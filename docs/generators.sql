@@ -72,6 +72,7 @@ CREATE TABLE `generator_fields` (
   `field_name` varchar(100) NOT NULL DEFAULT '' COMMENT '字段名',
   `field_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `field_length` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'DB字段长度',
+  `field_unsigned` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否是正整数',
   `field_comment` varchar(200) NOT NULL DEFAULT '' COMMENT 'DB字段描述',
   `group_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '表单字段组ID',
   `type_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '字段类型ID',
