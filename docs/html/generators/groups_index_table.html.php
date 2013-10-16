@@ -2,7 +2,7 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><input type="checkbox" name="chkall" value="group_ids[]"></th>
+      <th><input type="checkbox" name="checked_toggle" value="group_ids[]"></th>
       <th>组名</th>
       <th>生成代码名</th>
       <th>排序</th>
@@ -12,7 +12,7 @@
   </thead>
   <tbody>
     <tr>
-      <td><input type="checkbox" name="group_ids[]" value=""></td>
+      <td><input type="checkbox" name="group_ids[]" value="a"></td>
       <td><a href="#">主要信息</a></td>
       <td>公共组</td>
       <td>1</td>
@@ -23,7 +23,7 @@
       </td>
     </tr>
     <tr>
-      <td><input type="checkbox" name="group_ids[]" value=""></td>
+      <td><input type="checkbox" name="group_ids[]" value="b"></td>
       <td><a href="#">扩展信息</a></td>
       <td>公共组</td>
       <td>2</td>
@@ -34,7 +34,7 @@
       </td>
     </tr>
     <tr>
-      <td><input type="checkbox" name="group_ids[]" value=""></td>
+      <td><input type="checkbox" name="group_ids[]" value="c"></td>
       <td><a href="#">行动名</a></td>
       <td>generators</td>
       <td>3</td>

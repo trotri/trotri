@@ -109,6 +109,7 @@ CREATE TABLE `generator_field_validators` (
   `option_category` enum('boolean','integer','string','array') NOT NULL DEFAULT 'boolean' COMMENT '验证时对比值类型',
   `message` varchar(100) NOT NULL DEFAULT '' COMMENT '出错提示消息',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `condition` enum('all','create','modify') NOT NULL DEFAULT 'n' COMMENT '验证环境，任意时候验证、只在新增数据时验证、只在更新数据时验证',
   PRIMARY KEY (`validator_id`),
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),

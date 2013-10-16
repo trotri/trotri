@@ -2,7 +2,7 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><input type="checkbox" name="chkall" value="group_ids[]"></th>
+      <th><input type="checkbox" name="checked_toggle" value="group_ids[]"></th>
       <th>类型名</th>
       <th>表单类型名</th>
       <th>表字段类型</th>

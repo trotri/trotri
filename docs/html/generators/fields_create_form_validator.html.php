@@ -52,6 +52,23 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
+  <label for="" class="col-lg-2 control-label">验证环境</label>
+  <label class="checkbox-inline">
+    <input type="radio" class="icheck" name="condition" checked>
+  </label>
+  <label class="checkbox-inline">任意时候验证</label>
+  <label class="checkbox-inline">
+    <input type="radio" class="icheck" name="condition">
+  </label>
+  <label class="checkbox-inline">只在新增数据时验证</label>
+  <label class="checkbox-inline">
+    <input type="radio" class="icheck" name="condition">
+  </label>
+  <label class="checkbox-inline">只在更新数据时验证</label>
+  <span class="control-label"></span>
+</div><!-- /.form-group -->
+
+<div class="form-group">
   <div class="col-lg-1"></div>
   <div class="col-lg-11">
     <button type="button" class="btn btn-default">

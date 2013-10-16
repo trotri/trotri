@@ -2,7 +2,7 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><input type="checkbox" name="chkall" value="generator_ids[]"></th>
+      <th><input type="checkbox" name="checked_toggle" value="generator_ids[]"></th>
       <th>生成代码名</th>
       <th>表名</th>
       <th>生成扩展表</th>
