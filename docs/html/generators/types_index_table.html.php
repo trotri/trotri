@@ -21,10 +21,12 @@
       <td>1</td>
       <td>
         <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" data-original-title="编辑表单字段类型" onclick="return Core.href('../generators/types_create.html.php');"></span>
-        <span class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="left" data-original-title="彻底删除" onclick="alert('彻底删除');"></span> 
+        <span class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="left" data-original-title="彻底删除" onclick="return Core.dialogRemove('/remove?id=4');"></span> 
       </td>
     </tr>
   </tbody>
 </table>
 <?php include "types_index_btns.html.php"; ?>
 <?php include "../pagination.html.php"; ?>
+
+<?php include "../dialog_remove.html.php"; ?>

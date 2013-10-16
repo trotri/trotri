@@ -32,9 +32,9 @@
       <td>不展示</td>
       <td>1</td>
       <td>
-        <span class="glyphicon glyphicon-comment" data-toggle="tooltip" data-placement="left" data-original-title="查看验证规则"></span>
+        <span class="glyphicon glyphicon-comment" data-toggle="tooltip" data-placement="left" data-original-title="查看验证规则" onclick="return Core.dialogAjaxView('/view?id=10');"></span>
         <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" data-original-title="编辑表单字段" onclick="return Core.href('../generators/fields_create.html.php');"></span>
-        <span class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="left" data-original-title="彻底删除" onclick="alert('彻底删除');"></span> 
+        <span class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="left" data-original-title="彻底删除" onclick="return Core.dialogRemove('/remove?id=4');"></span> 
       </td>
     </tr>
     <tr>
@@ -59,12 +59,15 @@
       <td>1</td>
       <td>1</td>
       <td>
-        <span class="glyphicon glyphicon-comment" data-toggle="tooltip" data-placement="left" data-original-title="查看验证规则"></span>
+        <span class="glyphicon glyphicon-comment" data-toggle="tooltip" data-placement="left" data-original-title="查看验证规则" onclick="return Core.dialogAjaxView('/view?id=10', '查看验证规则');"></span>
         <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" data-original-title="编辑表单字段" onclick="return Core.href('../generators/fields_create.html.php');"></span>
-        <span class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="left" data-original-title="彻底删除" onclick="alert('彻底删除');"></span> 
+        <span class="glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="left" data-original-title="彻底删除" onclick="return Core.dialogRemove('/remove?id=4');"></span> 
       </td>
     </tr>
   </tbody>
 </table>
 <?php include "fields_index_btns.html.php"; ?>
 <?php include "../pagination.html.php"; ?>
+
+<?php include "../dialog_ajax_view.html.php"; ?>
+<?php include "../dialog_remove.html.php"; ?>

@@ -37,7 +37,16 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">DB整型字段unsigned</label>
+  <label for="" class="col-lg-2 control-label">AUTO_INCREMENT</label>
+  <div class="col-lg-4">
+    <div id="label-switch" class="make-switch switch-small" data-on-label="是" data-off-label="否">
+      <input type="checkbox" checked>
+    </div>
+  </div>
+</div><!-- /.form-group -->
+
+<div class="form-group">
+  <label for="" class="col-lg-2 control-label">UNSIGNED</label>
   <div class="col-lg-4">
     <div id="label-switch" class="make-switch switch-small" data-on-label="是" data-off-label="否">
       <input type="checkbox" checked>

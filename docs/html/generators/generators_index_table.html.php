@@ -52,10 +52,12 @@
       <td>1</td>
       <td>
         <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" data-original-title="编辑生成代码" onclick="alert('编辑生成代码');"></span>
-        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="left" data-original-title="放入回收站" onclick="alert('放入回收站');"></span> 
+        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="left" data-original-title="移至回收站" onclick="return Core.dialogTrash('/trash?id=1');"></span> 
       </td>
     </tr>
   </tbody>
 </table>
 <?php include "generators_index_btns.html.php"; ?>
 <?php include "../pagination.html.php"; ?>
+
+<?php include "../dialog_trash.html.php"; ?>
