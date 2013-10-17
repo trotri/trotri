@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `users`;
+CREATE DATABASE IF NOT EXISTS `ucenter`;
 
-USE `users`;
+USE `ucenter`;
 
 DROP TABLE IF EXISTS `user_amcas`;
 CREATE TABLE `user_amcas` (

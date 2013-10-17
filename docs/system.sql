@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `generators`;
+CREATE DATABASE IF NOT EXISTS `system`;
 
-USE `generators`;
+USE `system`;
 
 DROP TABLE IF EXISTS `generators`;
 CREATE TABLE `generators` (
@@ -71,10 +71,10 @@ CREATE TABLE `generator_fields` (
   `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `field_name` varchar(100) NOT NULL DEFAULT '' COMMENT '字段名',
   `field_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
-  `field_length` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'DB字段长度',
-  `field_auto_increment` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否自动递增',
-  `field_unsigned` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否无符号',
-  `field_comment` varchar(200) NOT NULL DEFAULT '' COMMENT 'DB字段描述',
+  `column_length` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'DB字段长度',
+  `column_auto_increment` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否自动递增',
+  `column_unsigned` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否无符号',
+  `column_comment` varchar(200) NOT NULL DEFAULT '' COMMENT 'DB字段描述',
   `group_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '表单字段组ID',
   `type_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '字段类型ID',
   `html_label` varchar(100) NOT NULL DEFAULT '' COMMENT 'HTML：Table和Form显示名',
