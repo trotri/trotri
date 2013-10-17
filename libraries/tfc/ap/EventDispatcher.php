@@ -11,14 +11,14 @@
 namespace tfc\ap;
 
 /**
- * EventDispatcher abstract class file
+ * EventDispatcher class file
  * observer模式的事件处理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: EventDispatcher.php 1 2013-03-29 16:48:06Z huan.song $
  * @package tfc.ap
  * @since 1.0
  */
-abstract class EventDispatcher
+class EventDispatcher
 {
     /**
      * @var instances of tfc\ap\Event
@@ -63,7 +63,7 @@ abstract class EventDispatcher
     }
 
     /**
-     * 触发所有被观察事件的方法
+     * 触发所有被观察的方法
      * @param string $method
      * @param array $args
      * @return array
