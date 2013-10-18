@@ -28,8 +28,8 @@ class Bootstrap extends ap\Bootstrap
 	public function _initDefaultRouter()
 	{
 		$router = Mvc::getRouter();
-		$router->setDefaultModule('system')
-			   ->setDefaultController('show')
+		$router->setDefaultModule('generator')
+			   ->setDefaultController('Index')
 			   ->setDefaultAction('index');
 	}
 

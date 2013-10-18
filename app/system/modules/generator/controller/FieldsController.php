@@ -13,14 +13,14 @@ namespace modules\generator\controller;
 use library\BaseController;
 
 /**
- * IndexController class file
- * 生成代码控制器
+ * FieldsController class file
+ * 字段控制器
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: IndexController.php 1 2013-02-08 00:48:06Z huan.song $
+ * @version $Id: FieldsController.php 1 2013-02-08 00:48:06Z huan.song $
  * @package modules.generator.controller
  * @since 1.0
  */
-class IndexController extends BaseController
+class FieldsController extends BaseController
 {
 	/**
 	 * 数据列表

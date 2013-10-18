@@ -58,7 +58,7 @@ abstract class Controller extends Application
      * @param string $id
      * @return tfc\mvc\Action
      */
-    public function createAction($id)
+    public function createActionById($id)
     {
         if (($id = (string) $id) === '') {
             $id = $this->_defaultActionId;

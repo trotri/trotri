@@ -47,7 +47,7 @@ class Dispatcher extends Application
     public function run(Router $router)
     {
         $controller = $this->createController($router);
-        $action = $controller->createAction($router->getAction());
+        $action = $controller->createActionById($router->getAction());
         $controller->runAction($action);
     }
 

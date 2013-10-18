@@ -52,17 +52,17 @@ defined('PS') || define('PS', PATH_SEPARATOR);
 /**
  * tfc\saf目录
  */
-defined('DIR_IDEA_SAF') || define('DIR_IDEA_SAF', dirname(__FILE__));
+defined('DIR_TFC_SAF') || define('DIR_TFC_SAF', dirname(__FILE__));
 
 /**
- * IDEA框架目录
+ * TFC框架目录
  */
-defined('DIR_IDEA') || define('DIR_IDEA', substr(DIR_IDEA_SAF, 0, -4));
+defined('DIR_TFC') || define('DIR_TFC', substr(DIR_TFC_SAF, 0, -4));
 
 /**
  * 公共框架和代码库目录
  */
-defined('DIR_LIBRARIES') || define('DIR_LIBRARIES', substr(DIR_IDEA, 0, -5));
+defined('DIR_LIBRARIES') || define('DIR_LIBRARIES', substr(DIR_TFC, 0, -4));
 
 /**
  * ROOT目录
@@ -185,7 +185,7 @@ is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entitie
 /**
  * 设置公共框架和代码库目录、当前项目的公共代码库目录、当前项目的所有模块存放目录到PHP INI自动加载目录
  */
-set_include_path('.' . PS . DIR_LIBRARIES . PS. DIR_APP . PS . trim(get_include_path(), '.' . PS)) || exit('Request Error, your server configuration not allowed to change PHP include path');
+set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) || exit('Request Error, your server configuration not allowed to change PHP include path');
 
 /**
  * 自动加载PHP文件
