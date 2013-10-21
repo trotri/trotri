@@ -25,17 +25,17 @@ use tfc\ap\ErrorException;
 class Dispatcher extends Application
 {
     /**
-     * @var string Controller目录名
+     * @var string 控制器的目录名
      */
     protected $_controllerDirName = 'controller';
 
     /**
-     * @var string Module目录名
+     * @var string 模型的目录名
      */
     protected $_moduleDirName = 'modules';
 
     /**
-     * @var string Controller类名后缀
+     * @var string 控制器类名后缀
      */
     protected $_controllerExtName = 'Controller';
 
@@ -78,7 +78,7 @@ class Dispatcher extends Application
     }
 
     /**
-     * 通过路由器获取Controller名
+     * 通过路由器获取控制器名
      * @param tfc\mvc\Router $router
      * @return string
      */
@@ -92,7 +92,7 @@ class Dispatcher extends Application
     }
 
     /**
-     * 获取Controller所在的目录名
+     * 获取控制器类所在的目录名
      * @return string
      */
     public function getControllerDirName()
@@ -101,7 +101,7 @@ class Dispatcher extends Application
     }
 
     /**
-     * 设置Controller所在的目录名
+     * 设置控制器类所在的目录名
      * @param string $dirName
      * @return tfc\mvc\Dispatcher
      */
@@ -112,27 +112,7 @@ class Dispatcher extends Application
     }
 
     /**
-     * 获取Module所在的目录名
-     * @return string
-     */
-    public function getModuleDirName()
-    {
-        return $this->_moduleDirName;
-    }
-
-    /**
-     * 设置Module所在的目录名
-     * @param string $dirName
-     * @return tfc\mvc\Dispatcher
-     */
-    public function setModuleDirName($dirName)
-    {
-        $this->_moduleDirName = (string) $dirName;
-        return $this;
-    }
-
-    /**
-     * 获取Controller类名后缀
+     * 获取控制器类名后缀
      * @return string
      */
     public function getControllerExtName()
@@ -141,7 +121,7 @@ class Dispatcher extends Application
     }
 
     /**
-     * 设置Controller类名后缀
+     * 设置控制器类名后缀
      * @param string $extName
      * @return tfc\mvc\Dispatcher
      */
@@ -149,5 +129,25 @@ class Dispatcher extends Application
     {
         $this->_controllerExtName = (string) $extName;
         return $this;
+    }
+
+    /**
+     * 获取模型所在的目录名
+     * @return string
+     */
+    public function getModuleDirName()
+    {
+    	return $this->_moduleDirName;
+    }
+
+    /**
+     * 设置模型所在的目录名
+     * @param string $dirName
+     * @return tfc\mvc\Dispatcher
+     */
+    public function setModuleDirName($dirName)
+    {
+    	$this->_moduleDirName = (string) $dirName;
+    	return $this;
     }
 }

@@ -274,7 +274,7 @@ class DbProxy extends Statement
     public function getConfig($key = null)
     {
         if ($this->_config === null) {
-            $config = Conf::getDbConf($this->getClusterName());
+            $config = Cfg::getDb($this->getClusterName());
             if (!isset($config['dsn']) || !isset($config['username']) || !isset($config['password']) || !isset($config['charset'])) {
                 throw new ErrorException(sprintf(
                     'DbProxy no entry is registered for key: dsn|username|password|charset in db config "%s"', serialize($config)

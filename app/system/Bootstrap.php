@@ -29,7 +29,7 @@ class Bootstrap extends ap\Bootstrap
 	{
 		$router = Mvc::getRouter();
 		$router->setDefaultModule('generator')
-			   ->setDefaultController('Index')
+			   ->setDefaultController('index')
 			   ->setDefaultAction('index');
 	}
 

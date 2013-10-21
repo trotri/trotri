@@ -118,7 +118,7 @@ abstract class Widget
         }
         else {
             throw new ErrorException(sprintf(
-                'Widget tpl file "%s" is not a valid directory.', $tplPath
+                'Widget tpl file "%s" is not a valid file.', $tplPath
             ));
         }
     }

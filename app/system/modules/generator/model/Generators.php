@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\generator\service;
+namespace modules\generator\model;
 
 /**
  * Generators class file
- * 服务类
+ * 业务层类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Admins.php 1 2013-05-18 14:58:59Z huan.song $
- * @package modules.generator.service
+ * @version $Id: Generators.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package modules.generator.model
  * @since 1.0
  */
 class Generators

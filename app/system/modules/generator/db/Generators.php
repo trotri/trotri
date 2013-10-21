@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\generator\dao;
+namespace modules\generator\db;
 
 /**
  * Generators class file
- * Dao层类
+ * 数据库操作层类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Admins.php 1 2013-05-18 14:58:59Z huan.song $
- * @package modules.generator.dao
+ * @version $Id: Generators.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package modules.generator.db
  * @since 1.0
  */
 class Generators

@@ -161,7 +161,7 @@ class View implements interfaces\View
         }
         else {
             throw new ErrorException(sprintf(
-                'View tpl file "%s" is not a valid directory.', $tplPath
+                'View tpl file "%s" is not a valid file.', $tplPath
             ));
         }
     }

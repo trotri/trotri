@@ -75,6 +75,16 @@ defined('DIR_ROOT') || define('DIR_ROOT', substr(DIR_LIBRARIES, 0, -10));
 defined('DIR_APP') || define('DIR_APP', DIR_ROOT . DS . 'app' . DS . APP_NAME);
 
 /**
+ * 当前项目的所有组件存放目录
+ */
+defined('DIR_APP_COMPONENTS') || define('DIR_APP_COMPONENTS', DIR_APP . DS . 'components');
+
+/**
+ * 当前项目的所有语言包存放目录
+ */
+defined('DIR_APP_LANGUAGES') || define('DIR_APP_LANGUAGES', DIR_APP . DS . 'languages');
+
+/**
  * 当前项目的公共代码库目录
  */
 defined('DIR_APP_LIBRARY') || define('DIR_APP_LIBRARY', DIR_APP . DS . 'library');
@@ -85,44 +95,54 @@ defined('DIR_APP_LIBRARY') || define('DIR_APP_LIBRARY', DIR_APP . DS . 'library'
 defined('DIR_APP_MODULES') || define('DIR_APP_MODULES', DIR_APP . DS . 'modules');
 
 /**
- * 当前项目的脚本存放目录
+ * 当前项目的所有插件存放目录
+ */
+defined('DIR_APP_PLUGINS') || define('DIR_APP_PLUGINS', DIR_APP . DS . 'plugins');
+
+/**
+ * 当前项目的所有脚本存放目录
  */
 defined('DIR_APP_SCRIPTS') || define('DIR_APP_SCRIPTS', DIR_APP . DS . 'scripts');
 
 /**
- * 当前项目的测试代码存放目录
+ * 当前项目的所有测试代码存放目录
  */
 defined('DIR_APP_TESTS') || define('DIR_APP_TESTS', DIR_APP . DS . 'tests');
 
 /**
- * 当前项目的模版存放目录
+ * 当前项目的所有模板存放目录
  */
 defined('DIR_APP_VIEWS') || define('DIR_APP_VIEWS', DIR_APP . DS . 'views');
 
 /**
+ * 当前项目的所有模板部件存放目录
+ */
+defined('DIR_APP_WIDGETS') || define('DIR_APP_WIDGETS', DIR_APP . DS . 'widgets');
+
+/**
  * 配置文件根目录
  */
-defined('DIR_CONF') || define('DIR_CONF', DIR_ROOT . DS . 'conf');
+defined('DIR_CFG') || define('DIR_CFG', DIR_ROOT . DS . 'cfg');
 
 /**
  * 当前项目的配置文件存放目录
  */
-defined('DIR_CONF_APP') || define('DIR_CONF_APP', DIR_CONF . DS . 'app' . DS . APP_NAME);
+defined('DIR_CFG_APP') || define('DIR_CFG_APP', DIR_CFG . DS . 'app' . DS . APP_NAME);
 
 /**
  * 数据库的配置文件存放目录
  */
-defined('DIR_CONF_DB') || define('DIR_CONF_DB', DIR_CONF . DS . 'db');
+defined('DIR_CFG_DB') || define('DIR_CFG_DB', DIR_CFG . DS . 'db');
 
 /**
  * Ral的配置文件存放目录
  */
-defined('DIR_CONF_RAL') || define('DIR_CONF_RAL', DIR_CONF . DS . 'ral');
+defined('DIR_CFG_RAL') || define('DIR_CFG_RAL', DIR_CFG . DS . 'ral');
 
 /**
  * 缓存的配置文件存放目录
  */
-defined('DIR_CONF_CACHE') || define('DIR_CONF_CACHE', DIR_CONF . DS . 'cache');
+defined('DIR_CFG_CACHE') || define('DIR_CFG_CACHE', DIR_CFG . DS . 'cache');
 
 /**
  * 数据文件存放根目录
@@ -160,7 +180,7 @@ defined('DIR_LOG_APP') || define('DIR_LOG_APP', DIR_LOG . DS . APP_NAME);
 defined('DIR_WEBROOT') || define('DIR_WEBROOT', DIR_ROOT . DS . 'webroot');
 
 /**
- * 当前项目的静态文件存放目录
+ * 所有项目公共的静态文件存放目录
  */
 defined('DIR_WEBROOT_STATIC') || define('DIR_WEBROOT_STATIC', DIR_WEBROOT . DS . 'static' . DS . APP_NAME);
 

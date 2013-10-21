@@ -172,7 +172,7 @@ class RalProxy
     public function getConfig($key = null)
     {
         if ($this->_config === null) {
-            $config = Conf::getRalConf($this->getClusterName());
+            $config = Cfg::getRal($this->getClusterName());
             if (!isset($config['server']) || !isset($config['port']) || !isset($config['connect_time_out_ms']) || !isset($config['time_out_ms']) || !isset($config['converter'])) {
                 throw new ErrorException(sprintf(
                     'RalProxy no entry is registered for key: server|port|connect_time_out_ms|time_out_ms|converter in ral config "%s"', serialize($config)

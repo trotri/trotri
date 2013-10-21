@@ -1,4 +1,4 @@
-<?php include "generators_index_btns.html.php"; ?>
+<?php //include "generators_index_btns.html.php"; ?>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -57,7 +57,7 @@
     </tr>
   </tbody>
 </table>
-<?php include "generators_index_btns.html.php"; ?>
-<?php include "../pagination.html.php"; ?>
+<?php //include "generators_index_btns.html.php"; ?>
+<?php //include "../pagination.html.php"; ?>
 
-<?php include "../dialog_trash.html.php"; ?>
+<?php //include "../dialog_trash.html.php"; ?>
