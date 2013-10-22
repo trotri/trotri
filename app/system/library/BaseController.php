@@ -82,6 +82,8 @@ abstract class BaseController extends Controller
 		$view->assign('sidebar', 	Mvc::$module . '/' . Mvc::$controller . '_sidebar');
 		$view->assign('log_id', 	Log::getId());
 		$view->assign('util', 		Singleton::getInstance('library\\Util'));
+		$view->assign('urls', 		Cfg::getApp('urls'));
+
 		if (($wfBackTrace = Registry::get('warning_backtrace')) !== null) {
 			$view->assign('warning_backtrace', $wfBackTrace);
 		}

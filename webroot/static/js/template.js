@@ -98,13 +98,13 @@ Core = {
    * @param integer E
    * @return boolean
    */
-    isInt: function(E) {
-      var pattern = /^[0-9]+$/ ;
-      if (E == "" || !pattern.test(E)) {
-        return false;
-      }
-      return true;
-    },
+  isInt: function(E) {
+    var pattern = /^[0-9]+$/ ;
+    if (E == "" || !pattern.test(E)) {
+      return false;
+    }
+    return true;
+  },
 
   /**
    * 确认对话框：删除数据时弹出
@@ -148,6 +148,28 @@ Core = {
     $("#dialog_ajax_view").modal("show");
   },
 
+  /**
+   * 提交表单
+   * @param string form 表单名
+   * @param string type 保存行为类型 
+   * @return void
+   */
+  formSubmit: function(type, form) {
+    var types = ["save", "save2index", "save2create"];
+    if ($.inArray(type, types) < 0) {
+      type = "save";
+    }
+
+    var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
+    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type);
+    o.submit();
+  },
+
+  /**
+   * 页面跳转
+   * @param string url
+   * @return void
+   */
   href: function(url) {
     window.location.href = url;
     return false;

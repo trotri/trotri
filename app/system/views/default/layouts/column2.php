@@ -6,7 +6,7 @@
 
   <body>
 
-<?php $this->display('navbar'); ?>
+<?php $this->widget('components\NavBar'); ?>
 
 <div class="container">
 

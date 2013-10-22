@@ -1,15 +1,15 @@
 <!-- SideBar -->
-<div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
+<div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar">
   <div class="list-group">
-    <a href="generators_index.html.php" class="list-group-item active">
+    <a href="<?php echo $this->urls['generator_index']['href']; ?>" class="list-group-item active">
       生成代码管理
-      <span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="新建生成代码" onclick="return Core.href('../generators/generators_create.html.php');"></span>
+      <span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="新建生成代码" onclick="return Core.href('<?php echo $this->urls['generator_create']['href']; ?>');"></span>
     </a>
-    <a href="#" class="list-group-item">生成代码回收站</a>
+    <a href="<?php echo $this->urls['generator_index_trash']['href']; ?>" class="list-group-item">生成代码回收站</a>
   </div><!--/.list-group-->
 
   <div class="list-group">
-    <button type="button" class="btn btn-primary btn-block" onclick="return Core.search('../generators/generators_index.html.php');">
+    <button type="button" class="btn btn-primary btn-block" onclick="return Core.search('<?php echo $this->urls['generator_index']['href']; ?>');">
       <span class="glyphicon glyphicon-search"></span>查询
     </button>
     <hr class="hr-condensed">
@@ -42,7 +42,7 @@
       <option>--应用名--</option>
     </select>
     <hr class="hr-condensed">
-    <button type="button" class="btn btn-primary btn-block" onclick="return Core.search('../generators/generators_index.html.php');">
+    <button type="button" class="btn btn-primary btn-block" onclick="return Core.search('<?php echo $this->urls['generator_index']['href']; ?>');">
       <span class="glyphicon glyphicon-search"></span>查询
     </button>
   </div><!-- /.list-group -->

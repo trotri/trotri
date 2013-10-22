@@ -10,7 +10,9 @@
 
 namespace tfc\mvc;
 
+use tfc\mvc\interfaces;
 use tfc\ap\ErrorException;
+use tfc\ap\InvalidArgumentException;
 
 /**
  * Widget abstract class file
@@ -20,7 +22,7 @@ use tfc\ap\ErrorException;
  * @package tfc.mvc
  * @since 1.0
  */
-abstract class Widget
+abstract class Widget implements interfaces\View
 {
     /**
      * @var instance of tfc\mvc\View
@@ -69,9 +71,17 @@ abstract class Widget
     }
 
     /**
-     * 魔术方法：通过模板变量名获取模板变量值
-     * @param mixed $key
-     * @return mixed
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::getEngine()
+     */
+    public function getEngine()
+    {
+        return $this;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::__get()
      */
     public function __get($key)
     {
@@ -83,9 +93,19 @@ abstract class Widget
     }
 
     /**
-     * 魔术方法：判定模板变量是否已经存在
-     * @param mixed $key
-     * @return boolean
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::__set()
+     */
+    public function __set($key, $value)
+    {
+        if ($key != '') {
+            $this->_tplVars[$key] = $value;
+        }
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::__isset()
      */
     public function __isset($key)
     {
@@ -93,11 +113,48 @@ abstract class Widget
     }
 
     /**
-     * 解析模板文件，根据需求输出到浏览器
-     * @param string $tplName
-     * @param boolean $display
-     * @return string|void
-     * @throws ErrorException 如果模板文件不存在，抛出异常
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::__unset()
+     */
+    public function __unset($key)
+    {
+        if (isset($this->_tplVars[$key])) {
+            unset($this->_tplVars[$key]);
+        }
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::assign()
+     */
+    public function assign($key, $value = null)
+    {
+        if (is_object($key)) {
+            $key = method_exists($key, 'toArray') ? $key->toArray() : (array) $key;
+            if (!is_array($key)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Widget assign the argument key be an object but can not convert to an array, received "%s".', gettype($key)
+                ));
+            }
+        }
+
+        if (is_array($key)) {
+            foreach ($key as $k => $v) {
+                if ($k != '') {
+                    $this->_tplVars[$k] = $v;
+                }
+            }
+        }
+        elseif ($key != '') {
+            $this->_tplVars[$key] = $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::fetch()
      */
     public function fetch($tplName = null, $display = false)
     {
@@ -107,12 +164,12 @@ abstract class Widget
         $tplPath = $this->getWidgetDirectory() . DIRECTORY_SEPARATOR . $tplName;
         if (is_file($tplPath)) {
             if ($display) {
-                include_once $tplPath;
+                include $tplPath;
             }
             else {
                 ob_start();
                 ob_implicit_flush(false);
-                include_once $tplPath;
+                include $tplPath;
                 return ob_get_clean();
             }
         }
@@ -124,9 +181,8 @@ abstract class Widget
     }
 
     /**
-     * 将模板内容输出到浏览器
-     * @param string $tplName
-     * @return void
+     * (non-PHPdoc)
+     * @see tfc\mvc\interfaces.View::display()
      */
     public function display($tplName = null)
     {
@@ -186,7 +242,7 @@ abstract class Widget
     }
 
     /**
-     * 获取页面装饰模板所在的目录，默认目录：{viewDirectory}/widgets/{className}
+     * 获取页面装饰模板所在的目录，默认目录：{viewDirectory}/{className}
      * @return string
      * @throws ErrorException 如果页面装饰模板所在的目录不存在，抛出异常
      */
@@ -197,10 +253,7 @@ abstract class Widget
         }
 
         $className = strtolower(get_class($this));
-        if (($pos = strrpos($className, '\\')) !== false) {
-            $className = substr($className, $pos + 1);
-        }
-        $this->_widgetDirectory = $this->getView()->viewDirectory . DIRECTORY_SEPARATOR . $this->getView()->skinName . DIRECTORY_SEPARATOR . 'widgets' . DIRECTORY_SEPARATOR . $className;
+        $this->_widgetDirectory = $this->getView()->viewDirectory . DIRECTORY_SEPARATOR . $this->getView()->skinName . DIRECTORY_SEPARATOR . $className;
         if (is_dir($this->_widgetDirectory)) {
             return $this->_widgetDirectory;
         }

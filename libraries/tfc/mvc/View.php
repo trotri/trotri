@@ -150,12 +150,12 @@ class View implements interfaces\View
         $tplPath = $this->getViewDirectory() . DIRECTORY_SEPARATOR . $tplName . $this->tplExtension;
         if (is_file($tplPath)) {
             if ($display) {
-                include_once $tplPath;
+                include $tplPath;
             }
             else {
                 ob_start();
                 ob_implicit_flush(false);
-                include_once $tplPath;
+                include $tplPath;
                 return ob_get_clean();
             }
         }

@@ -45,6 +45,7 @@ class IndexController extends BaseController
 	 */
 	public function createAction()
 	{
+		$this->render();
 	}
 
 	/**
@@ -52,6 +53,14 @@ class IndexController extends BaseController
 	 * @author 宋欢 <trotri@yeah.net>
 	 */
 	public function modifyAction()
+	{
+	}
+
+	/**
+	 * 移至回收站
+	 * @author 宋欢 <trotri@yeah.net>
+	 */
+	public function trashAction()
 	{
 	}
 

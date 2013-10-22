@@ -16,4 +16,5 @@ return array (
 		'tpl_extension' => '.php',
 		'version' => '1.0',
 	),
+	'urls' => require_once 'urls.php',
 );
