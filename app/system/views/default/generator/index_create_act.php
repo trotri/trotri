@@ -23,7 +23,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">更新数据 *</label>
+  <label for="" class="col-lg-2 control-label">编辑数据 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm" name="act_modify_name" value="modify">
   </div>

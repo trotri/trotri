@@ -11,6 +11,9 @@
 namespace modules\generator\controller;
 
 use library\BaseController;
+use tfc\ap\Ap;
+use library\Util;
+use library\ErrorNo;
 
 /**
  * IndexController class file
@@ -45,6 +48,15 @@ class IndexController extends BaseController
 	 */
 	public function createAction()
 	{
+		$req = Ap::getRequest();
+
+		if ($req->getParam('do') == 'post') {
+			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				exit('OK');
+			}
+		}
+
 		$this->render();
 	}
 

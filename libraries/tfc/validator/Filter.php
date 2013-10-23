@@ -28,7 +28,7 @@ use tfc\ap\Singleton;
  *         'MaxLength' => array(12, '密码长度%value%不能大于%option%个字符.')
  *     ),
  *     'user_email' => array(
- *            'MaxLength' => array(50, '邮箱长度%value%不能大于%option%个字符.'),
+ *         'MaxLength' => array(50, '邮箱长度%value%不能大于%option%个字符.'),
  *         'Mail' => array(true, '邮箱%value%不符合规范.')
  *     ),
  * );
