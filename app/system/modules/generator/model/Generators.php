@@ -34,7 +34,8 @@ class Generators
 				'MaxLength' => array (12, '生成代码名长度%value%不能大于%option%个字符.')
 			),
 			'tbl_name' => array (
-				'MinLength' => array (6, '表名长度%value%不能小于%option%个字符.'),
+				'AlphaNum' => array (true, '表名%value%只能由英文字母、数字或下划线组成.'),
+				'MinLength' => array (2, '表名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array (12, '表名长度%value%不能大于%option%个字符.')
 			),
 			'tbl_engine' => array (
@@ -53,39 +54,47 @@ class Generators
 				'NotEmpty' => array (true, '必须填写表描述.')
 			),
 			'app_name' => array (
-				'MinLength' => array (6, '应用名长度%value%不能小于%option%个字符.'),
+				'AlphaNum' => array (true, '应用名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '应用名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array (12, '应用名长度%value%不能大于%option%个字符.')
 			),
 			'mod_name' => array (
-				'MinLength' => array (6, '模块名长度%value%不能小于%option%个字符.'),
+				'AlphaNum' => array (true, '模块名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '模块名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array (12, '模块名长度%value%不能大于%option%个字符.')
 			),
 			'ctrl_name' => array (
-				'MinLength' => array (6, '控制器名长度%value%不能小于%option%个字符.'),
+				'AlphaNum' => array (true, '控制器名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '控制器名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array (12, '控制器名长度%value%不能大于%option%个字符.')
 			),
 			'act_index_name' => array (
-				'MinLength' => array (6, '数据列表名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array (12, '数据列表名长度%value%不能大于%option%个字符.')
+				'AlphaNum' => array (true, '数据列表行动名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '数据列表行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array (12, '数据列表行动名长度%value%不能大于%option%个字符.')
 			),
 			'act_view_name' => array (
-				'MinLength' => array (6, '数据详情名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array (12, '数据详情名长度%value%不能大于%option%个字符.')
+				'AlphaNum' => array (true, '数据详情行动名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '数据详情行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array (12, '数据详情行动名长度%value%不能大于%option%个字符.')
 			),
 			'act_create_name' => array (
-				'MinLength' => array (6, '新增数据名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array (12, '新增数据名长度%value%不能大于%option%个字符.')
+				'AlphaNum' => array (true, '新增数据行动名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '新增数据行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array (12, '新增数据行动名长度%value%不能大于%option%个字符.')
 			),
 			'act_modify_name' => array (
-				'MinLength' => array (6, '编辑数据名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array (12, '编辑数据名长度%value%不能大于%option%个字符.')
+				'AlphaNum' => array (true, '编辑数据行动名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '编辑数据行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array (12, '编辑数据行动名长度%value%不能大于%option%个字符.')
 			),
 			'act_remove_name' => array (
-				'MinLength' => array (6, '删除数据名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array (12, '删除数据名长度%value%不能大于%option%个字符.')
+				'AlphaNum' => array (true, '删除数据行动名%value%只能由英文字母组成.'),
+				'MinLength' => array (2, '删除数据行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array (12, '删除数据行动名长度%value%不能大于%option%个字符.')
 			),
 		);
-		
+
 		$filter = new Filter();
 		
 		echo '<pre>';
