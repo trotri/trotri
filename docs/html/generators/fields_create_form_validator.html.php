@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">验证类名 *</label>
+  <label class="col-lg-2 control-label">验证类名 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -7,7 +7,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">验证时对比值</label>
+  <label class="col-lg-2 control-label">验证时对比值</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -15,7 +15,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">验证时对比值类型</label>
+  <label class="col-lg-2 control-label">验证时对比值类型</label>
   <label class="checkbox-inline">
     <input type="radio" class="icheck" name="option_category" checked>
   </label>
@@ -36,7 +36,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">出错提示消息</label>
+  <label class="col-lg-2 control-label">出错提示消息</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -44,7 +44,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">排序</label>
+  <label class="col-lg-2 control-label">排序</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -52,7 +52,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">验证环境</label>
+  <label class="col-lg-2 control-label">验证环境</label>
   <label class="checkbox-inline">
     <input type="radio" class="icheck" name="condition" checked>
   </label>

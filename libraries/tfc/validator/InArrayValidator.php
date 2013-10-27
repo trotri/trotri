@@ -31,6 +31,10 @@ class InArrayValidator extends Validator
      */
     public function isValid()
     {
+        if (is_array($this->getValue())) {
+            return (array_diff($this->getValue(), $this->getOption()) === array());
+        }
+
         return in_array($this->getValue(), $this->getOption());
     }
 }

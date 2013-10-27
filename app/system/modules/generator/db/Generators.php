@@ -10,6 +10,8 @@
 
 namespace modules\generator\db;
 
+use library\Db;
+
 /**
  * Generators class file
  * 数据库操作层类
@@ -18,13 +20,7 @@ namespace modules\generator\db;
  * @package modules.generator.db
  * @since 1.0
  */
-class Generators
+class Generators extends Db
 {
-	/**
-	 * 构造方法：初始化表名
-	 */
-	public function __construct()
-	{
-		
-	}
+
 }

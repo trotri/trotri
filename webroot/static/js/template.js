@@ -160,7 +160,17 @@ Core = {
       type = "save";
     }
 
+    // 修复开关插件Bug（开关插件在关闭的状态下不传值）
     var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
+    $(".make-switch > .switch-animate").find("input[type='radio']").each(function() {
+      if ($(this).parent().hasClass("switch-on")) {
+        $("input[name='" + $(this).attr("name") + "']").val("y");
+      }
+      else if ($(this).parent().hasClass("switch-off")) {
+        o.append("<input type='hidden' name='" + $(this).attr("name") + "' value='n'>")
+      }
+    });
+
     o.attr("action", o.attr("action") + "&do=post&submit_type=" + type);
     o.submit();
   },

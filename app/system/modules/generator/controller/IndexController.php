@@ -48,16 +48,17 @@ class IndexController extends BaseController
 	 */
 	public function createAction()
 	{
-		$req = Ap::getRequest();
+		$ret = array();
 
-		if ($req->getParam('do') == 'post') {
+		$req = Ap::getRequest();
+		$do = $req->getParam('do');
+		$submitType = $req->getParam('submit_type');
+
+		if ($do == 'post') {
 			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				exit('OK');
-			}
 		}
 
-		$this->render();
+		$this->render($ret);
 	}
 
 	/**

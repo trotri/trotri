@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">组名 *</label>
+  <label class="col-lg-2 control-label">组名 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -7,7 +7,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">生成代码名</label>
+  <label class="col-lg-2 control-label">生成代码名</label>
   <div class="col-lg-4">
     <select class="form-control input-sm">
       <option>公共组</option>
@@ -18,7 +18,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">排序 *</label>
+  <label class="col-lg-2 control-label">排序 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -26,7 +26,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">描述</label>
+  <label class="col-lg-2 control-label">描述</label>
   <div class="col-lg-4">
     <textarea class="form-control" rows="5"></textarea>
   </div>

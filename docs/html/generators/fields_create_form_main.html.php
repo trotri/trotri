@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">字段名 *</label>
+  <label class="col-lg-2 control-label">字段名 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>
@@ -7,7 +7,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">父字段</label>
+  <label class="col-lg-2 control-label">父字段</label>
   <div class="col-lg-4">
     <select class="form-control input-sm">
       <option></option>
@@ -18,7 +18,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">字段类型</label>
+  <label class="col-lg-2 control-label">字段类型</label>
   <div class="col-lg-4">
     <select class="form-control input-sm">
       <option>单行文本 FormType(text) DbType(VARCHAR)</option>
@@ -29,7 +29,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">DB字段长度 *</label>
+  <label class="col-lg-2 control-label">DB字段长度 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm" value="100">
   </div>
@@ -37,7 +37,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">AUTO_INCREMENT</label>
+  <label class="col-lg-2 control-label">AUTO_INCREMENT</label>
   <div class="col-lg-4">
     <div id="label-switch" class="make-switch switch-small" data-on-label="是" data-off-label="否">
       <input type="checkbox" checked>
@@ -46,7 +46,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">UNSIGNED</label>
+  <label class="col-lg-2 control-label">UNSIGNED</label>
   <div class="col-lg-4">
     <div id="label-switch" class="make-switch switch-small" data-on-label="是" data-off-label="否">
       <input type="checkbox" checked>
@@ -55,7 +55,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">DB字段描述 *</label>
+  <label class="col-lg-2 control-label">DB字段描述 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm" value="">
   </div>
@@ -63,7 +63,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">表单字段组</label>
+  <label class="col-lg-2 control-label">表单字段组</label>
   <div class="col-lg-4">
     <select class="form-control input-sm">
       <option>主要信息</option>
@@ -74,7 +74,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">Table和Form-Label *</label>
+  <label class="col-lg-2 control-label">Table和Form-Label *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm" value="">
   </div>
@@ -82,7 +82,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">表单提示</label>
+  <label class="col-lg-2 control-label">表单提示</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm" value="">
   </div>
@@ -90,7 +90,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">表单是否必填</label>
+  <label class="col-lg-2 control-label">表单是否必填</label>
   <div class="col-lg-4">
     <div id="label-switch" class="make-switch switch-small" data-on-label="是" data-off-label="否">
       <input type="checkbox">
@@ -99,7 +99,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">更新表单中允许输入</label>
+  <label class="col-lg-2 control-label">更新表单中允许输入</label>
   <div class="col-lg-4">
     <div id="label-switch" class="make-switch switch-small" data-on-label="是" data-off-label="否">
       <input type="checkbox" checked>

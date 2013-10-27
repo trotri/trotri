@@ -161,4 +161,13 @@ class Util
 		$className = 'modules\\' . strtolower($moduleName) . '\\db\\' . $className;
 		return Singleton::getInstance($className);
 	}
+
+	/**
+	 * 获取当前时间，包含年月日时分秒
+	 * @return string
+	 */
+	public function getNowTime()
+	{
+		return date('Y-m-d H:i:s');
+	}
 }

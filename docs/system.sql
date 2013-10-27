@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS `system`;
+CREATE DATABASE IF NOT EXISTS `trotri`;
 
-USE `system`;
+USE `trotri`;
 
-DROP TABLE IF EXISTS `generators`;
-CREATE TABLE `generators` (
+DROP TABLE IF EXISTS `tr_generators`;
+CREATE TABLE `tr_generators` (
   `generator_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `generator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '生成代码名',
   `tbl_name` varchar(100) NOT NULL DEFAULT '' COMMENT '表名',
@@ -37,8 +37,8 @@ CREATE TABLE `generators` (
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
-DROP TABLE IF EXISTS `generator_field_groups`;
-CREATE TABLE `generator_field_groups` (
+DROP TABLE IF EXISTS `tr_generator_field_groups`;
+CREATE TABLE `tr_generator_field_groups` (
   `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
   `generator_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '生成代码ID，置0表示公共组',
@@ -50,8 +50,8 @@ CREATE TABLE `generator_field_groups` (
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
-DROP TABLE IF EXISTS `generator_field_types`;
-CREATE TABLE `generator_field_types` (
+DROP TABLE IF EXISTS `tr_generator_field_types`;
+CREATE TABLE `tr_generator_field_types` (
   `type_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类型名，单行文本、多行文本、密码、开关选项卡、提交按钮等',
   `form_type` varchar(100) NOT NULL DEFAULT '' COMMENT '表单类型名，HTML：text、password、button、radio等；用户自定义：ckeditor、datetime等',
@@ -66,8 +66,8 @@ CREATE TABLE `generator_field_types` (
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
 
-DROP TABLE IF EXISTS `generator_fields`;
-CREATE TABLE `generator_fields` (
+DROP TABLE IF EXISTS `tr_generator_fields`;
+CREATE TABLE `tr_generator_fields` (
   `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `field_name` varchar(100) NOT NULL DEFAULT '' COMMENT '字段名',
   `field_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
@@ -100,8 +100,8 @@ CREATE TABLE `generator_fields` (
   KEY `form_search_sort` (`form_search_sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
-DROP TABLE IF EXISTS `generator_field_validators`;
-CREATE TABLE `generator_field_validators` (
+DROP TABLE IF EXISTS `tr_generator_field_validators`;
+CREATE TABLE `tr_generator_field_validators` (
   `validator_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `validator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '验证类名',
   `field_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '表单字段ID',
@@ -109,7 +109,7 @@ CREATE TABLE `generator_field_validators` (
   `option_category` enum('boolean','integer','string','array') NOT NULL DEFAULT 'boolean' COMMENT '验证时对比值类型',
   `message` varchar(100) NOT NULL DEFAULT '' COMMENT '出错提示消息',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
-  `condition` enum('all','create','modify') NOT NULL DEFAULT 'n' COMMENT '验证环境，任意时候验证、只在新增数据时验证、只在更新数据时验证',
+  `when` enum('all','create','modify') NOT NULL DEFAULT 'all' COMMENT '验证环境，任意时候验证、只在新增数据时验证、只在更新数据时验证',
   PRIMARY KEY (`validator_id`),
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),

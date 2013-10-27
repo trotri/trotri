@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">类型名 *</label>
+  <label class="col-lg-2 control-label">类型名 *</label>
   <div class="col-lg-4">
     <div class="input-group">
       <input type="text" class="form-control input-sm">
@@ -19,7 +19,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">表单类型名 *</label>
+  <label class="col-lg-2 control-label">表单类型名 *</label>
   <div class="col-lg-4">
     <div class="input-group">
       <input type="text" class="form-control input-sm">
@@ -41,7 +41,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">表字段类型 *</label>
+  <label class="col-lg-2 control-label">表字段类型 *</label>
   <div class="col-lg-4">
     <select class="form-control input-sm">
       <option>INT</option>
@@ -54,7 +54,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">所属分类</label>
+  <label class="col-lg-2 control-label">所属分类</label>
   <label class="checkbox-inline">
     <input type="radio" class="icheck" name="category" checked>
   </label>
@@ -71,7 +71,7 @@
 </div><!-- /.form-group -->
 
 <div class="form-group">
-  <label for="" class="col-lg-2 control-label">排序 *</label>
+  <label class="col-lg-2 control-label">排序 *</label>
   <div class="col-lg-4">
     <input type="text" class="form-control input-sm">
   </div>

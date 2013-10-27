@@ -8,6 +8,8 @@
 
 <?php $this->widget('components\NavBar'); ?>
 
+<?php $this->widget('components\AlertBar'); ?>
+
 <div class="container">
 
   <div class="row row-offcanvas row-offcanvas-right">
