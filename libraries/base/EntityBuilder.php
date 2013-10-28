@@ -35,7 +35,7 @@ class EntityBuilder
     /**
      * @var array instances of base\EntityBuilder
      */
-    protected static $_instances = null;
+    protected static $_instances = array();
 
     /**
      * 构造方法：初始化数据库操作类和MySQL表结构处理类

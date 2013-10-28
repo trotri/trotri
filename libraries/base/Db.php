@@ -14,14 +14,14 @@ use tfc\ap\Singleton;
 use tfc\db\TableSchema;
 
 /**
- * Db class file
+ * Db abstract class file
  * 数据库操作基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Db.php 1 2013-05-18 14:58:59Z huan.song $
  * @package base
  * @since 1.0
  */
-class Db
+abstract class Db
 {
 	/**
 	 * @var instance of tfc\db\TableSchema
@@ -70,22 +70,28 @@ class Db
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
+	 * 通过主键，获取某个列的值。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
 	 * @param string $columnName
-	 * @param integer $value
+	 * @param array|integer $value
 	 * @return mixed
 	 */
 	public function getByPk($columnName, $value)
 	{
-		$attributes = array(
-				$this->getTableSchema()->primaryKey => $value
-		);
-	
-		return $this->getByAttributes($columnName, $attributes);
+		return $this->getByCondition($columnName, $this->getPKCondition(), $value);
 	}
-	
+
 	/**
-	 * 通过多个字段名和值，获取主键的值，字段之间用简单的AND连接
+	 * 通过主键，查询一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
+	 * @param array|integer $value
+	 * @return array
+	 */
+	public function findByPk($value)
+	{
+		return $this->findByCondition($this->getPKCondition(), $value);
+	}
+
+	/**
+	 * 通过多个字段名和值，获取主键的值，字段之间用简单的AND连接。不支持联合主键
 	 * @param array $attributes
 	 * @return mixed
 	 */
@@ -94,7 +100,7 @@ class Db
 		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->getPkByCondition($condition, $attributes);
 	}
-	
+
 	/**
 	 * 通过多个字段名和值，获取某个列的值，字段之间用简单的AND连接
 	 * @param string $columnName
@@ -106,7 +112,7 @@ class Db
 		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->getByCondition($columnName, $condition, $attributes);
 	}
-	
+
 	/**
 	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接
 	 * @param array $attributes
@@ -120,7 +126,7 @@ class Db
 		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset);
 	}
-	
+
 	/**
 	 * 通过多个字段名和值，统计记录数，字段之间用简单的AND连接
 	 * @param array $attributes
@@ -131,7 +137,7 @@ class Db
 		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->countByCondition($condition, $attributes);
 	}
-	
+
 	/**
 	 * 通过多个字段名和值，查询一条记录，字段之间用简单的AND连接
 	 * @param array $attributes
@@ -142,9 +148,9 @@ class Db
 		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->findByCondition($condition, $attributes);
 	}
-	
+
 	/**
-	 * 通过条件，获取主键的值
+	 * 通过条件，获取主键的值。不支持联合主键
 	 * @param string $condition
 	 * @param mixed $params
 	 * @return mixed
@@ -153,7 +159,7 @@ class Db
 	{
 		return $this->getByCondition($this->getTableSchema()->primaryKey, $condition, $params);
 	}
-	
+
 	/**
 	 * 通过条件，获取某个列的值
 	 * @param string $columnName
@@ -166,16 +172,19 @@ class Db
 		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, array($columnName), $condition);
 		return $this->getDbProxy()->fetchColumn($sql, $params);
 	}
-	
+
 	/**
 	 * 获取表中所有的记录
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
 	 * @return array
 	 */
 	public function findAll($order = '', $limit = 0, $offset = 0)
 	{
 		return $this->findAllByCondition(1, null, $order, $limit, $offset);
 	}
-	
+
 	/**
 	 * 通过条件，查询多条记录
 	 * @param string $condition
@@ -190,7 +199,7 @@ class Db
 		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition, $order, $limit, $offset);
 		return $this->getDbProxy()->fetchAll($sql, $params);
 	}
-	
+
 	/**
 	 * 通过条件，统计记录数
 	 * @param string $condition
@@ -202,7 +211,7 @@ class Db
 		$sql = $this->getCommandBuilder()->createCount($this->getTableSchema()->name, $condition);
 		return $this->getDbProxy()->fetchColumn($sql, $params);
 	}
-	
+
 	/**
 	 * 通过条件，查询一条记录
 	 * @param string $condition
@@ -214,23 +223,10 @@ class Db
 		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition);
 		return $this->getDbProxy()->fetch($sql, $params);
 	}
-	
+
 	/**
-	 * 通过主键，查询一条记录
-	 * @param integer $value
-	 * @return array
-	 */
-	public function findByPk($value)
-	{
-		$condition = $this->getQuotePrimaryKey() . ' = ' . CommandBuilder::PLACE_HOLDERS;
-		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition);
-		return $this->getDbProxy()->fetch($sql, $value);
-	}
-	
-	/**
-	 * 插入一条新记录
+	 * 新增一条记录
 	 * @param array $attributes
-	 * @param boolean $filter
 	 * @param boolean $ignore
 	 * @return integer
 	 */
@@ -240,7 +236,7 @@ class Db
 		if ($this->getDbProxy()->query($sql, $attributes)) {
 			return $this->getDbProxy()->getLastInsertId();
 		}
-	
+
 		return false;
 	}
 

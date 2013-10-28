@@ -65,7 +65,7 @@ CREATE TABLE `user_profile` (
   `profile_key` varchar(255) NOT NULL DEFAULT '' COMMENT '扩展Key',
   `profile_value` longtext COMMENT '扩展Value',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `profile_id` (`profile_id`,`profile_key`)
+  UNIQUE KEY `uk_id_key` (`profile_id`,`profile_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户扩展表';
 
 DROP TABLE IF EXISTS `user_usergroups_map`;
