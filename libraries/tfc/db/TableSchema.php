@@ -34,7 +34,7 @@ class TableSchema
     public $name;
 
     /**
-     * @var string 表的主键
+     * @var array|string 表的主键
      */
     public $primaryKey;
 
