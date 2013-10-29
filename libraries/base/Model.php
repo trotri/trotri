@@ -156,7 +156,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s condition "%s", params "%s"', $errMsg, $condition, (is_array($params) ? serialize($params) : $params)
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg
 			);
@@ -169,7 +169,7 @@ abstract class Model
 			$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $total
 		), __METHOD__);
 
-		return array (
+		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'total' => $total
@@ -190,7 +190,7 @@ abstract class Model
 			return $ret;
 		}
 
-		return array (
+		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
 			'err_msg' => ErrorMsg::SUCCESS_SELECT,
 			'id' => $ret[$columnName]
@@ -218,13 +218,13 @@ abstract class Model
 				'%s column_name "%s", condition "%s", params "%s"',
 				$errMsg, $columnName, $condition, (is_array($params) ? serialize($params) : $params)
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg
 			);
 		}
 
-		return array (
+		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
 			'err_msg' => ErrorMsg::SUCCESS_SELECT,
 			$columnName => $ret['data'][$columnName]
@@ -246,7 +246,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s condition "%s", params "%s"', $errMsg, $condition, (is_array($params) ? serialize($params) : $params)
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'data' => array()
@@ -263,7 +263,7 @@ abstract class Model
 			$errMsg, $condition, (is_array($params) ? serialize($params) : $params), serialize($data)
 		), __METHOD__);
 
-		return array (
+		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'data' => $data
@@ -289,13 +289,13 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s column_name "%s", pk "%d"', $errMsg, $columnName, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg
 			);
 		}
 
-		return array (
+		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
 			'err_msg' => ErrorMsg::SUCCESS_SELECT,
 			$columnName => $ret['data'][$columnName]
@@ -316,7 +316,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg
 			);
@@ -329,7 +329,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'data' => array()
@@ -345,7 +345,7 @@ abstract class Model
 			'%s pk "%d", data "%s"', $errMsg, $value, serialize($data)
 		), __METHOD__);
 
-		return array (
+		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'data' => $data
@@ -367,7 +367,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s attributes empty', $errMsg
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg
 			);
@@ -382,7 +382,7 @@ abstract class Model
 				Log::warning(sprintf(
 					'%s attributes "%s", errors "%s"', $errMsg, serialize($attributes), serialize($errors)
 				), $errNo, __METHOD__);
-				return array (
+				return array(
 					'err_no' => $errNo,
 					'err_msg' => $errMsg,
 					'errors' => $errors
@@ -397,7 +397,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d", attributes "%s"', $errMsg, $value, serialize($attributes)
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg
 			);
@@ -409,7 +409,7 @@ abstract class Model
 			'%s pk "%s", attributes "%s"', $errMsg, $value, serialize($attributes)
 		), __METHOD__);
 
-		return array (
+		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'id' => $value
@@ -432,7 +432,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'id' => $value
@@ -445,7 +445,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d", attributes empty', $errMsg, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'id' => $value
@@ -461,7 +461,7 @@ abstract class Model
 				Log::warning(sprintf(
 					'%s pk "%d", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
 				), $errNo, __METHOD__);
-				return array (
+				return array(
 					'err_no' => $errNo,
 					'err_msg' => $errMsg,
 					'errors' => $errors,
@@ -477,7 +477,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d", attributes "%s"', $errMsg, $value, serialize($attributes)
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'id' => $value
@@ -525,7 +525,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'id' => $value
@@ -539,7 +539,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'id' => $value
@@ -565,7 +565,7 @@ abstract class Model
 			'%s pk "%d", rowCount "%d"', $errMsg, $value, $rowCount
 		), __METHOD__);
 
-		return array (
+		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'row_count' => $rowCount,
@@ -592,7 +592,7 @@ abstract class Model
 			Log::warning(sprintf(
 				'%s pk "%d", rowCount "%d"', $errMsg, $value, 0
 			), $errNo, __METHOD__);
-			return array (
+			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
 				'id' => $value

@@ -23,7 +23,7 @@ use tfc\ap\Singleton;
  *   `profile_key` varchar(255) NOT NULL DEFAULT '' COMMENT '扩展Key',
  *   `profile_value` longtext COMMENT '扩展Value',
  *   PRIMARY KEY (`id`),
- *   UNIQUE `uk_id_key` (`profile_id`, `profile_key`)
+ *   UNIQUE KEY `uk_id_key` (`profile_id`, `profile_key`)
  * );
  * </pre>
  * @author 宋欢 <trotri@yeah.net>
@@ -54,16 +54,6 @@ class Profile
     protected $_idValue;
 
     /**
-     * @var string 常用的查询条件语句，通过profile_id查询
-     */
-    protected $_idCondition;
-
-    /**
-     * @var string 常用的查询条件语句，通过profile_id和profile_key查询
-     */
-    protected $_keyCondition;
-
-    /**
      * @var array 用于寄存类的实例
      */
     protected static $_instances = array();
@@ -79,8 +69,6 @@ class Profile
         $this->_dbProxy = $dbProxy;
         $this->_tableName = $tableName;
         $this->_idValue = (int) $idValue;
-        $this->_idCondition = $this->getCommandBuilder()->quoteColumnName('profile_id') . ' = \'' . $this->_idValue . '\'';
-        $this->_keyCondition = $this->_idCondition . ' AND ' . $this->getCommandBuilder()->quoteColumnName('profile_key') . ' = ' . CommandBuilder::PLACE_HOLDERS;
     }
 
     /**
@@ -108,7 +96,7 @@ class Profile
     public function findAll()
     {
         $data = array();
-        $sql = $this->getCommandBuilder()->createFind($this->getTableName(), $this->_columnNames, $this->_idCondition);
+        $sql = $this->getCommandBuilder()->createFind($this->getTableName(), $this->_columnNames, $this->getIDCondition());
         $rows = $this->getDbProxy()->fetchAll($sql);
         if (is_array($rows)) {
             foreach ($rows as $row) {
@@ -125,7 +113,7 @@ class Profile
      */
     public function deleteAll()
     {
-        $sql = $this->getCommandBuilder()->createDelete($this->getTableName(), $this->_idCondition);
+        $sql = $this->getCommandBuilder()->createDelete($this->getTableName(), $this->getIDCondition());
         if ($this->getDbProxy()->query($sql)) {
             return $this->getDbProxy()->getRowCount();
         }
@@ -140,7 +128,7 @@ class Profile
      */
     public function find($profileKey)
     {
-        $sql = $this->getCommandBuilder()->createFind($this->getTableName(), array('profile_value'), $this->_keyCondition);
+        $sql = $this->getCommandBuilder()->createFind($this->getTableName(), array('profile_value'), $this->getUKCondition());
         return $this->getDbProxy()->fetchColumn($sql, $profileKey);
     }
 
@@ -164,7 +152,7 @@ class Profile
     }
 
     /**
-     * 插入一条新记录
+     * 新增一条记录
      * @param string $key
      * @param mixed $value
      * @return integer|false
@@ -193,7 +181,7 @@ class Profile
      */
     public function update($key, $value)
     {
-        $sql = $this->getCommandBuilder()->createUpdate($this->getTableName(), array('profile_value'), $this->_keyCondition);
+        $sql = $this->getCommandBuilder()->createUpdate($this->getTableName(), array('profile_value'), $this->getUKCondition());
         $attributes = array(
             'profile_value' => $value,
             'profile_key' => $key
@@ -212,12 +200,40 @@ class Profile
      */
     public function delete($key)
     {
-        $sql = $this->getCommandBuilder()->createDelete($this->getTableName(), $this->_keyCondition);
+        $sql = $this->getCommandBuilder()->createDelete($this->getTableName(), $this->getUKCondition());
         if ($this->getDbProxy()->query($sql, $key)) {
             return $this->getDbProxy()->getRowCount();
         }
 
         return false;
+    }
+
+    /**
+     * 通过profile_id名，获取Where条件
+     * @return string
+     */
+    public function getIDCondition()
+    {
+    	static $condition = null;
+    	if ($condition === null) {
+    		$condition = $this->getCommandBuilder()->quoteColumnName('profile_id') . ' = \'' . $this->_idValue . '\'';
+    	}
+
+    	return $condition;
+    }
+
+    /**
+     * 通过profile_id和profile_key名，获取Where条件
+     * @return string
+     */
+    public function getUKCondition()
+    {
+    	static $condition = null;
+    	if ($condition === null) {
+    		$condition = $this->getIDCondition() . ' AND ' . $this->getCommandBuilder()->quoteColumnName('profile_key') . ' = ' . CommandBuilder::PLACE_HOLDERS;
+    	}
+
+    	return $condition;
     }
 
     /**

@@ -54,11 +54,6 @@ abstract class Db
 	protected $_quotePrimaryKey;
 
 	/**
-	 * @var string 由主键名组成的Where条件
-	 */
-	protected $_PKCondition;
-
-	/**
 	 * 构造方法：初始化表名和数据库操作类
 	 * @param string $tableName
 	 * @param tfc\saf\DbProxy $dbProxy
@@ -347,16 +342,17 @@ abstract class Db
 	 */
 	public function getPKCondition()
 	{
-		if ($this->_PKCondition === null) {
+		static $condition = null;
+		if ($condition === null) {
 			$primaryKey = $this->getQuotePrimaryKey();
 			if (is_array($primaryKey)) {
 				$primaryKey = implode(' = ' . CommandBuilder::PLACE_HOLDERS . ', ', $primaryKey);
 			}
 
-			$this->_PKCondition = $primaryKey . ' = ' . CommandBuilder::PLACE_HOLDERS;
+			$condition = $primaryKey . ' = ' . CommandBuilder::PLACE_HOLDERS;
 		}
 
-		return $this->_PKCondition;
+		return $condition;
 	}
 
 	/**
