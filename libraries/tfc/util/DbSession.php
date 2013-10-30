@@ -1,14 +1,14 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri Foundation Classes
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright (c) 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace base;
+namespace tfc\util;
 
 use tfc\ap\interfaces\SessionSaveHandler;
 use tfc\db\Driver;
@@ -17,9 +17,9 @@ use tfc\db\Driver;
  * DbSession class file
  * 用MySQL数据库存储会话，默认自动创建SESSION表
  * 手动建表时，session_id一定要加主键约束，不然SQL:REPLACE语句会添加很多新记录
- * @author 宋欢 <iphper@yeah.net>
- * @version $Id: DbSession.php 1 2013-04-05 19:41:06Z huan.song $
- * @package base
+ * @author 宋欢 <trotri@yeah.net>
+ * @version $Id: DbSession.php 1 2013-03-29 16:48:06Z huan.song $
+ * @package tfc.util
  * @since 1.0
  */
 class DbSession implements SessionSaveHandler
@@ -56,6 +56,7 @@ class DbSession implements SessionSaveHandler
         if ($table !== null) {
             $this->_table = (string) $table;
         }
+
         $this->_autoCreateSessTable = (boolean) $autoCreateSessTable;
     }
 

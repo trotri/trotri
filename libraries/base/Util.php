@@ -16,8 +16,8 @@ use tfc\saf\DbProxy;
 /**
  * Util class file
  * 常用小工具集
- * @author 宋欢 <iphper@yeah.net>
- * @version $Id: Util.php 1 2013-04-05 19:41:06Z huan.song $
+ * @author 宋欢 <trotri@yeah.net>
+ * @version $Id: Util.php 1 2013-05-18 14:58:59Z huan.song $
  * @package base
  * @since 1.0
  */
