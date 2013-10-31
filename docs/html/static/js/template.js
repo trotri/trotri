@@ -98,13 +98,13 @@ Core = {
    * @param integer E
    * @return boolean
    */
-    isInt: function(E) {
-      var pattern = /^[0-9]+$/ ;
-      if (E == "" || !pattern.test(E)) {
-        return false;
-      }
-      return true;
-    },
+  isInt: function(E) {
+    var pattern = /^[0-9]+$/ ;
+    if (E == "" || !pattern.test(E)) {
+      return false;
+    }
+    return true;
+  },
 
   /**
    * 确认对话框：删除数据时弹出
