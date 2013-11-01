@@ -34,8 +34,8 @@ abstract class Application
         }
         else {
             throw new ErrorException(sprintf(
-                'Property "%s.%s" was not defined.', get_class($this), $method)
-            );
+                'Property "%s.%s" was not defined.', get_class($this), $method
+            ));
         }
     }
 
@@ -54,8 +54,8 @@ abstract class Application
         }
         else {
             throw new ErrorException(sprintf(
-                'Property "%s.%s" was not defined.', get_class($this), $method)
-            );
+                'Property "%s.%s" was not defined.', get_class($this), $method
+            ));
         }
     }
 }

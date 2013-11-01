@@ -10,6 +10,7 @@
 
 namespace base\form;
 
+use tfc\ap\ErrorException;
 use tfc\ap\Singleton;
 
 /**
@@ -23,40 +24,6 @@ use tfc\ap\Singleton;
 abstract class Element
 {
 	/**
-	 * @var string 文本输入类表单元素，如：text、textarea、password等
-	 */
-	const CATEGORY_TEXT = 'text';
-
-	/**
-	 * @var string 选项类表单元素，如：radio、checkbox、select等
-	 */
-	const CATEGORY_OPTION = 'option';
-
-	/**
-	 * @var string 按钮类表单元素，如：button、submit、reset等
-	 */
-	const CATEGORY_BUTTON = 'button';
-
-	/**
-	 * @var array 将表单元素的类型归类
-	 */
-	public static $categories = array (
-		self::CATEGORY_TEXT,
-		self::CATEGORY_OPTION,
-		self::CATEGORY_BUTTON
-	);
-
-	/**
-	 * @var string 表单元素的类型所属的大类别
-	 */
-	public $category = '';
-
-	/**
-	 * @var string 表单元素的类型
-	 */
-	public $type = '';
-
-	/**
 	 * @var string 表单元素的名称
 	 */
 	public $name = '';
@@ -67,114 +34,29 @@ abstract class Element
 	public $value = '';
 
 	/**
-	 * @var string Label
+	 * @var array 寄存表单元素属性
 	 */
-	public $label = '';
+	public $attributes = array();
 
 	/**
-	 * @var string 用户输入提示
+	 * @var string 表单元素的类型
 	 */
-	public $prompt = '';
+	protected $_type = '';
 
 	/**
-	 * @var string 错误提示
+	 * @var boolean 是否显示
 	 */
-	public $errMsg = '';
+	protected $_visible = true;
 
 	/**
 	 * @var boolean 是否必填
 	 */
-	public $required = false;
+	protected $_required = false;
 
 	/**
 	 * @var boolean 是否只读
 	 */
-	public $readonly = false;
-
-	/**
-	 * @var integer label标签所占的列数，默认2列
-	 */
-	public $labelColumns = 2;
-
-	/**
-	 * @var integer 表单元素所占的列数，默认4列
-	 */
-	public $mainColumns = 4;
-
-	/**
-	 * 构造方法：初始化表单元素参数
-	 * @param string $name
-	 * @param string $label
-	 * @param string $value
-	 * @param string $errMsg
-	 * @param string $prompt
-	 * @param boolean $required
-	 * @param boolean $readonly
-	 */
-	public function __construct($name, $label, $value = '', $errMsg = '', $prompt = '', $required = false, $readonly = false)
-	{
-		$this->name = $name;
-		$this->label = $label;
-		$this->value = $value;
-		$this->errMsg = $errMsg;
-		$this->prompt = $prompt;
-		$this->required = (boolean) $required;
-		$this->readonly = (boolean) $readonly;
-	}
-
-	/**
-	 * 获取主Div的HTML
-	 * @return string
-	 */
-	public function getWrap()
-	{
-		return $this->openWrap() . $this->getLabel() . $this->getMain() . $this->getPrompt() . $this->closeWrap();
-	}
-
-	/**
-	 * 获取主Div的开始标签
-	 * @return string
-	 */
-	public function openWrap()
-	{
-		return $this->html->openTag('div', array('class' => 'form-group' . ($this->hasError() ? ' has-error' : '')));
-	}
-
-	/**
-	 * 获取主Div的结束标签
-	 * @return string
-	 */
-	public function closeWrap()
-	{
-		return $this->html->closeTag('div');
-	}
-
-	/**
-	 * 获取表单元素HTML
-	 * @return string
-	 */
-	public function getMain()
-	{
-		return $this->html->tag('div', array('class' => 'col-lg-' . $this->mainColumns), $this->getInput());
-	}
-
-	/**
-	 * 获取标题HTML
-	 * @return string
-	 */
-	public function getLabel()
-	{
-		return $this->html->tag('label', array('class' => 'col-lg-' . $this->labelColumns . ' control-label'), $this->label . ($this->required ? ' *' : ''));
-	}
-
-	/**
-	 * 获取用户输入提示或错误提示HTML
-	 * @return string
-	 */
-	public function getPrompt()
-	{
-		return $this->html->tag('span', array('class' => 'control-label'), $this->hasError() ? $this->errMsg : $this->prompt);
-	}
+	protected $_readonly = false;
 
 	/**
 	 * 获取页面辅助类
@@ -186,44 +68,132 @@ abstract class Element
 	}
 
 	/**
-	 * 判定是否有错误提示
-	 * @return boolean
+	 * 获取Input框的属性
+	 * @param string $name
+	 * @return mixed
 	 */
-	public function hasError()
+	public function getAttribute($name)
 	{
-		return $this->errMsg !== '';
+		return isset($this->attributes[$name]) ? $this->attributes[$name] : '';
 	}
 
 	/**
-	 * 判定表单元素的类型所属的大类别是否是文本输入类
-	 * @return boolean
+	 * 魔术方法：请求set开头的方法，设置一个受保护的属性值
+	 * @param string $name
+	 * @param mixed $value
+	 * @return base\form\Element
 	 */
-	public function isCategoryText()
+	public function setAttribute($name, $value)
 	{
-		return $this->category === self::CATEGORY_TEXT;
+		$this->attributes[$name] = $value;
+		return $this;
 	}
 
 	/**
-	 * 判定表单元素的类型所属的大类别是否是选项类
-	 * @return boolean
-	 */
-	public function isCategoryOption()
-	{
-		return $this->category === self::CATEGORY_OPTION;
-	}
-
-	/**
-	 * 判定表单元素的类型所属的大类别是否是按钮类
-	 * @return boolean
-	 */
-	public function isCategoryButton()
-	{
-		return $this->category === self::CATEGORY_BUTTON;
-	}
-
-	/**
-	 * 获取表单元素，需要通过子类重写
+	 * 获取表单元素的类型
 	 * @return string
 	 */
-	abstract public function getInput();
+	public function getType()
+	{
+		if ($this->_type === '') {
+			throw new ErrorException('Element no type is registered.');
+		}
+
+		return $this->_type;
+	}
+
+	/**
+	 * 设置表单元素的类型
+	 * @param string $value
+	 * @return base\form\Element
+	 */
+	public function setType($value)
+	{
+		$this->_type = trim($value);
+		return $this;
+	}
+
+	/**
+	 * 获取是否显示
+	 * @return boolean
+	 */
+	public function getVisible()
+	{
+		return $this->_visible;
+	}
+
+	/**
+	 * 设置是否显示
+	 * @param boolean $value
+	 * @return base\form\Element
+	 */
+	public function setVisible($value)
+	{
+		$this->_visible = (boolean) $value;
+		return $this;
+	}
+
+	/**
+	 * 获取是否必填
+	 * @return boolean
+	 */
+	public function getRequired()
+	{
+		return $this->_required;
+	}
+
+	/**
+	 * 设置是否必填
+	 * @param boolean $value
+	 * @return base\form\Element
+	 */
+	public function setRequired($value)
+	{
+		$this->_required = (boolean) $value;
+		return $this;
+	}
+
+	/**
+	 * 获取是否只读
+	 * @return boolean
+	 */
+	public function getReadonly()
+	{
+		return $this->_readonly;
+	}
+
+	/**
+	 * 设置是否只读
+	 * @param boolean $value
+	 * @return base\form\Element
+	 */
+	public function setReadonly($value)
+	{
+		$this->_readonly = (boolean) $value;
+		return $this;
+	}
+
+	/**
+	 * 魔术方法：执行Element类，获取输出内容
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->fetch();
+	}
+
+	/**
+	 * 魔术方法：执行Element类，输出内容
+	 * @return string
+	 */
+	public function display()
+	{
+		echo $this->fetch();
+	}
+
+	/**
+	 * 执行Element类，获取输出内容，根据需求输出到浏览器
+	 * @return string
+	 */
+	abstract public function fetch();
 }

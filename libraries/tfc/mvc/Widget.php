@@ -265,6 +265,15 @@ abstract class Widget implements interfaces\View
     }
 
     /**
+     * 魔术方法：执行Widget类，输出内容
+     * @return string
+     */
+    public function __toString()
+    {
+    	return $this->run();
+    }
+
+    /**
      * 执行Widget类，输出内容
      * @return void
      */
