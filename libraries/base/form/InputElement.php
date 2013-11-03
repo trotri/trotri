@@ -10,6 +10,8 @@
 
 namespace base\form;
 
+use tfc\ap\ErrorException;
+
 /**
  * InputElement abstract class file
  * 文本类表单元素基类，text、textarea、password等
@@ -36,14 +38,14 @@ abstract class InputElement extends Element
 	public $error = '';
 
 	/**
-	 * @var array 选项类表单元素多选项值，array('value' => 'prompt')
-	 */
-	public $options = array();
-
-	/**
 	 * @var string 页面布局，{prompt}是{hint}或{error}其中之一
 	 */
 	public $layout = "{label}\n{input}\n{prompt}";
+
+	/**
+	 * @var string 表单元素样式名
+	 */
+	protected $_class = 'form-control input-sm';
 
 	/**
 	 * (non-PHPdoc)
@@ -53,29 +55,11 @@ abstract class InputElement extends Element
 	{
 		$output = array(
 			'{label}' => $this->getLabel(),
-			'{input}' => $this->getInput(),
+			'{input}' => $this->openInput() . $this->getInput() . $this->closeInput(),
 			'{prompt}' => $this->getPrompt(),
 		);
 
-		return $this->openWrap() . "\n" . strtr($this->layout, $output) . "\n" . $this->closeWrap();
-	}
-
-	/**
-	 * 获取主Div的开始标签
-	 * @return string
-	 */
-	public function openWrap()
-	{
-		return $this->getHtml()->openTag('div', array('class' => 'form-group' . ($this->hasError() ? ' has-error' : '')));
-	}
-
-	/**
-	 * 获取主Div的结束标签
-	 * @return string
-	 */
-	public function closeWrap()
-	{
-		return $this->getHtml()->closeTag('div');
+		return $this->openWrap() . strtr($this->layout, $output) . $this->closeWrap();
 	}
 
 	/**
@@ -106,26 +90,53 @@ abstract class InputElement extends Element
 	}
 
 	/**
-	 * 获取主Div的开始标签
+	 * 获取主Div的外开始标签
+	 * @return string
+	 */
+	public function openWrap()
+	{
+		return $this->getHtml()->openTag('div', 
+			array('class' => 'form-group' . ($this->hasError() ? ' has-error' : '') . ($this->getVisible() ? '' : ' hidden'))
+		) . "\n";
+	}
+
+	/**
+	 * 获取主Div的外结束标签
+	 * @return string
+	 */
+	public function closeWrap()
+	{
+		return "\n" . $this->getHtml()->closeTag('div');
+	}
+
+	/**
+	 * 获取Input-HTML的外开始标签
 	 * @return string
 	 */
 	public function openInput()
 	{
-		return $this->getHtml()->openTag('div', array('class' => 'col-lg-4'));
+		return $this->getHtml()->openTag('div', array('class' => 'col-lg-4')) . "\n";
 	}
 
 	/**
-	 * 获取主Div的结束标签
+	 * 获取Input-HTML的外结束标签
 	 * @return string
 	 */
 	public function closeInput()
 	{
-		return $this->getHtml()->closeTag('div');
+		return "\n" . $this->getHtml()->closeTag('div');
 	}
 
 	/**
-	 * 获取Input-HTML
-	 * @return string
+	 * (non-PHPdoc)
+	 * @see base\form.Element::getName()
 	 */
-	abstract public function getInput();
+	public function getName()
+	{
+		if ($this->_name === '') {
+			throw new ErrorException('Element no name is registered.');
+		}
+
+		return $this->_name;
+	}
 }

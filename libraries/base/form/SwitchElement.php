@@ -28,22 +28,22 @@ class SwitchElement extends InputElement
 	/**
 	 * @var string 表单元素的样式
 	 */
-	public $class = 'make-switch switch-small';
+	public $swClass = 'make-switch switch-small';
 
 	/**
 	 * @var string 选项ID
 	 */
-	public $id = 'label-switch';
+	public $swId = 'label-switch';
 
 	/**
 	 * @var string 选项“是”标签
 	 */
-	public $on = '是';
+	public $swOn = '是';
 
 	/**
 	 * @var string 选项“否”标签
 	 */
-	public $off = '否';
+	public $swOff = '否';
 
 	/**
 	 * @var string 表单元素的类型
@@ -57,18 +57,15 @@ class SwitchElement extends InputElement
 	public function getInput()
 	{
 		$attributes = array(
-			'id'             => $this->id,
-			'class'          => $this->class,
-			'data-on-label'  => $this->on,
-			'data-off-label' => $this->off
+			'id'             => $this->swId,
+			'class'          => $this->swClass,
+			'data-on-label'  => $this->swOn,
+			'data-off-label' => $this->swOff
 		);
 
-		$method = $this->getType();
-		$output = $this->openInput() . "\n"
-				. $this->getHtml()->openTag('div', $attributes) . "\n"
-				. $this->getHtml()->$method($this->name, $this->value, $this->checked) . "\n"
-				. $this->getHtml()->closeTag('div') . "\n"
-				. $this->closeInput();
+		$output = $this->getHtml()->openTag('div', $attributes) . "\n"
+				. $this->getHtml()->radio($this->name, $this->value, $this->checked)
+				. "\n" . $this->getHtml()->closeTag('div');
 
 		return $output;
 	}

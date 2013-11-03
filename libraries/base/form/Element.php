@@ -24,24 +24,38 @@ use tfc\ap\Singleton;
 abstract class Element
 {
 	/**
-	 * @var string 表单元素的名称
-	 */
-	public $name = '';
-
-	/**
 	 * @var string 表单元素的默认值
 	 */
 	public $value = '';
 
 	/**
+	 * @var array 选项类表单元素多选项值，array('value' => 'prompt')
+	 */
+	public $options = array();
+
+	/**
 	 * @var array 寄存表单元素属性
 	 */
-	public $attributes = array();
+	protected $_attributes = array();
+
+	/**
+	 * @var array Input方法支持的类型
+	 */
+	protected $_types = array(
+		'text' => '|text|password|hidden|file|textarea|',
+		'button' => '|button|submit|reset|image|',
+		'option' => '|radio|checkbox|select|'
+	);
 
 	/**
 	 * @var string 表单元素的类型
 	 */
 	protected $_type = '';
+
+	/**
+	 * @var string 表单元素的名称
+	 */
+	protected $_name = '';
 
 	/**
 	 * @var boolean 是否显示
@@ -54,9 +68,53 @@ abstract class Element
 	protected $_required = false;
 
 	/**
-	 * @var boolean 是否只读
+	 * @var string 表单元素样式名
+	 */
+	protected $_class = '';
+
+	/**
+	 * @var boolean 表单元素是否只读
 	 */
 	protected $_readonly = false;
+
+	/**
+	 * @var boolean 表单元素是否禁用
+	 */
+	protected $_disabled = false;
+
+	/**
+	 * 获取Input-HTML
+	 * @return string
+	 */
+	public function getInput()
+	{
+		$html = $this->getHtml();
+		$type = $this->getType();
+		$attributes = $this->getAttributes();
+
+		$output = '';
+		if ($this->isText()) {
+			$output .= $html->$type($this->name, $this->value, $attributes);
+		}
+		elseif ($this->isButton()) {
+			$output .= $html->$type($this->value, $this->name, $attributes);
+		}
+		elseif ($this->isOption()) {
+			if ($type === 'select') {
+				$output .= $html->openSelect($this->name, $attributes);
+				$output .= $html->options($this->options, $this->value);
+				$output .= $html->closeSelect();
+			}
+			else {
+				foreach ($this->options as $value => $prompt) {
+					$checked = (($value === $this->value) ? true : false);
+					$output .= $html->$type($this->name, $value, $checked, $attributes) . $prompt;
+				}
+			}
+		}
+
+		return $output;
+	}
 
 	/**
 	 * 获取页面辅助类
@@ -65,28 +123,6 @@ abstract class Element
 	public function getHtml()
 	{
 		return Singleton::getInstance('\\tfc\\mvc\\Html');
-	}
-
-	/**
-	 * 获取Input框的属性
-	 * @param string $name
-	 * @return mixed
-	 */
-	public function getAttribute($name)
-	{
-		return isset($this->attributes[$name]) ? $this->attributes[$name] : '';
-	}
-
-	/**
-	 * 魔术方法：请求set开头的方法，设置一个受保护的属性值
-	 * @param string $name
-	 * @param mixed $value
-	 * @return base\form\Element
-	 */
-	public function setAttribute($name, $value)
-	{
-		$this->attributes[$name] = $value;
-		return $this;
 	}
 
 	/**
@@ -101,16 +137,64 @@ abstract class Element
 
 		return $this->_type;
 	}
+	
+	/**
+	 * 获取表单元素的名称
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->_name;
+	}
 
 	/**
-	 * 设置表单元素的类型
+	 * 设置表单元素的名称
 	 * @param string $value
 	 * @return base\form\Element
 	 */
-	public function setType($value)
+	public function setName($value)
 	{
-		$this->_type = trim($value);
+		$this->_name = trim($value);
 		return $this;
+	}
+
+	/**
+	 * 魔术方法：请求get开头的方法，获取一个受保护的属性值
+	 * @param string $name
+	 * @return mixed
+	 * @throws ErrorException 如果该属性名的getter方法不存在并且attributes键不存在，抛出异常
+	 */
+	public function __get($name)
+	{
+		$method = 'get' . $name;
+		if (method_exists($this, $method)) {
+			return $this->$method();
+		}
+		elseif ($this->hasAttribute($name)) {
+			return $this->getAttribute($name);
+		}
+		else {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" was not defined and "attributes.%s" was not exists.', get_class($this), $method, $name
+			));
+		}
+	}
+
+	/**
+	 * 魔术方法：请求set开头的方法，设置一个受保护的属性值
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function __set($name, $value)
+	{
+		$method = 'set' . $name;
+		if (method_exists($this, $method)) {
+			return $this->$method($value);
+		}
+		else {
+			return $this->setAttribute($name, $value);
+		}
 	}
 
 	/**
@@ -154,7 +238,80 @@ abstract class Element
 	}
 
 	/**
-	 * 获取是否只读
+	 * 获取所有的表单元素属性
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+		if (!$this->hasAttribute('class') && $this->getClass() !== '') {
+			$this->setAttribute('class', $this->getClass());
+		}
+
+		if (!$this->hasAttribute('readonly') && $this->getReadonly()) {
+			$this->setAttribute('readonly', 'true');
+		}
+
+		if (!$this->hasAttribute('disabled') && $this->getDisabled()) {
+			$this->setAttribute('disabled', 'true');
+		}
+
+		return $this->_attributes;
+	}
+
+	/**
+	 * 获取表单元素属性是否存在
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function hasAttribute($name)
+	{
+		return isset($this->_attributes[$name]);
+	}
+
+	/**
+	 * 获取表单元素属性
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function getAttribute($name)
+	{
+		return isset($this->_attributes[$name]) ? $this->_attributes[$name] : '';
+	}
+
+	/**
+	 * 设置表单元素属性
+	 * @param string $name
+	 * @param mixed $value
+	 * @return base\form\Element
+	 */
+	public function setAttribute($name, $value)
+	{
+		$this->_attributes[$name] = $value;
+		return $this;
+	}
+
+	/**
+	 * 获取表单元素样式名
+	 * @return string
+	 */
+	public function getClass()
+	{
+		return $this->_class;
+	}
+
+	/**
+	 * 设置表单元素样式名
+	 * @param string $value
+	 * @return base\form\Element
+	 */
+	public function setClass($value)
+	{
+		$this->_class = $value;
+		return $this;
+	}
+
+	/**
+	 * 获取表单元素是否只读
 	 * @return boolean
 	 */
 	public function getReadonly()
@@ -163,7 +320,7 @@ abstract class Element
 	}
 
 	/**
-	 * 设置是否只读
+	 * 设置表单元素是否只读
 	 * @param boolean $value
 	 * @return base\form\Element
 	 */
@@ -171,6 +328,53 @@ abstract class Element
 	{
 		$this->_readonly = (boolean) $value;
 		return $this;
+	}
+
+	/**
+	 * 获取表单元素是否禁用
+	 * @return boolean
+	 */
+	public function getDisabled()
+	{
+		return $this->_disabled;
+	}
+
+	/**
+	 * 设置表单元素是否禁用
+	 * @param boolean $value
+	 * @return base\form\Element
+	 */
+	public function setDisabled($value)
+	{
+		$this->_disabled = (boolean) $value;
+		return $this;
+	}
+
+	/**
+	 * 获取是否是文本类型Input
+	 * @return boolean
+	 */
+	public function isText()
+	{
+		return strpos($this->_types['text'], '|' . $this->getType() . '|');
+	}
+
+	/**
+	 * 获取是否是按钮类型Input
+	 * @return boolean
+	 */
+	public function isButton()
+	{
+		return strpos($this->_types['button'], '|' . $this->getType() . '|');
+	}
+
+	/**
+	 * 获取是否是选项类型Input
+	 * @return boolean
+	 */
+	public function isOption()
+	{
+		return strpos($this->_types['option'], '|' . $this->getType() . '|');
 	}
 
 	/**

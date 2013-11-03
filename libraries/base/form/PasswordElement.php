@@ -18,7 +18,7 @@ namespace base\form;
  * @package base.form
  * @since 1.0
  */
-class PasswordElement extends TextElement
+class PasswordElement extends InputElement
 {
 	/**
 	 * @var string 表单元素的类型

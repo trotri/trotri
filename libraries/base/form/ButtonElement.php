@@ -26,19 +26,19 @@ class ButtonElement extends Element
 	public $label = '';
 
 	/**
-	 * @var string 按钮的CSS类
-	 */
-	public $class = 'btn btn-default';
-
-	/**
-	 * @var string JS点击函数
-	 */
-	public $func = '';
-
-	/**
 	 * @var string Glyphicon名
 	 */
 	public $glyphicon = '';
+
+	/**
+	 * @var string 表单元素样式名
+	 */
+	protected $_class = 'btn btn-default';
+
+	/**
+	 * @var string 表单元素的类型
+	 */
+	protected $_type = 'button';
 
 	/**
 	 * (non-PHPdoc)
@@ -46,7 +46,7 @@ class ButtonElement extends Element
 	 */
 	public function fetch()
 	{
-		return $this->openButton() . "\n" . $this->getGlyphicon() . $this->label . $this->closeButton();
+		return $this->openButton() . $this->getGlyphicon() . $this->label . $this->closeButton();
 	}
 
 	/**
@@ -55,7 +55,8 @@ class ButtonElement extends Element
 	 */
 	public function openButton()
 	{
-		return $this->getHtml()->openTag('button', array('type' => 'button', 'class' => $this->class, 'onclick' => $this->func));
+		$this->setAttribute('type', $this->getType());
+		return $this->getHtml()->openTag('button', $this->getAttributes()) . "\n";
 	}
 
 	/**
@@ -64,7 +65,7 @@ class ButtonElement extends Element
 	 */
 	public function closeButton()
 	{
-		return $this->getHtml()->closeTag('button');
+		return "\n" . $this->getHtml()->closeTag('button');
 	}
 
 	/**

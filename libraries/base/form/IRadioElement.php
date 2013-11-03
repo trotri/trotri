@@ -23,7 +23,7 @@ class IRadioElement extends InputElement
 	/**
 	 * @var string 表单元素的样式
 	 */
-	public $class = 'checkbox-inline';
+	public $irClass = 'checkbox-inline';
 
 	/**
 	 * @var string 表单元素的类型
@@ -31,23 +31,45 @@ class IRadioElement extends InputElement
 	protected $_type = 'radio';
 
 	/**
+	 * @var string 表单元素样式名
+	 */
+	protected $_class = 'icheck';
+
+	/**
 	 * (non-PHPdoc)
-	 * @see base\form.InputElement::getInput()
+	 * @see base\form.Element::getInput()
 	 */
 	public function getInput()
 	{
 		$html = $this->getHtml();
-		$method = $this->getType();
+		$type = $this->getType();
+		$this->setAttribute('class', $this->_class);
 
 		$output = '';
-		foreach ($this->options as $value => $name) {
-			$output .= $html->tag('label', array('class' => $this->class), 
-				$html->$method($this->name, $value, ($value == $this->value), array('class' => 'icheck'))
-			);
-
-			$output .= $html->tag('label', array('class' => $this->class), $name);
+		foreach ($this->options as $value => $prompt) {
+			$checked = (($value === $this->value) ? true : false);
+			$output .= $html->$type($this->name, $value, $checked, $this->attributes);
+			$output .= $html->tag('label', $this->attributes, $prompt);
 		}
 
 		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see base\form.InputElement::openInput()
+	 */
+	public function openInput()
+	{
+		return '';
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see base\form.InputElement::closeInput()
+	 */
+	public function closeInput()
+	{
+		return '';
 	}
 }

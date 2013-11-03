@@ -197,7 +197,7 @@ class Driver extends Application
      */
     public function getPDOType($type)
     {
-        static $maps = array (
+        static $maps = array(
             'boolean' => \PDO::PARAM_BOOL,
             'integer' => \PDO::PARAM_INT,
             'string'  => \PDO::PARAM_STR,

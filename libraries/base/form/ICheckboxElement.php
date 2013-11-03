@@ -27,7 +27,7 @@ class ICheckboxElement extends IRadioElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see base\form.InputElement::getInput()
+	 * @see base\form.IRadioElement::getInput()
 	 */
 	public function getInput()
 	{

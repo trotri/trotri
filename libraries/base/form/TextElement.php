@@ -21,28 +21,7 @@ namespace base\form;
 class TextElement extends InputElement
 {
 	/**
-	 * @var string 表单元素的样式
-	 */
-	public $class = 'form-control input-sm';
-
-	/**
 	 * @var string 表单元素的类型
 	 */
 	protected $_type = 'text';
-
-	/**
-	 * (non-PHPdoc)
-	 * @see base\form.InputElement::getInput()
-	 */
-	public function getInput()
-	{
-		$this->setAttribute('class', $this->class);
-
-		$method = $this->getType();
-		$output = $this->openInput() . "\n" 
-				. $this->getHtml()->$method($this->name, $this->value, $this->attributes) . "\n"
-				. $this->closeInput();
-
-		return $output;
-	}
 }

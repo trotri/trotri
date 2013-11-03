@@ -11,6 +11,7 @@
 namespace tfc\mvc;
 
 use tfc\mvc\interfaces;
+use tfc\ap\Singleton;
 use tfc\ap\ErrorException;
 use tfc\ap\InvalidArgumentException;
 
@@ -317,7 +318,7 @@ class View implements interfaces\View
     public function getHtml()
     {
         if ($this->_html === null) {
-            $this->_html = new Html();
+            $this->_html = Singleton::getInstance('\\tfc\\mvc\\Html');
         }
 
         return $this->_html;

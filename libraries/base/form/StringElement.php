@@ -31,7 +31,7 @@ class StringElement extends Element
 	 */
 	public function fetch()
 	{
-		return $this->openWrap() . "\n" . $this->getLabel() . "\n" . $this->getValue() . $this->closeWrap();
+		return $this->openWrap() . $this->getLabel() . "\n" . $this->getValue() . $this->closeWrap();
 	}
 
 	/**
@@ -40,7 +40,7 @@ class StringElement extends Element
 	 */
 	public function openWrap()
 	{
-		return $this->getHtml()->openTag('div', array('class' => 'form-group'));
+		return $this->getHtml()->openTag('div', array('class' => 'form-group')) . "\n";
 	}
 
 	/**
@@ -49,7 +49,7 @@ class StringElement extends Element
 	 */
 	public function closeWrap()
 	{
-		return $this->getHtml()->closeTag('div');
+		return "\n" . $this->getHtml()->closeTag('div');
 	}
 
 	/**

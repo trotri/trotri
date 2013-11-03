@@ -18,10 +18,19 @@ namespace base\form;
  * @package base.form
  * @since 1.0
  */
-class HiddenElement extends TextElement
+class HiddenElement extends Element
 {
 	/**
 	 * @var string 表单元素的类型
 	 */
 	protected $_type = 'hidden';
+
+	/**
+	 * (non-PHPdoc)
+	 * @see base\form.Element::fetch()
+	 */
+	public function fetch()
+	{
+		return parent::getInput();
+	}
 }

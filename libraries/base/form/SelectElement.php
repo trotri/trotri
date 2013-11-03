@@ -21,31 +21,7 @@ namespace base\form;
 class SelectElement extends InputElement
 {
 	/**
-	 * @var string 表单元素的样式
-	 */
-	public $class = 'checkbox-inline';
-
-	/**
 	 * @var string 表单元素的类型
 	 */
 	protected $_type = 'select';
-
-	/**
-	 * (non-PHPdoc)
-	 * @see base\form.InputElement::getInput()
-	 */
-	public function getInput()
-	{
-		$html = $this->getHtml();
-		$this->setAttribute('class', $this->class);
-
-		$method = $this->getType();
-		$output = $this->openInput() . "\n"
-				. $html->openSelect($this->name, $this->attributes) . "\n"
-				. $html->options($this->options, $this->value) . "\n"
-				. $html->closeSelect() . "\n"
-				. $this->closeInput();
-
-		return $output;
-	}
 }

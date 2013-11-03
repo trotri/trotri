@@ -18,7 +18,7 @@ namespace base\form;
  * @package base.form
  * @since 1.0
  */
-class TextareaElement extends TextElement
+class TextareaElement extends InputElement
 {
 	/**
 	 * @var integer 文本框的行数
@@ -37,7 +37,7 @@ class TextareaElement extends TextElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see base\form.TextElement::getInput()
+	 * @see base\form.Element::getInput()
 	 */
 	public function getInput()
 	{
@@ -48,7 +48,7 @@ class TextareaElement extends TextElement
 		if ($this->cols > 0) {
 			$this->setAttribute('cols', $this->cols);
 		}
-		
+
 		return parent::getInput();
 	}
 }
