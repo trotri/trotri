@@ -7,18 +7,19 @@
  * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
+namespace library\form;
 
-namespace base\form;
+use tfc\mvc\form;
 
 /**
  * ButtonElement class file
- * 按钮类表单元素，button、submit、reset等
+ * 按钮类表单元素
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ButtonElement.php 1 2013-10-30 23:11:59Z huan.song $
- * @package base.form
+ * @version $Id: ButtonElement.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package library.form
  * @since 1.0
  */
-class ButtonElement extends Element
+class ButtonElement extends form\ButtonElement
 {
 	/**
 	 * @var string Label名
@@ -42,7 +43,7 @@ class ButtonElement extends Element
 
 	/**
 	 * (non-PHPdoc)
-	 * @see base\form.Element::fetch()
+	 * @see tfc\mvc\form.ButtonElement::fetch()
 	 */
 	public function fetch()
 	{
@@ -56,6 +57,10 @@ class ButtonElement extends Element
 	public function openButton()
 	{
 		$this->setAttribute('type', $this->getType());
+		if (!$this->hasAttribute('class')) {
+			$this->setAttribute('class', $this->_class);
+		}
+
 		return $this->getHtml()->openTag('button', $this->getAttributes()) . "\n";
 	}
 

@@ -7,15 +7,14 @@
  * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
-
-namespace base\form;
+namespace library\form;
 
 /**
  * SwitchElement class file
- * 是否选择表单元素
+ * 美化版“是|否”选择项表单元素
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SwitchElement.php 1 2013-10-30 23:11:59Z huan.song $
- * @package base.form
+ * @version $Id: SwitchElement.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package library.form
  * @since 1.0
  */
 class SwitchElement extends InputElement
@@ -46,13 +45,8 @@ class SwitchElement extends InputElement
 	public $swOff = '否';
 
 	/**
-	 * @var string 表单元素的类型
-	 */
-	protected $_type = 'radio';
-
-	/**
 	 * (non-PHPdoc)
-	 * @see base\form.InputElement::getInput()
+	 * @see tfc\mvc\form.InputElement::getInput()
 	 */
 	public function getInput()
 	{
@@ -63,10 +57,7 @@ class SwitchElement extends InputElement
 			'data-off-label' => $this->swOff
 		);
 
-		$output = $this->getHtml()->openTag('div', $attributes) . "\n"
-				. $this->getHtml()->radio($this->name, $this->value, $this->checked)
-				. "\n" . $this->getHtml()->closeTag('div');
-
-		return $output;
+		$html = $this->getHtml();
+		return $html->tag('div', $attributes, $html->radio($this->getName(true), $this->value, $this->checked));
 	}
 }

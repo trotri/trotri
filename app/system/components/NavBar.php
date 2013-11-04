@@ -15,8 +15,8 @@ use tfc\saf\Cfg;
 class NavBar extends Widget
 {
 	/**
-	 * 执行Widget类，输出内容
-	 * @return void
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Widget::run()
 	 */
 	public function run()
 	{
