@@ -34,10 +34,6 @@ class FormBuilder extends form\FormBuilder
 		array('tab_id' => 'main', 'prompt' => '主要信息', 'active' => true)
 	);
 
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::renderTab()
-	 */
 	public function renderTab()
 	{
 		$output = '';
@@ -51,10 +47,6 @@ class FormBuilder extends form\FormBuilder
 		return $output;
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::openInput()
-	 */
 	public function openInput($tabId = null)
 	{
 		if (($tab = $this->getTabById($tabId)) === null) {
@@ -65,10 +57,6 @@ class FormBuilder extends form\FormBuilder
 		return $this->getHtml()->openTag('div', array('class' => $className, 'id' => $tabId));
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::closeInput()
-	 */
 	public function closeInput()
 	{
 		return $this->getHtml()->closeTag('div');

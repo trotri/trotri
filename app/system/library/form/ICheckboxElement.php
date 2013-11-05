@@ -31,7 +31,6 @@ class ICheckboxElement extends IRadioElement
 	public function getInput()
 	{
 		$name = $this->getName(true);
-
 		if (strpos($name, '[') === false) {
 			$this->setName($name . '[]');
 		}

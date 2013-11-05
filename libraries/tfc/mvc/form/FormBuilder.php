@@ -15,7 +15,7 @@ use tfc\ap\ErrorException;
 
 /**
  * FormBuilder abstract class file
- * 表单处理基类
+ * 表单处理基类，需要加载模板文件才能生成表单
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FormBuilder.php 1 2013-03-29 16:48:06Z huan.song $
  * @package tfc.mvc.form
@@ -69,12 +69,19 @@ abstract class FormBuilder extends Widget
 	protected $_buttonElements = array();
 
 	/**
-	 * @var array 所有输入框和字符串类表单元素外层HTML标签属性
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Widget::run()
 	 */
-	protected $_inputsTag = array(
-		'name' => '',
-		'attributes' => array('class' => '')
-	);
+    public function run()
+    {
+    	$this->assign('form_inputs', $this->getInputs());
+    	$this->assign('form_buttons', $this->getButtons());
+
+    	$this->assign('form_open', $this->openForm());
+    	$this->assign('form_close', $this->closeForm());
+
+    	$this->display();
+    }
 
 	/**
 	 * 获取一组输入框HTML
@@ -83,13 +90,13 @@ abstract class FormBuilder extends Widget
 	 */
 	public function getInputs($id = '')
 	{
-		$output = $this->openInput($id);
+		$output = $this->openInputs($id);
 		$inputElements = $this->getInputElements($id);
 		foreach ($inputElements as $inputElement) {
 			$output .= $inputElement->fetch();
 		}
 
-		$output .= $this->closeInput();
+		$output .= $this->openInputs();
 		return $output;
 	}
 
@@ -106,40 +113,6 @@ abstract class FormBuilder extends Widget
 		}
 
 		return $output;
-	}
-
-	/**
-	 * 获取一组输入框外开始标签
-	 * @param string $id
-	 * @return string
-	 */
-	public function openInputs($id = '')
-	{
-		$name = isset($this->_inputsTag['name']) ? $this->_inputsTag['name'] : '';
-		if ($name === '') {
-			return '';
-		}
-
-		$attributes = isset($this->_inputsTag['attributes']) ? $this->_inputsTag['attributes'] : array();
-		if ($id !== '') {
-			$attributes['id'] = $id;
-		}
-
-		return $this->getHtml()->openTag($name, $attributes) . "\n";
-	}
-
-	/**
-	 * 获取一组输入框外结束标签
-	 * @return string
-	 */
-	public function closeInputs()
-	{
-		$name = isset($this->_inputsTag['name']) ? $this->_inputsTag['name'] : '';
-		if ($name === '') {
-			return '';
-		}
-
-		return "\n" . $this->getHtml()->closeTag($name);
 	}
 
 	/**
@@ -223,7 +196,7 @@ abstract class FormBuilder extends Widget
 
 			$instance = $this->createElement($className, $config);
 			if ($instance instanceof InputElement) {
-				$this->addInputElement($element);
+				$this->addInputElement($instance, $id);
 			}
 			elseif ($instance instanceof ButtonElement) {
 				$this->addButtonElement($instance);
@@ -285,5 +258,24 @@ abstract class FormBuilder extends Widget
 	public function closeForm()
 	{
 		return $this->getHtml()->closeForm();
+	}
+
+	/**
+	 * 获取一组输入框外开始标签
+	 * @param string $id
+	 * @return string
+	 */
+	public function openInputs($id = '')
+	{
+		return '';
+	}
+
+	/**
+	 * 获取一组输入框外结束标签
+	 * @return string
+	 */
+	public function closeInputs()
+	{
+		return '';
 	}
 }

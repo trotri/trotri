@@ -58,38 +58,6 @@ class InputElement extends Element
 	protected $_hiddenClassName = '';
 
 	/**
-	 * @var array 表单元素最外层HTML标签属性
-	 */
-	protected $_wrapTag = array(
-		'name' => '',
-		'attributes' => array('class' => '')
-	);
-
-	/**
-	 * @var array 表单元素Label-HTML标签属性
-	 */
-	protected $_labelTag = array(
-		'name' => '',
-		'attributes' => array('class' => '')
-	);
-
-	/**
-	 * @var array 表单元素Input-HTML标签属性
-	 */
-	protected $_inputTag = array(
-		'name' => '',
-		'attributes' => array('class' => '')
-	);
-
-	/**
-	 * @var array 表单元素用户输入提示和错误提示-HTML标签属性
-	 */
-	protected $_promptTag = array(
-		'name' => '',
-		'attributes' => array('class' => '')
-	);
-
-	/**
 	 * @var boolean 是否显示
 	 */
 	protected $_visible = true;
@@ -106,9 +74,9 @@ class InputElement extends Element
 	public function fetch()
 	{
 		$output = array(
-			'{label}' => $this->getLabel(),
+			'{label}' => $this->openLabel() . $this->getLabel() . $this->closeLabel(),
 			'{input}' => $this->openInput() . $this->getInput() . $this->closeInput(),
-			'{prompt}' => $this->getPrompt(),
+			'{prompt}' => $this->openPrompt() . $this->getPrompt() . $this->closePrompt(),
 		);
 
 		return $this->openWrap() . strtr($this->layout, $output) . $this->closeWrap();
@@ -150,14 +118,7 @@ class InputElement extends Element
 	 */
 	public function getLabel()
 	{
-		$content = $this->label . ($this->getRequired() ? ' *' : '');
-		$name = isset($this->_labelTag['name']) ? $this->_labelTag['name'] : '';
-		if ($name === '') {
-			return $content;
-		}
-
-		$attributes = isset($this->_labelTag['attributes']) ? $this->_labelTag['attributes'] : array();
-		return $this->getHtml()->tag($name, $attributes, $content);
+		return $this->label . ($this->getRequired() ? ' *' : '');
 	}
 
 	/**
@@ -166,14 +127,7 @@ class InputElement extends Element
 	 */
 	public function getPrompt()
 	{
-		$content = $this->hasError() ? $this->error : $this->hint;
-		$name = isset($this->_promptTag['name']) ? $this->_promptTag['name'] : '';
-		if ($name === '') {
-			return $content;
-		}
-
-		$attributes = isset($this->_promptTag['attributes']) ? $this->_promptTag['attributes'] : array();
-		return $this->getHtml()->tag($name, $attributes, $content);
+		return $this->hasError() ? $this->error : $this->hint;
 	}
 
 	/**
@@ -182,20 +136,7 @@ class InputElement extends Element
 	 */
 	public function openWrap()
 	{
-		$name = isset($this->_wrapTag['name']) ? $this->_wrapTag['name'] : '';
-		if ($name === '') {
-			return '';
-		}
-
-		$attributes = isset($this->_wrapTag['attributes']) ? $this->_wrapTag['attributes'] : array();
-		if ($this->hasError() && $this->_errorClassName !== '') {
-			$attributes['class'] .= ' ' . $this->_errorClassName;
-		}
-		if (!$this->getVisible() && $this->_hiddenClassName !== '') {
-			$attributes['class'] .= ' ' . $this->_hiddenClassName;
-		}
-
-		return $this->getHtml()->openTag($name, $attributes) . "\n";
+		return $this->getHtml()->openTag('div') . "\n";
 	}
 
 	/**
@@ -204,12 +145,25 @@ class InputElement extends Element
 	 */
 	public function closeWrap()
 	{
-		$name = isset($this->_wrapTag['name']) ? $this->_wrapTag['name'] : '';
-		if ($name === '') {
-			return '';
-		}
+		return "\n" . $this->getHtml()->closeTag('div');
+	}
 
-		return "\n" . $this->getHtml()->closeTag($name);
+	/**
+	 * 获取Label-HTML开始标签
+	 * @return string
+	 */
+	public function openLabel()
+	{
+		return '';
+	}
+
+	/**
+	 * 获取Label-HTML结束标签
+	 * @return string
+	 */
+	public function closeLabel()
+	{
+		return '';
 	}
 
 	/**
@@ -218,27 +172,34 @@ class InputElement extends Element
 	 */
 	public function openInput()
 	{
-		$name = isset($this->_inputTag['name']) ? $this->_inputTag['name'] : '';
-		if ($name === '') {
-			return '';
-		}
-
-		$attributes = isset($this->_inputTag['attributes']) ? $this->_inputTag['attributes'] : array();
-		return $this->getHtml()->openTag($name, $attributes) . "\n";
+		return '';
 	}
-
+	
 	/**
 	 * 获取表单元素Input-HTML结束标签
 	 * @return string
 	 */
 	public function closeInput()
 	{
-		$name = isset($this->_inputTag['name']) ? $this->_inputTag['name'] : '';
-		if ($name === '') {
-			return '';
-		}
+		return '';
+	}
 
-		return "\n" . $this->getHtml()->closeTag($name);
+	/**
+	 * 获取用户输入提示和错误提示-HTML开始标签
+	 * @return string
+	 */
+	public function openPrompt()
+	{
+		return '';
+	}
+
+	/**
+	 * 获取用户输入提示和错误提示-HTML结束标签
+	 * @return string
+	 */
+	public function closePrompt()
+	{
+		return '';
 	}
 
 	/**

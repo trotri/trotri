@@ -32,34 +32,83 @@ class InputElement extends form\InputElement
 	protected $_hiddenClassName = 'hidden';
 
 	/**
-	 * @var array 表单元素最外层HTML标签属性
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::openWrap()
 	 */
-	protected $_wrapTag = array(
-		'name' => 'div',
-		'attributes' => array('class' => 'form-group')
-	);
+	public function openWrap()
+	{
+		$className = 'form-group';
+		if ($this->hasError() && $this->_errorClassName !== '') {
+			$className .= ' ' . $this->_errorClassName;
+		}
+
+		if ($this->getVisible() && $this->_hiddenClassName !== '') {
+			$className .= ' ' . $this->_hiddenClassName;
+		}
+
+		return $this->getHtml()->openTag('div', array('class' => $className)) . "\n";
+	}
 
 	/**
-	 * @var array 表单元素Label-HTML标签属性
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::closeWrap()
 	 */
-	protected $_labelTag = array(
-		'name' => 'label',
-		'attributes' => array('class' => 'col-lg-2 control-label')
-	);
+	public function closeWrap()
+	{
+		return "\n" . $this->getHtml()->closeTag('div');
+	}
 
 	/**
-	 * @var array 表单元素Input-HTML标签属性
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::openLabel()
 	 */
-	protected $_inputTag = array(
-		'name' => 'div',
-		'attributes' => array('class' => 'col-lg-4')
-	);
+	public function openLabel()
+	{
+		return $this->getHtml()->openTag('label', array('class' => 'col-lg-2 control-label')) . "\n";
+	}
 
 	/**
-	 * @var array 表单元素用户输入提示和错误提示-HTML标签属性
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::closeLabel()
 	 */
-	protected $_promptTag = array(
-		'name' => 'span',
-		'attributes' => array('class' => 'control-label')
-	);
+	public function closeLabel()
+	{
+		return "\n" . $this->getHtml()->closeTag('label');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::openInput()
+	 */
+	public function openInput()
+	{
+		return $this->getHtml()->openTag('div', array('class' => 'col-lg-4')) . "\n";
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::closeInput()
+	 */
+	public function closeInput()
+	{
+		return "\n" . $this->getHtml()->closeTag('div');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::openPrompt()
+	 */
+	public function openPrompt()
+	{
+		return $this->getHtml()->openTag('span', array('class' => 'control-label')) . "\n";
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.InputElement::closePrompt()
+	 */
+	public function closePrompt()
+	{
+		return "\n" . $this->getHtml()->closeTag('span');
+	}
 }
