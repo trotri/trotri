@@ -10,6 +10,8 @@
 
 namespace tfc\mvc\form;
 
+use tfc\ap\ErrorException;
+
 /**
  * InputElement class file
  * 输入框类表单元素
@@ -20,6 +22,11 @@ namespace tfc\mvc\form;
  */
 class InputElement extends Element
 {
+	/**
+	 * @var array 选项类表单元素多选项值，array('value' => 'prompt')
+	 */
+	public $options = array();
+
 	/**
 	 * @var string Label名
 	 */
@@ -36,14 +43,61 @@ class InputElement extends Element
 	public $error = '';
 
 	/**
-	 * @var array 选项类表单元素多选项值，array('value' => 'prompt')
-	 */
-	public $options = array();
-
-	/**
 	 * @var string 页面布局，{prompt}是{hint}或{error}其中之一
 	 */
 	public $layout = "{label}\n{input}\n{prompt}";
+
+	/**
+	 * @var string 错误提示样式名
+	 */
+	protected $_errorClassName = '';
+
+	/**
+	 * @var string 隐藏表单样式名
+	 */
+	protected $_hiddenClassName = '';
+
+	/**
+	 * @var array 表单元素最外层HTML标签属性
+	 */
+	protected $_wrapTag = array(
+		'name' => '',
+		'attributes' => array('class' => '')
+	);
+
+	/**
+	 * @var array 表单元素Label-HTML标签属性
+	 */
+	protected $_labelTag = array(
+		'name' => '',
+		'attributes' => array('class' => '')
+	);
+
+	/**
+	 * @var array 表单元素Input-HTML标签属性
+	 */
+	protected $_inputTag = array(
+		'name' => '',
+		'attributes' => array('class' => '')
+	);
+
+	/**
+	 * @var array 表单元素用户输入提示和错误提示-HTML标签属性
+	 */
+	protected $_promptTag = array(
+		'name' => '',
+		'attributes' => array('class' => '')
+	);
+
+	/**
+	 * @var boolean 是否显示
+	 */
+	protected $_visible = true;
+
+	/**
+	 * @var boolean 是否必填
+	 */
+	protected $_required = false;
 
 	/**
 	 * (non-PHPdoc)
@@ -71,7 +125,7 @@ class InputElement extends Element
 		$attributes = $this->getAttributes();
 		$html = $this->getHtml();
 
-		$output = '';		
+		$output = '';
 		if ($type === 'select') {
 			$output .= $html->openSelect($name, $attributes);
 			$output .= $html->options($this->options, $this->value);
@@ -96,7 +150,14 @@ class InputElement extends Element
 	 */
 	public function getLabel()
 	{
-		return $this->label . ($this->getRequired() ? ' *' : '');
+		$content = $this->label . ($this->getRequired() ? ' *' : '');
+		$name = isset($this->_labelTag['name']) ? $this->_labelTag['name'] : '';
+		if ($name === '') {
+			return $content;
+		}
+
+		$attributes = isset($this->_labelTag['attributes']) ? $this->_labelTag['attributes'] : array();
+		return $this->getHtml()->tag($name, $attributes, $content);
 	}
 
 	/**
@@ -105,7 +166,79 @@ class InputElement extends Element
 	 */
 	public function getPrompt()
 	{
-		return $this->hasError() ? $this->error : $this->hint;
+		$content = $this->hasError() ? $this->error : $this->hint;
+		$name = isset($this->_promptTag['name']) ? $this->_promptTag['name'] : '';
+		if ($name === '') {
+			return $content;
+		}
+
+		$attributes = isset($this->_promptTag['attributes']) ? $this->_promptTag['attributes'] : array();
+		return $this->getHtml()->tag($name, $attributes, $content);
+	}
+
+	/**
+	 * 获取表单元素最外层HTML开始标签
+	 * @return string
+	 */
+	public function openWrap()
+	{
+		$name = isset($this->_wrapTag['name']) ? $this->_wrapTag['name'] : '';
+		if ($name === '') {
+			return '';
+		}
+
+		$attributes = isset($this->_wrapTag['attributes']) ? $this->_wrapTag['attributes'] : array();
+		if ($this->hasError() && $this->_errorClassName !== '') {
+			$attributes['class'] .= ' ' . $this->_errorClassName;
+		}
+		if (!$this->getVisible() && $this->_hiddenClassName !== '') {
+			$attributes['class'] .= ' ' . $this->_hiddenClassName;
+		}
+
+		return $this->getHtml()->openTag($name, $attributes) . "\n";
+	}
+
+	/**
+	 * 获取表单元素最外层HTML结束标签
+	 * @return string
+	 */
+	public function closeWrap()
+	{
+		$name = isset($this->_wrapTag['name']) ? $this->_wrapTag['name'] : '';
+		if ($name === '') {
+			return '';
+		}
+
+		return "\n" . $this->getHtml()->closeTag($name);
+	}
+
+	/**
+	 * 获取表单元素Input-HTML开始标签
+	 * @return string
+	 */
+	public function openInput()
+	{
+		$name = isset($this->_inputTag['name']) ? $this->_inputTag['name'] : '';
+		if ($name === '') {
+			return '';
+		}
+
+		$attributes = isset($this->_inputTag['attributes']) ? $this->_inputTag['attributes'] : array();
+		return $this->getHtml()->openTag($name, $attributes) . "\n";
+	}
+
+	/**
+	 * 获取表单元素Input-HTML结束标签
+	 * @return string
+	 */
+	public function closeInput()
+	{
+		$name = isset($this->_inputTag['name']) ? $this->_inputTag['name'] : '';
+		if ($name === '') {
+			return '';
+		}
+
+		return "\n" . $this->getHtml()->closeTag($name);
 	}
 
 	/**
@@ -118,40 +251,42 @@ class InputElement extends Element
 	}
 
 	/**
-	 * 获取主Div的外开始标签
-	 * @return string
+	 * 获取是否显示
+	 * @return boolean
 	 */
-	public function openWrap()
+	public function getVisible()
 	{
-		return $this->getHtml()->openTag('div',
-			array('style' => ($this->hasError() ? ' color: red;' : '') . ($this->getVisible() ? '' : ' display: none;'))
-		) . "\n";
+		return $this->_visible;
 	}
 
 	/**
-	 * 获取主Div的外结束标签
-	 * @return string
+	 * 设置是否显示
+	 * @param boolean $value
+	 * @return tfc\mvc\form\InputElement
 	 */
-	public function closeWrap()
+	public function setVisible($value)
 	{
-		return "\n" . $this->getHtml()->closeTag('div');
+		$this->_visible = (boolean) $value;
+		return $this;
 	}
 
 	/**
-	 * 获取Input-HTML的外开始标签
-	 * @return string
+	 * 获取是否必填
+	 * @return boolean
 	 */
-	public function openInput()
+	public function getRequired()
 	{
-		return '';
+		return $this->_required;
 	}
 
 	/**
-	 * 获取Input-HTML的外结束标签
-	 * @return string
+	 * 设置是否必填
+	 * @param boolean $value
+	 * @return tfc\mvc\form\InputElement
 	 */
-	public function closeInput()
+	public function setRequired($value)
 	{
-		return '';
+		$this->_required = (boolean) $value;
+		return $this;
 	}
 }

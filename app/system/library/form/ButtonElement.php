@@ -32,11 +32,6 @@ class ButtonElement extends form\ButtonElement
 	public $glyphicon = '';
 
 	/**
-	 * @var string 表单元素样式名
-	 */
-	protected $_class = 'btn btn-default';
-
-	/**
 	 * @var string 表单元素的类型
 	 */
 	protected $_type = 'button';
@@ -57,10 +52,6 @@ class ButtonElement extends form\ButtonElement
 	public function openButton()
 	{
 		$this->setAttribute('type', $this->getType());
-		if (!$this->hasAttribute('class')) {
-			$this->setAttribute('class', $this->_class);
-		}
-
 		return $this->getHtml()->openTag('button', $this->getAttributes()) . "\n";
 	}
 

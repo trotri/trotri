@@ -22,64 +22,44 @@ use tfc\mvc\form;
 class InputElement extends form\InputElement
 {
 	/**
-	 * @var string Label样式名
+	 * @var string 错误提示样式名
 	 */
-	public $labelClassName = 'col-lg-2 control-label';
+	protected $_errorClassName = 'has-error';
 
 	/**
-	 * @var string 输入框表单元素样式名
+	 * @var string 隐藏表单样式名
 	 */
-	public $inputClassName = 'col-lg-4';
+	protected $_hiddenClassName = 'hidden';
 
 	/**
-	 * @var string 提示样式名
+	 * @var array 表单元素最外层HTML标签属性
 	 */
-	public $promptClassName = 'control-label';
+	protected $_wrapTag = array(
+		'name' => 'div',
+		'attributes' => array('class' => 'form-group')
+	);
 
 	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::getLabel()
+	 * @var array 表单元素Label-HTML标签属性
 	 */
-	public function getLabel()
-	{
-		return $this->getHtml()->tag('label', array('class' => $this->labelClassName), parent::getLabel());
-	}
+	protected $_labelTag = array(
+		'name' => 'label',
+		'attributes' => array('class' => 'col-lg-2 control-label')
+	);
 
 	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::getPrompt()
+	 * @var array 表单元素Input-HTML标签属性
 	 */
-	public function getPrompt()
-	{
-		return $this->getHtml()->tag('span', array('class' => $this->promptClassName), parent::getPrompt());
-	}
+	protected $_inputTag = array(
+		'name' => 'div',
+		'attributes' => array('class' => 'col-lg-4')
+	);
 
 	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::openWrap()
+	 * @var array 表单元素用户输入提示和错误提示-HTML标签属性
 	 */
-	public function openWrap()
-	{
-		return $this->getHtml()->openTag('div',
-			array('class' => 'form-group' . ($this->hasError() ? ' has-error' : '') . ($this->getVisible() ? '' : ' hidden'))
-		) . "\n";
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::openInput()
-	 */
-	public function openInput()
-	{
-		return $this->getHtml()->openTag('div', array('class' => $this->inputClassName)) . "\n";
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::closeInput()
-	 */
-	public function closeInput()
-	{
-		return "\n" . $this->getHtml()->closeTag('div');
-	}
+	protected $_promptTag = array(
+		'name' => 'span',
+		'attributes' => array('class' => 'control-label')
+	);
 }

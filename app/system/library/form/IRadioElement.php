@@ -20,9 +20,20 @@ namespace library\form;
 class IRadioElement extends InputElement
 {
 	/**
-	 * @var string 表单元素的样式
+	 * @var array 表单元素Label-HTML标签属性
 	 */
-	public $labelClassName = 'checkbox-inline';
+	protected $_labelTag = array(
+		'name' => 'label',
+		'attributes' => array('class' => 'checkbox-inline')
+	);
+
+	/**
+	 * @var array 表单元素Input-HTML标签属性
+	 */
+	protected $_inputTag = array(
+		'name' => '',
+		'attributes' => array('class' => '')
+	);
 
 	/**
 	 * @var string 表单元素的类型
@@ -40,34 +51,18 @@ class IRadioElement extends InputElement
 		$type = $this->getType();
 		$name = $this->getName(true);
 		$attributes = $this->getAttributes();
-		$labelAttributes = array('class' => $this->labelClassName);
 		$html = $this->getHtml();
+
+		$labelName = isset($this->_labelTag['name']) ? $this->_labelTag['name'] : '';
+		$labelAttributes = isset($this->_labelTag['attributes']) ? $this->_labelTag['attributes'] : array();
 
 		$output = '';
 		foreach ($this->options as $value => $prompt) {
 			$checked = ($value === $this->value) ? true : false;
-			$output .= $html->tag('label', $labelAttributes, $html->$type($name, $value, $checked, $attributes));
-			$output .= $html->tag('label', $labelAttributes, $prompt);
+			$output .= $html->tag($labelName, $labelAttributes, $html->$type($name, $value, $checked, $attributes));
+			$output .= $html->tag($labelName, $labelAttributes, $prompt);
 		}
 
 		return $output;
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see library\form.InputElement::openInput()
-	 */
-	public function openInput()
-	{
-		return '';
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see library\form.InputElement::closeInput()
-	 */
-	public function closeInput()
-	{
-		return '';
 	}
 }

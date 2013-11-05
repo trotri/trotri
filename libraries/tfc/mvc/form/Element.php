@@ -44,16 +44,6 @@ abstract class Element
 	protected $_attributes = array();
 
 	/**
-	 * @var boolean 是否显示
-	 */
-	protected $_visible = true;
-
-	/**
-	 * @var boolean 是否必填
-	 */
-	protected $_required = false;
-
-	/**
 	 * 构造方法：初始化所有属性值
 	 * @param array $config
 	 */
@@ -151,46 +141,6 @@ abstract class Element
 	public function setName($value)
 	{
 		$this->_name = trim($value);
-		return $this;
-	}
-
-	/**
-	 * 获取是否显示
-	 * @return boolean
-	 */
-	public function getVisible()
-	{
-		return $this->_visible;
-	}
-
-	/**
-	 * 设置是否显示
-	 * @param boolean $value
-	 * @return tfc\mvc\form\Element
-	 */
-	public function setVisible($value)
-	{
-		$this->_visible = (boolean) $value;
-		return $this;
-	}
-
-	/**
-	 * 获取是否必填
-	 * @return boolean
-	 */
-	public function getRequired()
-	{
-		return $this->_required;
-	}
-
-	/**
-	 * 设置是否必填
-	 * @param boolean $value
-	 * @return tfc\mvc\form\Element
-	 */
-	public function setRequired($value)
-	{
-		$this->_required = (boolean) $value;
 		return $this;
 	}
 

@@ -9,8 +9,6 @@
  */
 namespace library\form;
 
-use tfc\mvc\form;
-
 /**
  * StringElement class file
  * 按钮类表单元素
@@ -19,74 +17,14 @@ use tfc\mvc\form;
  * @package library.form
  * @since 1.0
  */
-class StringElement extends form\StringElement
+class StringElement extends InputElement
 {
 	/**
-	 * @var string Label样式名
-	 */
-	public $labelClassName = 'col-lg-2 control-label';
-
-	/**
-	 * @var string 输入框表单元素样式名
-	 */
-	public $inputClassName = 'col-lg-4';
-
-	/**
-	 * @var string 提示样式名
-	 */
-	public $promptClassName = 'control-label';
-
-	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.StringElement::getInput()
+	 * @see tfc\mvc\form.InputElement::getInput()
 	 */
 	public function getInput()
 	{
-		return $this->getHtml()->tag('div', array('class' => $this->inputClassName), $this->value);
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.StringElement::getLabel()
-	 */
-	public function getLabel()
-	{
-		return $this->getHtml()->tag('label', array('class' => $this->labelClassName), $this->label);
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.StringElement::openWrap()
-	 */
-	public function openWrap()
-	{
-		return $this->getHtml()->openTag('div', array('class' => 'form-group')) . "\n";
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.StringElement::closeWrap()
-	 */
-	public function closeWrap()
-	{
-		return "\n" . $this->getHtml()->closeTag('div');
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.StringElement::openInput()
-	 */
-	public function openInput()
-	{
-		return $this->getHtml()->openTag('div', array('class' => $this->inputClassName)) . "\n";
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.StringElement::closeInput()
-	 */
-	public function closeInput()
-	{
-		return "\n" . $this->getHtml()->closeTag('div');
+		return $this->value;
 	}
 }

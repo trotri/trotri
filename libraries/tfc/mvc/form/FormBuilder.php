@@ -11,16 +11,17 @@
 namespace tfc\mvc\form;
 
 use tfc\mvc\Widget;
+use tfc\ap\ErrorException;
 
 /**
- * FormBuilder class file
- * 表单处理类
+ * FormBuilder abstract class file
+ * 表单处理基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FormBuilder.php 1 2013-03-29 16:48:06Z huan.song $
  * @package tfc.mvc.form
  * @since 1.0
  */
-class FormBuilder extends Widget
+abstract class FormBuilder extends Widget
 {
 	/**
 	 * @var string 表单的名称
@@ -43,12 +44,12 @@ class FormBuilder extends Widget
 	public $attributes = array();
 
 	/**
-	 * @var boolean 数据是否二进制提交
+	 * @var boolean 表单数据是否二进制提交
 	 */
 	public $multipart = false;
 
 	/**
-	 * @var array 寄存表单元素的默认值
+	 * @var array 寄存所有表单元素的默认值
 	 */
 	public $values = array();
 
@@ -56,11 +57,6 @@ class FormBuilder extends Widget
 	 * @var array 寄存所有表单元素的错误提示
 	 */
 	public $errors = array();
-
-	/**
-	 * @var array 表单元素分类标签
-	 */
-	protected $_tabs = array();
 
 	/**
 	 * @var array 寄存所有输入框和字符串类表单元素
@@ -73,30 +69,88 @@ class FormBuilder extends Widget
 	protected $_buttonElements = array();
 
 	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc.Widget::run()
+	 * @var array 所有输入框和字符串类表单元素外层HTML标签属性
 	 */
-	public function run()
-	{
-		$this->sortTabs();
+	protected $_inputsTag = array(
+		'name' => '',
+		'attributes' => array('class' => '')
+	);
 
-		$this->assign('tabRender', $this->renderTab());
-		$this->assign('inputRender', $this->renderInput());
-		$this->assign('buttonRender', $this->renderButton());
-		$this->assign('openForm', $this->openForm());
-		$this->assign('closeForm', $this->closeForm());
-		$this->display();
+	/**
+	 * 获取一组输入框HTML
+	 * @param string $id
+	 * @return string
+	 */
+	public function getInputs($id = '')
+	{
+		$output = $this->openInput($id);
+		$inputElements = $this->getInputElements($id);
+		foreach ($inputElements as $inputElement) {
+			$output .= $inputElement->fetch();
+		}
+
+		$output .= $this->closeInput();
+		return $output;
+	}
+
+	/**
+	 * 获取所有按钮HTML
+	 * @return string
+	 */
+	public function getButtons()
+	{
+		$output = '';
+		$buttonElements = $this->getButtonElements();
+		foreach ($buttonElements as $buttonElement) {
+			$output .= $buttonElement->fetch();
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取一组输入框外开始标签
+	 * @param string $id
+	 * @return string
+	 */
+	public function openInputs($id = '')
+	{
+		$name = isset($this->_inputsTag['name']) ? $this->_inputsTag['name'] : '';
+		if ($name === '') {
+			return '';
+		}
+
+		$attributes = isset($this->_inputsTag['attributes']) ? $this->_inputsTag['attributes'] : array();
+		if ($id !== '') {
+			$attributes['id'] = $id;
+		}
+
+		return $this->getHtml()->openTag($name, $attributes) . "\n";
+	}
+
+	/**
+	 * 获取一组输入框外结束标签
+	 * @return string
+	 */
+	public function closeInputs()
+	{
+		$name = isset($this->_inputsTag['name']) ? $this->_inputsTag['name'] : '';
+		if ($name === '') {
+			return '';
+		}
+
+		return "\n" . $this->getHtml()->closeTag($name);
 	}
 
 	/**
 	 * 获取所有输入框和字符串类表单元素
-	 * @param string $tabId
+	 * @param string $id
 	 * @return array
 	 */
-	public function getInputElements($tabId = null)
+	public function getInputElements($id = '')
 	{
-		if ($tabId !== null) {
-			return isset($this->_inputElements[$tabId]) ? $this->_inputElements[$tabId] : array();
+		if ($id !== '') {
+			return isset($this->_inputElements[$id]) ? $this->_inputElements[$id] : array();
 		}
 
 		return $this->_inputElements;
@@ -104,11 +158,11 @@ class FormBuilder extends Widget
 
 	/**
 	 * 添加输入框和字符串类表单元素
-	 * @param Element $element
-	 * @param string $tabId
+	 * @param InputElement $element
+	 * @param string $id
 	 * @return tfc\mvc\form\FormBuilder
 	 */
-	public function addInputElement(Element $element, $tabId = null)
+	public function addInputElement(InputElement $element, $id = '')
 	{
 		$name = $element->getName(true);
 
@@ -120,8 +174,8 @@ class FormBuilder extends Widget
 			$element->error = $this->errors[$name];
 		}
 
-		if ($tabId !== null) {
-			$this->_inputElements[$tabId] = $element;
+		if ($id !== '') {
+			$this->_inputElements[$id] = $element;
 		}
 		else {
 			$this->_inputElements[] = $element;
@@ -151,67 +205,63 @@ class FormBuilder extends Widget
 	}
 
 	/**
-	 * 获取所有的输入框分类
-	 * @return array
+	 * 设置多个表单元素
+	 * @param array $elements
+	 * @return tfc\mvc\form\FormBuilder
+	 * @throws ErrorException 如果获取的实例不是tfc\mvc\form\InputElement或tfc\mvc\form\ButtonElement类的子类，抛出异常
 	 */
-	public function getTabs()
+	public function setElements(array $elements = array())
 	{
-		return $this->_tabs;
-	}
+		foreach ($elements as $element) {
+			if (!isset($element['className'])) {
+				continue;
+			}
 
-	/**
-	 * 通过ID获取输入框分类
-	 * @param string $tabId
-	 * @return array
-	 */
-	public function getTabById($tabId)
-	{
-		$tabs = $this->getTabs();
-		foreach ($tabs as $tab) {
-			if ($tab['tab_id'] === $tabId) {
-				return $tab;
+			$className = $element['className'];
+			$id = isset($element['id']) ? $element['id'] : '';
+			$config = isset($element['config']) ? $element['config'] : array();
+
+			$instance = $this->createElement($className, $config);
+			if ($instance instanceof InputElement) {
+				$this->addInputElement($element);
+			}
+			elseif ($instance instanceof ButtonElement) {
+				$this->addButtonElement($instance);
+			}
+			else {
+				throw new ErrorException(sprintf(
+					'Filter Element class "%s" is not instanceof tfc\mvc\form\InputElement or tfc\mvc\form\ButtonElement.', $className
+				));
 			}
 		}
 
-		return null;
-	}
-
-	/**
-	 * 获取所有的输入框分类
-	 * @return tfc\mvc\form\FormBuilder
-	 */
-	public function sortTabs()
-	{
-		ksort($this->_tabs);
 		return $this;
 	}
 
 	/**
-	 * 添加输入框分类，数字越小排序越靠前
-	 * @param integer $sort
-	 * @param string $tabId
-	 * @param string $prompt
-	 * @param boolean $active
-	 * @return tfc\mvc\form\FormBuilder
+	 * 创建表单元素类
+	 * @param string $className
+	 * @param array $config
+	 * @return tfc\mvc\form\Element
+	 * @throws ErrorException 如果Element类不存在，抛出异常
+	 * @throws ErrorException 如果获取的实例不是tfc\mvc\form\Element类的子类，抛出异常
 	 */
-	public function addTab($sort, $tabId, $prompt, $active = false)
+	public function createElement($className, array $config = array())
 	{
-		if (($tabId = trim((string) $tabId)) === '') {
-			return $this;
+		if (!class_exists($className)) {
+			throw new ErrorException(sprintf(
+				'FormBuilder is unable to find the requested element "%s".', $className
+			));
 		}
 
-		$sort = (int) $sort;
-		if (isset($this->_tabs[$sort])) {
-			return $this->addTab($sort + 1, $tabId, $prompt, $active);
+		$instance = new $className($config);
+		if (!$instance instanceof Element) {
+			throw new ErrorException(sprintf(
+				'Filter Element class "%s" is not instanceof tfc\mvc\form\Element.', $className
+			));
 		}
 
-		$this->_tabs[$sort] = array(
-			'tab_id' => $tabId,
-			'prompt' => $prompt,
-			'active' => (boolean) $active
-		);
-
-		return $this;
+		return $instance;
 	}
 
 	/**
@@ -235,75 +285,5 @@ class FormBuilder extends Widget
 	public function closeForm()
 	{
 		return $this->getHtml()->closeForm();
-	}
-
-	/**
-	 * 获取输入框HTML
-	 * @param string $tabId
-	 * @return string
-	 */
-	public function renderInput($tabId = null)
-	{
-		$output = '';
-		$tabs = $this->getTabs();
-		if ($tabs && $tabId === null) {
-			foreach ($tabs as $tab) {
-				$output .= $this->renderInput($tab['tab_id']);
-			}
-		}
-		else {
-			$output .= $this->openInput($tabId);
-			$inputElements = $this->getInputElements($tabId);
-			foreach ($inputElements as $inputElement) {
-				$output .= $inputElement->fetch();
-			}
-
-			$output .= $this->closeInput();
-		}
-
-		return $output;
-	}
-
-	/**
-	 * 获取按钮HTML
-	 * @return string
-	 */
-	public function renderButton()
-	{
-		$output = '';
-		$buttonElements = $this->getButtonElements();
-		foreach ($buttonElements as $buttonElement) {
-			$output .= $buttonElement->fetch();
-		}
-
-		return $output;
-	}
-
-	/**
-	 * 获取分类-HTML
-	 * @return string
-	 */
-	public function renderTab()
-	{
-		return '';
-	}
-
-	/**
-	 * 获取某个输入框分类的外开始标签
-	 * @param string $tabId
-	 * @return string
-	 */
-	public function openInput($tabId = null)
-	{
-		return '';
-	}
-
-	/**
-	 * 获取某个输入框分类的外结束标签
-	 * @return string
-	 */
-	public function closeInput()
-	{
-		return '';
 	}
 }

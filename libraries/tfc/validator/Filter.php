@@ -140,7 +140,7 @@ class Filter
     }
 
     /**
-     * 享元模式：根据类名获取验证类
+     * 根据类名获取验证类
      * @param string $className
      * @param mixed $value
      * @param mixed $option
@@ -150,11 +150,7 @@ class Filter
      */
     public function getValidator($className, $value, $option, $message)
     {
-        if (($instance = Singleton::get($className)) === null) {
-            $instance = new $className($value, $option, $message);
-            Singleton::set($className, $instance);
-        }
-
+        $instance = new $className($value, $option, $message);
         if (!$instance instanceof Validator) {
             throw new ErrorException(sprintf(
                 'Filter Validator class "%s" is not instanceof tfc\validator\Validator.', $className
