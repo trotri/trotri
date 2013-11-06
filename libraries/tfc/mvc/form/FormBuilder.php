@@ -59,7 +59,7 @@ abstract class FormBuilder extends Widget
 	public $errors = array();
 
 	/**
-	 * @var array 寄存所有输入框和字符串类表单元素
+	 * @var array 寄存所有输入框类和字符串类表单元素
 	 */
 	protected $_inputElements = array();
 
@@ -67,6 +67,45 @@ abstract class FormBuilder extends Widget
 	 * @var array 寄存所有按钮类表单元素
 	 */
 	protected $_buttonElements = array();
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Widget::_init()
+	 */
+	protected function _init()
+	{
+		if (isset($this->_tplVars['name'])) {
+			$this->name = $this->_tplVars['name'];
+		}
+
+		if (isset($this->_tplVars['action'])) {
+			$this->action = $this->_tplVars['action'];
+		}
+
+		if (isset($this->_tplVars['method'])) {
+			$this->action = $this->_tplVars['method'];
+		}
+
+		if (isset($this->_tplVars['attributes']) && is_array($this->_tplVars['attributes'])) {
+			$this->attributes = array_merge($this->attributes, $this->_tplVars['attributes']);
+		}
+
+		if (isset($this->_tplVars['multipart'])) {
+			$this->multipart = (boolean) $this->_tplVars['multipart'];
+		}
+
+		if (isset($this->_tplVars['elements'])) {
+			$this->setElements($this->_tplVars['elements']);
+		}
+
+		if (isset($this->_tplVars['values'])) {
+			$this->values = $this->_tplVars['values'];
+		}
+
+		if (isset($this->_tplVars['errors'])) {
+			$this->errors = $this->_tplVars['errors'];
+		}
+	}
 
 	/**
 	 * (non-PHPdoc)
@@ -84,19 +123,27 @@ abstract class FormBuilder extends Widget
     }
 
 	/**
-	 * 获取一组输入框HTML
-	 * @param string $id
+	 * 获取所有的输入框类和字符串类表单元素HTML
 	 * @return string
 	 */
-	public function getInputs($id = '')
+	public function getInputs()
 	{
-		$output = $this->openInputs($id);
-		$inputElements = $this->getInputElements($id);
+		return $this->getInputsByTid();
+	}
+
+	/**
+	 * 获取一组输入框类和字符串类表单元素HTML
+	 * @param string $tid
+	 * @return string
+	 */
+	public function getInputsByTid($tid = '')
+	{
+		$output = '';
+		$inputElements = $this->getInputElements($tid);
 		foreach ($inputElements as $inputElement) {
 			$output .= $inputElement->fetch();
 		}
 
-		$output .= $this->openInputs();
 		return $output;
 	}
 
@@ -116,26 +163,60 @@ abstract class FormBuilder extends Widget
 	}
 
 	/**
-	 * 获取所有输入框和字符串类表单元素
-	 * @param string $id
+	 * 设置多个表单元素
+	 * @param array $elements
+	 * @return tfc\mvc\form\FormBuilder
+	 * @throws ErrorException 如果获取的实例不是tfc\mvc\form\InputElement或tfc\mvc\form\ButtonElement类的子类，抛出异常
+	 */
+	public function setElements(array $elements = array())
+	{
+		foreach ($elements as $element) {
+			if (!isset($element['className'])) {
+				continue;
+			}
+
+			$className = $element['className'];
+			$tid = isset($element['tid']) ? $element['tid'] : '';
+			$config = isset($element['config']) ? $element['config'] : array();
+
+			$instance = $this->createElement($className, $config);
+			if ($instance instanceof InputElement) {
+				$this->addInputElement($instance, $tid);
+			}
+			elseif ($instance instanceof ButtonElement) {
+				$this->addButtonElement($instance);
+			}
+			else {
+				throw new ErrorException(sprintf(
+					'FormBuilder Element class "%s" is not instanceof tfc\mvc\form\InputElement or tfc\mvc\form\ButtonElement.', $className
+				));
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 获取所有输入框类和字符串类表单元素
+	 * @param string $tid
 	 * @return array
 	 */
-	public function getInputElements($id = '')
+	public function getInputElements($tid = '')
 	{
-		if ($id !== '') {
-			return isset($this->_inputElements[$id]) ? $this->_inputElements[$id] : array();
+		if ($tid !== '') {
+			return isset($this->_inputElements[$tid]) ? $this->_inputElements[$tid] : array();
 		}
 
 		return $this->_inputElements;
 	}
 
 	/**
-	 * 添加输入框和字符串类表单元素
+	 * 添加输入框类和字符串类表单元素
 	 * @param InputElement $element
-	 * @param string $id
+	 * @param string $tid
 	 * @return tfc\mvc\form\FormBuilder
 	 */
-	public function addInputElement(InputElement $element, $id = '')
+	public function addInputElement(InputElement $element, $tid = '')
 	{
 		$name = $element->getName(true);
 
@@ -147,8 +228,8 @@ abstract class FormBuilder extends Widget
 			$element->error = $this->errors[$name];
 		}
 
-		if ($id !== '') {
-			$this->_inputElements[$id] = $element;
+		if ($tid !== '') {
+			$this->_inputElements[$tid][] = $element;
 		}
 		else {
 			$this->_inputElements[] = $element;
@@ -178,40 +259,6 @@ abstract class FormBuilder extends Widget
 	}
 
 	/**
-	 * 设置多个表单元素
-	 * @param array $elements
-	 * @return tfc\mvc\form\FormBuilder
-	 * @throws ErrorException 如果获取的实例不是tfc\mvc\form\InputElement或tfc\mvc\form\ButtonElement类的子类，抛出异常
-	 */
-	public function setElements(array $elements = array())
-	{
-		foreach ($elements as $element) {
-			if (!isset($element['className'])) {
-				continue;
-			}
-
-			$className = $element['className'];
-			$id = isset($element['id']) ? $element['id'] : '';
-			$config = isset($element['config']) ? $element['config'] : array();
-
-			$instance = $this->createElement($className, $config);
-			if ($instance instanceof InputElement) {
-				$this->addInputElement($instance, $id);
-			}
-			elseif ($instance instanceof ButtonElement) {
-				$this->addButtonElement($instance);
-			}
-			else {
-				throw new ErrorException(sprintf(
-					'Filter Element class "%s" is not instanceof tfc\mvc\form\InputElement or tfc\mvc\form\ButtonElement.', $className
-				));
-			}
-		}
-
-		return $this;
-	}
-
-	/**
 	 * 创建表单元素类
 	 * @param string $className
 	 * @param array $config
@@ -230,7 +277,7 @@ abstract class FormBuilder extends Widget
 		$instance = new $className($config);
 		if (!$instance instanceof Element) {
 			throw new ErrorException(sprintf(
-				'Filter Element class "%s" is not instanceof tfc\mvc\form\Element.', $className
+				'FormBuilder Element class "%s" is not instanceof tfc\mvc\form\Element.', $className
 			));
 		}
 
@@ -258,24 +305,5 @@ abstract class FormBuilder extends Widget
 	public function closeForm()
 	{
 		return $this->getHtml()->closeForm();
-	}
-
-	/**
-	 * 获取一组输入框外开始标签
-	 * @param string $id
-	 * @return string
-	 */
-	public function openInputs($id = '')
-	{
-		return '';
-	}
-
-	/**
-	 * 获取一组输入框外结束标签
-	 * @return string
-	 */
-	public function closeInputs()
-	{
-		return '';
 	}
 }

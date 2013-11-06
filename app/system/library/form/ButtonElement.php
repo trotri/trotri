@@ -1,12 +1,13 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
  * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace library\form;
 
 use tfc\mvc\form;
@@ -52,7 +53,7 @@ class ButtonElement extends form\ButtonElement
 	public function openButton()
 	{
 		$this->setAttribute('type', $this->getType());
-		return $this->getHtml()->openTag('button', $this->getAttributes()) . "\n";
+		return $this->getHtml()->openTag('button', $this->getAttributes());
 	}
 
 	/**
@@ -61,7 +62,7 @@ class ButtonElement extends form\ButtonElement
 	 */
 	public function closeButton()
 	{
-		return "\n" . $this->getHtml()->closeTag('button');
+		return $this->getHtml()->closeTag('button') . "\n";
 	}
 
 	/**
@@ -70,6 +71,6 @@ class ButtonElement extends form\ButtonElement
 	 */
 	public function getGlyphicon()
 	{
-		return $this->getHtml()->tag('span', array('class' => 'glyphicon glyphicon-' . $this->glyphicon));
+		return $this->getHtml()->tag('span', array('class' => 'glyphicon glyphicon-' . $this->glyphicon), '');
 	}
 }

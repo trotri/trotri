@@ -21,6 +21,21 @@ namespace modules\generator\form;
 class Generators
 {
 	/**
+	 * @var 表格类型
+	 */
+	const TYPE_TABLE = 0;
+
+	/**
+	 * @var 表单类型
+	 */
+	const TYPE_FORM = 1;
+
+	/**
+	 * @var 验证规则类型
+	 */
+	const TYPE_RULE = 2;
+
+	/**
 	 * @var string 数据库表引擎：InnoDB类型
 	 */
 	const TBL_ENGINE_INNODB = 'InnoDB';
@@ -83,278 +98,792 @@ class Generators
 	/**
 	 * @var array 数据库表引擎
 	 */
-	public static $tblEngines = array (
-		self::TBL_ENGINE_INNODB,
-		self::TBL_ENGINE_MYISAM
+	public static $tblEngines = array(
+		self::TBL_ENGINE_INNODB => self::TBL_ENGINE_INNODB,
+		self::TBL_ENGINE_MYISAM => self::TBL_ENGINE_MYISAM
 	);
 
 	/**
 	 * @var array 数据库表编码方式
 	 */
-	public static $tblCharsets = array (
-		self::TBL_CHARSET_UTF8,
-		self::TBL_CHARSET_GBK,
-		self::TBL_CHARSET_GB2312
-	);
-
-	/**
-	 * @var array 是否生成扩展表
-	 */
-	public static $tblProfiles = array (
-		self::TBL_PROFILE_Y,
-		self::TBL_PROFILE_N
-	);
-
-	/**
-	 * @var array 是否删除
-	 */
-	public static $trashs = array (
-		self::TRASH_Y,
-		self::TRASH_N
+	public static $tblCharsets = array(
+		self::TBL_CHARSET_UTF8 => self::TBL_CHARSET_UTF8,
+		self::TBL_CHARSET_GBK => self::TBL_CHARSET_GBK,
+		self::TBL_CHARSET_GB2312 => self::TBL_CHARSET_GB2312
 	);
 
 	/**
 	 * @var array 数据列表每行操作Btn
 	 */
-	public static $indexRowBtns = array (
-		self::INDEX_ROW_BTNS_PENCIL,
-		self::INDEX_ROW_BTNS_TRASH,
-		self::INDEX_ROW_BTNS_REMOVE
+	public static $indexRowBtns = array(
+		self::INDEX_ROW_BTNS_PENCIL => '编辑',
+		self::INDEX_ROW_BTNS_TRASH => '放入回收站',
+		self::INDEX_ROW_BTNS_REMOVE => '彻底删除'
 	);
 
 	/**
-	 * 获取生成代码名验证规则
+	 * @var array 是否生成扩展表
+	 */
+	public static $tblProfiles = array(
+		self::TBL_PROFILE_Y => '是',
+		self::TBL_PROFILE_N => '否'
+	);
+
+	/**
+	 * @var array 是否删除
+	 */
+	public static $trashs = array(
+		self::TRASH_Y => '是',
+		self::TRASH_N => '否'
+	);
+
+	/**
+	 * @var array Input表单元素分类标签
+	 */
+	public static $tabs = array(
+		'act' => array('tid' => 'act', 'prompt' => '行动名'),
+		'system' => array('tid' => 'system', 'prompt' => '系统信息')
+	);
+
+	/**
+	 * 获取“生成代码名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getGeneratorNameRule()
-	{	
-		return array (
-			'MinLength' => array (6, '生成代码名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '生成代码名长度%value%不能大于%option%个字符.')
-		);
+	public function getGeneratorName($type)
+	{
+		$output = array();
+
+		$name = 'generator_name';
+		$label = '生成代码名';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'hint' => $label . '由6~12个字符组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'MinLength' => array(6, $label . '长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取表名验证规则
+	 * 获取“表名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getTblNameRule()
+	public function getTblName($type)
 	{
-		return array (
-			'AlphaNum' => array (true, '表名"%value%"只能由英文字母、数字或下划线组成.'),
-			'MinLength' => array (2, '表名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '表名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'tbl_name';
+		$label = '表名';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'hint' => $label . '由2~12个英文字母、数字或下划线组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'AlphaNum' => array(true, $label . '"%value%"只能由英文字母、数字或下划线组成.'),
+				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label. '长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取表引擎验证规则
+	 * 获取“是否生成扩展表”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getTblEngineRule()
+	public function getTblProfile($type)
 	{
-		return array (
-			'InArray' => array (
-				self::$tblEngines,
-				'必须选择表引擎，值只能是' . implode('、', self::$tblEngines) . '.'
-			),
-		);
+		$output = array();
+
+		$name = 'tbl_profile';
+		$label = '是否生成扩展表';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'SwitchElement',
+				'config' => array(
+					'name' => $name,
+					'label' => $label,
+				),
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'InArray' => array(
+					array_keys(self::$tblProfiles),
+					'必须选择' . $label . '，值只能是' . implode('、', self::$tblProfiles) . '.'
+				)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取表编码验证规则
+	 * 获取“表引擎”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getTblCharsetRule()
+	public function getTblEngine($type)
 	{
-		return array (
-			'InArray' => array (
-				self::$tblCharsets,
-				'必须选择表编码，值只能是' . implode('、', self::$tblCharsets) . '.'
-			),
-		);
+		$output = array();
+		
+		$name = 'tbl_engine';
+		$label = '表引擎';
+		
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'IRadioElement',
+				'config' => array(
+					'name' => $name,
+					'label' => $label,
+					'options' => self::$tblEngines
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'InArray' => array(
+					array_keys(self::$tblEngines),
+					'必须选择' . $label . '，值只能是' . implode('、', self::$tblEngines) . '.'
+				)
+			);
+		}
+		
+		return $output;
 	}
 
 	/**
-	 * 获取表描述验证规则
+	 * 获取“表编码”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getTblCommentRule()
+	public function getTblCharset($type)
 	{
-		return array (
-			'NotEmpty' => array (true, '必须填写表描述.')
-		);
+		$output = array();
+
+		$name = 'tbl_charset';
+		$label = '表编码';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'IRadioElement',
+				'config' => array(
+					'name' => $name,
+					'label' => $label,
+					'options' => self::$tblCharsets
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'InArray' => array(
+					array_keys(self::$tblCharsets),
+					'必须选择' . $label . '，值只能是' . implode('、', self::$tblCharsets) . '.'
+				)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取应用名验证规则
+	 * 获取“表描述”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getAppNameRule()
+	public function getTblComment($type)
 	{
-		return array (
-			'Alpha' => array (true, '应用名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '应用名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '应用名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+		
+		$name = 'tbl_comment';
+		$label = '表描述';
+		
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'NotEmpty' => array(true, '必须填写' . $label . '.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取模块名验证规则
+	 * 获取“应用名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getModNameRule()
+	public function getAppName($type)
 	{
-		return array (
-			'Alpha' => array (true, '模块名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '模块名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '模块名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'app_name';
+		$label = '应用名';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'hint' => $label . '由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取控制器名验证规则
+	 * 获取“模块名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getCtrlNameRule()
+	public function getModName($type)
 	{
-		return array (
-			'Alpha' => array (true, '控制器名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '控制器名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '控制器名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'mod_name';
+		$label = '模块名';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'hint' => $label . '由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'Alpha' => array(true, $label . '"%value%"只能由英文字母组成.'),
+					'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
+					'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+				)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取数据列表行动名验证规则
+	 * 获取“控制器名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getActIndexNameRule()
+	public function getCtrlName($type)
 	{
-		return array (
-			'Alpha' => array (true, '数据列表行动名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '数据列表行动名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '数据列表行动名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'ctrl_name';
+		$label = '控制器名';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'hint' => $label . '由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取数据详情行动名验证规则
+	 * 获取“列表每行操作按钮”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getActViewNameRule()
+	public function getIndexRowBtns($type)
 	{
-		return array (
-			'Alpha' => array (true, '数据详情行动名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '数据详情行动名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '数据详情行动名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'index_row_btns';
+		$label = '列表每行操作按钮';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'ICheckboxElement',
+				'config' => array(
+					'name' => $name,
+					'label' => $label,
+					'options' => self::$indexRowBtns
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'InArray' => array(
+					array_keys(self::$indexRowBtns),
+					'必须选择' . $label . '，值只能是' . implode('、', self::$indexRowBtns) . '.'
+				)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取新增数据行动名验证规则
+	 * 获取“描述”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getActCreateNameRule()
+	public function getDescription($type)
 	{
-		return array (
-			'Alpha' => array (true, '新增数据行动名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '新增数据行动名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '新增数据行动名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'description';
+		$label = '描述';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'TextareaElement',
+				'config' => array(
+					'name' => $name,
+					'label' => $label,
+				)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取编辑数据行动名验证规则
+	 * 获取“放入回收站”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getActModifyNameRule()
+	public function getTrash($type)
 	{
-		return array (
-			'Alpha' => array (true, '编辑数据行动名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '编辑数据行动名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '编辑数据行动名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'trash';
+		$label = '放入回收站';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'main',
+				'className' => 'SwitchElement',
+				'config' => array(
+					'name' => $name,
+					'label' => $label,
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'InArray' => array(
+					array_keys(self::$trashs),
+					'必须选择是否' . $label . '，值只能是' . implode('、', self::$trashs) . '.'
+				)
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取编删除数据行动名验证规则
+	 * 获取“数据列表行动名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getActRemoveNameRule()
+	public function getActIndexName($type)
 	{
-		return array (
-			'Alpha' => array (true, '删除数据行动名"%value%"只能由英文字母组成.'),
-			'MinLength' => array (2, '删除数据行动名长度%value%不能小于%option%个字符.'),
-			'MaxLength' => array (12, '删除数据行动名长度%value%不能大于%option%个字符.')
-		);
+		$output = array();
+
+		$name = 'act_index_name';
+		$label = '数据列表';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'act',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'value' => 'index',
+					'label' => $label,
+					'hint' => $label . '行动名由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+			);
+		}
+		
+		return $output;
 	}
 
 	/**
-	 * 获取数据列表每行操作Btn验证规则
+	 * 获取“数据详情行动名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getIndexRowBtnsRule()
+	public function getActViewName($type)
 	{
-		return array (
-			'InArray' => array (
-				self::$indexRowBtns,
-				'数据列表每行操作Btn只能是' . implode('、', self::$indexRowBtns) . '.'
-			),
-		);
+		$output = array();
+
+		$name = 'act_view_name';
+		$label = '数据详情';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'act',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'value' => 'view',
+					'label' => $label,
+					'hint' => $label . '行动名由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取是否生成扩展表验证规则
+	 * 获取“新增数据行动名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getTblProfileRule()
+	public function getActCreateName($type)
 	{
-		return array (
-			'InArray' => array (
-				self::$tblProfiles,
-				'必须选择是否生成扩展表，值只能是' . implode('、', self::$tblProfiles) . '.'
-			),
-		);
+		$output = array();
+		
+		$name = 'act_create_name';
+		$label = '新增数据';
+		
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'act',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'value' => 'create',
+					'label' => $label,
+					'hint' => $label . '行动名由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取是否放入回收站验证规则
+	 * 获取“编辑数据行动名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getTrashRule()
+	public function getActModifyName($type)
 	{
-		return array (
-			'InArray' => array (
-				self::$trashs,
-				'必须选择是否放入回收站，值只能是' . implode('、', self::$trashs) . '.'
-			),
-		);
+		$output = array();
+
+		$name = 'act_modify_name';
+		$label = '编辑数据';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'act',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'value' => 'modify',
+					'label' => $label,
+					'hint' => $label . '行动名由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
 	}
 
 	/**
-	 * 获取所有的验证规则
+	 * 获取“编删除数据行动名”表单元素和验证规则
+	 * @param integer $type
 	 * @return array
 	 */
-	public function getRules()
+	public function getActRemoveName($type)
 	{
-		return array (
-			'generator_name' => $this->getGeneratorNameRule(),
-			'tbl_name' => $this->getTblNameRule(),
-			'tbl_profile' => $this->getTblProfileRule(),
-			'tbl_engine' => $this->getTblEngineRule(),
-			'tbl_charset' => $this->getTblCharsetRule(),
-			'tbl_comment' => $this->getTblCommentRule(),
-			'app_name' => $this->getAppNameRule(),
-			'mod_name' => $this->getModNameRule(),
-			'ctrl_name' => $this->getCtrlNameRule(),
-			'act_index_name' => $this->getActIndexNameRule(),
-			'act_view_name' => $this->getActViewNameRule(),
-			'act_create_name' => $this->getActCreateNameRule(),
-			'act_modify_name' => $this->getActModifyNameRule(),
-			'act_remove_name' => $this->getActRemoveNameRule(),
-			'index_row_btns' => $this->getIndexRowBtnsRule(),
-			'trash' => $this->getTrashRule()
+		$output = array();
+		
+		$name = 'act_remove_name';
+		$label = '删除数据';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'act',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'value' => 'remove',
+					'label' => $label,
+					'hint' => $label . '行动名由2~12个英文字母组成',
+					'required' => true
+				)
+			);
+		}
+		elseif ($type === self::TYPE_RULE) {
+			$output = array(
+				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“创建人”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getCreatorId($type)
+	{
+		$output = array();
+
+		$name = 'creator_id';
+		$label = '创建人';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'system',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'disabled' => true
+				)
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“创建时间”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getDtCreated($type)
+	{
+		$output = array();
+
+		$name = 'dt_created';
+		$label = '创建时间';
+
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'system',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'disabled' => true
+				)
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“上次更新人”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getModifierId($type)
+	{
+		$output = array();
+		
+		$name = 'modifier_id';
+		$label = '上次更新人';
+		
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'system',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'disabled' => true
+				)
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“上次更新时间”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getDtModified($type)
+	{
+		$output = array();
+		
+		$name = 'dt_modified';
+		$label = '上次更新时间';
+		
+		if ($type === self::TYPE_FORM) {
+			$output = array(
+				'tid' => 'system',
+				'className' => 'InputElement',
+				'config' => array(
+					'type' => 'text',
+					'name' => $name,
+					'label' => $label,
+					'disabled' => true
+				)
+			);
+		}
+
+		return $output;
+	}
+
+	/*
+	public static function getCreateElements($type)
+	{
+		return array(
+			'generator_name' => self::getGeneratorName($type),
+			'tbl_name' => self::getTblName($type),
+			'tbl_profile' => self::getTblProfile($type),
+			'tbl_engine' => self::getTblEngine($type),
+			'tbl_charset' => self::getTblCharset($type),
+			'tbl_comment' => self::getTblComment($type),
+			'app_name' => self::getAppName($type),
+			'mod_name' => self::getModName($type),
+			'ctrl_name' => self::getCtrlName($type),
+			'index_row_btns' => self::getIndexRowBtns($type),
+			'description' => self::getDescription($type),
+			'trash' => self::getTrash($type),
+			'act_index_name' => self::getActIndexName($type),
+			'act_view_name' => self::getActViewName($type),
+			'act_create_name' => self::getActCreateName($type),
+			'act_modify_name' => self::getActModifyName($type),
+			'act_remove_name' => self::getActRemoveName($type),
+			'creator_id' => self::getCreatorId($type),
+			'dt_created' => self::getDtCreated($type),
+			'modifier_id' => self::getModifierId($type),
+			'dt_modified' => self::getDtModified($type)
 		);
 	}
+	*/
+
 }

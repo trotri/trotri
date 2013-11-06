@@ -1,12 +1,13 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
  * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace library\form;
 
 /**
@@ -48,5 +49,23 @@ class IRadioElement extends InputElement
 		}
 
 		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library\form.InputElement::openInput()
+	 */
+	public function openInput()
+	{
+		return '';
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library\form.InputElement::closeInput()
+	 */
+	public function closeInput()
+	{
+		return '';
 	}
 }

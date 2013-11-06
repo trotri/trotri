@@ -1,25 +1,67 @@
-<form class="form-horizontal" method="post" name="create" action="<?php echo $this->util->getUrlByAct(); ?>">
-
-<ul class="nav nav-tabs">
-  <li class="active"><a href="#main" data-toggle="tab">主要信息</a></li>
-  <li><a href="#act" data-toggle="tab">行动名</a></li>
-  <li><a href="#system" data-toggle="tab">系统信息</a></li>
-</ul><!-- /.nav nav-tabs -->
-
-<?php $this->display('generator/index_create_btns'); ?>
-
-<div class="tab-content">
-  <div class="tab-pane fade active in" id="main">
-    <?php $this->display('generator/index_create_main'); ?>
-  </div>
-  <div class="tab-pane fade" id="act">
-    <?php $this->display('generator/index_create_act'); ?>
-  </div>
-  <div class="tab-pane fade" id="system">
-    <?php $this->display('generator/index_create_system'); ?>
-  </div>
-</div><!-- /.tab-content -->
-
-<?php $this->display('generator/index_create_btns'); ?>
-
-</form>
+<?php
+$form = $this->util->getForm('Generators', 'generator');
+$type = $form::TYPE_FORM;
+$this->widget('widgets\FormBuilder', 
+	array(
+		'name' => '',
+		'action' => '',
+		'method' => 'post',
+		'tabs' => $form::$tabs,
+		'elements' => array(
+			'generator_name' => $form->getGeneratorName($type),
+			'tbl_name' => $form->getTblName($type),
+			'tbl_profile' => $form->getTblProfile($type),
+			'tbl_engine' => $form->getTblEngine($type),
+			'tbl_charset' => $form->getTblCharset($type),
+			'tbl_comment' => $form->getTblComment($type),
+			'app_name' => $form->getAppName($type),
+			'mod_name' => $form->getModName($type),
+			'ctrl_name' => $form->getCtrlName($type),
+			'index_row_btns' => $form->getIndexRowBtns($type),
+			'description' => $form->getDescription($type),
+			'trash' => $form->getTrash($type),
+			'act_index_name' => $form->getActIndexName($type),
+			'act_view_name' => $form->getActViewName($type),
+			'act_create_name' => $form->getActCreateName($type),
+			'act_modify_name' => $form->getActModifyName($type),
+			'act_remove_name' => $form->getActRemoveName($type),
+			'creator_id' => $form->getCreatorId($type),
+			'dt_created' => $form->getDtCreated($type),
+			'modifier_id' => $form->getModifierId($type),
+			'dt_modified' => $form->getDtModified($type),
+			'button_save' => array(
+				'className' => 'ButtonElement',
+				'config' => array(
+					'label' => '保存',
+					'glyphicon' => 'save',
+					'class' => 'btn btn-primary'
+				)
+			),
+			'button_save2close' => array(
+				'className' => 'ButtonElement',
+				'config' => array(
+					'label' => '保存并关闭',
+					'glyphicon' => 'ok-sign',
+					'class' => 'btn btn-default'
+				)
+			),
+			'button_save2new' => array(
+				'className' => 'ButtonElement',
+				'config' => array(
+					'label' => '保存并新建',
+					'glyphicon' => 'plus-sign',
+					'class' => 'btn btn-default'
+				)
+			),
+			'button_cancel' => array(
+				'className' => 'ButtonElement',
+				'config' => array(
+					'label' => '取消',
+					'glyphicon' => 'remove-sign',
+					'class' => 'btn btn-danger'
+				)
+			)
+		)
+	)
+);
+?>

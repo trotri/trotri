@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -28,37 +28,124 @@ class FormBuilder extends form\FormBuilder
 	public $attributes = array('class' => 'form-horizontal');
 
 	/**
-	 * @var array 表单元素分类标签
+	 * @var array Input表单元素分类标签
 	 */
 	protected $_tabs = array(
-		array('tab_id' => 'main', 'prompt' => '主要信息', 'active' => true)
+		'main' => array('tid' => 'main', 'prompt' => '主要信息', 'active' => true)
 	);
 
-	public function renderTab()
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.FormBuilder::_init()
+	 */
+	protected function _init()
 	{
-		$output = '';
-		$html = $this->getHtml();
+		parent::_init();
+
+		if (isset($this->_tplVars['tabs'])) {
+			$this->setTabs($this->_tplVars['tabs']);
+		}
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.FormBuilder::run()
+	 */
+	public function run()
+	{
+		$this->assign('tabs', $this->getTabs());
+		parent::run();
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.FormBuilder::getInputs()
+	 */
+	public function getInputs()
+	{
+		$output = array();
 		$tabs = $this->getTabs();
-		foreach ($tabs as $tab) {
-			$attributes = $tab['active'] ? array('class' => 'active') : array();
-			$output .= $html->tag('li', $attributes, $html->a($tab['prompt'], '#' . $tab['tab_id'], array('data-toggle' => 'tab')));
+		foreach ($tabs as $tid => $tab) {
+			$output[$tid] = $this->getInputsByTid($tid);
 		}
 
 		return $output;
 	}
 
-	public function openInput($tabId = null)
+	/**
+	 * 获取所有Input表单元素分类标签
+	 * @return array
+	 */
+	public function getTabs()
 	{
-		if (($tab = $this->getTabById($tabId)) === null) {
-			return '';
-		}
-
-		$className = 'tab-pane fade' . ($tab['active'] ? ' active in' : '');
-		return $this->getHtml()->openTag('div', array('class' => $className, 'id' => $tabId));
+		return $this->_tabs;
 	}
 
-	public function closeInput()
+	/**
+	 * 设置多个Input表单元素分类标签
+	 * @param array $tabs
+	 * @return widgets\FormBuilder
+	 */
+	public function setTabs(array $tabs = array())
 	{
-		return $this->getHtml()->closeTag('div');
+		foreach ($tabs as $tid => $tab) {
+			$prompt = isset($tab['prompt']) ? $tab['prompt'] : '';
+			$active = isset($tab['active']) ? $tab['active'] : false;
+			$this->addTab($tid, $prompt, $active);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 通过分类ID获取Input表单元素分类标签
+	 * @param string $tid
+	 * @return array
+	 */
+	public function getTabByTid($tid)
+	{
+		return $this->hasTab($tid) ? $this->_tabs[$tid] : null;
+	}
+
+	/**
+	 * 添加或修改Input表单元素分类标签
+	 * @param string $tid
+	 * @param string $prompt
+	 * @param boolean $active
+	 * @return widgets\FormBuilder
+	 */
+	public function addTab($tid, $prompt, $active = false)
+	{
+		if (($tid = trim($tid)) === '') {
+			return $this;
+		}
+
+		$this->_tabs[$tid] = array(
+			'tid' => $tid,
+			'prompt' => $prompt,
+			'active' => (boolean) $active
+		);
+
+		return $this;
+	}
+
+	/**
+	 * 通过分类ID判断该表单元素分类标签是否已经存在
+	 * @param string $tid
+	 * @return boolean
+	 */
+	public function hasTab($tid)
+	{
+		return isset($this->_tabs[$tid]);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.FormBuilder::createElement()
+	 */
+	public function createElement($className, array $config = array())
+	{
+		$className = 'library\\form\\' . $className;
+		return parent::createElement($className, $config);
 	}
 }

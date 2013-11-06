@@ -1,12 +1,13 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
  * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace library\form;
 
 use tfc\mvc\form;
@@ -22,6 +23,11 @@ use tfc\mvc\form;
 class InputElement extends form\InputElement
 {
 	/**
+	 * @var string 表单样式名
+	 */
+	protected $_className = 'form-control input-sm';
+
+	/**
 	 * @var string 错误提示样式名
 	 */
 	protected $_errorClassName = 'has-error';
@@ -30,6 +36,17 @@ class InputElement extends form\InputElement
 	 * @var string 隐藏表单样式名
 	 */
 	protected $_hiddenClassName = 'hidden';
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.Element::_init()
+	 */
+	public function _init()
+	{
+		if ($this->_className !== '') {
+			$this->setClass($this->_className);
+		}
+	}
 
 	/**
 	 * (non-PHPdoc)
@@ -42,7 +59,7 @@ class InputElement extends form\InputElement
 			$className .= ' ' . $this->_errorClassName;
 		}
 
-		if ($this->getVisible() && $this->_hiddenClassName !== '') {
+		if (!$this->getVisible() && $this->_hiddenClassName !== '') {
 			$className .= ' ' . $this->_hiddenClassName;
 		}
 
@@ -64,7 +81,7 @@ class InputElement extends form\InputElement
 	 */
 	public function openLabel()
 	{
-		return $this->getHtml()->openTag('label', array('class' => 'col-lg-2 control-label')) . "\n";
+		return $this->getHtml()->openTag('label', array('class' => 'col-lg-2 control-label'));
 	}
 
 	/**
@@ -73,7 +90,7 @@ class InputElement extends form\InputElement
 	 */
 	public function closeLabel()
 	{
-		return "\n" . $this->getHtml()->closeTag('label');
+		return $this->getHtml()->closeTag('label');
 	}
 
 	/**
@@ -100,7 +117,7 @@ class InputElement extends form\InputElement
 	 */
 	public function openPrompt()
 	{
-		return $this->getHtml()->openTag('span', array('class' => 'control-label')) . "\n";
+		return $this->getHtml()->openTag('span', array('class' => 'control-label'));
 	}
 
 	/**
@@ -109,6 +126,6 @@ class InputElement extends form\InputElement
 	 */
 	public function closePrompt()
 	{
-		return "\n" . $this->getHtml()->closeTag('span');
+		return $this->getHtml()->closeTag('span');
 	}
 }
