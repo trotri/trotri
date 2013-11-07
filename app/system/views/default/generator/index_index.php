@@ -1,4 +1,16 @@
 <?php $this->display('generator/index_index_btns'); ?>
+
+<?php
+$this->widget(
+	'library\widgets\TableBuilder',
+	array(
+		'columns' => array(
+		),
+		// 'dataProvider' => 
+	)
+);
+?>
+
 <table class="table table-striped table-hover">
   <thead>
     <tr>

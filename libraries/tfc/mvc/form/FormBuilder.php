@@ -70,40 +70,24 @@ abstract class FormBuilder extends Widget
 
 	/**
 	 * (non-PHPdoc)
+	 * @throws ErrorException 如果模板参数elements不存在或不是数组，抛出异常
 	 * @see tfc\mvc.Widget::_init()
 	 */
 	protected function _init()
 	{
-		if (isset($this->_tplVars['name'])) {
-			$this->name = $this->_tplVars['name'];
+		if (!isset($this->_tplVars['elements'])) {
+			throw new ErrorException('FormBuilder TplVars.elements was not defined.');
 		}
 
-		if (isset($this->_tplVars['action'])) {
-			$this->action = $this->_tplVars['action'];
+		if (!is_array($this->_tplVars['elements'])) {
+			throw new ErrorException('FormBuilder TplVars.elements invalid, elements must be array.');
 		}
 
-		if (isset($this->_tplVars['method'])) {
-			$this->action = $this->_tplVars['method'];
-		}
+		$this->setElements($this->_tplVars['elements']);
+		unset($this->_tplVars['elements']);
 
-		if (isset($this->_tplVars['attributes']) && is_array($this->_tplVars['attributes'])) {
-			$this->attributes = array_merge($this->attributes, $this->_tplVars['attributes']);
-		}
-
-		if (isset($this->_tplVars['multipart'])) {
-			$this->multipart = (boolean) $this->_tplVars['multipart'];
-		}
-
-		if (isset($this->_tplVars['elements'])) {
-			$this->setElements($this->_tplVars['elements']);
-		}
-
-		if (isset($this->_tplVars['values'])) {
-			$this->values = $this->_tplVars['values'];
-		}
-
-		if (isset($this->_tplVars['errors'])) {
-			$this->errors = $this->_tplVars['errors'];
+		foreach ($this->_tplVars as $key => $value) {
+			$this->$key = $value;
 		}
 	}
 
@@ -141,7 +125,7 @@ abstract class FormBuilder extends Widget
 		$output = '';
 		$inputElements = $this->getInputElements($tid);
 		foreach ($inputElements as $inputElement) {
-			$output .= $inputElement->fetch();
+			$output .= $inputElement->fetch() . "\n";
 		}
 
 		return $output;
@@ -171,15 +155,17 @@ abstract class FormBuilder extends Widget
 	public function setElements(array $elements = array())
 	{
 		foreach ($elements as $element) {
-			if (!isset($element['className'])) {
+			if (!isset($element['__object__'])) {
 				continue;
 			}
 
-			$className = $element['className'];
-			$tid = isset($element['tid']) ? $element['tid'] : '';
-			$config = isset($element['config']) ? $element['config'] : array();
+			$className = $element['__object__']; unset($element['__object__']);
+			$tid = '';
+			if (isset($element['__tid__'])) {
+				$tid = $element['__tid__']; unset($element['__tid__']);
+			}
 
-			$instance = $this->createElement($className, $config);
+			$instance = $this->createElement($className, $element);
 			if ($instance instanceof InputElement) {
 				$this->addInputElement($instance, $tid);
 			}
