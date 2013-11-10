@@ -28,9 +28,9 @@ class TableBuilder extends Widget
 	public $attributes = array('class' => 'table table-striped table-hover');
 
 	/**
-	 * @var boolean 表格首列是否需要全选按钮
+	 * @var string 表格首列全选按钮Value值，为空则不需要全选按钮
 	 */
-	public $checkedToggle = true;
+	public $checkedToggle = '';
 
 	/**
 	 * (non-PHPdoc)
@@ -38,18 +38,33 @@ class TableBuilder extends Widget
 	 */
 	public function run()
 	{
-		
+		if (isset($this->_tplVars['checkedToggle'])) {
+			$this->checkedToggle = trim($this->_tplVars['checkedToggle']);
+		}
+
+		echo $this->getHtml()->openTag('table', $this->attributes) . "\n";
+		echo $this->getThead();
+		echo $this->getTbody();
+		echo $this->getHtml()->closeTag('table') . "\n";
 	}
-	
+
 	/**
 	 * 获取Html表格元素：<tbody></tbody>
 	 * @return string
 	 */
 	public function getTbody()
 	{
-		
+		$html = $this->getHtml();
+
+		$output = $html->openTag('tbody') . "\n";
+		foreach ($this->_tplVars['data'] as $row) {
+			$output .= $this->getTr($row);
+		}
+
+		$output .= $html->closeTag('tbody') . "\n";
+		return $output;
 	}
-	
+
 	/**
 	 * 获取Html表格元素：<tr></tr>
 	 * @param array $data
@@ -57,39 +72,56 @@ class TableBuilder extends Widget
 	 */
 	public function getTr($data)
 	{
-		
+		$html = $this->getHtml();
+
+		$output = $html->openTag('tr') . "\n";
+		if ($this->checkedToggle !== '') {
+			$output .= $html->tag('td', array(), $html->checkbox('checked_toggle', $this->checkedToggle . '[]')) . "\n";
+		}
+
+		foreach ($this->_tplVars['columns'] as $columnName => $columns) {
+			if (isset($columns['name'])) {
+				$columnName = $columns['name'];
+			}
+
+			if (isset($data[$columnName])) {
+				$value = $data[$columnName];
+			}
+
+			$output .= $html->tag('td', array(), $value) . "\n";
+		}
+
+		$output .= $html->closeTag('tr') . "\n";
+		return $output;
 	}
-	
+
 	/**
 	 * 获取Html表格元素：<thead></thead>
 	 * @return string
 	 */
 	public function getThead()
 	{
-		$html = "<thead><tr>\n";
-		foreach ($this->_tplVars['columns'] as $columnName => $columns) {
-			if (is_int($columnName) && is_string($columns)) {
-				$columnName = $columns;
-				$columns = array();
-			}
+		$html = $this->getHtml();
 
+		$output = $html->openTag('thead') . $html->openTag('tr') . "\n";
+		if ($this->checkedToggle !== '') {
+			$output .= $html->tag('th', array(), $html->checkbox('checked_toggle', $this->checkedToggle . '[]')) . "\n";
+		}
+
+		foreach ($this->_tplVars['columns'] as $columnName => $columns) {
 			if (isset($columns['name'])) {
 				$columnName = $columns['name'];
 			}
 
 			$label = isset($columns['label']) ? $columns['label'] : '';
-			if ($label === '' && isset($this->_attributes[$columnName]['label'])) {
-				$label = $this->_attributes[$columnName]['label'];
-			}
-				
 			$attributes = isset($columns['attributes']) ? (array) $columns['attributes'] : array();
-			$html .= $this->getHtml()->tag('td', $attributes, $label);
+			$output .= $html->tag('th', $attributes, $label);
 		}
 
-		$html .= "\n</tr></thead>\n";
-		return $html;
+		$output .= "\n" . $html->closeTag('tr') . $html->closeTag('thead') . "\n";
+		return $output;
 	}
-	
+
 	/**
 	 * 获取Html表格元素：<tfoot></tfoot>
 	 * @return string

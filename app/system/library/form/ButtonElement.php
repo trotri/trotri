@@ -53,6 +53,8 @@ class ButtonElement extends form\ButtonElement
 	public function openButton()
 	{
 		$this->setAttribute('type', $this->getType());
+		$this->setAttribute('name', $this->getName());
+
 		return $this->getHtml()->openTag('button', $this->getAttributes());
 	}
 

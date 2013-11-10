@@ -35,6 +35,21 @@ class FormBuilder extends form\FormBuilder
 	);
 
 	/**
+	 * @var array 类型和Element关联表
+	 */
+	protected static $_typeObjectMap = array(
+		'text' => 'InputElement',
+		'password' => 'InputElement',
+		'file' => 'InputElement',
+		'button' => 'ButtonElement',
+		'hidden' => 'HiddenElement',
+		'checkbox' => 'ICheckboxElement',
+		'radio' => 'IRadioElement',
+		'switch' => 'SwitchElement',
+		'textarea' => 'TextareaElement',
+	);
+
+	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\form.FormBuilder::_init()
 	 */
@@ -137,6 +152,28 @@ class FormBuilder extends form\FormBuilder
 	public function hasTab($tid)
 	{
 		return isset($this->_tabs[$tid]);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.FormBuilder::setElements()
+	 */
+	public function setElements(array $elements = array())
+	{
+		foreach ($elements as $name => $element) {
+			if (!isset($element['__object__']) && isset($element['type'])) {
+				$type = $element['type'];
+				if (isset(self::$_typeObjectMap[$type])) {
+					$elements[$name]['__object__'] = self::$_typeObjectMap[$type];
+				}
+			}
+
+			if (!isset($element['__tid__'])) {
+				$elements[$name]['__tid__'] = 'main';
+			}
+		}
+
+		parent::setElements($elements);
 	}
 
 	/**

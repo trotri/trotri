@@ -2,9 +2,93 @@
 
 <?php
 $this->widget(
-	'library\widgets\TableBuilder',
+	'widgets\TableBuilder',
 	array(
 		'columns' => array(
+			'generator_name' => array(
+				'label' => '生成代码名',
+			),
+			'tbl_name' => array(
+				'label' => '表名',
+			),
+			'tbl_profile' => array(
+				'label' => '生成扩展表',
+				'callback' => array()
+			),
+			'tbl_engine' => array(
+				'label' => '表引擎',
+				'callback' => array()
+			),
+			'tbl_charset' => array(
+				'label' => '表编码',
+				'callback' => array()
+			),
+			'tbl_comment' => array(
+				'label' => '表描述',
+				'callback' => array()
+			),
+			'app_name' => array(
+				'label' => '应用名',
+				'callback' => array()
+			),
+			'mod_name' => array(
+				'label' => '模块名',
+				'callback' => array()
+			),
+			'ctrl_name' => array(
+				'label' => '控制器名',
+				'callback' => array()
+			),
+			'creator_id' => array(
+				'label' => '创建人',
+				'callback' => array()
+			),
+			'generator_field_groups' => array(
+				'name' => 'generator_field_groups',
+				'label' => '字段组',
+				'callback' => array()
+			),
+			'generator_field_types' => array(
+				'name' => 'generator_field_types',
+				'label' => '字段类型',
+				'callback' => array()
+			),
+			'generator_fields' => array(
+				'name' => 'generator_fields',
+				'label' => '字段管理',
+				'callback' => array()
+			),
+			'generator_id' => array(
+				'label' => 'ID',
+				'callback' => array()
+			),
+		),
+		'checkedToggle' => 'generator_ids',
+		'data' => array(
+			array(
+				'generator_name' => 'a1',
+				'tbl_name' => 'a2',
+				'tbl_profile' => 'a3',
+				'tbl_engine' => 'a4',
+				'tbl_charset' => 'a5',
+				'tbl_comment' => 'a6',
+				'app_name' => 'a7',
+				'mod_name' => 'a8',
+				'ctrl_name' => 'a9',
+				'creator_id' => 'a10'
+			),
+			array(
+				'generator_name' => 'b1',
+				'tbl_name' => 'b2',
+				'tbl_profile' => 'b3',
+				'tbl_engine' => 'b4',
+				'tbl_charset' => 'b5',
+				'tbl_comment' => 'b6',
+				'app_name' => 'b7',
+				'mod_name' => 'b8',
+				'ctrl_name' => 'b9',
+				'creator_id' => 'b10'
+			),
 		),
 		// 'dataProvider' => 
 	)

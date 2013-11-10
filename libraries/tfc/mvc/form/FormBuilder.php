@@ -154,7 +154,7 @@ abstract class FormBuilder extends Widget
 	 */
 	public function setElements(array $elements = array())
 	{
-		foreach ($elements as $element) {
+		foreach ($elements as $name => $element) {
 			if (!isset($element['__object__'])) {
 				continue;
 			}
@@ -163,6 +163,10 @@ abstract class FormBuilder extends Widget
 			$tid = '';
 			if (isset($element['__tid__'])) {
 				$tid = $element['__tid__']; unset($element['__tid__']);
+			}
+
+			if (!isset($element['name'])) {
+				$element['name'] = $name;
 			}
 
 			$instance = $this->createElement($className, $element);
