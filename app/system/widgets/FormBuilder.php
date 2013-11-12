@@ -10,6 +10,7 @@
 
 namespace widgets;
 
+use tfc\ap\ErrorException;
 use tfc\mvc\form;
 
 /**
@@ -35,6 +36,11 @@ class FormBuilder extends form\FormBuilder
 	);
 
 	/**
+	 * @var instance of modules\module\form
+	 */
+	protected $_form = null;
+
+	/**
 	 * @var array 类型和Element关联表
 	 */
 	protected static $_typeObjectMap = array(
@@ -55,6 +61,16 @@ class FormBuilder extends form\FormBuilder
 	 */
 	protected function _init()
 	{
+		if (isset($this->_tplVars['form'])) {
+			$this->_form = $this->_tplVars['form'];
+		}
+
+		if (!is_object($this->_form)) {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" must be a object.', 'FormBuilder', '_form'
+			));
+		}
+
 		parent::_init();
 
 		if (isset($this->_tplVars['tabs'])) {
@@ -160,7 +176,25 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function setElements(array $elements = array())
 	{
+		static $formType = 1;
+
 		foreach ($elements as $name => $element) {
+			if (is_int($name) && is_string($element)) {
+				$method = 'get' . str_replace('_', '', $element);
+				if (!method_exists($this->_form, $method)) {
+					throw new ErrorException(sprintf(
+						'Method "%s.%s" was not exists.', get_class($this->_form), $method
+					));
+				}
+
+				$elements[$name] = $this->_form->$method($formType);
+				if (!isset($elements[$name]['name'])) {
+					$elements[$name]['name'] = $element;
+				}
+
+				$element = $elements[$name];
+			}
+
 			if (!isset($element['__object__']) && isset($element['type'])) {
 				$type = $element['type'];
 				if (isset(self::$_typeObjectMap[$type])) {
