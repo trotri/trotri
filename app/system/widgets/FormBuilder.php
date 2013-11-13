@@ -12,6 +12,8 @@ namespace widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\form;
+use library\Util;
+use library\Constant;
 
 /**
  * FormBuilder class file
@@ -36,9 +38,9 @@ class FormBuilder extends form\FormBuilder
 	);
 
 	/**
-	 * @var instance of modules\module\form
+	 * @var instance of modules\module\helper
 	 */
-	protected $_form = null;
+	protected $_helper = null;
 
 	/**
 	 * @var array 类型和Element关联表
@@ -61,20 +63,28 @@ class FormBuilder extends form\FormBuilder
 	 */
 	protected function _init()
 	{
-		if (isset($this->_tplVars['form'])) {
-			$this->_form = $this->_tplVars['form'];
+		if (isset($this->_tplVars['helper'])) {
+			$this->_helper = $this->_tplVars['helper'];
 		}
 
-		if (!is_object($this->_form)) {
+		if (!is_object($this->_helper)) {
 			throw new ErrorException(sprintf(
-				'Property "%s.%s" must be a object.', 'FormBuilder', '_form'
+				'Property "%s.%s" must be a object.', 'FormBuilder', '_helper'
 			));
+		}
+
+		if (!isset($this->_tplVars['action'])) {
+			$this->action = Util::getUrlByAct();
 		}
 
 		parent::_init();
 
 		if (isset($this->_tplVars['tabs'])) {
 			$this->setTabs($this->_tplVars['tabs']);
+		}
+		elseif (property_exists($this->_helper, 'tabs')) {
+			$helper = $this->_helper;
+			$this->setTabs($helper::$tabs);
 		}
 	}
 
@@ -176,18 +186,16 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function setElements(array $elements = array())
 	{
-		static $formType = 1;
-
 		foreach ($elements as $name => $element) {
 			if (is_int($name) && is_string($element)) {
 				$method = 'get' . str_replace('_', '', $element);
-				if (!method_exists($this->_form, $method)) {
+				if (!method_exists($this->_helper, $method)) {
 					throw new ErrorException(sprintf(
-						'Method "%s.%s" was not exists.', get_class($this->_form), $method
+						'Method "%s.%s" was not exists.', get_class($this->_helper), $method
 					));
 				}
 
-				$elements[$name] = $this->_form->$method($formType);
+				$elements[$name] = $this->_helper->$method(Constant::M_H_TYPE_FORM);
 				if (!isset($elements[$name]['name'])) {
 					$elements[$name]['name'] = $element;
 				}

@@ -4,45 +4,18 @@
 $this->widget(
 	'widgets\TableBuilder',
 	array(
+		'helper' => $this->util->getHelper('Generators', 'generator'),
 		'columns' => array(
-			'generator_name' => array(
-				'label' => '生成代码名',
-			),
-			'tbl_name' => array(
-				'label' => '表名',
-			),
-			'tbl_profile' => array(
-				'label' => '生成扩展表',
-				'callback' => array()
-			),
-			'tbl_engine' => array(
-				'label' => '表引擎',
-				'callback' => array()
-			),
-			'tbl_charset' => array(
-				'label' => '表编码',
-				'callback' => array()
-			),
-			'tbl_comment' => array(
-				'label' => '表描述',
-				'callback' => array()
-			),
-			'app_name' => array(
-				'label' => '应用名',
-				'callback' => array()
-			),
-			'mod_name' => array(
-				'label' => '模块名',
-				'callback' => array()
-			),
-			'ctrl_name' => array(
-				'label' => '控制器名',
-				'callback' => array()
-			),
-			'creator_id' => array(
-				'label' => '创建人',
-				'callback' => array()
-			),
+			'generator_name',
+			'tbl_name',
+			'tbl_profile',
+			'tbl_engine',
+			'tbl_charset',
+			'tbl_comment',
+			'app_name',
+			'mod_name',
+			'ctrl_name',
+			'creator_id',
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
 				'label' => '字段组',

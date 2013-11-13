@@ -10,7 +10,9 @@
 
 namespace widgets;
 
+use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
+use library\Constant;
 
 /**
  * TableBuilder class file
@@ -33,6 +35,16 @@ class TableBuilder extends Widget
 	public $checkedToggle = '';
 
 	/**
+	 * @var array 所有的列信息
+	 */
+	protected $_columns = null;
+
+	/**
+	 * @var instance of modules\module\helper
+	 */
+	protected $_helper = null;
+
+	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc.Widget::run()
 	 */
@@ -40,6 +52,16 @@ class TableBuilder extends Widget
 	{
 		if (isset($this->_tplVars['checkedToggle'])) {
 			$this->checkedToggle = trim($this->_tplVars['checkedToggle']);
+		}
+
+		if (isset($this->_tplVars['helper'])) {
+			$this->_helper = $this->_tplVars['helper'];
+		}
+
+		if (!is_object($this->_helper)) {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" must be a object.', 'TableBuilder', '_helper'
+			));
 		}
 
 		echo $this->getHtml()->openTag('table', $this->attributes) . "\n";
@@ -79,11 +101,9 @@ class TableBuilder extends Widget
 			$output .= $html->tag('td', array(), $html->checkbox('checked_toggle', $this->checkedToggle . '[]')) . "\n";
 		}
 
-		foreach ($this->_tplVars['columns'] as $columnName => $columns) {
-			if (isset($columns['name'])) {
-				$columnName = $columns['name'];
-			}
+		$columns = $this->getColumns();
 
+		foreach ($columns as $columnName => $columnValue) {
 			if (isset($data[$columnName])) {
 				$value = $data[$columnName];
 			}
@@ -108,14 +128,10 @@ class TableBuilder extends Widget
 			$output .= $html->tag('th', array(), $html->checkbox('checked_toggle', $this->checkedToggle . '[]')) . "\n";
 		}
 
-		foreach ($this->_tplVars['columns'] as $columnName => $columns) {
-			if (isset($columns['name'])) {
-				$columnName = $columns['name'];
-			}
-
-			$label = isset($columns['label']) ? $columns['label'] : '';
+		$columns = $this->getColumns();
+		foreach ($columns as $columnName => $columnValue) {
 			$attributes = isset($columns['attributes']) ? (array) $columns['attributes'] : array();
-			$output .= $html->tag('th', $attributes, $label);
+			$output .= $html->tag('th', $attributes, $columnValue['label']);
 		}
 
 		$output .= "\n" . $html->closeTag('tr') . $html->closeTag('thead') . "\n";
@@ -129,5 +145,45 @@ class TableBuilder extends Widget
 	public function getTfoot()
 	{
 		
+	}
+
+	/**
+	 * 获取所有的列信息
+	 * @return array
+	 * @throws ErrorException 如果列信息为空并且helper中没有获取列信息的方法，抛出异常
+	 */
+	public function getColumns()
+	{
+		if ($this->_columns !== null) {
+			return $this->_columns;
+		}
+
+		$this->_columns = array();
+
+		foreach ($this->_tplVars['columns'] as $columnName => $columnValue) {
+			if (is_int($columnName) && is_string($columnValue)) {
+				$method = 'get' . str_replace('_', '', $columnValue);
+				if (!method_exists($this->_helper, $method)) {
+					throw new ErrorException(sprintf(
+						'Method "%s.%s" was not exists.', get_class($this->_helper), $method
+					));
+				}
+
+				$columnName = $columnValue;
+				$columnValue = $this->_helper->$method(Constant::M_H_TYPE_TABLE);
+			}
+
+			if (isset($columnValue['name'])) {
+				$columnName = $columnValue['name'];
+			}
+
+			if (!isset($columnValue['label'])) {
+				$columnValue['label'] = '';
+			}
+
+			$this->_columns[$columnName] = $columnValue;
+		}
+
+		return $this->_columns;
 	}
 }

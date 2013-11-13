@@ -22,4 +22,44 @@ use base;
  */
 class ErrorMsg extends base\ErrorMsg
 {
+	/**
+	 * @var string 登录成功
+	 */
+	const SUCCESS_LOGIN           	          = 'Login OK';
+
+	/**
+	 * @var string 管理员没有访问本Action的权限
+	 */
+	const ERROR_NO_AUTH     	   		      = 'No Auth!';
+
+	/**
+	 * @var string 登录失败，用户名不存在
+	 */
+	const ERROR_LOGIN_FAILED_NAME_NOT_EXISTS  = 'Login Failed, Name Not Exists!';
+
+	/**
+	 * @var string 登录失败，密码错误
+	 */
+	const ERROR_LOGIN_FAILED_PWD_ERR          = 'Login Failed, Password Error!';
+
+	/**
+	 * @var string 登录失败，验证码错误
+	 */
+	const ERROR_LOGIN_FAILED_VERIFY_ERR       = 'Login Failed, Verify Error!';
+
+	/**
+	 * @var string 登录失败，用户名为空
+	 */
+	const ERROR_LOGIN_FAILED_NAME_EMPTY       = 'Login Failed, Name Empty!';
+
+	/**
+	 * @var string 登录失败，密码为空
+	 */
+	const ERROR_LOGIN_FAILED_PWD_EMPTY        = 'Login Failed, Password Empty!';
+
+	/**
+	 * @var string 登录失败，验证码为空
+	 */
+	const ERROR_LOGIN_FAILED_VERIFY_EMPTY     = 'Login Failed, Verify Empty!';
+
 }

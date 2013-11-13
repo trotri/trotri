@@ -8,33 +8,20 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\generator\form;
+namespace modules\generator\helper;
+
+use library\Constant;
 
 /**
  * Generators class file
- * 表单处理层类
+ * 业务辅助层类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Generators.php 1 2013-05-18 14:58:59Z huan.song $
- * @package modules.generator.form
+ * @package modules.generator.helper
  * @since 1.0
  */
 class Generators
 {
-	/**
-	 * @var 表格类型
-	 */
-	const TYPE_TABLE = 0;
-
-	/**
-	 * @var 表单类型
-	 */
-	const TYPE_FORM = 1;
-
-	/**
-	 * @var 验证规则类型
-	 */
-	const TYPE_RULE = 2;
-
 	/**
 	 * @var string 数据库表引擎：InnoDB类型
 	 */
@@ -157,12 +144,12 @@ class Generators
 		$name = 'generator_name';
 		$label = '生成代码名';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -170,7 +157,7 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'MinLength' => array(6, $label . '长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
@@ -192,12 +179,12 @@ class Generators
 		$name = 'tbl_name';
 		$label = '表名';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -205,9 +192,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'AlphaNum' => array(true, $label . '"%value%"只能由英文字母、数字或下划线组成.'),
+				'AlphaNum' => array(true, $label . '只能由英文字母、数字或下划线组成.'),
 				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label. '长度%value%不能大于%option%个字符.')
 			);
@@ -228,18 +215,18 @@ class Generators
 		$name = 'tbl_profile';
 		$label = '是否生成扩展表';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblProfiles),
@@ -263,19 +250,19 @@ class Generators
 		$name = 'tbl_engine';
 		$label = '表引擎';
 		
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
 				'label' => $label,
 				'options' => self::$tblEngines
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblEngines),
@@ -283,7 +270,7 @@ class Generators
 				)
 			);
 		}
-		
+
 		return $output;
 	}
 
@@ -299,19 +286,19 @@ class Generators
 		$name = 'tbl_charset';
 		$label = '表编码';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
 				'label' => $label,
 				'options' => self::$tblCharsets
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblCharsets),
@@ -335,19 +322,19 @@ class Generators
 		$name = 'tbl_comment';
 		$label = '表描述';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'NotEmpty' => array(true, '必须填写' . $label . '.')
 			);
@@ -368,12 +355,12 @@ class Generators
 		$name = 'app_name';
 		$label = '应用名';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -381,9 +368,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
 			);
@@ -404,12 +391,12 @@ class Generators
 		$name = 'mod_name';
 		$label = '模块名';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -417,9 +404,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
 			);
@@ -440,12 +427,12 @@ class Generators
 		$name = 'ctrl_name';
 		$label = '控制器名';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -453,9 +440,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
 			);
@@ -476,19 +463,19 @@ class Generators
 		$name = 'index_row_btns';
 		$label = '列表每行操作按钮';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'checkbox',
 				'label' => $label,
 				'options' => self::$indexRowBtns
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$indexRowBtns),
@@ -512,12 +499,12 @@ class Generators
 		$name = 'description';
 		$label = '描述';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'textarea',
 				'label' => $label,
@@ -539,18 +526,18 @@ class Generators
 		$name = 'trash';
 		$label = '放入回收站';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$trashs),
@@ -574,12 +561,12 @@ class Generators
 		$name = 'act_index_name';
 		$label = '数据列表';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -589,9 +576,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
 			);
@@ -612,12 +599,12 @@ class Generators
 		$name = 'act_view_name';
 		$label = '数据详情';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -627,9 +614,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
 			);
@@ -650,12 +637,12 @@ class Generators
 		$name = 'act_create_name';
 		$label = '新增数据';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -665,9 +652,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
 			);
@@ -688,12 +675,12 @@ class Generators
 		$name = 'act_modify_name';
 		$label = '编辑数据';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -703,9 +690,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
 			);
@@ -726,12 +713,12 @@ class Generators
 		$name = 'act_remove_name';
 		$label = '删除数据';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -741,9 +728,9 @@ class Generators
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名"%value%"只能由英文字母组成.'),
+				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
 			);
@@ -764,12 +751,12 @@ class Generators
 		$name = 'creator_id';
 		$label = '创建人';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -793,12 +780,12 @@ class Generators
 		$name = 'dt_created';
 		$label = '创建时间';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -822,12 +809,12 @@ class Generators
 		$name = 'modifier_id';
 		$label = '上次更新人';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -851,12 +838,12 @@ class Generators
 		$name = 'dt_modified';
 		$label = '上次更新时间';
 
-		if ($type === self::TYPE_TABLE) {
+		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === self::TYPE_FORM) {
+		elseif ($type === Constant::M_H_TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -868,33 +855,36 @@ class Generators
 		return $output;
 	}
 
-	/*
-	public static function getCreateElements($type)
+	/**
+	 * 获取新增数据的验证规则
+	 * @return array
+	 */
+	public function getCreateRules()
 	{
-		return array(
-			'generator_name' => self::getGeneratorName($type),
-			'tbl_name' => self::getTblName($type),
-			'tbl_profile' => self::getTblProfile($type),
-			'tbl_engine' => self::getTblEngine($type),
-			'tbl_charset' => self::getTblCharset($type),
-			'tbl_comment' => self::getTblComment($type),
-			'app_name' => self::getAppName($type),
-			'mod_name' => self::getModName($type),
-			'ctrl_name' => self::getCtrlName($type),
-			'index_row_btns' => self::getIndexRowBtns($type),
-			'description' => self::getDescription($type),
-			'trash' => self::getTrash($type),
-			'act_index_name' => self::getActIndexName($type),
-			'act_view_name' => self::getActViewName($type),
-			'act_create_name' => self::getActCreateName($type),
-			'act_modify_name' => self::getActModifyName($type),
-			'act_remove_name' => self::getActRemoveName($type),
-			'creator_id' => self::getCreatorId($type),
-			'dt_created' => self::getDtCreated($type),
-			'modifier_id' => self::getModifierId($type),
-			'dt_modified' => self::getDtModified($type)
+		$type = Constant::M_H_TYPE_RULE;
+
+		$output = array(
+			'generator_name' => $this->getGeneratorName($type),
+			'tbl_name' => $this->getTblName($type),
+			'tbl_profile' => $this->getTblProfile($type),
+			'tbl_engine' => $this->getTblEngine($type),
+			'tbl_charset' => $this->getTblCharset($type),
+			'tbl_comment' => $this->getTblComment($type),
+			'app_name' => $this->getAppName($type),
+			'mod_name' => $this->getModName($type),
+			'ctrl_name' => $this->getCtrlName($type),
+			'index_row_btns' => $this->getIndexRowBtns($type),
+			'trash' => $this->getTrash($type),
+			'act_index_name' => $this->getActIndexName($type),
+			'act_view_name' => $this->getActViewName($type),
+			'act_create_name' => $this->getActCreateName($type),
+			'act_modify_name' => $this->getActModifyName($type),
+			'act_remove_name' => $this->getActRemoveName($type),
 		);
+
+		// 不需要验证的字段：'description', 'creator_id', 'dt_created', 'modifier_id', 'dt_modified',
+
+		return $output;
 	}
-	*/
 
 }

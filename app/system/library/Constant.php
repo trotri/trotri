@@ -21,6 +21,21 @@ namespace library;
 class Constant
 {
 	/**
+	 * @var integer 业务辅助层：表格类型
+	 */
+	const M_H_TYPE_TABLE = 0;
+
+	/**
+	 * @var integer 业务辅助层：表单类型
+	 */
+	const M_H_TYPE_FORM = 1;
+
+	/**
+	 * @var integer 业务辅助层：验证规则类型
+	 */
+	const M_H_TYPE_RULE = 2;
+
+	/**
 	 * @var string 数据库配置名
 	 */
 	const DB_CLUSTER            = 'system';

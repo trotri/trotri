@@ -10,8 +10,8 @@
 
 namespace modules\generator\model;
 
-use library\Model;
 use tfc\ap\UserIdentity;
+use base\Model;
 use library\Util;
 
 /**
@@ -33,9 +33,12 @@ class Generators extends Model
 	{
 		$params['creator_id'] = UserIdentity::getId();
 		$params['dt_created'] = Util::getNowTime();
+		if (!isset($params['index_row_btns']) || !is_array($params['index_row_btns'])) {
+			$params['index_row_btns'] = array();
+		}
 
-		$form = Util::getForm('Generators', 'generator');
-		return $this->insert($params, $form->getRules());
+		$helper = Util::getHelper('Generators', 'generator');
+		return $this->insert($params, $helper->getCreateRules());
 	}
 
 	/**

@@ -18,7 +18,7 @@ namespace library\form;
  * @package library.form
  * @since 1.0
  */
-class ICheckboxElement extends IRadioElement
+class ICheckboxElement extends InputElement
 {
 	/**
 	 * @var string 表单元素的类型
@@ -27,15 +27,51 @@ class ICheckboxElement extends IRadioElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library\form.IRadioElement::getInput()
+	 * @see tfc\mvc\form.InputElement::getInput()
 	 */
 	public function getInput()
 	{
 		$name = $this->getName(true);
 		if (strpos($name, '[') === false) {
-			$this->setName($name . '[]');
+			$name .= '[]';
+			$this->setName($name);
 		}
 
-		return parent::getInput();
+		$this->setAttribute('class', 'icheck');
+
+		$type = $this->getType();
+		$attributes = $this->getAttributes();
+		$values = (array) $this->value;
+		$html = $this->getHtml();
+
+		$tagName = 'label';
+		$tagAttributes = array('class' => 'checkbox-inline');
+
+		$output = '';
+		foreach ($this->options as $value => $prompt) {
+			$checked = (in_array($value, $values)) ? true : false;
+			$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, $checked, $attributes));
+			$output .= $html->tag($tagName, $tagAttributes, $prompt);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library\form.InputElement::openInput()
+	 */
+	public function openInput()
+	{
+		return '';
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library\form.InputElement::closeInput()
+	 */
+	public function closeInput()
+	{
+		return '';
 	}
 }

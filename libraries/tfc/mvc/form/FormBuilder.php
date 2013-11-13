@@ -83,12 +83,14 @@ abstract class FormBuilder extends Widget
 			throw new ErrorException('FormBuilder TplVars.elements invalid, elements must be array.');
 		}
 
-		$this->setElements($this->_tplVars['elements']);
+		$elements = $this->_tplVars['elements'];
 		unset($this->_tplVars['elements']);
 
 		foreach ($this->_tplVars as $key => $value) {
 			$this->$key = $value;
 		}
+
+		$this->setElements($elements);
 	}
 
 	/**

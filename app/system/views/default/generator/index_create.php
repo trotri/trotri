@@ -1,14 +1,11 @@
 <?php
+$helper = $this->util->getHelper('Generators', 'generator');
 $this->widget('widgets\FormBuilder', 
 	array(
-		'name' => '',
-		'action' => '',
-		'method' => 'post',
-		'tabs' => array(
-			'act' => array('tid' => 'act', 'prompt' => '行动名'),
-			'system' => array('tid' => 'system', 'prompt' => '系统信息')
-		),
-		'form' => $this->util->getForm('Generators', 'generator'),
+		'name' => 'create',
+		'values' => $this->values,
+		'errors' => $this->errors,
+		'helper' => $helper,
 		'elements' => array(
 			'generator_name',
 			'tbl_name',
@@ -35,25 +32,29 @@ $this->widget('widgets\FormBuilder',
 				'type' => 'button',
 				'label' => '保存',
 				'glyphicon' => 'save',
-				'class' => 'btn btn-primary'
+				'class' => 'btn btn-primary',
+				'onclick' => "return Core.formSubmit('save', 'create');"
 			),
 			'button_save2close' => array(
 				'type' => 'button',
 				'label' => '保存并关闭',
 				'glyphicon' => 'ok-sign',
-				'class' => 'btn btn-default'
+				'class' => 'btn btn-default',
+				'onclick' => "return Core.formSubmit('save2close', 'create');"
 			),
 			'button_save2new' => array(
 				'type' => 'button',
 				'label' => '保存并新建',
 				'glyphicon' => 'plus-sign',
-				'class' => 'btn btn-default'
+				'class' => 'btn btn-default',
+				'onclick' => "return Core.formSubmit('save2new', 'create');"
 			),
 			'button_cancel' => array(
 				'type' => 'button',
 				'label' => '取消',
 				'glyphicon' => 'remove-sign',
-				'class' => 'btn btn-danger'
+				'class' => 'btn btn-danger',
+				'onclick' => "return Core.href('#');"
 			)
 		)
 	)

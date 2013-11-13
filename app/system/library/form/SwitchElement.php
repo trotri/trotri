@@ -58,6 +58,10 @@ class SwitchElement extends InputElement
 			'data-off-label' => $this->swOff
 		);
 
+		if ($this->value === 'y') {
+			$this->checked = true;
+		}
+
 		$html = $this->getHtml();
 		return $html->tag('div', $attributes, $html->radio($this->getName(true), $this->value, $this->checked));
 	}

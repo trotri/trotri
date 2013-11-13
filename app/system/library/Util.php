@@ -10,9 +10,10 @@
 
 namespace library;
 
-use base;
 use tfc\ap\Ap;
+use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
+use tfc\saf\DbProxy;
 
 /**
  * Util class file
@@ -22,7 +23,7 @@ use tfc\mvc\Mvc;
  * @package library
  * @since 1.0
  */
-class Util extends base\Util
+class Util
 {
 	/**
 	 * 页面重定向到当前的Action
@@ -116,5 +117,66 @@ class Util extends base\Util
 		}
 
 		return $url;
+	}
+
+	/**
+	 * 通过DB配置名获取DB操作类
+	 * @param string $clusterName
+	 * @return instance of tfc\saf\DbProxy
+	 */
+	public function getDbProxy($clusterName)
+	{
+		$className = 'tfc\saf\DbProxy::' . $clusterName;
+		if (($instance = Singleton::get($className)) === null) {
+			$instance = new DbProxy($clusterName);
+			Singleton::set($className, $instance);
+		}
+
+		return $instance;
+	}
+
+	/**
+	 * 获取业务辅助类
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return instance of helper
+	 */
+	public function getHelper($className, $moduleName)
+	{
+		$className = 'modules\\' . strtolower($moduleName) . '\\helper\\' . $className;
+		return Singleton::getInstance($className);
+	}
+
+	/**
+	 * 获取业务层类
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return instance of model
+	 */
+	public function getModel($className, $moduleName)
+	{
+		$className = 'modules\\' . strtolower($moduleName) . '\\model\\' . $className;
+		return Singleton::getInstance($className);
+	}
+
+	/**
+	 * 获取数据库层类
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return instance of db
+	 */
+	public function getDb($className, $moduleName)
+	{
+		$className = 'modules\\' . strtolower($moduleName) . '\\db\\' . $className;
+		return Singleton::getInstance($className);
+	}
+
+	/**
+	 * 获取当前时间，包含年月日时分秒
+	 * @return string
+	 */
+	public function getNowTime()
+	{
+		return date('Y-m-d H:i:s');
 	}
 }

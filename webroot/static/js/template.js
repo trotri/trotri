@@ -150,12 +150,12 @@ Core = {
 
   /**
    * 提交表单
+   * @param string type 保存行为类型
    * @param string form 表单名
-   * @param string type 保存行为类型 
    * @return void
    */
   formSubmit: function(type, form) {
-    var types = ["save", "save2index", "save2create"];
+    var types = ["save", "save2close", "save2new"];
     if ($.inArray(type, types) < 0) {
       type = "save";
     }
