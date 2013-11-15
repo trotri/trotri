@@ -55,9 +55,7 @@ class IndexController extends BaseController
 		$submitType = $req->getParam('submit_type');
 
 		if ($do == 'post') {
-			$params = $req->getPost();
-			$ret = Util::getModel('Generators', 'generator')->create($params);
-			$ret['values'] = $params;
+			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
 		}
 
 		$this->render($ret);

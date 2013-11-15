@@ -11,6 +11,7 @@
 namespace tfc\mvc\form;
 
 use tfc\mvc\Widget;
+use tfc\ap\Ap;
 use tfc\ap\ErrorException;
 
 /**
@@ -88,6 +89,10 @@ abstract class FormBuilder extends Widget
 
 		foreach ($this->_tplVars as $key => $value) {
 			$this->$key = $value;
+		}
+
+		if ($this->values === array()) {
+			$this->values = Ap::getRequest()->getPost();
 		}
 
 		$this->setElements($elements);

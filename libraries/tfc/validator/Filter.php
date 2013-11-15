@@ -108,6 +108,60 @@ class Filter
     }
 
     /**
+     * 基于配置清理表单提交的数据
+     * <pre>
+     * 一.清理规则：
+     * $rules = array(
+     *     'user_loginname' => 'trim',
+     *     'user_interest' => array($foo, 'explode')
+     * );
+     * 参数：
+     * $params = array(
+     *     'user_loginname' => '  abcdefghi  ',
+     *     'user_interest' => ' 1, 2'
+     * );
+     * 结果：
+     * $result = array(
+     *     'user_loginname' => 'abcdefghi',
+     *     'user_interest' => array(1, 2)
+     * );
+     *
+     * 二.清理规则：
+     * $rules = array(
+     *     'user_password' => 'md5',
+     *     'user_interest' => array($foo, 'implode')
+     * );
+     * 参数：
+     * $params = array(
+     *     'user_password' => '  1234  ',
+     *     'user_interest' => array(1, 2)
+     * );
+     * 结果：
+     * $result = array(
+     *     'user_loginname' => '81dc9bdb52d04dc20036dbd8313ed055',
+     *     'user_interest' => '1,2'
+     * );
+     * </pre>
+     * @param array $rules
+     * @param array $attributes
+     * @return void
+     */
+    public function clean(array $rules, array &$attributes)
+    {
+        if ($rules === null || $attributes === null) {
+            return ;
+        }
+
+        foreach ($rules as $columnName => $rule) {
+            if (!isset($attributes[$columnName])) {
+                continue;
+            }
+
+            $attributes[$columnName] = call_user_func($rule, $attributes[$columnName]);
+        }
+    }
+
+    /**
      * 创建验证类
      * @param string $className
      * @param mixed $value

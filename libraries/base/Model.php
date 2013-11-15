@@ -355,11 +355,11 @@ abstract class Model
 	/**
 	 * 新增一条记录
 	 * @param array $attributes
-	 * @param array $rules
+	 * @param Helper $helper
 	 * @param boolean $ignore
 	 * @return array
 	 */
-	public function insert(array $attributes = array(), array $rules = array(), $ignore = false)
+	public function insert(array $attributes = array(), Helper $helper = null, $ignore = false)
 	{
 		if (empty($attributes)) {
 			$errNo = ErrorNo::ERROR_ARGS_INSERT;
@@ -373,20 +373,33 @@ abstract class Model
 			);
 		}
 
-		if (!empty($rules)) {
+		if ($helper !== null) {
 			$filter = Singleton::getInstance('tfc\validator\Filter');
-			if (!$filter->run($rules, $attributes, true)) {
-				$errNo = ErrorNo::ERROR_ARGS_INSERT;
-				$errMsg = ErrorMsg::ERROR_ARGS_INSERT;
-				$errors = $filter->getErrors(true);
-				Log::warning(sprintf(
-					'%s attributes "%s", errors "%s"', $errMsg, serialize($attributes), serialize($errors)
-				), $errNo, __METHOD__);
-				return array(
-					'err_no' => $errNo,
-					'err_msg' => $errMsg,
-					'errors' => $errors
-				);
+			$rules = $helper->getBeforeValidatorCleanRules();
+			if (is_array($rules)) {
+				$filter->clean($rules, $attributes);
+			}
+
+			$rules = $helper->getInsertRules();
+			if (is_array($rules)) {
+				if (!$filter->run($rules, $attributes, true)) {
+					$errNo = ErrorNo::ERROR_ARGS_INSERT;
+					$errMsg = ErrorMsg::ERROR_ARGS_INSERT;
+					$errors = $filter->getErrors(true);
+					Log::warning(sprintf(
+						'%s attributes "%s", errors "%s"', $errMsg, serialize($attributes), serialize($errors)
+					), $errNo, __METHOD__);
+					return array(
+						'err_no' => $errNo,
+						'err_msg' => $errMsg,
+						'errors' => $errors
+					);
+				}
+			}
+
+			$rules = $helper->getAfterValidatorCleanRules();
+			if (is_array($rules)) {
+				$filter->clean($rules, $attributes);
 			}
 		}
 
@@ -420,10 +433,10 @@ abstract class Model
 	 * 通过主键，编辑一条记录。不支持联合主键
 	 * @param integer $value
 	 * @param array $attributes
-	 * @param array $rules
+	 * @param Helper $helper
 	 * @return array
 	 */
-	public function updateByPk($value, array $attributes = array(), array $rules = array())
+	public function updateByPk($value, array $attributes = array(), Helper $helper = null)
 	{
 		$value = (int) $value;
 		if ($value <= 0) {
@@ -452,21 +465,34 @@ abstract class Model
 			);
 		}
 
-		if (!empty($rules)) {
+		if ($helper !== null) {
 			$filter = Singleton::getInstance('tfc\validator\Filter');
-			if (!$filter->run($rules, $attributes, false)) {
-				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
-				$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
-				$errors = $filter->getErrors(true);
-				Log::warning(sprintf(
-					'%s pk "%d", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
-				), $errNo, __METHOD__);
-				return array(
-					'err_no' => $errNo,
-					'err_msg' => $errMsg,
-					'errors' => $errors,
-					'id' => $value
-				);
+			$rules = $helper->getBeforeValidatorCleanRules();
+			if (is_array($rules)) {
+				$filter->clean($rules, $attributes);
+			}
+
+			$rules = $helper->getUpdateRules();
+			if (is_array($rules)) {
+				if (!$filter->run($rules, $attributes, false)) {
+					$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+					$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
+					$errors = $filter->getErrors(true);
+					Log::warning(sprintf(
+						'%s pk "%d", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
+					), $errNo, __METHOD__);
+					return array(
+						'err_no' => $errNo,
+						'err_msg' => $errMsg,
+						'errors' => $errors,
+						'id' => $value
+					);
+				}
+			}
+
+			$rules = $helper->getAfterValidatorCleanRules();
+			if (is_array($rules)) {
+				$filter->clean($rules, $attributes);
 			}
 		}
 
@@ -649,12 +675,12 @@ abstract class Model
 	}
 
 	/**
-	 * 获取当前业务类对应的表单类
-	 * @return instance of base\Form
+	 * 获取当前业务类对应的辅助层类
+	 * @return instance of base\Generators
 	 */
-	public function getForm()
+	public function getHelper()
 	{
-		$className = str_replace('model', 'form', get_class($this));
+		$className = str_replace('model', 'helper', get_class($this));
 		return Singleton::getInstance($className);
 	}
 }

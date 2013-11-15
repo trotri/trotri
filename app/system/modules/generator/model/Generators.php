@@ -37,8 +37,7 @@ class Generators extends Model
 			$params['index_row_btns'] = array();
 		}
 
-		$helper = Util::getHelper('Generators', 'generator');
-		return $this->insert($params, $helper->getCreateRules());
+		return $this->insert($params, $this->getHelper());
 	}
 
 	/**
@@ -52,8 +51,7 @@ class Generators extends Model
 		$params['modifier_id'] = UserIdentity::getId();
 		$params['dt_modified'] = Util::getNowTime();
 
-		$form = Util::getForm('Generators', 'generator');
-		return $this->updateByPk($value, $params, $form->getRules());
+		return $this->updateByPk($value, $params, $this->getHelper());
 	}
 
 	/**

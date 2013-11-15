@@ -3,7 +3,6 @@ $helper = $this->util->getHelper('Generators', 'generator');
 $this->widget('widgets\FormBuilder', 
 	array(
 		'name' => 'create',
-		'values' => $this->values,
 		'errors' => $this->errors,
 		'helper' => $helper,
 		'elements' => array(

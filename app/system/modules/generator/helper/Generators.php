@@ -10,6 +10,7 @@
 
 namespace modules\generator\helper;
 
+use base\Helper;
 use library\Constant;
 
 /**
@@ -20,7 +21,7 @@ use library\Constant;
  * @package modules.generator.helper
  * @since 1.0
  */
-class Generators
+class Generators extends Helper
 {
 	/**
 	 * @var string 数据库表引擎：InnoDB类型
@@ -159,8 +160,8 @@ class Generators
 		}
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
-				'MinLength' => array(6, $label . '长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+				'MinLength' => array(6, $label . '“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -195,8 +196,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'AlphaNum' => array(true, $label . '只能由英文字母、数字或下划线组成.'),
-				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label. '长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label. '“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -371,8 +372,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -407,8 +408,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -443,8 +444,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -579,8 +580,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -617,8 +618,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -655,8 +656,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -693,8 +694,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -731,8 +732,8 @@ class Generators
 		elseif ($type === Constant::M_H_TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名长度%value%不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名长度%value%不能大于%option%个字符.')
+				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
+				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
 			);
 		}
 
@@ -856,17 +857,16 @@ class Generators
 	}
 
 	/**
-	 * 获取新增数据的验证规则
-	 * @return array
+	 * (non-PHPdoc)
+	 * @see base.Helper::getInsertRules()
 	 */
-	public function getCreateRules()
+	public function getInsertRules()
 	{
 		$type = Constant::M_H_TYPE_RULE;
 
 		$output = array(
 			'generator_name' => $this->getGeneratorName($type),
 			'tbl_name' => $this->getTblName($type),
-			'tbl_profile' => $this->getTblProfile($type),
 			'tbl_engine' => $this->getTblEngine($type),
 			'tbl_charset' => $this->getTblCharset($type),
 			'tbl_comment' => $this->getTblComment($type),
@@ -880,11 +880,61 @@ class Generators
 			'act_create_name' => $this->getActCreateName($type),
 			'act_modify_name' => $this->getActModifyName($type),
 			'act_remove_name' => $this->getActRemoveName($type),
+			'creator_id' => $this->getCreatorId($type)
 		);
-
-		// 不需要验证的字段：'description', 'creator_id', 'dt_created', 'modifier_id', 'dt_modified',
 
 		return $output;
 	}
 
+	/**
+	 * (non-PHPdoc)
+	 * @see base.Helper::getBeforeValidatorCleanRules()
+	 */
+	public function getBeforeValidatorCleanRules()
+	{
+		$output = array(
+			'generator_name' => 'trim',
+			'tbl_name' => 'trim',
+			'tbl_comment' => 'trim',
+			'app_name' => 'trim',
+			'mod_name' => 'trim',
+			'ctrl_name' => 'trim',
+			'act_index_name' => 'trim',
+			'act_view_name' => 'trim',
+			'act_create_name' => 'trim',
+			'act_modify_name' => 'trim',
+			'act_remove_name' => 'trim',
+			'creator_id' => 'intval',
+			'modifier_id' => 'intval'
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see base.Helper::getAfterValidatorCleanRules()
+	 */
+	public function getAfterValidatorCleanRules()
+	{
+		$output = array(
+			'index_row_btns' => array($this, 'joinIndexRowBtns')
+		);
+
+		return $output;
+	}
+
+	/**
+	 * 将列表每行操作按钮用英文逗号连接
+	 * @param array $value
+	 * @return string
+	 */
+	public function joinIndexRowBtns($value)
+	{
+		if (is_array($value)) {
+			$value = implode(',', $value);
+		}
+
+		return $value;
+	}
 }
