@@ -22,5 +22,12 @@ use library\Db;
  */
 class Generators extends Db
 {
-
+	/**
+	 * 构造方法：初始化表名操作类
+	 * @param string $tableName
+	 */
+	public function __construct()
+	{
+		parent::__construct('generators');
+	}
 }

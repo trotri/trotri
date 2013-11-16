@@ -102,7 +102,7 @@ CREATE TABLE `tr_generator_fields` (
 
 DROP TABLE IF EXISTS `tr_generator_field_validators`;
 CREATE TABLE `tr_generator_field_validators` (
-  `validator_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `validator_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `validator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '验证类名',
   `field_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '表单字段ID',
   `options` varchar(100) NOT NULL DEFAULT '' COMMENT '验证时对比值，可以是布尔类型、整型、字符型、数组序列化',

@@ -12,6 +12,7 @@ namespace base;
 
 use tfc\db\TableSchema;
 use tfc\db\ColumnSchema;
+use tfc\saf\DbProxy;
 
 /**
  * DbMeta class file

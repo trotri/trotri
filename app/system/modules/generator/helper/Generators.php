@@ -12,6 +12,7 @@ namespace modules\generator\helper;
 
 use base\Helper;
 use library\Constant;
+use library\Util;
 
 /**
  * Generators class file
@@ -148,6 +149,7 @@ class Generators extends Helper
 		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
+				'callback' => array($this, 'getGeneratorNameUrl')
 			);
 		}
 		elseif ($type === Constant::M_H_TYPE_FORM) {
@@ -219,6 +221,7 @@ class Generators extends Helper
 		if ($type === Constant::M_H_TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
+				'callback' => array($this, 'getTblProfileSwitchLabel')
 			);
 		}
 		elseif ($type === Constant::M_H_TYPE_FORM) {
@@ -936,5 +939,77 @@ class Generators extends Helper
 		}
 
 		return $value;
+	}
+
+	/**
+	 * 获取列表页“是否生成扩展表”美化版“是|否”选择项表单元素
+	 * @param array $data
+	 * @return string
+	 */
+	public function getTblProfileSwitchLabel($data)
+	{
+		return $this->getSwitchLabel('tbl_profile', $data['tbl_profile']);
+	}
+
+	/**
+	 * 获取字段组图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getGeneratorFieldGroupsLabel($data)
+	{
+		$ret = $this->getGlyphicon(self::GLYPHICON_INDEX, '#', '浏览表单字段组') 
+			 . $this->getGlyphicon(self::GLYPHICON_CREATE, '#', '新增表单字段组');
+
+		return $ret;
+	}
+
+	/**
+	 * 获取字段类型图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getGeneratorFieldTypesLabel($data)
+	{
+		$ret = $this->getGlyphicon(self::GLYPHICON_INDEX, '#', '浏览表单字段类型')
+			 . $this->getGlyphicon(self::GLYPHICON_CREATE, '#', '新增表单字段类型');
+
+		return $ret;
+	}
+
+	/**
+	 * 获取表单字段图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getGeneratorFieldsLabel($data)
+	{
+		$ret = $this->getGlyphicon(self::GLYPHICON_INDEX, '#', '浏览表单字段')
+			 . $this->getGlyphicon(self::GLYPHICON_CREATE, '#', '新增表单字段');
+
+		return $ret;
+	}
+
+	/**
+	 * 获取操作图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getOperateLabel($data)
+	{
+		$ret = $this->getGlyphicon(self::GLYPHICON_PENCIL, '#', '编辑生成代码')
+			 . $this->getGlyphicon(self::GLYPHICON_TRASH, '#', '移至回收站');
+
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“生成代码名”的A标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getGeneratorNameUrl($data)
+	{
+		return $this->getHtml()->a($data['generator_name'], Util::getUrlByCtrl('modify') . '&generator_id=' . $data['generator_id']);
 	}
 }

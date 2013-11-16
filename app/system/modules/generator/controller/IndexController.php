@@ -27,16 +27,17 @@ class IndexController extends BaseController
 {
 	/**
 	 * 数据列表
-	 * @author 宋欢 <trotri@yeah.net>
+	 * @return void
 	 */
 	public function indexAction()
 	{
-		$this->render();
+		$ret = Util::getModel('Generators', 'generator')->findAll();
+		$this->render($ret);
 	}
 
 	/**
 	 * 数据详情
-	 * @author 宋欢 <trotri@yeah.net>
+	 * @return void
 	 */
 	public function viewAction()
 	{
@@ -44,7 +45,7 @@ class IndexController extends BaseController
 
 	/**
 	 * 新增数据
-	 * @author 宋欢 <trotri@yeah.net>
+	 * @return void
 	 */
 	public function createAction()
 	{
@@ -63,7 +64,7 @@ class IndexController extends BaseController
 
 	/**
 	 * 编辑数据
-	 * @author 宋欢 <trotri@yeah.net>
+	 * @return void
 	 */
 	public function modifyAction()
 	{
@@ -71,7 +72,7 @@ class IndexController extends BaseController
 
 	/**
 	 * 移至回收站
-	 * @author 宋欢 <trotri@yeah.net>
+	 * @return void
 	 */
 	public function trashAction()
 	{
@@ -79,7 +80,7 @@ class IndexController extends BaseController
 
 	/**
 	 * 删除数据
-	 * @author 宋欢 <trotri@yeah.net>
+	 * @return void
 	 */
 	public function removeAction()
 	{

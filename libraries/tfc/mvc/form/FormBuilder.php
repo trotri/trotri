@@ -12,6 +12,7 @@ namespace tfc\mvc\form;
 
 use tfc\mvc\Widget;
 use tfc\ap\Ap;
+use tfc\ap\Registry;
 use tfc\ap\ErrorException;
 
 /**
@@ -71,31 +72,19 @@ abstract class FormBuilder extends Widget
 
 	/**
 	 * (non-PHPdoc)
-	 * @throws ErrorException 如果模板参数elements不存在或不是数组，抛出异常
 	 * @see tfc\mvc.Widget::_init()
 	 */
 	protected function _init()
 	{
-		if (!isset($this->_tplVars['elements'])) {
-			throw new ErrorException('FormBuilder TplVars.elements was not defined.');
-		}
-
-		if (!is_array($this->_tplVars['elements'])) {
-			throw new ErrorException('FormBuilder TplVars.elements invalid, elements must be array.');
-		}
-
-		$elements = $this->_tplVars['elements'];
-		unset($this->_tplVars['elements']);
+		$this->initValues();
+		$this->initErrors();
+		$this->initElements();
 
 		foreach ($this->_tplVars as $key => $value) {
 			$this->$key = $value;
 		}
 
-		if ($this->values === array()) {
-			$this->values = Ap::getRequest()->getPost();
-		}
-
-		$this->setElements($elements);
+		$this->initId();
 	}
 
 	/**
@@ -302,5 +291,93 @@ abstract class FormBuilder extends Widget
 	public function closeForm()
 	{
 		return $this->getHtml()->closeForm();
+	}
+
+	/**
+	 * 初始化所有表单元素的默认值
+	 * @return tfc\mvc\form\FormBuilder
+	 * @throws ErrorException 如果默认值不是数组，抛出异常
+	 */
+	public function initValues()
+	{
+		if (isset($this->_tplVars['values'])) {
+			if (!is_array($this->_tplVars['values'])) {
+				throw new ErrorException('FormBuilder TplVars.values invalid, values must be array.');
+			}
+
+			$this->values = $this->_tplVars['values'];
+			unset($this->_tplVars['values']);
+		}
+		else {
+			$this->values = Ap::getRequest()->getPost();
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 初始化所有表单元素的错误提示
+	 * @return tfc\mvc\form\FormBuilder
+	 * @throws ErrorException 如果错误提示不是数组，抛出异常
+	 */
+	public function initErrors()
+	{
+		if (isset($this->_tplVars['errors'])) {
+			if (!is_array($this->_tplVars['errors'])) {
+				throw new ErrorException('FormBuilder TplVars.errors invalid, errors must be array.');
+			}
+
+			$this->errors = $this->_tplVars['errors'];
+			unset($this->_tplVars['errors']);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 初始化所有表单元素
+	 * @return tfc\mvc\form\FormBuilder
+	 * @throws ErrorException 如果模板参数elements不存在或不是数组，抛出异常
+	 */
+	public function initElements()
+	{
+		if (!isset($this->_tplVars['elements'])) {
+			throw new ErrorException('FormBuilder TplVars.elements was not defined.');
+		}
+
+		if (!is_array($this->_tplVars['elements'])) {
+			throw new ErrorException('FormBuilder TplVars.elements invalid, elements must be array.');
+		}
+
+		$this->setElements($this->_tplVars['elements']);
+		unset($this->_tplVars['elements']);
+
+		return $this;
+	}
+
+	/**
+	 * 初始化表单ID
+	 * @return tfc\mvc\form\FormBuilder
+	 */
+	public function initId()
+	{
+		if (isset($this->attributes['id'])) {
+			return $this;
+		}
+
+		$id = (int) Registry::get('FormBuilder_ID') + 1;
+		Registry::set('FormBuilder_ID', $id);
+
+		$this->attributes['id'] = 'form_id_' . $id;
+		return $this;
+	}
+
+	/**
+	 * 返回表单ID
+	 * @return string
+	 */
+	public function getId()
+	{
+		return isset($this->attributes['id']) ? $this->attributes['id'] : '';
 	}
 }

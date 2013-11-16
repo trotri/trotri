@@ -12,6 +12,7 @@ namespace widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\form;
+use base\Helper;
 use library\Util;
 use library\Constant;
 
@@ -38,7 +39,7 @@ class FormBuilder extends form\FormBuilder
 	);
 
 	/**
-	 * @var instance of modules\module\helper
+	 * @var instance of base\helper
 	 */
 	protected $_helper = null;
 
@@ -63,29 +64,12 @@ class FormBuilder extends form\FormBuilder
 	 */
 	protected function _init()
 	{
-		if (isset($this->_tplVars['helper'])) {
-			$this->_helper = $this->_tplVars['helper'];
-		}
-
-		if (!is_object($this->_helper)) {
-			throw new ErrorException(sprintf(
-				'Property "%s.%s" must be a object.', 'FormBuilder', '_helper'
-			));
-		}
-
-		if (!isset($this->_tplVars['action'])) {
-			$this->action = Util::getUrlByAct();
-		}
+		$this->initHelper();
+		$this->initAction();
 
 		parent::_init();
 
-		if (isset($this->_tplVars['tabs'])) {
-			$this->setTabs($this->_tplVars['tabs']);
-		}
-		elseif (property_exists($this->_helper, 'tabs')) {
-			$helper = $this->_helper;
-			$this->setTabs($helper::$tabs);
-		}
+		$this->initTabs();
 	}
 
 	/**
@@ -96,6 +80,17 @@ class FormBuilder extends form\FormBuilder
 	{
 		$this->assign('tabs', $this->getTabs());
 		parent::run();
+		$this->displayJs();
+	}
+
+	/**
+     * 将JS内容输出到浏览器
+     * @return void
+     */
+	public function displayJs()
+	{
+		$this->assign('id', $this->getId());
+		$this->display($this->getJsName());
 	}
 
 	/**
@@ -226,5 +221,67 @@ class FormBuilder extends form\FormBuilder
 	{
 		$className = 'library\\form\\' . $className;
 		return parent::createElement($className, $config);
+	}
+
+	/**
+	 * 初始化业务辅助类
+	 * @return widgets\FormBuilder
+	 * @throws ErrorException 如果类的属性"_helper"不是对象，抛出异常
+	 */
+	public function initHelper()
+	{
+		if (isset($this->_tplVars['helper'])) {
+			$this->_helper = $this->_tplVars['helper'];
+			unset($this->_tplVars['helper']);
+		}
+
+		if (!is_object($this->_helper)) {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" must be a object.', get_class($this), '_helper'
+			));
+		}
+
+		if (!$this->_helper instanceof Helper) {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" is not instanceof base\Helper.', get_class($this), '_helper'
+			));
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 初始化表单Action
+	 * @return widgets\FormBuilder
+	 */
+	public function initAction()
+	{
+		if (isset($this->_tplVars['action'])) {
+			$this->action = $this->_tplVars['action'];
+			unset($this->_tplVars['action']);
+		}
+		else {
+			$this->action = Util::getUrlByAct();
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 初始化Nav-Tab
+	 * @return widgets\FormBuilder
+	 */
+	public function initTabs()
+	{
+		if (isset($this->_tplVars['tabs'])) {
+			$this->setTabs($this->_tplVars['tabs']);
+			unset($this->_tplVars['tabs']);
+		}
+		elseif (property_exists($this->_helper, 'tabs')) {
+			$helper = $this->_helper;
+			$this->setTabs($helper::$tabs);
+		}
+
+		return $this;
 	}
 }

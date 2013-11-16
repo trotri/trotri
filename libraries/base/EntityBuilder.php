@@ -11,6 +11,7 @@
 namespace base;
 
 use tfc\ap\ErrorException;
+use tfc\saf\DbProxy;
 
 /**
  * EntityBuilder class file

@@ -95,7 +95,7 @@ class Cfg
     public static function getDb($name)
     {
         if (self::$_db === null) {
-            $file = DIR_CFG_CACHE . DS . 'cluster.php';
+            $file = DIR_CFG_DB . DS . 'cluster.php';
             self::$_db = self::getCfg($file);
         }
 
@@ -117,7 +117,7 @@ class Cfg
     public static function getRal($name)
     {
         if (self::$_ral === null) {
-            $file = DIR_CFG_CACHE . DS . 'cluster.php';
+            $file = DIR_CFG_RAL . DS . 'cluster.php';
             self::$_ral = self::getCfg($file);
         }
 

@@ -10,6 +10,8 @@
 
 namespace base;
 
+use tfc\ap\Singleton;
+
 /**
  * Helper abstract class file
  * 业务辅助层基类
@@ -20,6 +22,31 @@ namespace base;
  */
 abstract class Helper
 {
+	/**
+	 * @var string 列表GlyphIcon
+	 */
+	const GLYPHICON_INDEX = 'list';
+
+	/**
+	 * @var string 加号GlyphIcon
+	 */
+	const GLYPHICON_CREATE = 'plus-sign';
+
+	/**
+	 * @var string 编辑笔GlyphIcon
+	 */
+	const GLYPHICON_PENCIL = 'pencil';
+
+	/**
+	 * @var string 回收站GlyphIcon
+	 */
+	const GLYPHICON_TRASH = 'trash';
+
+	/**
+	 * @var instance of tfc\mvc\Html
+	 */
+	protected $_html = null;
+
 	/**
 	 * 获取新增数据的验证规则
 	 * @return array
@@ -50,5 +77,56 @@ abstract class Helper
 	 */
 	public function getAfterValidatorCleanRules()
 	{
+	}
+
+	/**
+	 * 获取美化版“是|否”选择项表单元素
+	 * @return string
+	 */
+	public function getSwitchLabel($name, $value = 'n')
+	{
+		static $attributes = array(
+			'id'             => 'label-switch',
+			'class'          => 'make-switch switch-small',
+			'data-on-label'  => '是',
+			'data-off-label' => '否'
+		);
+
+		$html = $this->getHtml();
+		return $html->tag('div', $attributes, $html->radio($name, $value, ($value === 'y')));
+	}
+
+	/**
+	 * 获取图标按钮
+	 * @param string $type
+	 * @param string $url
+	 * @param string $title
+	 * @param string $placement
+	 * @return string
+	 */
+	public function getGlyphicon($type, $onclick, $title, $placement = 'left')
+	{
+		$attributes = array(
+			'class'               => 'glyphicon glyphicon-' . $type,
+			'data-toggle'         => 'tooltip',
+			'data-placement'      => $placement,
+			'data-original-title' => $title,
+			'onclick'             => 'return ' . $onclick . ';'
+		);
+
+		return $this->getHtml()->tag('span', $attributes, '');
+	}
+
+	/**
+	 * 获取页面辅助类
+	 * @return tfc\mvc\Html
+	 */
+	public function getHtml()
+	{
+		if ($this->_html === null) {
+			$this->_html = Singleton::getInstance('\\tfc\\mvc\\Html');
+		}
+
+		return $this->_html;
 	}
 }

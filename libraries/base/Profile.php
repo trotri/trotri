@@ -11,6 +11,7 @@
 namespace base;
 
 use tfc\ap\Singleton;
+use tfc\saf\DbProxy;
 
 /**
  * Profile class file

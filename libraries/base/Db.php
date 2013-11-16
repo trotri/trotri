@@ -12,6 +12,7 @@ namespace base;
 
 use tfc\ap\Singleton;
 use tfc\db\TableSchema;
+use tfc\saf\DbProxy;
 
 /**
  * Db abstract class file
@@ -60,8 +61,13 @@ abstract class Db
 	 */
 	public function __construct($tableName, DbProxy $dbProxy)
 	{
-		$this->_tableName = $tableName;
+		$tblprefix = $dbProxy->getTblprefix();
+		if ($tblprefix !== '' && stripos($tableName, $tblprefix) !== 0) {
+			$tableName = $tblprefix . $tableName;
+		}
+
 		$this->_dbProxy = $dbProxy;
+		$this->_tableName = $tableName;
 	}
 
 	/**

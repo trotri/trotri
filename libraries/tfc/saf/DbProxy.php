@@ -267,6 +267,15 @@ class DbProxy extends Statement
     }
 
     /**
+     * 获取表前缀
+     * @return string
+     */
+    public function getTblprefix()
+    {
+        return (string) $this->getConfig('tblprefix');
+    }
+
+    /**
      * 获取数据库配置信息，如果配置信息中没有指定连接数据库失败尝试重连次数，则由MAX_RETRY_TIMES常量指定次数
      * @return mixed
      * @throws ErrorException 如果配置信息中没有指定DSN、用户名、密码或编码格式，抛出异常

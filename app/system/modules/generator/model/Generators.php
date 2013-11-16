@@ -23,7 +23,7 @@ use library\Util;
  * @since 1.0
  */
 class Generators extends Model
-{
+{	
 	/**
 	 * 新增一条记录
 	 * @param array $params
