@@ -20,22 +20,22 @@ namespace tfc\mvc\form;
  */
 class ButtonElement extends Element
 {
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.Element::fetch()
-	 */
-	public function fetch()
-	{
-		return $this->getInput();
-	}
+    /**
+     * (non-PHPdoc)
+     * @see tfc\mvc\form.Element::fetch()
+     */
+    public function fetch()
+    {
+        return $this->getInput();
+    }
 
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.Element::getInput()
-	 */
-	public function getInput()
-	{
-		$type = $this->getType();
-		return $this->getHtml()->$type($this->value, $this->getName(), $this->getAttributes());
-	}
+    /**
+     * (non-PHPdoc)
+     * @see tfc\mvc\form.Element::getInput()
+     */
+    public function getInput()
+    {
+        $type = $this->getType();
+        return $this->getHtml()->$type($this->value, $this->getName(), $this->getAttributes());
+    }
 }
