@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,19 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace widgets;
+namespace koala\widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
-use base\Helper;
-use library\Constant;
 
 /**
  * TableBuilder class file
- * 表格处理类
+ * 表格处理类，基于Bootstrap-CSS框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: TableBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package widgets
+ * @package koala.widgets
  * @since 1.0
  */
 class TableBuilder extends Widget
@@ -46,9 +44,9 @@ class TableBuilder extends Widget
 	protected $_columns = array();
 
 	/**
-	 * @var instance of base\helper
+	 * @var instance of koala\widgets\ElementCollections
 	 */
-	protected $_helper = null;
+	protected $_elementCollections = null;
 
 	/**
 	 * (non-PHPdoc)
@@ -56,7 +54,7 @@ class TableBuilder extends Widget
 	 */
 	public function run()
 	{
-		$this->initHelper();
+		$this->initElementCollections();
 		$this->initCheckedToggle();
 		$this->initColumns();
 
@@ -87,7 +85,7 @@ class TableBuilder extends Widget
 	 * 获取Html表格元素：<tr></tr>
 	 * @param array $data
 	 * @return string
-	 * @throws ErrorException 如果表格首列需要全选按钮并且checkbox值不存在，抛出异常
+	 * @throws ErrorException 如果表格首列需要全选按钮但是checkbox值不存在，抛出异常
 	 */
 	public function getTr($data)
 	{
@@ -155,9 +153,8 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化所有的列信息
-	 * @return widgets\TableBuilder
+	 * @return koala\widgets\TableBuilder
 	 * @throws ErrorException 如果模板参数columns不存在或不是数组，抛出异常
-	 * @throws ErrorException 如果列信息为空并且helper中没有获取列信息的方法，抛出异常
 	 */
 	public function initColumns()
 	{
@@ -172,19 +169,13 @@ class TableBuilder extends Widget
 		$this->_columns = array();
 		foreach ($this->_tplVars['columns'] as $columnName => $columnValue) {
 			if (is_int($columnName) && is_string($columnValue)) {
-				$method = 'get' . str_replace('_', '', $columnValue);
-				if (!method_exists($this->_helper, $method)) {
-					throw new ErrorException(sprintf(
-						'Method "%s.%s" was not exists.', get_class($this->_helper), $method
-					));
-				}
-
 				$columnName = $columnValue;
-				$columnValue = $this->_helper->$method(Constant::M_H_TYPE_TABLE);
+				$columnValue = $this->_elementCollections->getElement(ElementCollections::TYPE_TABLE, $columnName);
 			}
 
 			if (isset($columnValue['name'])) {
 				$columnName = $columnValue['name'];
+				unset($columnValue['name']);
 			}
 
 			if (!isset($columnValue['label'])) {
@@ -199,7 +190,7 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化表格首列全选按钮
-	 * @return widgets\TableBuilder
+	 * @return koala\widgets\TableBuilder
 	 */
 	public function initCheckedToggle()
 	{
@@ -216,26 +207,26 @@ class TableBuilder extends Widget
 	}
 
 	/**
-	 * 初始化业务辅助类
-	 * @return widgets\TableBuilder
-	 * @throws ErrorException 如果类的属性"_helper"不是对象，抛出异常
+	 * 初始化表单元素集合类
+	 * @return koala\widgets\TableBuilder
+	 * @throws ErrorException 如果表单元素集合类不是对象或不是ElementCollections子类，抛出异常
 	 */
-	public function initHelper()
+	public function initElementCollections()
 	{
-		if (isset($this->_tplVars['helper'])) {
-			$this->_helper = $this->_tplVars['helper'];
-			unset($this->_tplVars['helper']);
+		if (isset($this->_tplVars['elementCollections'])) {
+			$this->_elementCollections = $this->_tplVars['elementCollections'];
+			unset($this->_tplVars['elementCollections']);
 		}
 
-		if (!is_object($this->_helper)) {
+		if (!is_object($this->_elementCollections)) {
 			throw new ErrorException(sprintf(
-				'Property "%s.%s" must be a object.', get_class($this), '_helper'
+				'Property "%s.%s" must be a object.', get_class($this), '_elementCollections'
 			));
 		}
 
-		if (!$this->_helper instanceof Helper) {
+		if (!$this->_elementCollections instanceof ElementCollections) {
 			throw new ErrorException(sprintf(
-				'Property "%s.%s" is not instanceof base\Helper.', get_class($this), '_helper'
+				'Property "%s.%s" is not instanceof koala\widgets\ElementCollections.', get_class($this), '_elementCollections'
 			));
 		}
 

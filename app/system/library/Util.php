@@ -32,7 +32,7 @@ class Util
 	 * @param integer $delay
 	 * @return void
 	 */
-	public function refresh($params = array(), $message = '', $delay = 0)
+	public static function refresh($params = array(), $message = '', $delay = 0)
 	{
 		self::forward('', '', '', $params, $message, $delay);
 	}
@@ -47,7 +47,7 @@ class Util
 	 * @param integer $delay
 	 * @return void
 	 */
-	public function forward($action = '', $controller = '', $module = '', array $params = array(), $message = '', $delay = 0)
+	public static function forward($action = '', $controller = '', $module = '', array $params = array(), $message = '', $delay = 0)
 	{
 		$url = self::getUrl($action, $controller, $module, $params);
 		Ap::getResponse()->redirect($url, $message, $delay);
@@ -59,9 +59,9 @@ class Util
 	 * @param array $params
 	 * @return string
 	 */
-	public function getUrlByAct(array $params = array())
+	public static function getActUrl(array $params = array())
 	{
-		return self::getUrlByCtrl('', $params);
+		return self::getCtrlUrl('', $params);
 	}
 
 	/**
@@ -70,9 +70,9 @@ class Util
 	 * @param array $params
 	 * @return string
 	 */
-	public function getUrlByCtrl($action = '', array $params = array())
+	public static function getCtrlUrl($action = '', array $params = array())
 	{
-		return self::getUrlByMod($action, '', $params);
+		return self::getModUrl($action, '', $params);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Util
 	 * @param array $params
 	 * @return string
 	 */
-	public function getUrlByMod($action = '', $controller = '', array $params = array())
+	public static function getModUrl($action = '', $controller = '', array $params = array())
 	{
 		return self::getUrl($action, $controller, '', $params);
 	}
@@ -95,7 +95,7 @@ class Util
 	 * @param array $params
 	 * @return string
 	 */
-	public function getUrl($action = '', $controller = '', $module = '', array $params = array())
+	public static function getUrl($action = '', $controller = '', $module = '', array $params = array())
 	{
 		$url = Ap::getRequest()->getScriptUrl();
 
@@ -122,11 +122,11 @@ class Util
 	/**
 	 * 通过DB配置名获取DB操作类
 	 * @param string $clusterName
-	 * @return instance of tfc\saf\DbProxy
+	 * @return tfc\saf\DbProxy
 	 */
-	public function getDbProxy($clusterName)
+	public static function getDbProxy($clusterName)
 	{
-		$className = 'tfc\saf\DbProxy::' . $clusterName;
+		$className = 'tfc\\saf\\DbProxy::' . $clusterName;
 		if (($instance = Singleton::get($className)) === null) {
 			$instance = new DbProxy($clusterName);
 			Singleton::set($className, $instance);
@@ -139,9 +139,9 @@ class Util
 	 * 获取业务辅助类
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return instance of helper
+	 * @return koala\widgets\ElementCollections
 	 */
-	public function getHelper($className, $moduleName)
+	public static function getHelper($className, $moduleName)
 	{
 		$className = 'modules\\' . strtolower($moduleName) . '\\helper\\' . $className;
 		return Singleton::getInstance($className);
@@ -151,9 +151,9 @@ class Util
 	 * 获取业务层类
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return instance of model
+	 * @return koala\Model
 	 */
-	public function getModel($className, $moduleName)
+	public static function getModel($className, $moduleName)
 	{
 		$className = 'modules\\' . strtolower($moduleName) . '\\model\\' . $className;
 		return Singleton::getInstance($className);
@@ -163,9 +163,9 @@ class Util
 	 * 获取数据库层类
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return instance of db
+	 * @return koala\Db
 	 */
-	public function getDb($className, $moduleName)
+	public static function getDb($className, $moduleName)
 	{
 		$className = 'modules\\' . strtolower($moduleName) . '\\db\\' . $className;
 		return Singleton::getInstance($className);
@@ -175,7 +175,7 @@ class Util
 	 * 获取当前时间，包含年月日时分秒
 	 * @return string
 	 */
-	public function getNowTime()
+	public static function getNowTime()
 	{
 		return date('Y-m-d H:i:s');
 	}

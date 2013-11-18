@@ -85,4 +85,13 @@ class IndexController extends BaseController
 	public function removeAction()
 	{
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library.BaseController::_getHelper()
+	 */
+	protected function _getHelper()
+	{
+		return Util::getHelper('Generators', 'generator');
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,10 +8,9 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace base;
+namespace koala;
 
 use tfc\ap\Singleton;
-use tfc\db\TableSchema;
 use tfc\saf\DbProxy;
 
 /**
@@ -19,7 +18,7 @@ use tfc\saf\DbProxy;
  * 数据库操作基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Db.php 1 2013-05-18 14:58:59Z huan.song $
- * @package base
+ * @package koala
  * @since 1.0
  */
 abstract class Db
@@ -422,11 +421,11 @@ abstract class Db
 
 	/**
 	 * 获取创建简单的执行命令类
-	 * @return base\CommandBuilder
+	 * @return koala\CommandBuilder
 	 */
 	public function getCommandBuilder()
 	{
-		return Singleton::getInstance('base\CommandBuilder');
+		return Singleton::getInstance('koala\\CommandBuilder');
 	}
 
 	/**
@@ -437,39 +436,11 @@ abstract class Db
 	 */
 	public function getTableSchema()
 	{
-		if ($this->_tableSchema !== null) {
-			return $this->_tableSchema;
+		if ($this->_tableSchema === null) {
+			$entityBuilder = EntityBuilder::getInstance($this->getDbProxy());
+			$this->_tableSchema = $entityBuilder->getTableSchema($this->getTableName());
 		}
 
-		$className = 'tfc\db\TableSchema::' . $this->getTableName();
-		if (($instance = Singleton::get($className)) !== null) {
-			return $this->_tableSchema = $instance;
-		}
-
-		$ref = EntityBuilder::getInstance($this->getDbProxy())->getRefClass($this->getTableName());
-		$attributes = $ref->getDefaultProperties();
-
-		$tableSchema = new TableSchema();
-		$tableSchema->name = $ref->hasConstant('TABLE_NAME') ? $ref->getConstant('TABLE_NAME') : $ref->getShortName();
-		$tableSchema->autoIncrement = $ref->hasConstant('AUTO_INCREMENT') ? $ref->getConstant('AUTO_INCREMENT') : null;
-		if (isset($attributes['primaryKey'])) {
-			$tableSchema->primaryKey = $attributes['primaryKey'];
-			unset($attributes['primaryKey']);
-		}
-
-		$tableSchema->columnNames = array_keys($attributes);
-		if ($tableSchema->primaryKey === null) {
-			$tableSchema->primaryKey = $tableSchema->columnNames[0];
-		}
-
-		foreach ($attributes as $key => $value) {
-			if ($value === null) {
-				unset($attributes[$key]);
-			}
-		}
-		$tableSchema->attributeDefaults = $attributes;
-
-		Singleton::set($className, $tableSchema);
-		return $this->_tableSchema = $tableSchema;
+		return $this->_tableSchema;
 	}
 }

@@ -13,11 +13,11 @@ namespace library;
 use tfc\mvc\Controller;
 use tfc\ap\UserIdentity;
 use tfc\ap\Ap;
-use tfc\ap\Singleton;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
+use koala\widgets\ElementCollections;
 
 /**
  * BaseController abstract class file
@@ -45,6 +45,7 @@ abstract class BaseController extends Controller
 		$this->assignSystem();
 		$this->assignUrl();
 		$this->assignUser();
+		$this->assignHelper();
 
 		$view = Mvc::getView();
 		$view->addLayoutName('layouts' . DS . $this->layoutName);
@@ -81,7 +82,6 @@ abstract class BaseController extends Controller
 		$view->assign('action', 	Mvc::$action);
 		$view->assign('sidebar', 	Mvc::$module . '/' . Mvc::$controller . '_sidebar');
 		$view->assign('log_id', 	Log::getId());
-		$view->assign('util', 		Singleton::getInstance('library\\Util'));
 		$view->assign('urls', 		Cfg::getApp('urls'));
 
 		if (($wfBackTrace = Registry::get('warning_backtrace')) !== null) {
@@ -102,6 +102,9 @@ abstract class BaseController extends Controller
 		$scriptUrl = Ap::getRequest()->getScriptUrl();
 		$staticUrl = $baseUrl . '/static/' . APP_NAME . '/' . $view->skinName;
 
+		$view->assign('act_url', 	Util::getActUrl());
+		$view->assign('ctrl_url', 	Util::getCtrlUrl());
+		$view->assign('mod_url', 	Util::getModUrl());
 		$view->assign('root_url',   $baseUrl . '/..');
 		$view->assign('base_path',  $basePath);
 		$view->assign('base_url',   $baseUrl);
@@ -121,6 +124,18 @@ abstract class BaseController extends Controller
 		$view = Mvc::getView();
 		$view->assign('user_id', UserIdentity::getId());
 		$view->assign('name', UserIdentity::getName());
+	}
+
+	/**
+	 * 将业务辅助类设置到模板变量中
+	 * @return void
+	 */
+	public function assignHelper()
+	{
+		$helper = $this->_getHelper();
+		if (is_object($helper)) {
+			Mvc::getView()->assign('helper', $helper);
+		}
 	}
 
 	/**
@@ -189,4 +204,10 @@ abstract class BaseController extends Controller
 
 		return true;
 	}
+
+	/**
+	 * 获取业务辅助类
+	 * @return koala\widgets\ElementCollections
+	 */
+	abstract protected function _getHelper();
 }

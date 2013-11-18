@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library\form;
+namespace koala\form;
 
 /**
  * StringElement class file
  * 按钮类表单元素
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: StringElement.php 1 2013-05-18 14:58:59Z huan.song $
- * @package library.form
+ * @package koala.form
  * @since 1.0
  */
 class StringElement extends InputElement

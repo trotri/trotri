@@ -10,7 +10,7 @@
 
 namespace library;
 
-use base;
+use koala;
 
 /**
  * ErrorMsg class file
@@ -20,7 +20,7 @@ use base;
  * @package library
  * @since 1.0
  */
-class ErrorMsg extends base\ErrorMsg
+class ErrorMsg extends koala\ErrorMsg
 {
 	/**
 	 * @var string 登录成功

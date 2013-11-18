@@ -1,11 +1,15 @@
 <!-- FormBuilder -->
+<?php
+$html = $this->getHtml();
+$aTagAttributes = array('data-toggle' => 'tab');
+$activeAttributes = array('class' => 'active');
+?>
 <?php echo $this->form_open; ?>
-<?php $html = $this->getHtml(); ?>
 
 <ul class="nav nav-tabs">
 <?php foreach ($this->tabs as $tid => $tab) : ?>
-<?php $aTag = $html->a($tab['prompt'], '#' . $tid, array('data-toggle' => 'tab')); ?>
-<?php echo $html->tag('li', ($tab['active'] ? array('class' => 'active') : array()), $aTag), "\n"; ?>
+<?php $aTag = $html->a($tab['prompt'], '#' . $tid, $aTagAttributes); ?>
+<?php echo $html->tag('li', ($tab['active'] ? $activeAttributes : array()), $aTag), "\n"; ?>
 <?php endforeach; ?>
 </ul><!-- /.nav nav-tabs -->
 

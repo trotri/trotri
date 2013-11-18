@@ -1,12 +1,10 @@
 <?php $this->display('generator/index_index_btns'); ?>
 
 <?php
-$helper = $this->util->getHelper('Generators', 'generator');
-
 $this->widget(
-	'widgets\TableBuilder',
+	'koala\widgets\TableBuilder',
 	array(
-		'helper' => $helper,
+		'elementCollections' => $this->helper,
 		'columns' => array(
 			'generator_name',
 			'tbl_name',
@@ -20,24 +18,24 @@ $this->widget(
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
 				'label' => '字段组',
-				'callback' => array($helper, 'getGeneratorFieldGroupsLabel')
+				'callback' => array($this->helper, 'getGeneratorFieldGroupsLabel')
 			),
 			'generator_field_types' => array(
 				'name' => 'generator_field_types',
 				'label' => '字段类型',
-				'callback' => array($helper, 'getGeneratorFieldTypesLabel')
+				'callback' => array($this->helper, 'getGeneratorFieldTypesLabel')
 			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
 				'label' => '字段管理',
-				'callback' => array($helper, 'getGeneratorFieldsLabel')
+				'callback' => array($this->helper, 'getGeneratorFieldsLabel')
 			),
 			'generator_id' => array(
 				'label' => 'ID',
 			),
 			'operate' => array(
 				'label' => '操作',
-				'callback' => array($helper, 'getOperateLabel')
+				'callback' => array($this->helper, 'getOperateLabel')
 			),
 		),
 		'checkedToggle' => 'generator_id',

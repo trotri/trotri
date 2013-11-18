@@ -114,6 +114,10 @@ class Metadata
             $tableSchema->columns[$columnSchema->name] = $columnSchema;
         }
 
+        if (is_array($tableSchema->primaryKey)) {
+        	$tableSchema->primaryKey = $this->getPrimary($tableName);
+        }
+
         return $this->_tableSchemas[$tableName] = $tableSchema;
     }
 
@@ -137,6 +141,29 @@ class Metadata
         $columnSchema->isAutoIncrement = (strpos(strtolower($columns['Extra']), 'auto_increment') !== false);
 
         return $columnSchema;
+    }
+
+    /**
+     * 获取表的主键信息
+     * @param string $tableName
+     * @return array|string
+     */
+    public function getPrimary($tableName)
+    {
+    	$sql = str_replace('`', '', $this->getCreateTable($tableName));
+    	$regs = array();
+    	$preg = '/PRIMARY KEY\s*\(([^\)]+)\)\s*/mi';
+    	preg_match_all($preg, $sql, $regs, PREG_SET_ORDER);
+		if ($regs === array()) {
+			return null;
+		}
+
+		$primaryKey = str_replace(' ', '', $regs[0][1]);
+		if (strpos($primaryKey, ',') === false) {
+			return $primaryKey;
+		}
+
+		return explode(',', $primaryKey);
     }
 
     /**

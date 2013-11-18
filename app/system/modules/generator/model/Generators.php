@@ -10,8 +10,8 @@
 
 namespace modules\generator\model;
 
+use koala\Model;
 use tfc\ap\UserIdentity;
-use base\Model;
 use library\Util;
 
 /**
@@ -23,7 +23,16 @@ use library\Util;
  * @since 1.0
  */
 class Generators extends Model
-{	
+{
+	/**
+	 * 构造方法：初始化当前业务类对应的数据库操作类
+	 */
+	public function __construct()
+	{
+		$db = Util::getDb('Generators', 'generator');
+		parent::__construct($db);
+	}
+
 	/**
 	 * 新增一条记录
 	 * @param array $params
@@ -37,7 +46,7 @@ class Generators extends Model
 			$params['index_row_btns'] = array();
 		}
 
-		return $this->insert($params, $this->getHelper());
+		return $this->insert($params);
 	}
 
 	/**
@@ -51,7 +60,7 @@ class Generators extends Model
 		$params['modifier_id'] = UserIdentity::getId();
 		$params['dt_modified'] = Util::getNowTime();
 
-		return $this->updateByPk($value, $params, $this->getHelper());
+		return $this->updateByPk($value, $params);
 	}
 
 	/**
@@ -66,10 +75,93 @@ class Generators extends Model
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library.Model::getDb()
+	 * @see koala.Model::getInsertRules()
 	 */
-	public function getDb()
+	public function getInsertRules()
 	{
-		return Util::getDb('Generators', 'generator');
+		$helper = $this->getHelper();
+		$type = $helper::TYPE_RULE;
+
+		$output = array(
+			'generator_name' => $helper->getGeneratorName($type),
+			'tbl_name' => $helper->getTblName($type),
+			'tbl_engine' => $helper->getTblEngine($type),
+			'tbl_charset' => $helper->getTblCharset($type),
+			'tbl_comment' => $helper->getTblComment($type),
+			'app_name' => $helper->getAppName($type),
+			'mod_name' => $helper->getModName($type),
+			'ctrl_name' => $helper->getCtrlName($type),
+			'index_row_btns' => $helper->getIndexRowBtns($type),
+			'trash' => $helper->getTrash($type),
+			'act_index_name' => $helper->getActIndexName($type),
+			'act_view_name' => $helper->getActViewName($type),
+			'act_create_name' => $helper->getActCreateName($type),
+			'act_modify_name' => $helper->getActModifyName($type),
+			'act_remove_name' => $helper->getActRemoveName($type),
+			'creator_id' => $helper->getCreatorId($type)
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'generator_name' => 'trim',
+			'tbl_name' => 'trim',
+			'tbl_comment' => 'trim',
+			'app_name' => 'trim',
+			'mod_name' => 'trim',
+			'ctrl_name' => 'trim',
+			'act_index_name' => 'trim',
+			'act_view_name' => 'trim',
+			'act_create_name' => 'trim',
+			'act_modify_name' => 'trim',
+			'act_remove_name' => 'trim',
+			'creator_id' => 'intval',
+			'modifier_id' => 'intval'
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesAfterValidator()
+	 */
+	public function getCleanRulesAfterValidator()
+	{
+		$output = array(
+			'index_row_btns' => array($this, 'joinIndexRowBtns')
+		);
+
+		return $output;
+	}
+
+	/**
+	 * 将列表每行操作按钮用英文逗号连接
+	 * @param array $value
+	 * @return string
+	 */
+	public function joinIndexRowBtns($value)
+	{
+		if (is_array($value)) {
+			$value = implode(',', $value);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * 获取业务辅助类
+	 * @return koala\widgets\ElementCollections
+	 */
+	public function getHelper()
+	{
+		return Util::getHelper('Generators', 'generator');
 	}
 }

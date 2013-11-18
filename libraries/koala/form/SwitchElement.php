@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library\form;
+namespace koala\form;
 
 /**
  * SwitchElement class file
- * 美化版“是|否”选择项表单元素
+ * 美化版“是|否”选择项表单元素，基于Bootstrap-CSS框架的switch开关控件
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: SwitchElement.php 1 2013-05-18 14:58:59Z huan.song $
- * @package library.form
+ * @package koala.form
  * @since 1.0
  */
 class SwitchElement extends InputElement

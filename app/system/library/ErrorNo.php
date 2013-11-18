@@ -10,7 +10,7 @@
 
 namespace library;
 
-use base;
+use koala;
 
 /**
  * ErrorNo class file
@@ -20,7 +20,7 @@ use base;
  * @package library
  * @since 1.0
  */
-class ErrorNo extends base\ErrorNo
+class ErrorNo extends koala\ErrorNo
 {
 	/**
 	 * @var integer 登录成功

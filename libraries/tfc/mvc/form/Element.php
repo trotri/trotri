@@ -266,7 +266,7 @@ abstract class Element
      */
     public function getHtml()
     {
-        return Singleton::getInstance('\\tfc\\mvc\\Html');
+        return Singleton::getInstance('tfc\\mvc\\Html');
     }
 
     /**

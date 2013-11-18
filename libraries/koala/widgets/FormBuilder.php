@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,24 +8,26 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace widgets;
+namespace koala\widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\form;
-use base\Helper;
-use library\Util;
-use library\Constant;
 
 /**
  * FormBuilder class file
- * 表单处理类
+ * 表单处理类，基于Bootstrap-CSS框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FormBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package widgets
+ * @package koala.widgets
  * @since 1.0
  */
 class FormBuilder extends form\FormBuilder
 {
+	/**
+	 * @var string 默认的分类标签
+	 */
+	const DEFAULT_TID = 'main';
+
 	/**
 	 * @var array 寄存表单属性
 	 */
@@ -39,22 +41,22 @@ class FormBuilder extends form\FormBuilder
 	);
 
 	/**
-	 * @var instance of base\helper
+	 * @var instance of koala\widgets\ElementCollections
 	 */
-	protected $_helper = null;
+	protected $_elementCollections = null;
 
 	/**
 	 * @var array 类型和Element关联表
 	 */
 	protected static $_typeObjectMap = array(
-		'text' => 'InputElement',
+		'text'     => 'InputElement',
 		'password' => 'InputElement',
-		'file' => 'InputElement',
-		'button' => 'ButtonElement',
-		'hidden' => 'HiddenElement',
+		'file'     => 'InputElement',
+		'button'   => 'ButtonElement',
+		'hidden'   => 'HiddenElement',
 		'checkbox' => 'ICheckboxElement',
-		'radio' => 'IRadioElement',
-		'switch' => 'SwitchElement',
+		'radio'    => 'IRadioElement',
+		'switch'   => 'SwitchElement',
 		'textarea' => 'TextareaElement',
 	);
 
@@ -64,12 +66,11 @@ class FormBuilder extends form\FormBuilder
 	 */
 	protected function _init()
 	{
-		$this->initHelper();
+		$this->initElementCollections();
 		$this->initAction();
+		$this->initTabs();
 
 		parent::_init();
-
-		$this->initTabs();
 	}
 
 	/**
@@ -120,7 +121,7 @@ class FormBuilder extends form\FormBuilder
 	/**
 	 * 设置多个Input表单元素分类标签
 	 * @param array $tabs
-	 * @return widgets\FormBuilder
+	 * @return koala\widgets\FormBuilder
 	 */
 	public function setTabs(array $tabs = array())
 	{
@@ -148,7 +149,7 @@ class FormBuilder extends form\FormBuilder
 	 * @param string $tid
 	 * @param string $prompt
 	 * @param boolean $active
-	 * @return widgets\FormBuilder
+	 * @return koala\widgets\FormBuilder
 	 */
 	public function addTab($tid, $prompt, $active = false)
 	{
@@ -181,32 +182,26 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function setElements(array $elements = array())
 	{
-		foreach ($elements as $name => $element) {
-			if (is_int($name) && is_string($element)) {
-				$method = 'get' . str_replace('_', '', $element);
-				if (!method_exists($this->_helper, $method)) {
-					throw new ErrorException(sprintf(
-						'Method "%s.%s" was not exists.', get_class($this->_helper), $method
-					));
+		foreach ($elements as $columnName => $columnValue) {
+			if (is_int($columnName) && is_string($columnValue)) {
+				$_tmpColumnName = $columnValue;
+				$columnValue = $this->_elementCollections->getElement(ElementCollections::TYPE_FORM, $_tmpColumnName);
+				if (!isset($columnValue['name'])) {
+					$columnValue['name'] = $_tmpColumnName;
 				}
 
-				$elements[$name] = $this->_helper->$method(Constant::M_H_TYPE_FORM);
-				if (!isset($elements[$name]['name'])) {
-					$elements[$name]['name'] = $element;
-				}
-
-				$element = $elements[$name];
+				$elements[$columnName] = $columnValue;
 			}
 
-			if (!isset($element['__object__']) && isset($element['type'])) {
-				$type = $element['type'];
+			if (!isset($columnValue['__object__']) && isset($columnValue['type'])) {
+				$type = $columnValue['type'];
 				if (isset(self::$_typeObjectMap[$type])) {
-					$elements[$name]['__object__'] = self::$_typeObjectMap[$type];
+					$elements[$columnName]['__object__'] = self::$_typeObjectMap[$type];
 				}
 			}
 
-			if (!isset($element['__tid__'])) {
-				$elements[$name]['__tid__'] = 'main';
+			if (!isset($columnValue['__tid__'])) {
+				$elements[$columnName]['__tid__'] = self::DEFAULT_TID;
 			}
 		}
 
@@ -219,40 +214,13 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function createElement($className, array $config = array())
 	{
-		$className = 'library\\form\\' . $className;
+		$className = 'koala\\form\\' . $className;
 		return parent::createElement($className, $config);
 	}
 
 	/**
-	 * 初始化业务辅助类
-	 * @return widgets\FormBuilder
-	 * @throws ErrorException 如果类的属性"_helper"不是对象，抛出异常
-	 */
-	public function initHelper()
-	{
-		if (isset($this->_tplVars['helper'])) {
-			$this->_helper = $this->_tplVars['helper'];
-			unset($this->_tplVars['helper']);
-		}
-
-		if (!is_object($this->_helper)) {
-			throw new ErrorException(sprintf(
-				'Property "%s.%s" must be a object.', get_class($this), '_helper'
-			));
-		}
-
-		if (!$this->_helper instanceof Helper) {
-			throw new ErrorException(sprintf(
-				'Property "%s.%s" is not instanceof base\Helper.', get_class($this), '_helper'
-			));
-		}
-
-		return $this;
-	}
-
-	/**
 	 * 初始化表单Action
-	 * @return widgets\FormBuilder
+	 * @return koala\widgets\FormBuilder
 	 */
 	public function initAction()
 	{
@@ -260,16 +228,13 @@ class FormBuilder extends form\FormBuilder
 			$this->action = $this->_tplVars['action'];
 			unset($this->_tplVars['action']);
 		}
-		else {
-			$this->action = Util::getUrlByAct();
-		}
 
 		return $this;
 	}
 
 	/**
-	 * 初始化Nav-Tab
-	 * @return widgets\FormBuilder
+	 * 初始化分类标签
+	 * @return koala\widgets\FormBuilder
 	 */
 	public function initTabs()
 	{
@@ -277,11 +242,53 @@ class FormBuilder extends form\FormBuilder
 			$this->setTabs($this->_tplVars['tabs']);
 			unset($this->_tplVars['tabs']);
 		}
-		elseif (property_exists($this->_helper, 'tabs')) {
-			$helper = $this->_helper;
-			$this->setTabs($helper::$tabs);
+		else {
+			$tabs = $this->_elementCollections->getViewTabs();
+			if (is_array($tabs)) {
+				$this->setTabs($tabs);
+			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * 初始化表单元素集合类
+	 * @return koala\widgets\FormBuilder
+	 * @throws ErrorException 如果表单元素集合类不是对象或不是ElementCollections子类，抛出异常
+	 */
+	public function initElementCollections()
+	{
+		if (isset($this->_tplVars['elementCollections'])) {
+			$this->_elementCollections = $this->_tplVars['elementCollections'];
+			unset($this->_tplVars['elementCollections']);
+		}
+
+		if (!is_object($this->_elementCollections)) {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" must be a object.', get_class($this), '_elementCollections'
+			));
+		}
+
+		if (!$this->_elementCollections instanceof ElementCollections) {
+			throw new ErrorException(sprintf(
+				'Property "%s.%s" is not instanceof koala\widgets\ElementCollections.', get_class($this), '_elementCollections'
+			));
+		}
+
+		return $this;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Widget::getWidgetDirectory()
+	 */
+	public function getWidgetDirectory()
+	{
+		if ($this->_widgetDirectory === null) {
+			$this->_widgetDirectory = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'formbuilder';
+		}
+
+		return $this->_widgetDirectory;
 	}
 }

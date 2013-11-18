@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,9 +8,11 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace base;
+namespace koala;
 
 use tfc\ap\ErrorException;
+use tfc\ap\Singleton;
+use tfc\db\TableSchema;
 use tfc\saf\DbProxy;
 
 /**
@@ -18,7 +20,7 @@ use tfc\saf\DbProxy;
  * 生成表的实体类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: EntityBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package base
+ * @package koala
  * @since 1.0
  */
 class EntityBuilder
@@ -29,12 +31,12 @@ class EntityBuilder
     protected $_dbProxy = null;
 
     /**
-     * @var instance of base\DbMeta
+     * @var instance of koala\Metadata
      */
-    protected $_dbMeta = null;
+    protected $_metadata = null;
 
     /**
-     * @var array instances of base\EntityBuilder
+     * @var array instances of koala\EntityBuilder
      */
     protected static $_instances = array();
 
@@ -45,13 +47,13 @@ class EntityBuilder
     protected function __construct(DbProxy $dbProxy)
     {
         $this->_dbProxy = $dbProxy;
-        $this->_dbMeta = new DbMeta($this->getDbProxy());
+        $this->_metadata = new Metadata($dbProxy);
     }
 
     /**
-     * 单例模式：获取类的实例
+     * 单例模式：获取本类的实例
      * @param tfc\saf\DbProxy $dbProxy
-     * @return instance of base\EntityBuilder
+     * @return instance of koala\EntityBuilder
      */
     public static function getInstance(DbProxy $dbProxy)
     {
@@ -64,13 +66,54 @@ class EntityBuilder
     }
 
     /**
+     * 通过表的实体类，获取表的概要描述，包括：表名、主键、自增字段、字段、默认值
+     * 应该根据不同的数据库类型创建对应的TableSchema类：$dbType = $this->getDriver(false)->getDbType();
+     * 这里只用到MySQL数据库，暂时不做多数据库类型
+     * @param string $tableName
+     * @return tfc\db\TableSchema
+     */
+    public function getTableSchema($tableName)
+    {
+    	$className = 'tfc\\db\\TableSchema::' . strtolower($tableName);
+    	if (Singleton::has($className)) {
+    		return Singleton::get($className);
+    	}
+
+    	$ref = $this->getRefClass($tableName);
+    	$attributes = $ref->getDefaultProperties();
+
+    	$tableSchema = new TableSchema();
+    	$tableSchema->name = $ref->hasConstant('TABLE_NAME') ? $ref->getConstant('TABLE_NAME') : $ref->getShortName();
+    	$tableSchema->autoIncrement = $ref->hasConstant('AUTO_INCREMENT') ? $ref->getConstant('AUTO_INCREMENT') : null;
+    	if (isset($attributes['primaryKey'])) {
+    		$tableSchema->primaryKey = $attributes['primaryKey'];
+    		unset($attributes['primaryKey']);
+    	}
+
+    	$tableSchema->columnNames = array_keys($attributes);
+    	if ($tableSchema->primaryKey === null) {
+    		$tableSchema->primaryKey = $tableSchema->columnNames[0];
+    	}
+
+    	foreach ($attributes as $key => $value) {
+    		if ($value === null) {
+    			unset($attributes[$key]);
+    		}
+    	}
+    	$tableSchema->attributeDefaults = $attributes;
+
+    	Singleton::set($className, $tableSchema);
+    	return $tableSchema;
+    }
+
+    /**
      * 获取实体类的反射对象
      * @param string $tableName
      * @return class reports
      */
     public function getRefClass($tableName)
     {
-        require_once $this->getFile($tableName);
+        require_once $this->getEntityFile($tableName);
         return new \ReflectionClass('\\' . ucfirst(strtolower($tableName)));
     }
 
@@ -80,28 +123,29 @@ class EntityBuilder
      * @return string
      * @throws ErrorException 如果没有创建文件的权限，抛出异常
      */
-    public function getFile($tableName)
+    public function getEntityFile($tableName)
     {
         $tableName = strtolower($tableName);
         $className = ucfirst($tableName);
-        $path = $this->getDir() . DS . $className . '.php';
-        if (is_file($path)) {
-            return $path;
+        $filePath = $this->getEntityDir() . DS . $className . '.php';
+        if (is_file($filePath)) {
+            return $filePath;
         }
 
-        $tableSchema = $this->getDbMeta()->getTableSchema($tableName);
-
-        if (!($stream = @fopen($path, 'w', false))) {
+        if (!($stream = @fopen($filePath, 'w', false))) {
             throw new ErrorException(sprintf(
-                'EntityBuilder file "%s" cannot be opened with mode "w"', $path
+                'EntityBuilder file "%s" cannot be opened with mode "w"', $filePath
             ));
         }
+
+        $tableSchema = $this->getMetadata()->getTableSchema($tableName);
+
         fwrite($stream, "<?php\n");
         fwrite($stream, "/**\n");
         fwrite($stream, " * {$className} class file\n");
         fwrite($stream, " * {$tableName} 表实体\n");
-        fwrite($stream, " * @author auto create\n");
-        fwrite($stream, " * @version \$Id: {$className}.php 1 " . date('Y-m-d H:i:s') . "Z auto create $\n");
+        fwrite($stream, " * @author Create by koala\\EntityBuilder\n");
+        fwrite($stream, " * @version \$Id: {$className}.php 1 " . date('Y-m-d H:i:s') . "Z koala\\EntityBuilder $\n");
         fwrite($stream, " * @package \n");
         fwrite($stream, " * @since 1.0\n");
         fwrite($stream, " */\n");
@@ -123,7 +167,7 @@ class EntityBuilder
         fwrite($stream, "     */\n");
         fwrite($stream, "    public static \$primaryKey = " . var_export($tableSchema->primaryKey, true) . ";\n\n");
 
-        $comments = $this->getDbMeta()->getComments($tableName);
+        $comments = $this->getMetadata()->getComments($tableName);
         foreach ($tableSchema->columnNames as $columnName) {
             $comment = isset($comments[$columnName]) ? $comments[$columnName] : '';
             $type = $tableSchema->columns[$columnName]->type;
@@ -135,11 +179,11 @@ class EntityBuilder
             fwrite($stream, "    /**\n");
             fwrite($stream, "     * @var $type $comment\n");
             fwrite($stream, "     */\n");
-            fwrite($stream, "    public \${$columnName}" . (($defaultValue !== '') ? " = $defaultValue" : "") . ";\n\n");
+            fwrite($stream, "    public \${$columnName}" . (($defaultValue !== '') ? " = $defaultValue" : '') . ";\n\n");
         }
 
         fwrite($stream, "}\n");
-        return $path;
+        return $filePath;
     }
 
     /**
@@ -147,7 +191,7 @@ class EntityBuilder
      * @return string
      * @throws ErrorException 如果创建目录失败，抛出异常
      */
-    public function getDir()
+    public function getEntityDir()
     {
         $dir = DIR_DATA_RUNTIME_ENTITIES . DS . $this->getDbProxy()->getClusterName();
         $mode = 0664;
@@ -175,10 +219,10 @@ class EntityBuilder
 
     /**
      * 获取MySQL表结构处理类
-     * @return base\DbMeta
+     * @return koala\Metadata
      */
-    public function getDbMeta()
+    public function getMetadata()
     {
-        return $this->_dbMeta;
+        return $this->_metadata;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -10,17 +10,17 @@
 
 namespace library;
 
-use base;
+use koala;
 
 /**
  * Db abstract class file
  * 数据库操作基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Db.php 1 2013-05-18 14:58:59Z huan.song $
- * @package base
+ * @package library
  * @since 1.0
  */
-abstract class Db extends base\Db
+abstract class Db extends koala\Db
 {
 	/**
 	 * 构造方法：初始化表名和数据库操作类

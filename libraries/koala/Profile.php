@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace base;
+namespace koala;
 
 use tfc\ap\Singleton;
 use tfc\saf\DbProxy;
@@ -29,7 +29,7 @@ use tfc\saf\DbProxy;
  * </pre>
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Profile.php 1 2013-05-18 14:58:59Z huan.song $
- * @package base
+ * @package koala
  * @since 1.0
  */
 class Profile
@@ -55,7 +55,7 @@ class Profile
     protected $_idValue;
 
     /**
-     * @var array 用于寄存类的实例
+     * @var array instances of koala\Profile
      */
     protected static $_instances = array();
 
@@ -67,20 +67,21 @@ class Profile
      */
     protected function __construct($tableName, $idValue, DbProxy $dbProxy)
     {
-        $this->_dbProxy = $dbProxy;
-        $this->_tableName = $tableName;
+        $this->_tableName = strtolower($tableName);
         $this->_idValue = (int) $idValue;
+        $this->_dbProxy = $dbProxy;
     }
 
     /**
-     * 单例模式：获取类的实例
+     * 单例模式：获取本类的实例
      * @param string $tableName
      * @param integer $idValue
      * @param DbProxy $dbProxy
-     * @return instance of base\Profile
+     * @return instance of koala\Profile
      */
     public static function getInstance($tableName, $idValue, DbProxy $dbProxy)
     {
+    	$tableName = strtolower($tableName);
         $idValue = (int) $idValue;
         $name = $tableName . '[' . $idValue . ']';
         if (!isset(self::$_instances[$name])) {
@@ -124,17 +125,17 @@ class Profile
 
     /**
      * 通过profile_id和profile_key，查询一条记录
-     * @param string $profileKey
+     * @param string $key
      * @return mixed 
      */
-    public function find($profileKey)
+    public function find($key)
     {
         $sql = $this->getCommandBuilder()->createFind($this->getTableName(), array('profile_value'), $this->getUKCondition());
-        return $this->getDbProxy()->fetchColumn($sql, $profileKey);
+        return $this->getDbProxy()->fetchColumn($sql, $key);
     }
 
     /**
-     * 批量添加和更新记录
+     * 批量新增和编辑记录
      * @param array $attributes
      * @return boolean
      */
@@ -175,7 +176,7 @@ class Profile
     }
 
     /**
-     * 更新一条记录
+     * 编辑一条记录
      * @param string $key
      * @param mixed $value
      * @return integer|false
@@ -187,6 +188,7 @@ class Profile
             'profile_value' => $value,
             'profile_key' => $key
         );
+
         if ($this->getDbProxy()->query($sql, $attributes)) {
             return $this->getDbProxy()->getRowCount();
         }
@@ -256,11 +258,11 @@ class Profile
     }
 
     /**
-     * 获取创建简单的执行命令类
-     * @return base\CommandBuilder
+     * 获取创建简单的DB执行命令类
+     * @return koala\CommandBuilder
      */
     public function getCommandBuilder()
     {
-        return Singleton::getInstance('base\CommandBuilder');
+        return Singleton::getInstance('koala\\CommandBuilder');
     }
 }

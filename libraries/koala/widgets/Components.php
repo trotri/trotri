@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,82 +8,52 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace base;
+namespace koala\widgets;
 
 use tfc\ap\Singleton;
 
 /**
- * Helper abstract class file
- * 业务辅助层基类
+ * Components class file
+ * 页面小组件类，基于Bootstrap-CSS框架
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Helper.php 1 2013-05-18 14:58:59Z huan.song $
- * @package base
+ * @version $Id: Components.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package koala.widgets
  * @since 1.0
  */
-abstract class Helper
+class Components
 {
 	/**
-	 * @var string 列表GlyphIcon
+	 * @var string Glyphicons图标：列表按钮
 	 */
 	const GLYPHICON_INDEX = 'list';
 
 	/**
-	 * @var string 加号GlyphIcon
+	 * @var string Glyphicons图标：加号按钮
 	 */
 	const GLYPHICON_CREATE = 'plus-sign';
 
 	/**
-	 * @var string 编辑笔GlyphIcon
+	 * @var string Glyphicons图标：编辑铅笔按钮
 	 */
 	const GLYPHICON_PENCIL = 'pencil';
 
 	/**
-	 * @var string 回收站GlyphIcon
+	 * @var string Glyphicons图标：回收站按钮
 	 */
 	const GLYPHICON_TRASH = 'trash';
 
 	/**
 	 * @var instance of tfc\mvc\Html
 	 */
-	protected $_html = null;
-
-	/**
-	 * 获取新增数据的验证规则
-	 * @return array
-	 */
-	public function getInsertRules()
-	{
-	}
-
-	/**
-	 * 获取编辑数据的验证规则
-	 * @return array
-	 */
-	public function getUpdateRules()
-	{
-	}
-
-	/**
-	 * 获取验证数据前的清理规则
-	 * @return array
-	 */
-	public function getBeforeValidatorCleanRules()
-	{
-	}
-
-	/**
-	 * 获取验证数据前的清理规则
-	 * @return array
-	 */
-	public function getAfterValidatorCleanRules()
-	{
-	}
+	protected static $_html = null;
 
 	/**
 	 * 获取美化版“是|否”选择项表单元素
+	 * @param string $name
+	 * @param string $value
 	 * @return string
 	 */
-	public function getSwitchLabel($name, $value = 'n')
+	public static function getSwitch($name, $value = 'n')
 	{
 		static $attributes = array(
 			'id'             => 'label-switch',
@@ -92,19 +62,19 @@ abstract class Helper
 			'data-off-label' => '否'
 		);
 
-		$html = $this->getHtml();
+		$html = self::getHtml();
 		return $html->tag('div', $attributes, $html->radio($name, $value, ($value === 'y')));
 	}
 
 	/**
-	 * 获取图标按钮
+	 * 获取Glyphicons图标按钮和工具提示
 	 * @param string $type
-	 * @param string $url
+	 * @param string $onclick
 	 * @param string $title
 	 * @param string $placement
 	 * @return string
 	 */
-	public function getGlyphicon($type, $onclick, $title, $placement = 'left')
+	public static function getGlyphicon($type, $onclick, $title, $placement = 'left')
 	{
 		$attributes = array(
 			'class'               => 'glyphicon glyphicon-' . $type,
@@ -114,19 +84,19 @@ abstract class Helper
 			'onclick'             => 'return ' . $onclick . ';'
 		);
 
-		return $this->getHtml()->tag('span', $attributes, '');
+		return self::getHtml()->tag('span', $attributes, '');
 	}
 
 	/**
 	 * 获取页面辅助类
 	 * @return tfc\mvc\Html
 	 */
-	public function getHtml()
+	public static function getHtml()
 	{
-		if ($this->_html === null) {
-			$this->_html = Singleton::getInstance('\\tfc\\mvc\\Html');
+		if (self::$_html === null) {
+			self::$_html = Singleton::getInstance('tfc\\mvc\\Html');
 		}
 
-		return $this->_html;
+		return self::$_html;
 	}
 }

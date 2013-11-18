@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,22 +8,22 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library\form;
+namespace koala\form;
 
 /**
- * ICheckboxElement class file
- * 美化版Checkbox表单元素
+ * IRadioElement class file
+ * 美化版Radio表单元素，，基于Bootstrap-CSS框架的iCheck插件
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ICheckboxElement.php 1 2013-05-18 14:58:59Z huan.song $
- * @package library.form
+ * @version $Id: IRadioElement.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package koala.form
  * @since 1.0
  */
-class ICheckboxElement extends InputElement
+class IRadioElement extends InputElement
 {
 	/**
 	 * @var string 表单元素的类型
 	 */
-	protected $_type = 'checkbox';
+	protected $_type = 'radio';
 
 	/**
 	 * (non-PHPdoc)
@@ -31,17 +31,11 @@ class ICheckboxElement extends InputElement
 	 */
 	public function getInput()
 	{
-		$name = $this->getName(true);
-		if (strpos($name, '[') === false) {
-			$name .= '[]';
-			$this->setName($name);
-		}
-
 		$this->setAttribute('class', 'icheck');
 
 		$type = $this->getType();
+		$name = $this->getName(true);
 		$attributes = $this->getAttributes();
-		$values = (array) $this->value;
 		$html = $this->getHtml();
 
 		$tagName = 'label';
@@ -49,7 +43,7 @@ class ICheckboxElement extends InputElement
 
 		$output = '';
 		foreach ($this->options as $value => $prompt) {
-			$checked = (in_array($value, $values)) ? true : false;
+			$checked = ($value === $this->value) ? true : false;
 			$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, $checked, $attributes));
 			$output .= $html->tag($tagName, $tagAttributes, $prompt);
 		}
@@ -59,7 +53,7 @@ class ICheckboxElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library\form.InputElement::openInput()
+	 * @see koala\form.InputElement::openInput()
 	 */
 	public function openInput()
 	{
@@ -68,7 +62,7 @@ class ICheckboxElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library\form.InputElement::closeInput()
+	 * @see koala\form.InputElement::closeInput()
 	 */
 	public function closeInput()
 	{

@@ -11,7 +11,6 @@
 namespace tfc\validator;
 
 use tfc\ap\ErrorException;
-use tfc\ap\Singleton;
 
 /**
  * Filter class file

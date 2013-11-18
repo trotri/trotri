@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Base Classes
+ * Trotri Koala
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace base;
+namespace koala;
 
 use tfc\ap\Singleton;
 use tfc\saf\Log;
@@ -18,7 +18,7 @@ use tfc\saf\Log;
  * 业务处理层基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Model.php 1 2013-05-18 14:58:59Z huan.song $
- * @package base
+ * @package koala
  * @since 1.0
  */
 abstract class Model
@@ -39,7 +39,21 @@ abstract class Model
 	protected $_pageVar = 'page';
 
 	/**
-	 * 通过多个字段名和值，获取主键的值，字段之间用简单的AND连接
+	 * @var instance of koala\Db
+	 */
+	protected $_db = null;
+
+	/**
+	 * 构造方法：初始化当前业务类对应的数据库操作类
+	 * @param koala\Db $db
+	 */
+	public function __construct(Db $db)
+	{
+		$this->_db = $db;
+	}
+
+	/**
+	 * 通过多个字段名和值，获取主键的值，字段之间用简单的AND连接。不支持联合主键
 	 * @param array $attributes
 	 * @return array
 	 */
@@ -177,7 +191,7 @@ abstract class Model
 	}
 
 	/**
-	 * 通过条件，获取主键的值
+	 * 通过条件，获取主键的值。不支持联合主键
 	 * @param string $condition
 	 * @param mixed $params
 	 * @return array
@@ -215,7 +229,7 @@ abstract class Model
 			$errNo = ErrorNo::ERROR_ARGS_SELECT;
 			$errMsg = ErrorMsg::ERROR_ARGS_SELECT;
 			Log::warning(sprintf(
-				'%s column_name "%s", condition "%s", params "%s"',
+				'%s column_name "%s" not exists, condition "%s", params "%s"',
 				$errMsg, $columnName, $condition, (is_array($params) ? serialize($params) : $params)
 			), $errNo, __METHOD__);
 			return array(
@@ -287,7 +301,7 @@ abstract class Model
 			$errNo = ErrorNo::ERROR_ARGS_SELECT;
 			$errMsg = ErrorMsg::ERROR_ARGS_SELECT;
 			Log::warning(sprintf(
-				'%s column_name "%s", pk "%d"', $errMsg, $columnName, $value
+				'%s column_name "%s" not exists, pk "%d"', $errMsg, $columnName, $value
 			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
@@ -323,7 +337,7 @@ abstract class Model
 		}
 
 		$data = $this->getDb()->findByPk($value);
-		if ($data === false || empty($data)) {
+		if (empty($data)) {
 			$errNo = ErrorNo::ERROR_DB_SELECT_EMPTY;
 			$errMsg = ErrorMsg::ERROR_DB_SELECT_EMPTY;
 			Log::warning(sprintf(
@@ -355,11 +369,10 @@ abstract class Model
 	/**
 	 * 新增一条记录
 	 * @param array $attributes
-	 * @param Helper $helper
 	 * @param boolean $ignore
 	 * @return array
 	 */
-	public function insert(array $attributes = array(), Helper $helper = null, $ignore = false)
+	public function insert(array $attributes = array(), $ignore = false)
 	{
 		if (empty($attributes)) {
 			$errNo = ErrorNo::ERROR_ARGS_INSERT;
@@ -373,34 +386,33 @@ abstract class Model
 			);
 		}
 
-		if ($helper !== null) {
-			$filter = Singleton::getInstance('tfc\validator\Filter');
-			$rules = $helper->getBeforeValidatorCleanRules();
-			if (is_array($rules)) {
-				$filter->clean($rules, $attributes);
-			}
+		$filter = Singleton::getInstance('tfc\\validator\\Filter');
+		
+		$rules = $this->getCleanRulesBeforeValidator();
+		if (is_array($rules)) {
+			$filter->clean($rules, $attributes);
+		}
 
-			$rules = $helper->getInsertRules();
-			if (is_array($rules)) {
-				if (!$filter->run($rules, $attributes, true)) {
-					$errNo = ErrorNo::ERROR_ARGS_INSERT;
-					$errMsg = ErrorMsg::ERROR_ARGS_INSERT;
-					$errors = $filter->getErrors(true);
-					Log::warning(sprintf(
-						'%s attributes "%s", errors "%s"', $errMsg, serialize($attributes), serialize($errors)
-					), $errNo, __METHOD__);
-					return array(
-						'err_no' => $errNo,
-						'err_msg' => $errMsg,
-						'errors' => $errors
-					);
-				}
+		$rules = $this->getInsertRules();
+		if (is_array($rules)) {
+			if (!$filter->run($rules, $attributes, true)) {
+				$errNo = ErrorNo::ERROR_ARGS_INSERT;
+				$errMsg = ErrorMsg::ERROR_ARGS_INSERT;
+				$errors = $filter->getErrors(true);
+				Log::warning(sprintf(
+					'%s attributes "%s", errors "%s"', $errMsg, serialize($attributes), serialize($errors)
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'errors' => $errors
+				);
 			}
+		}
 
-			$rules = $helper->getAfterValidatorCleanRules();
-			if (is_array($rules)) {
-				$filter->clean($rules, $attributes);
-			}
+		$rules = $this->getCleanRulesAfterValidator();
+		if (is_array($rules)) {
+			$filter->clean($rules, $attributes);
 		}
 
 		$value = $this->getDb()->insert($attributes);
@@ -433,10 +445,9 @@ abstract class Model
 	 * 通过主键，编辑一条记录。不支持联合主键
 	 * @param integer $value
 	 * @param array $attributes
-	 * @param Helper $helper
 	 * @return array
 	 */
-	public function updateByPk($value, array $attributes = array(), Helper $helper = null)
+	public function updateByPk($value, array $attributes = array())
 	{
 		$value = (int) $value;
 		if ($value <= 0) {
@@ -465,35 +476,34 @@ abstract class Model
 			);
 		}
 
-		if ($helper !== null) {
-			$filter = Singleton::getInstance('tfc\validator\Filter');
-			$rules = $helper->getBeforeValidatorCleanRules();
-			if (is_array($rules)) {
-				$filter->clean($rules, $attributes);
-			}
+		$filter = Singleton::getInstance('tfc\\validator\\Filter');
 
-			$rules = $helper->getUpdateRules();
-			if (is_array($rules)) {
-				if (!$filter->run($rules, $attributes, false)) {
-					$errNo = ErrorNo::ERROR_ARGS_UPDATE;
-					$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
-					$errors = $filter->getErrors(true);
-					Log::warning(sprintf(
-						'%s pk "%d", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
-					), $errNo, __METHOD__);
-					return array(
-						'err_no' => $errNo,
-						'err_msg' => $errMsg,
-						'errors' => $errors,
-						'id' => $value
-					);
-				}
-			}
+		$rules = $this->getCleanRulesBeforeValidator();
+		if (is_array($rules)) {
+			$filter->clean($rules, $attributes);
+		}
 
-			$rules = $helper->getAfterValidatorCleanRules();
-			if (is_array($rules)) {
-				$filter->clean($rules, $attributes);
+		$rules = $this->getUpdateRules();
+		if (is_array($rules)) {
+			if (!$filter->run($rules, $attributes, false)) {
+				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+				$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
+				$errors = $filter->getErrors(true);
+				Log::warning(sprintf(
+					'%s pk "%d", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'errors' => $errors,
+					'id' => $value
+				);
 			}
+		}
+
+		$rules = $this->getCleanRulesAfterValidator();
+		if (is_array($rules)) {
+			$filter->clean($rules, $attributes);
 		}
 
 		$rowCount = $this->getDb()->updateByPk($value, $attributes);
@@ -665,22 +675,43 @@ abstract class Model
 	}
 
 	/**
-	 * 获取当前业务类对应的DB操作类
-	 * @return instance of base\Db
+	 * 获取当前业务类对应的数据库操作类
+	 * @return instance of koala\Db
 	 */
 	public function getDb()
 	{
-		$className = str_replace('model', 'db', get_class($this));
-		return Singleton::getInstance($className);
+		return $this->_db;
 	}
 
 	/**
-	 * 获取当前业务类对应的辅助层类
-	 * @return instance of base\Generators
+	 * 获取新增数据的验证规则，需要子类重写此方法
+	 * @return array
 	 */
-	public function getHelper()
+	public function getInsertRules()
 	{
-		$className = str_replace('model', 'helper', get_class($this));
-		return Singleton::getInstance($className);
+	}
+
+	/**
+	 * 获取编辑数据的验证规则，需要子类重写此方法
+	 * @return array
+	 */
+	public function getUpdateRules()
+	{
+	}
+
+	/**
+	 * 获取验证数据前的清理规则，需要子类重写此方法
+	 * @return array
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+	}
+
+	/**
+	 * 获取验证数据后的清理规则，需要子类重写此方法
+	 * @return array
+	 */
+	public function getCleanRulesAfterValidator()
+	{
 	}
 }

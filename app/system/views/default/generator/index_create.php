@@ -1,10 +1,9 @@
 <?php
-$helper = $this->util->getHelper('Generators', 'generator');
-$this->widget('widgets\FormBuilder', 
+$this->widget('koala\widgets\FormBuilder', 
 	array(
 		'name' => 'create',
 		'errors' => $this->errors,
-		'helper' => $helper,
+		'elementCollections' => $this->helper,
 		'elements' => array(
 			'generator_name',
 			'tbl_name',

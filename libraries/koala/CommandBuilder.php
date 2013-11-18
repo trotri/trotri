@@ -12,7 +12,7 @@ namespace koala;
 
 /**
  * CommandBuilder class file
- * 创建简单的MySQL执行命令
+ * 创建简单的MySQL执行命令类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: CommandBuilder.php 1 2013-05-18 14:58:59Z huan.song $
  * @package koala

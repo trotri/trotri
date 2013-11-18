@@ -10,8 +10,8 @@
 
 namespace modules\generator\helper;
 
-use base\Helper;
-use library\Constant;
+use koala\widgets\Components;
+use koala\widgets\ElementCollections;
 use library\Util;
 
 /**
@@ -22,7 +22,7 @@ use library\Util;
  * @package modules.generator.helper
  * @since 1.0
  */
-class Generators extends Helper
+class Generators extends ElementCollections
 {
 	/**
 	 * @var string 数据库表引擎：InnoDB类型
@@ -146,13 +146,13 @@ class Generators extends Helper
 		$name = 'generator_name';
 		$label = '生成代码名';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 				'callback' => array($this, 'getGeneratorNameUrl')
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -160,7 +160,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'MinLength' => array(6, $label . '“%value%”长度不能小于%option%个字符.'),
 				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
@@ -182,12 +182,12 @@ class Generators extends Helper
 		$name = 'tbl_name';
 		$label = '表名';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -195,7 +195,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'AlphaNum' => array(true, $label . '只能由英文字母、数字或下划线组成.'),
 				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
@@ -218,19 +218,19 @@ class Generators extends Helper
 		$name = 'tbl_profile';
 		$label = '是否生成扩展表';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 				'callback' => array($this, 'getTblProfileSwitchLabel')
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblProfiles),
@@ -254,19 +254,19 @@ class Generators extends Helper
 		$name = 'tbl_engine';
 		$label = '表引擎';
 		
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
 				'label' => $label,
 				'options' => self::$tblEngines
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblEngines),
@@ -290,19 +290,19 @@ class Generators extends Helper
 		$name = 'tbl_charset';
 		$label = '表编码';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
 				'label' => $label,
 				'options' => self::$tblCharsets
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblCharsets),
@@ -326,19 +326,19 @@ class Generators extends Helper
 		$name = 'tbl_comment';
 		$label = '表描述';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'NotEmpty' => array(true, '必须填写' . $label . '.')
 			);
@@ -359,12 +359,12 @@ class Generators extends Helper
 		$name = 'app_name';
 		$label = '应用名';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -372,7 +372,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
@@ -395,12 +395,12 @@ class Generators extends Helper
 		$name = 'mod_name';
 		$label = '模块名';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -408,7 +408,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
@@ -431,12 +431,12 @@ class Generators extends Helper
 		$name = 'ctrl_name';
 		$label = '控制器名';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
 				'label' => $label,
@@ -444,7 +444,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
@@ -467,19 +467,19 @@ class Generators extends Helper
 		$name = 'index_row_btns';
 		$label = '列表每行操作按钮';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'checkbox',
 				'label' => $label,
 				'options' => self::$indexRowBtns
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$indexRowBtns),
@@ -503,12 +503,12 @@ class Generators extends Helper
 		$name = 'description';
 		$label = '描述';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'textarea',
 				'label' => $label,
@@ -530,18 +530,18 @@ class Generators extends Helper
 		$name = 'trash';
 		$label = '放入回收站';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$trashs),
@@ -565,12 +565,12 @@ class Generators extends Helper
 		$name = 'act_index_name';
 		$label = '数据列表';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -580,7 +580,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
@@ -603,12 +603,12 @@ class Generators extends Helper
 		$name = 'act_view_name';
 		$label = '数据详情';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -618,7 +618,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
@@ -641,12 +641,12 @@ class Generators extends Helper
 		$name = 'act_create_name';
 		$label = '新增数据';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -656,7 +656,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
@@ -679,12 +679,12 @@ class Generators extends Helper
 		$name = 'act_modify_name';
 		$label = '编辑数据';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -694,7 +694,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
@@ -717,12 +717,12 @@ class Generators extends Helper
 		$name = 'act_remove_name';
 		$label = '删除数据';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'act',
 				'type' => 'text',
@@ -732,7 +732,7 @@ class Generators extends Helper
 				'required' => true
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_RULE) {
+		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
 				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
@@ -755,12 +755,12 @@ class Generators extends Helper
 		$name = 'creator_id';
 		$label = '创建人';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -784,12 +784,12 @@ class Generators extends Helper
 		$name = 'dt_created';
 		$label = '创建时间';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -813,12 +813,12 @@ class Generators extends Helper
 		$name = 'modifier_id';
 		$label = '上次更新人';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -842,12 +842,12 @@ class Generators extends Helper
 		$name = 'dt_modified';
 		$label = '上次更新时间';
 
-		if ($type === Constant::M_H_TYPE_TABLE) {
+		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => $label,
 			);
 		}
-		elseif ($type === Constant::M_H_TYPE_FORM) {
+		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
@@ -860,95 +860,13 @@ class Generators extends Helper
 	}
 
 	/**
-	 * (non-PHPdoc)
-	 * @see base.Helper::getInsertRules()
-	 */
-	public function getInsertRules()
-	{
-		$type = Constant::M_H_TYPE_RULE;
-
-		$output = array(
-			'generator_name' => $this->getGeneratorName($type),
-			'tbl_name' => $this->getTblName($type),
-			'tbl_engine' => $this->getTblEngine($type),
-			'tbl_charset' => $this->getTblCharset($type),
-			'tbl_comment' => $this->getTblComment($type),
-			'app_name' => $this->getAppName($type),
-			'mod_name' => $this->getModName($type),
-			'ctrl_name' => $this->getCtrlName($type),
-			'index_row_btns' => $this->getIndexRowBtns($type),
-			'trash' => $this->getTrash($type),
-			'act_index_name' => $this->getActIndexName($type),
-			'act_view_name' => $this->getActViewName($type),
-			'act_create_name' => $this->getActCreateName($type),
-			'act_modify_name' => $this->getActModifyName($type),
-			'act_remove_name' => $this->getActRemoveName($type),
-			'creator_id' => $this->getCreatorId($type)
-		);
-
-		return $output;
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see base.Helper::getBeforeValidatorCleanRules()
-	 */
-	public function getBeforeValidatorCleanRules()
-	{
-		$output = array(
-			'generator_name' => 'trim',
-			'tbl_name' => 'trim',
-			'tbl_comment' => 'trim',
-			'app_name' => 'trim',
-			'mod_name' => 'trim',
-			'ctrl_name' => 'trim',
-			'act_index_name' => 'trim',
-			'act_view_name' => 'trim',
-			'act_create_name' => 'trim',
-			'act_modify_name' => 'trim',
-			'act_remove_name' => 'trim',
-			'creator_id' => 'intval',
-			'modifier_id' => 'intval'
-		);
-
-		return $output;
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see base.Helper::getAfterValidatorCleanRules()
-	 */
-	public function getAfterValidatorCleanRules()
-	{
-		$output = array(
-			'index_row_btns' => array($this, 'joinIndexRowBtns')
-		);
-
-		return $output;
-	}
-
-	/**
-	 * 将列表每行操作按钮用英文逗号连接
-	 * @param array $value
-	 * @return string
-	 */
-	public function joinIndexRowBtns($value)
-	{
-		if (is_array($value)) {
-			$value = implode(',', $value);
-		}
-
-		return $value;
-	}
-
-	/**
 	 * 获取列表页“是否生成扩展表”美化版“是|否”选择项表单元素
 	 * @param array $data
 	 * @return string
 	 */
 	public function getTblProfileSwitchLabel($data)
 	{
-		return $this->getSwitchLabel('tbl_profile', $data['tbl_profile']);
+		return Components::getSwitch('tbl_profile', $data['tbl_profile']);
 	}
 
 	/**
@@ -958,8 +876,8 @@ class Generators extends Helper
 	 */
 	public function getGeneratorFieldGroupsLabel($data)
 	{
-		$ret = $this->getGlyphicon(self::GLYPHICON_INDEX, '#', '浏览表单字段组') 
-			 . $this->getGlyphicon(self::GLYPHICON_CREATE, '#', '新增表单字段组');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', '浏览表单字段组') 
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', '新增表单字段组');
 
 		return $ret;
 	}
@@ -971,8 +889,8 @@ class Generators extends Helper
 	 */
 	public function getGeneratorFieldTypesLabel($data)
 	{
-		$ret = $this->getGlyphicon(self::GLYPHICON_INDEX, '#', '浏览表单字段类型')
-			 . $this->getGlyphicon(self::GLYPHICON_CREATE, '#', '新增表单字段类型');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', '浏览表单字段类型')
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', '新增表单字段类型');
 
 		return $ret;
 	}
@@ -984,8 +902,8 @@ class Generators extends Helper
 	 */
 	public function getGeneratorFieldsLabel($data)
 	{
-		$ret = $this->getGlyphicon(self::GLYPHICON_INDEX, '#', '浏览表单字段')
-			 . $this->getGlyphicon(self::GLYPHICON_CREATE, '#', '新增表单字段');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', '浏览表单字段')
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', '新增表单字段');
 
 		return $ret;
 	}
@@ -997,8 +915,8 @@ class Generators extends Helper
 	 */
 	public function getOperateLabel($data)
 	{
-		$ret = $this->getGlyphicon(self::GLYPHICON_PENCIL, '#', '编辑生成代码')
-			 . $this->getGlyphicon(self::GLYPHICON_TRASH, '#', '移至回收站');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, '#', '编辑生成代码')
+			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, '#', '移至回收站');
 
 		return $ret;
 	}
@@ -1010,6 +928,6 @@ class Generators extends Helper
 	 */
 	public function getGeneratorNameUrl($data)
 	{
-		return $this->getHtml()->a($data['generator_name'], Util::getUrlByCtrl('modify') . '&generator_id=' . $data['generator_id']);
+		return Components::getHtml()->a($data['generator_name'], Util::getCtrlUrl('modify') . '&generator_id=' . $data['generator_id']);
 	}
 }
