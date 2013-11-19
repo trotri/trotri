@@ -12,7 +12,7 @@ namespace modules\generator\controller;
 
 use library\BaseController;
 use tfc\ap\Ap;
-use library\Util;
+use helper\Util;
 use library\ErrorNo;
 
 /**
@@ -25,6 +25,14 @@ use library\ErrorNo;
  */
 class IndexController extends BaseController
 {
+	/**
+	 * 构造方法：初始化业务辅助类
+	 */
+	public function __construct()
+	{
+		$this->helper = Util::getHelper('Generators', 'generator');
+	}
+
 	/**
 	 * 数据列表
 	 * @return void
@@ -53,10 +61,11 @@ class IndexController extends BaseController
 
 		$req = Ap::getRequest();
 		$do = $req->getParam('do');
-		$submitType = $req->getParam('submit_type');
-
 		if ($do == 'post') {
 			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$this->saveForward($ret);
+			}
 		}
 
 		$this->render($ret);
@@ -84,14 +93,5 @@ class IndexController extends BaseController
 	 */
 	public function removeAction()
 	{
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see library.BaseController::_getHelper()
-	 */
-	protected function _getHelper()
-	{
-		return Util::getHelper('Generators', 'generator');
 	}
 }

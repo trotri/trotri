@@ -56,6 +56,11 @@ class View implements interfaces\View
     protected $_html = null;
 
     /**
+     * @var instance of tfc\mvc\UrlManager
+     */
+    protected $_urlManager = null;
+
+    /**
      * @var array 用于寄存渲染模板的变量名和值
      */
     protected $_tplVars = array();
@@ -322,5 +327,18 @@ class View implements interfaces\View
         }
 
         return $this->_html;
+    }
+
+    /**
+     * 获取URL管理类
+     * @return tfc\mvc\UrlManager
+     */
+    public function getUrlManager()
+    {
+        if ($this->_urlManager === null) {
+            $this->_urlManager = Singleton::getInstance('tfc\\mvc\\UrlManager');
+        }
+
+        return $this->_urlManager;
     }
 }

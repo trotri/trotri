@@ -170,7 +170,7 @@ class EventDispatcher
     }
 
     /**
-     * 判定事件的方法是否可被注册
+     * 判断事件的方法是否可被注册
      * @param string $method
      * @return boolean
      */
@@ -180,7 +180,7 @@ class EventDispatcher
     }
 
     /**
-     * 通过名称判定事件是否已经存在
+     * 通过名称判断事件是否已经存在
      * @param string $name
      * @return boolean
      */
@@ -190,7 +190,7 @@ class EventDispatcher
     }
 
     /**
-     * 通过名称判定事件的方法是否已经存在
+     * 通过名称判断事件的方法是否已经存在
      * @param string $name
      * @return boolean
      */

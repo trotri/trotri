@@ -2,6 +2,7 @@
 $this->widget('koala\widgets\FormBuilder', 
 	array(
 		'name' => 'create',
+		'action' => $this->getUrlManager()->getUrl($this->action),
 		'errors' => $this->errors,
 		'elementCollections' => $this->helper,
 		'elements' => array(
@@ -38,21 +39,21 @@ $this->widget('koala\widgets\FormBuilder',
 				'label' => '保存并关闭',
 				'glyphicon' => 'ok-sign',
 				'class' => 'btn btn-default',
-				'onclick' => "return Core.formSubmit('save2close', 'create');"
+				'onclick' => "return Core.formSubmit('save_close', 'create');"
 			),
 			'button_save2new' => array(
 				'type' => 'button',
 				'label' => '保存并新建',
 				'glyphicon' => 'plus-sign',
 				'class' => 'btn btn-default',
-				'onclick' => "return Core.formSubmit('save2new', 'create');"
+				'onclick' => "return Core.formSubmit('save_new', 'create');"
 			),
 			'button_cancel' => array(
 				'type' => 'button',
 				'label' => '取消',
 				'glyphicon' => 'remove-sign',
 				'class' => 'btn btn-danger',
-				'onclick' => "return Core.href('#');"
+				'onclick' => 'return Core.href(\'' . $this->getUrlManager()->getUrl('index') . '\');'
 			)
 		)
 	)

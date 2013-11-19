@@ -17,7 +17,7 @@ use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
-use koala\widgets\ElementCollections;
+use helper\Util;
 
 /**
  * BaseController abstract class file
@@ -30,9 +30,75 @@ use koala\widgets\ElementCollections;
 abstract class BaseController extends Controller
 {
 	/**
+	 * @var string 保存数据后执行的跳转行为，跳转到编辑页面
+	 */
+	const FORWARD_SAVE = 'SAVE';
+
+	/**
+	 * @var string 保存数据后执行的跳转行为，跳转到数据列表
+	 */
+	const FORWARD_SAVE_CLOSE = 'SAVE_CLOSE';
+
+	/**
+	 * @var string 保存数据后执行的跳转行为，跳转到新增页面
+	 */
+	const FORWARD_SAVE_NEW = 'SAVE_NEW';
+
+	/**
+	 * @var string 数据列表页面的Action
+	 */
+	public $forwardIndex = 'index';
+
+	/**
+	 * @var string 数据详情页面的Action
+	 */
+	public $forwardView = 'view';
+
+	/**
+	 * @var string 新增数据页面的Action
+	 */
+	public $forwardCreate = 'create';
+
+	/**
+	 * @var string 编辑数据页面的Action
+	 */
+	public $forwardModify = 'modify';
+
+	/**
 	 * @var string 页面首次渲染的布局名
 	 */
 	public $layoutName = 'column2';
+
+	/**
+	 * @var instance of koala\widgets\ElementCollections
+	 */
+	public $helper = null;
+
+	/**
+	 * 保存并跳转到指定的页面
+	 * @param array $params
+	 * @return void
+	 */
+	public function saveForward(array $params)
+	{
+		$submitType = Ap::getRequest()->getParam('submit_type');
+		$submitType = strtoupper($submitType);
+		$forwardAction = '';
+		switch ($submitType)
+		{
+			case self::FORWARD_SAVE_CLOSE: 
+				$forwardAction = $this->forwardIndex;
+				break;
+			case self::FORWARD_SAVE_NEW:
+				$forwardAction = $this->forwardCreate;
+				break;
+			case self::FORWARD_SAVE:
+			default:
+				$forwardAction = $this->forwardModify;
+		}
+
+		Util::forward($forwardAction, '', '', $params);
+	}
 
 	/**
 	 * 展示页面，输出数据
@@ -102,9 +168,6 @@ abstract class BaseController extends Controller
 		$scriptUrl = Ap::getRequest()->getScriptUrl();
 		$staticUrl = $baseUrl . '/static/' . APP_NAME . '/' . $view->skinName;
 
-		$view->assign('act_url', 	Util::getActUrl());
-		$view->assign('ctrl_url', 	Util::getCtrlUrl());
-		$view->assign('mod_url', 	Util::getModUrl());
 		$view->assign('root_url',   $baseUrl . '/..');
 		$view->assign('base_path',  $basePath);
 		$view->assign('base_url',   $baseUrl);
@@ -132,9 +195,8 @@ abstract class BaseController extends Controller
 	 */
 	public function assignHelper()
 	{
-		$helper = $this->_getHelper();
-		if (is_object($helper)) {
-			Mvc::getView()->assign('helper', $helper);
+		if ($this->helper !== null) {
+			Mvc::getView()->assign('helper', $this->helper);
 		}
 	}
 
@@ -204,10 +266,4 @@ abstract class BaseController extends Controller
 
 		return true;
 	}
-
-	/**
-	 * 获取业务辅助类
-	 * @return koala\widgets\ElementCollections
-	 */
-	abstract protected function _getHelper();
 }

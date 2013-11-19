@@ -12,7 +12,7 @@ namespace modules\generator\helper;
 
 use koala\widgets\Components;
 use koala\widgets\ElementCollections;
-use library\Util;
+use helper\Util;
 
 /**
  * Generators class file
@@ -133,6 +133,15 @@ class Generators extends ElementCollections
 		'act' => array('tid' => 'act', 'prompt' => '行动名'),
 		'system' => array('tid' => 'system', 'prompt' => '系统信息')
 	);
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala\widgets.ElementCollections::getViewTabs()
+	 */
+	public function getViewTabs()
+	{
+		return self::$tabs;
+	}
 
 	/**
 	 * 获取“生成代码名”表单元素和验证规则
@@ -928,6 +937,9 @@ class Generators extends ElementCollections
 	 */
 	public function getGeneratorNameUrl($data)
 	{
-		return Components::getHtml()->a($data['generator_name'], Util::getCtrlUrl('modify') . '&generator_id=' . $data['generator_id']);
+		$params = array(
+			'generator_id' => $data['generator_id']
+		);
+		return Components::getHtml()->a($data['generator_name'], Util::getUrl('modify', '', '', $params));
 	}
 }

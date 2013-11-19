@@ -203,7 +203,7 @@ class InputElement extends Element
     }
 
     /**
-     * 判定是否有错误提示
+     * 判断是否有错误提示
      * @return boolean
      */
     public function hasError()

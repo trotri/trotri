@@ -12,7 +12,7 @@ namespace modules\generator\model;
 
 use koala\Model;
 use tfc\ap\UserIdentity;
-use library\Util;
+use helper\Util;
 
 /**
  * Generators class file

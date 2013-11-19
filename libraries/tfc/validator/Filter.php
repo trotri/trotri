@@ -288,7 +288,7 @@ class Filter
     }
 
     /**
-     * 通过键名判定错误信息是否存在
+     * 通过键名判断错误信息是否存在
      * @param string|null $key
      * @return boolean
      */

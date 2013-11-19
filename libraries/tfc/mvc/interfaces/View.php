@@ -42,7 +42,7 @@ interface View
     public function __set($key, $value);
 
     /**
-     * 魔术方法：判定模板变量是否已经存在
+     * 魔术方法：判断模板变量是否已经存在
      * @param mixed $key
      * @return boolean
      */

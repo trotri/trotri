@@ -63,7 +63,7 @@ class Registry
     }
 
     /**
-     * 通过名称判定数据是否已经存在
+     * 通过名称判断数据是否已经存在
      * @param string $name
      * @return boolean
      */
