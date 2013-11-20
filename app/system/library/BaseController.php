@@ -15,6 +15,7 @@ use tfc\ap\UserIdentity;
 use tfc\ap\Ap;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
+use tfc\util\String;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
 use helper\Util;
@@ -121,7 +122,7 @@ abstract class BaseController extends Controller
 
 		if (!isset($data['err_no']) || $data['err_no'] === ErrorNo::SUCCESS_NUM) {
 			$data['err_no'] = Ap::getRequest()->getInteger('err_no', ErrorNo::SUCCESS_NUM);
-			$data['err_msg'] = Ap::getRequest()->getString('err_msg');
+			$data['err_msg'] = String::escapeXss(Ap::getRequest()->getString('err_msg'));
 		}
 
 		$view->render($tplName, $data);

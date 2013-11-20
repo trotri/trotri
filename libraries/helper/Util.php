@@ -11,9 +11,11 @@
 namespace helper;
 
 use tfc\ap\Ap;
+use tfc\ap\ErrorException;
 use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
 use tfc\saf\DbProxy;
+use tfc\saf\Cfg;
 
 /**
  * Util class file
@@ -128,6 +130,24 @@ class Util
 	{
 		$className = 'modules\\' . strtolower($moduleName) . '\\db\\' . $className;
 		return Singleton::getInstance($className);
+	}
+
+	/**
+	 * 获取当前的页码
+	 * @return integer
+	 */
+	public static function getCurrPage()
+	{
+		try {
+			$pageVar = Cfg::getApp('page_var', 'paginator');
+		}
+		catch (ErrorException $e) {
+			$pageVar = 'page';
+		}
+
+		$currPage = (int) Ap::getRequest()->getParam($pageVar, 0);
+		$currPage = max($currPage, 1);
+		return $currPage;
 	}
 
 	/**

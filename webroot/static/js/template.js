@@ -155,11 +155,6 @@ Core = {
    * @return void
    */
   formSubmit: function(type, form) {
-    var types = ["save", "save2close", "save2new"];
-    if ($.inArray(type, types) < 0) {
-      type = "save";
-    }
-
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
     var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
     $(".make-switch > .switch-animate").find("input[type='radio']").each(function() {

@@ -11,7 +11,9 @@
 namespace koala;
 
 use tfc\ap\Singleton;
+use tfc\util\Language;
 use tfc\saf\Log;
+use tfc\saf\Cfg;
 
 /**
  * Model abstract class file
@@ -24,19 +26,9 @@ use tfc\saf\Log;
 abstract class Model
 {
 	/**
-	 * @var integer 每页默认展示的行数
+	 * @var instance of tfc\util\Language
 	 */
-	protected $_listRows = 20;
-
-	/**
-	 * @var integer 每页默认展示的页码数
-	 */
-	protected $_listPages = 4;
-
-	/**
-	 * @var string 从$_GET或$_POST中获取当前页的键名
-	 */
-	protected $_pageVar = 'page';
+	protected $_language = null;
 
 	/**
 	 * @var instance of koala\Db
@@ -81,12 +73,13 @@ abstract class Model
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
-		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset);
+		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -116,11 +109,52 @@ abstract class Model
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll($order = '', $limit = 0, $offset = 0)
+	public function findAll($order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		return $this->findAllByCondition(1, null, $order, $limit, $offset);
+		return $this->findAllByCondition(1, null, $order, $limit, $offset, $option);
+	}
+
+	/**
+	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接，并且返回分页信息
+	 * @param array $attributes
+	 * @param string $order
+	 * @param integer $pageNo
+	 * @return array
+	 */
+	public function findIndexByAttributes(array $attributes = array(), $order = '', $pageNo = 0)
+	{
+		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
+		return $this->findIndexByCondition($condition, $attributes, $order, $pageNo);
+	}
+
+	/**
+	 * 通过条件，查询多条记录，并且返回分页信息
+	 * @param string $condition
+	 * @param mixed $params
+	 * @param string $order
+	 * @param integer $pageNo
+	 * @return array
+	 */
+	public function findIndexByCondition($condition, $params = null, $order = '', $pageNo = 0)
+	{
+		$pageNo = max((int) $pageNo, 1);
+		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
+		$offset = ($pageNo - 1) * $listRows;
+		$ret = $this->findAllByCondition($condition, $params, $order, $listRows, $offset, 'SQL_CALC_FOUND_ROWS');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$ret['paginator'] = array(
+			'total_rows' => $this->getDb()->getFoundRows(),
+			'curr_page' => $pageNo,
+			'list_rows' => $listRows
+		);
+
+		return $ret;
 	}
 
 	/**
@@ -130,14 +164,15 @@ abstract class Model
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0)
+	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		$data = $this->getDb()->findAllByCondition($condition, $params, $order, $limit, $offset);
+		$data = $this->getDb()->findAllByCondition($condition, $params, $order, $limit, $offset, $option);
 		if ($data === false) {
 			$errNo = ErrorNo::ERROR_DB_SELECT;
-			$errMsg = ErrorMsg::ERROR_DB_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT');
 			Log::warning(sprintf(
 				'%s condition "%s", params "%s", order "%s", limit "%d", offset "%d"',
 				$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset
@@ -150,7 +185,7 @@ abstract class Model
 
 		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
-			'err_msg' => ErrorMsg::SUCCESS_SELECT,
+			'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
 			'data' => $data
 		);
 	}
@@ -166,7 +201,7 @@ abstract class Model
 		$total = $this->getDb()->countByCondition($condition, $params);
 		if ($total === false) {
 			$errNo = ErrorNo::ERROR_DB_SELECT;
-			$errMsg = ErrorMsg::ERROR_DB_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT');
 			Log::warning(sprintf(
 				'%s condition "%s", params "%s"', $errMsg, $condition, (is_array($params) ? serialize($params) : $params)
 			), $errNo, __METHOD__);
@@ -177,7 +212,7 @@ abstract class Model
 		}
 
 		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ErrorMsg::SUCCESS_SELECT;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_SELECT');
 		Log::notice(sprintf(
 			'%s condition "%s", params "%s", total "%d"',
 			$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $total
@@ -206,7 +241,7 @@ abstract class Model
 
 		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
-			'err_msg' => ErrorMsg::SUCCESS_SELECT,
+			'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
 			'id' => $ret[$columnName]
 		);
 	}
@@ -227,7 +262,7 @@ abstract class Model
 
 		if (!isset($ret['data'][$columnName])) {
 			$errNo = ErrorNo::ERROR_ARGS_SELECT;
-			$errMsg = ErrorMsg::ERROR_ARGS_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_SELECT');
 			Log::warning(sprintf(
 				'%s column_name "%s" not exists, condition "%s", params "%s"',
 				$errMsg, $columnName, $condition, (is_array($params) ? serialize($params) : $params)
@@ -240,7 +275,7 @@ abstract class Model
 
 		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
-			'err_msg' => ErrorMsg::SUCCESS_SELECT,
+			'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
 			$columnName => $ret['data'][$columnName]
 		);
 	}
@@ -256,7 +291,7 @@ abstract class Model
 		$data = $this->getDb()->findByCondition($condition, $params);
 		if ($data === false || empty($data)) {
 			$errNo = ErrorNo::ERROR_DB_SELECT_EMPTY;
-			$errMsg = ErrorMsg::ERROR_DB_SELECT_EMPTY;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT_EMPTY');
 			Log::warning(sprintf(
 				'%s condition "%s", params "%s"', $errMsg, $condition, (is_array($params) ? serialize($params) : $params)
 			), $errNo, __METHOD__);
@@ -268,7 +303,7 @@ abstract class Model
 		}
 
 		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ErrorMsg::SUCCESS_SELECT;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_SELECT');
 		Log::notice(sprintf(
 			'%s condition "%s", params "%s"', $errMsg, $condition, (is_array($params) ? serialize($params) : $params)
 		), __METHOD__);
@@ -299,7 +334,7 @@ abstract class Model
 
 		if (!isset($ret['data'][$columnName])) {
 			$errNo = ErrorNo::ERROR_ARGS_SELECT;
-			$errMsg = ErrorMsg::ERROR_ARGS_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_SELECT');
 			Log::warning(sprintf(
 				'%s column_name "%s" not exists, pk "%d"', $errMsg, $columnName, $value
 			), $errNo, __METHOD__);
@@ -311,7 +346,7 @@ abstract class Model
 
 		return array(
 			'err_no' => ErrorNo::SUCCESS_NUM,
-			'err_msg' => ErrorMsg::SUCCESS_SELECT,
+			'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
 			$columnName => $ret['data'][$columnName]
 		);
 	}
@@ -326,7 +361,7 @@ abstract class Model
 		$value = (int) $value;
 		if ($value <= 0) {
 			$errNo = ErrorNo::ERROR_ARGS_SELECT;
-			$errMsg = ErrorMsg::ERROR_ARGS_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_SELECT');
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
@@ -339,7 +374,7 @@ abstract class Model
 		$data = $this->getDb()->findByPk($value);
 		if (empty($data)) {
 			$errNo = ErrorNo::ERROR_DB_SELECT_EMPTY;
-			$errMsg = ErrorMsg::ERROR_DB_SELECT_EMPTY;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT_EMPTY');
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
@@ -351,7 +386,7 @@ abstract class Model
 		}
 
 		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ErrorMsg::SUCCESS_SELECT;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_SELECT');
 		Log::notice(sprintf(
 			'%s pk "%d"', $errMsg, $value
 		), __METHOD__);
@@ -376,7 +411,7 @@ abstract class Model
 	{
 		if (empty($attributes)) {
 			$errNo = ErrorNo::ERROR_ARGS_INSERT;
-			$errMsg = ErrorMsg::ERROR_ARGS_INSERT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_INSERT');
 			Log::warning(sprintf(
 				'%s attributes empty', $errMsg
 			), $errNo, __METHOD__);
@@ -397,7 +432,7 @@ abstract class Model
 		if (is_array($rules)) {
 			if (!$filter->run($rules, $attributes, true)) {
 				$errNo = ErrorNo::ERROR_ARGS_INSERT;
-				$errMsg = ErrorMsg::ERROR_ARGS_INSERT;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_INSERT');
 				$errors = $filter->getErrors(true);
 				Log::warning(sprintf(
 					'%s attributes "%s", errors "%s"', $errMsg, serialize($attributes), serialize($errors)
@@ -418,7 +453,7 @@ abstract class Model
 		$value = $this->getDb()->insert($attributes);
 		if ($value === false || $value <= 0) {
 			$errNo = ErrorNo::ERROR_DB_INSERT;
-			$errMsg = ErrorMsg::ERROR_DB_INSERT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_INSERT');
 			Log::warning(sprintf(
 				'%s pk "%d", attributes "%s"', $errMsg, $value, serialize($attributes)
 			), $errNo, __METHOD__);
@@ -429,7 +464,7 @@ abstract class Model
 		}
 
 		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ErrorMsg::SUCCESS_INSERT;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_INSERT');
 		Log::notice(sprintf(
 			'%s pk "%s", attributes "%s"', $errMsg, $value, serialize($attributes)
 		), __METHOD__);
@@ -452,7 +487,7 @@ abstract class Model
 		$value = (int) $value;
 		if ($value <= 0) {
 			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
-			$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
@@ -465,7 +500,7 @@ abstract class Model
 
 		if (empty($attributes)) {
 			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
-			$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
 			Log::warning(sprintf(
 				'%s pk "%d", attributes empty', $errMsg, $value
 			), $errNo, __METHOD__);
@@ -487,7 +522,7 @@ abstract class Model
 		if (is_array($rules)) {
 			if (!$filter->run($rules, $attributes, false)) {
 				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
-				$errMsg = ErrorMsg::ERROR_ARGS_UPDATE;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
 				$errors = $filter->getErrors(true);
 				Log::warning(sprintf(
 					'%s pk "%d", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
@@ -509,7 +544,7 @@ abstract class Model
 		$rowCount = $this->getDb()->updateByPk($value, $attributes);
 		if ($rowCount === false) {
 			$errNo = ErrorNo::ERROR_DB_UPDATE;
-			$errMsg = ErrorMsg::ERROR_DB_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_UPDATE');
 			Log::warning(sprintf(
 				'%s pk "%d", attributes "%s"', $errMsg, $value, serialize($attributes)
 			), $errNo, __METHOD__);
@@ -522,7 +557,7 @@ abstract class Model
 
 		if ($rowCount <= 0) {
 			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
-			$errMsg = ErrorMsg::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
 			Log::warning(sprintf(
 				'%s pk "%d", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
 			), $errNo, __METHOD__);
@@ -534,7 +569,7 @@ abstract class Model
 		}
 
 		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ErrorMsg::SUCCESS_UPDATE;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_UPDATE');
 		Log::notice(sprintf(
 			'%s pk "%d", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
 		), __METHOD__);
@@ -557,7 +592,7 @@ abstract class Model
 		$value = (int) $value;
 		if ($value <= 0) {
 			$errNo = ErrorNo::ERROR_ARGS_DELETE;
-			$errMsg = ErrorMsg::ERROR_ARGS_DELETE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_DELETE');
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
@@ -571,7 +606,7 @@ abstract class Model
 		$rowCount = $this->getDb()->deleteByPk($value);
 		if ($rowCount === false) {
 			$errNo = ErrorNo::ERROR_DB_DELETE;
-			$errMsg = ErrorMsg::ERROR_DB_DELETE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_DELETE');
 			Log::warning(sprintf(
 				'%s pk "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
@@ -584,7 +619,7 @@ abstract class Model
 
 		if ($rowCount <= 0) {
 			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
-			$errMsg = ErrorMsg::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
 			Log::warning(sprintf(
 				'%s pk "%d", rowCount "%d"', $errMsg, $value, $rowCount
 			), $errNo, __METHOD__);
@@ -596,7 +631,7 @@ abstract class Model
 		}
 
 		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ErrorMsg::SUCCESS_DELETE;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_DELETE');
 		Log::notice(sprintf(
 			'%s pk "%d", rowCount "%d"', $errMsg, $value, $rowCount
 		), __METHOD__);
@@ -624,7 +659,7 @@ abstract class Model
 
 		if ($ret['err_no'] === ErrorNo::ERROR_DB_SELECT_EMPTY) {
 			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
-			$errMsg = ErrorMsg::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
 			Log::warning(sprintf(
 				'%s pk "%d", rowCount "%d"', $errMsg, $value, 0
 			), $errNo, __METHOD__);
@@ -681,6 +716,33 @@ abstract class Model
 	public function getDb()
 	{
 		return $this->_db;
+	}
+
+	/**
+	 * 通过键名获取语言内容
+	 * @param string $string
+	 * @param boolean $jsSafe
+	 * @param boolean $interpretBackSlashes
+	 * @return string
+	 */
+	public function _($string, $jsSafe = false, $interpretBackSlashes = true)
+	{
+		return $this->getLanguage()->_($string, $jsSafe, $interpretBackSlashes);
+	}
+
+	/**
+	 * 获取语言国际化管理类
+	 * @return tfc\util\Language
+	 */
+	public function getLanguage()
+	{
+		if ($this->_language === null) {
+			$type = Cfg::getApp('language');
+			$baseDir = DIR_LIBRARIES . DIRECTORY_SEPARATOR . 'koala' . DIRECTORY_SEPARATOR . 'languages';
+			$this->_language = Language::getInstance($type, $baseDir);
+		}
+
+		return $this->_language;
 	}
 
 	/**

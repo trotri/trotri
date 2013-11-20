@@ -10,6 +10,7 @@
 
 namespace modules\generator\helper;
 
+use tfc\saf\Text;
 use koala\widgets\Components;
 use koala\widgets\ElementCollections;
 use helper\Util;
@@ -153,26 +154,25 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'generator_name';
-		$label = '生成代码名';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_GENERATOR_NAME_LABEL'),
 				'callback' => array($this, 'getGeneratorNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
-				'label' => $label,
-				'hint' => $label . '由6~12个字符组成',
+				'label' => Text::_('MOD_GENERATOR_GENERATOR_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_GENERATOR_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'MinLength' => array(6, $label . '“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
+				'MinLength' => array(6, Text::_('MOD_GENERATOR_GENERATOR_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATOR_NAME_MAXLENGTH'))
 			);
 		}
 

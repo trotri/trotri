@@ -52,7 +52,7 @@ class Zip
                 $this->_methodPre = 'win';
                 if (!is_file($this->_rarPath)) {
                     throw new ErrorException(sprintf(
-                        'Zip OS is WINNT, but rar path "%s" is not a valid directory.', $this->_rarPath
+                        'Zip OS is WINNT, but rar path "%s" is not a valid file.', $this->_rarPath
                     ));
                 }
                 break;

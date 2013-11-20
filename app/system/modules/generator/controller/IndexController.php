@@ -14,6 +14,7 @@ use library\BaseController;
 use tfc\ap\Ap;
 use helper\Util;
 use library\ErrorNo;
+use tfc\saf\Text;
 
 /**
  * IndexController class file
@@ -39,7 +40,8 @@ class IndexController extends BaseController
 	 */
 	public function indexAction()
 	{
-		$ret = Util::getModel('Generators', 'generator')->findAll();
+		$pageNo = Util::getCurrPage();
+		$ret = Util::getModel('Generators', 'generator')->findIndexByCondition('1', null, '', $pageNo);
 		$this->render($ret);
 	}
 

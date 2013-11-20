@@ -46,5 +46,7 @@ $this->widget(
 ?>
 
 <?php $this->display('generator/index_index_btns'); ?>
-<?php $this->display('paginator'); ?>
+
+<?php $this->widget('koala\widgets\PaginatorBuilder', $this->paginator); ?>
+
 <?php $this->display('dialogs/trash'); ?>

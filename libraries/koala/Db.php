@@ -119,12 +119,13 @@ abstract class Db
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
-		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset);
+		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -178,11 +179,12 @@ abstract class Db
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll($order = '', $limit = 0, $offset = 0)
+	public function findAll($order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		return $this->findAllByCondition(1, null, $order, $limit, $offset);
+		return $this->findAllByCondition(1, null, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -192,11 +194,12 @@ abstract class Db
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0)
+	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition, $order, $limit, $offset);
+		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition, $order, $limit, $offset, $option);
 		return $this->getDbProxy()->fetchAll($sql, $params);
 	}
 
@@ -222,6 +225,16 @@ abstract class Db
 	{
 		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition);
 		return $this->getDbProxy()->fetch($sql, $params);
+	}
+
+	/**
+	 * 获取"SELECT SQL_CALC_FOUND_ROWS"语句的查询总数
+	 * @return integer
+	 */
+	public function getFoundRows()
+	{
+		$sql = 'SELECT FOUND_ROWS()';
+		return $this->getDbProxy()->fetchColumn($sql);
 	}
 
 	/**

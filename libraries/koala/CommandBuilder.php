@@ -33,11 +33,13 @@ class CommandBuilder
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return string
 	 */
-	public function createFind($table, array $columnNames = array(), $condition = '', $order = '', $limit = 0, $offset = 0)
+	public function createFind($table, array $columnNames = array(), $condition = '', $order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		$command = 'SELECT ' . implode(', ', $this->quoteColumnNames($columnNames)) . ' FROM ' . $this->quoteTableName($table);
+		$option !== '' && $option = strtoupper($option) . ' ';
+		$command = 'SELECT ' . $option . implode(', ', $this->quoteColumnNames($columnNames)) . ' FROM ' . $this->quoteTableName($table);
 		$command = $this->applyCondition($command, $condition);
 		$command = $this->applyOrder($command, $order);
 		$command = $this->applyLimit($command, $limit, $offset);
