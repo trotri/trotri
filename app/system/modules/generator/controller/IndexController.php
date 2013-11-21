@@ -41,16 +41,10 @@ class IndexController extends BaseController
 	public function indexAction()
 	{
 		$pageNo = Util::getCurrPage();
-		$ret = Util::getModel('Generators', 'generator')->findIndexByCondition('1', null, '', $pageNo);
-		$this->render($ret);
-	}
+		$attributes = array('trash' => 'n');
 
-	/**
-	 * 数据详情
-	 * @return void
-	 */
-	public function viewAction()
-	{
+		$ret = Util::getModel('Generators', 'generator')->findIndexByAttributes($attributes, '', $pageNo);
+		$this->render($ret);
 	}
 
 	/**
@@ -64,9 +58,14 @@ class IndexController extends BaseController
 		$req = Ap::getRequest();
 		$do = $req->getParam('do');
 		if ($do == 'post') {
+			
+			echo '<pre>';
+			print_r($req->getPost());
+			exit;
+			
 			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$this->saveForward($ret);
+				$this->forward($ret);
 			}
 		}
 
@@ -79,6 +78,27 @@ class IndexController extends BaseController
 	 */
 	public function modifyAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$id = $req->getInteger('id');
+		$do = $req->getParam('do');
+		if ($do == 'post') {
+			$ret = $mod->modifyByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$this->forward($ret);
+			}
+
+			$ret['data'] = $req->getPost();
+		}
+		else {
+			$ret = $mod->findByPk($id);
+		}
+
+		$ret['id'] = $id;
+		$this->render($ret);
 	}
 
 	/**
@@ -87,6 +107,14 @@ class IndexController extends BaseController
 	 */
 	public function trashAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$id = $req->getInteger('id');
+		$ret = $mod->trashByPk($id);
+		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
 	}
 
 	/**
@@ -94,6 +122,14 @@ class IndexController extends BaseController
 	 * @return void
 	 */
 	public function removeAction()
+	{
+	}
+
+	/**
+	 * 数据详情
+	 * @return void
+	 */
+	public function viewAction()
 	{
 	}
 }

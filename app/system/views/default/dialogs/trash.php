@@ -8,7 +8,7 @@
       <div class="modal-footer">
         <input type="hidden" name="dialog_remove_trash_action">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" onclick="return Core.ajaxRemoveTrash();">确定</button>
+        <button type="button" class="btn btn-primary" onclick="return Core.removeTrash();">确定</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

@@ -14,6 +14,7 @@ use tfc\ap\Ap;
 use tfc\ap\ErrorException;
 use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
+use tfc\util\Paginator;
 use tfc\saf\DbProxy;
 use tfc\saf\Cfg;
 
@@ -69,6 +70,15 @@ class Util
 	public static function getUrl($action = '', $controller = '', $module = '', array $params = array())
 	{
 		return self::getUrlManager()->getUrl($action, $controller, $module, $params);
+	}
+
+	/**
+	 * 获取当前链接
+	 * @return string
+	 */
+	public static function getRequestUri()
+	{
+		return Ap::getRequest()->getRequestUri();
 	}
 
 	/**
@@ -142,7 +152,7 @@ class Util
 			$pageVar = Cfg::getApp('page_var', 'paginator');
 		}
 		catch (ErrorException $e) {
-			$pageVar = 'page';
+			$pageVar = Paginator::DEFAULT_PAGE_VAR;
 		}
 
 		$currPage = (int) Ap::getRequest()->getParam($pageVar, 0);

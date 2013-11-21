@@ -49,17 +49,19 @@ class Components
 
 	/**
 	 * 获取美化版“是|否”选择项表单元素
+	 * @param integer $id
 	 * @param string $name
 	 * @param string $value
 	 * @return string
 	 */
-	public static function getSwitch($name, $value = 'n')
+	public static function getSwitch($id, $name, $value = 'n')
 	{
-		static $attributes = array(
-			'id'             => 'label-switch',
+		$attributes = array(
+			'id'             => 'label_switch_' . $name . '_' . $id,
+			'name'           => 'label_switch',
 			'class'          => 'make-switch switch-small',
 			'data-on-label'  => '是',
-			'data-off-label' => '否'
+			'data-off-label' => '否',
 		);
 
 		$html = self::getHtml();

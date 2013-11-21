@@ -80,15 +80,19 @@ abstract class BaseController extends Controller
 	 * @param array $params
 	 * @return void
 	 */
-	public function saveForward(array $params)
+	public function forward(array $params, $submitType = '')
 	{
-		$submitType = Ap::getRequest()->getParam('submit_type');
+		if ($submitType === '') {
+			$submitType = Ap::getRequest()->getParam('submit_type');
+		}
+
 		$submitType = strtoupper($submitType);
 		$forwardAction = '';
 		switch ($submitType)
 		{
-			case self::FORWARD_SAVE_CLOSE: 
-				$forwardAction = $this->forwardIndex;
+			case self::FORWARD_SAVE_CLOSE:
+				$continue = Ap::getRequest()->getQuery('continue', '');
+				$forwardAction = ($continue === '') ? $this->forwardIndex : $continue;
 				break;
 			case self::FORWARD_SAVE_NEW:
 				$forwardAction = $this->forwardCreate;
@@ -123,6 +127,10 @@ abstract class BaseController extends Controller
 		if (!isset($data['err_no']) || $data['err_no'] === ErrorNo::SUCCESS_NUM) {
 			$data['err_no'] = Ap::getRequest()->getInteger('err_no', ErrorNo::SUCCESS_NUM);
 			$data['err_msg'] = String::escapeXss(Ap::getRequest()->getString('err_msg'));
+		}
+
+		if (($continue = Ap::getRequest()->getQuery('continue', '')) !== '') {
+			$data['continue'] = $continue;
 		}
 
 		$view->render($tplName, $data);

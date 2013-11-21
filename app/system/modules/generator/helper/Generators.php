@@ -236,6 +236,7 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
+				'value' => self::TBL_PROFILE_N,
 				'label' => $label,
 			);
 		}
@@ -271,6 +272,7 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
+				'value' => self::TBL_ENGINE_INNODB,
 				'label' => $label,
 				'options' => self::$tblEngines
 			);
@@ -307,6 +309,7 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
+				'value' => self::TBL_CHARSET_UTF8,
 				'label' => $label,
 				'options' => self::$tblCharsets
 			);
@@ -547,6 +550,7 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
+				'value' => self::TRASH_Y,
 				'label' => $label,
 			);
 		}
@@ -875,7 +879,7 @@ class Generators extends ElementCollections
 	 */
 	public function getTblProfileSwitchLabel($data)
 	{
-		return Components::getSwitch('tbl_profile', $data['tbl_profile']);
+		return Components::getSwitch($data['generator_id'], 'tbl_profile', $data['tbl_profile']);
 	}
 
 	/**
@@ -924,8 +928,16 @@ class Generators extends ElementCollections
 	 */
 	public function getOperateLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, '#', '编辑生成代码')
-			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, '#', '移至回收站');
+		$params = array(
+			'id' => $data['generator_id'],
+			'continue' => Util::getRequestUri()
+		);
+
+		$trash = 'Core.dialogTrash(\'' . Util::getUrl('trash', '', '', $params) . '\')';
+		$modify = 'Core.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
+
+		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, '编辑生成代码')
+			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, '移至回收站');
 
 		return $ret;
 	}
@@ -937,9 +949,7 @@ class Generators extends ElementCollections
 	 */
 	public function getGeneratorNameUrl($data)
 	{
-		$params = array(
-			'generator_id' => $data['generator_id']
-		);
+		$params = array('id' => $data['generator_id']);
 		return Components::getHtml()->a($data['generator_name'], Util::getUrl('modify', '', '', $params));
 	}
 }

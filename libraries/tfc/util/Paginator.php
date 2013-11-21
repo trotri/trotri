@@ -33,6 +33,11 @@ class Paginator
     const DEFAULT_LIST_PAGES = 4;
 
     /**
+     * @var string 默认的从$_GET或$_POST中获取当前页的键名
+     */
+    const DEFAULT_PAGE_VAR = 'page';
+
+    /**
      * @var integer|null 当前的页码
      */
     protected $_currPage = null;
@@ -45,7 +50,7 @@ class Paginator
     /**
      * @var string 从$_GET或$_POST中获取当前页的键名
      */
-    protected $_pageVar = 'page';
+    protected $_pageVar = self::DEFAULT_PAGE_VAR;
 
     /**
      * @var string 链接地址的前半部分，拼接上页码就是完整的链接

@@ -583,6 +583,70 @@ abstract class Model
 	}
 
 	/**
+	 * 通过主键，将一条记录移至回收站。不支持联合主键
+	 * @param integer $value
+	 * @param string $columnName
+	 * @return array
+	 */
+	public function trashByPk($value, $columnName = 'trash')
+	{
+		$value = (int) $value;
+		if ($value <= 0) {
+			$errNo = ErrorNo::ERROR_ARGS_DELETE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_DELETE');
+			Log::warning(sprintf(
+				'%s pk "%d"', $errMsg, $value
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		$attributes = array($columnName => 'y');
+		$rowCount = $this->getDb()->updateByPk($value, $attributes);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_DB_DELETE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_DELETE');
+			Log::warning(sprintf(
+				'%s pk "%d", attributes "%s"', $errMsg, $value, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		if ($rowCount <= 0) {
+			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+			Log::warning(sprintf(
+				'%s pk "%d", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_DELETE');
+		Log::notice(sprintf(
+			'%s pk "%d", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+		), __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount,
+			'id' => $value
+		);
+	}
+
+	/**
 	 * 通过主键，删除一条记录。不支持联合主键
 	 * @param integer $value
 	 * @return array

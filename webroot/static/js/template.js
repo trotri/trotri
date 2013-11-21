@@ -6,6 +6,11 @@ $(document).ready(function() {
     increaseArea: "20%" // optional
   });
   Core.checkedToggle();
+  Core.changeSwitchRadioValue();
+
+  if (typeof(callback) == "function") {
+    callback();
+  }
 });
 
 /**
@@ -127,6 +132,15 @@ Core = {
   },
 
   /**
+   * 提交删除数据链接
+   * @return void
+   */
+  removeTrash: function() {
+    var url = $(":hidden[name='dialog_remove_trash_action']").val();
+    location.href = url;
+  },
+
+  /**
    * Ajax方式删除数据
    * @return void
    */
@@ -149,6 +163,22 @@ Core = {
   },
 
   /**
+   * 修复开关插件Bug（点击开关插件时，不改变Radio值）
+   * @return void
+   */
+  changeSwitchRadioValue: function() {
+    $(".make-switch").each(function() {
+      var inputSelector = 'input[type!="hidden"]';
+      $(this).find(inputSelector).on('change', function (e, skipOnChange) {
+        var o = $(this).parent();
+        var r = o.find(":radio");
+        var isOn = o.hasClass("switch-on");
+        r.val(isOn ? "y" : "n");
+      });
+    });
+  },
+
+  /**
    * 提交表单
    * @param string type 保存行为类型
    * @param string form 表单名
@@ -157,12 +187,12 @@ Core = {
   formSubmit: function(type, form) {
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
     var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
-    $(".make-switch > .switch-animate").find("input[type='radio']").each(function() {
-      if ($(this).parent().hasClass("switch-on")) {
-        $("input[name='" + $(this).attr("name") + "']").val("y");
-      }
-      else if ($(this).parent().hasClass("switch-off")) {
-        o.append("<input type='hidden' name='" + $(this).attr("name") + "' value='n'>")
+
+    $(".make-switch > .switch-animate").find(":radio").each(function() {
+      var e = $(this).parent();
+      if (e.hasClass("switch-on")) { $(this).val("y"); }
+      else if (e.hasClass("switch-off")) {
+        e.append("<input type='hidden' name='" + $(this).attr("name") + "' value='n'>");
       }
     });
 

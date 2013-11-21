@@ -12,6 +12,7 @@ namespace modules\generator\model;
 
 use koala\Model;
 use tfc\ap\UserIdentity;
+use tfc\util\String;
 use helper\Util;
 
 /**
@@ -106,6 +107,37 @@ class Generators extends Model
 
 	/**
 	 * (non-PHPdoc)
+	 * @see koala.Model::getUpdateRules()
+	 */
+	public function getUpdateRules()
+	{
+		$helper = $this->getHelper();
+		$type = $helper::TYPE_RULE;
+
+		$output = array(
+			'generator_name' => $helper->getGeneratorName($type),
+			'tbl_name' => $helper->getTblName($type),
+			'tbl_engine' => $helper->getTblEngine($type),
+			'tbl_charset' => $helper->getTblCharset($type),
+			'tbl_comment' => $helper->getTblComment($type),
+			'app_name' => $helper->getAppName($type),
+			'mod_name' => $helper->getModName($type),
+			'ctrl_name' => $helper->getCtrlName($type),
+			'index_row_btns' => $helper->getIndexRowBtns($type),
+			'trash' => $helper->getTrash($type),
+			'act_index_name' => $helper->getActIndexName($type),
+			'act_view_name' => $helper->getActViewName($type),
+			'act_create_name' => $helper->getActCreateName($type),
+			'act_modify_name' => $helper->getActModifyName($type),
+			'act_remove_name' => $helper->getActRemoveName($type),
+			'modifier_id' => $helper->getCreatorId($type)
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
 	 * @see koala.Model::getCleanRulesBeforeValidator()
 	 */
 	public function getCleanRulesBeforeValidator()
@@ -113,10 +145,11 @@ class Generators extends Model
 		$output = array(
 			'generator_name' => 'trim',
 			'tbl_name' => 'trim',
-			'tbl_comment' => 'trim',
+			'tbl_comment' => array($this, 'cleanTblComment'),
 			'app_name' => 'trim',
 			'mod_name' => 'trim',
 			'ctrl_name' => 'trim',
+			'description' => array($this, 'cleanDescription'),
 			'act_index_name' => 'trim',
 			'act_view_name' => 'trim',
 			'act_create_name' => 'trim',
@@ -153,6 +186,28 @@ class Generators extends Model
 			$value = implode(',', $value);
 		}
 
+		return $value;
+	}
+
+	/**
+	 * 清理表描述，除去左右空格，并且escapeXss
+	 * @param string $value
+	 * @return string
+	 */
+	public function cleanTblComment($value)
+	{
+		$value = String::escapeXss(trim($value));
+		return $value;
+	}
+
+	/**
+	 * 清理表描述，除去左右空格，并且escapeXss
+	 * @param string $value
+	 * @return string
+	 */
+	public function cleanDescription($value)
+	{
+		$value = String::escapeXss(trim($value));
 		return $value;
 	}
 

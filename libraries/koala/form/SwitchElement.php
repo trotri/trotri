@@ -33,7 +33,7 @@ class SwitchElement extends InputElement
 	/**
 	 * @var string 选项ID
 	 */
-	public $swId = 'label-switch';
+	public $swId = 'label_switch';
 
 	/**
 	 * @var string 选项“是”标签
@@ -51,8 +51,10 @@ class SwitchElement extends InputElement
 	 */
 	public function getInput()
 	{
+		$name = $this->getName(true);
+		
 		$attributes = array(
-			'id'             => $this->swId,
+			'id'             => $this->swId . '_' . $name,
 			'class'          => $this->swClass,
 			'data-on-label'  => $this->swOn,
 			'data-off-label' => $this->swOff
@@ -63,6 +65,6 @@ class SwitchElement extends InputElement
 		}
 
 		$html = $this->getHtml();
-		return $html->tag('div', $attributes, $html->radio($this->getName(true), $this->value, $this->checked));
+		return $html->tag('div', $attributes, $html->radio($name, $this->value, $this->checked));
 	}
 }
