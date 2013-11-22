@@ -14,7 +14,14 @@
 <!-- Custom styles for this template -->
 <?php echo $this->getHtml()->cssFile($this->base_url . '/static/css/template.css?v=' . $this->version); ?>
 
+<script type="text/javascript">
+var g_url = "<?php echo $this->script_url; ?>"; var g_logId = "<?php echo $this->log_id; ?>";
+var g_mod = "<?php echo $this->module; ?>"; var g_ctrl = "<?php echo $this->controller; ?>"; var g_act = "<?php echo $this->action; ?>";
+</script>
+
 <?php echo $this->getHtml()->jsFile($this->base_url . '/static/js/jquery-2.0.3.min.js'); ?>
+
+<?php echo $this->getHtml()->jsFile($this->base_url . '/static/js/template.js'); ?>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>

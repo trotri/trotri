@@ -118,6 +118,22 @@ class IndexController extends BaseController
 	}
 
 	/**
+	 * Ajax编辑“是否生成扩展表”
+	 * @return void
+	 */
+	public function ajaxmodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$id = $req->getInteger('id');
+		$ret = $mod->modifyByPk($id, $req->getQuery());
+		$this->display($ret);
+	}
+
+	/**
 	 * 删除数据
 	 * @return void
 	 */

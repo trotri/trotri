@@ -65,7 +65,7 @@ class Components
 		);
 
 		$html = self::getHtml();
-		return $html->tag('div', $attributes, $html->radio($name, $value, ($value === 'y')));
+		return $html->tag('div', $attributes, $html->radio($name . '_' . $id, $value, ($value === 'y')));
 	}
 
 	/**

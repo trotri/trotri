@@ -1,9 +1,9 @@
 <!-- Modal Dialog Ajax View -->
-<div class="modal fade" id="dialog_ajax_view" tabindex="-1" role="dialog" aria-labelledby="dialog_ajax_view_label" aria-hidden="true">
+<div class="modal fade" id="dialog_ajax_view" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title" id="dialog_ajax_view_title">查看</h4>
       </div>
       <div class="modal-body" id="dialog_ajax_view_body">

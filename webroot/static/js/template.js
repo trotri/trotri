@@ -42,6 +42,114 @@ Core = {
   },
 
   /**
+   * 确认对话框：删除数据时弹出
+   * @param string url 删除数据连接
+   * @return void
+   */
+  dialogRemove: function(url) {
+    $(":hidden[name='dialog_remove_trash_action']").val(url);
+    $("#dialog_remove").modal("show");
+  },
+
+  /**
+   * 确认对话框：将数据移至回收站时弹出
+   * @param string url 将数据移至回收站连接
+   * @return void
+   */
+  dialogTrash: function(url) {
+    $(":hidden[name='dialog_remove_trash_action']").val(url);
+    $("#dialog_trash").modal("show");
+  },
+
+  /**
+   * 关闭确认对话框后，提交删除数据链接
+   * @return void
+   */
+  afterDialogRemoveTrash: function() {
+    var url = $(":hidden[name='dialog_remove_trash_action']").val();
+    Core.href(url);
+  },
+
+  /**
+   * 展示对话框：Ajax方式展示数据
+   * @param string url Ajax请求展示数据连接
+   * @param string title 对话框标题
+   * @return void
+   */
+  dialogAjaxView: function(url, title) {
+    if (title != undefined) {
+      $("#dialog_ajax_view_title").html(title);
+    }
+    $("#dialog_ajax_view").modal("show");
+  },
+
+  /**
+   * Alert对话框
+   * @param string m Alert消息
+   * @param boolean hasErr 是否是错误消息
+   * @return void
+   */
+  dialogAlert: function(m, hasErr, callback) {
+    var o = $("#dialog_alert");
+    var h = o.find("h2");
+    if (hasErr) h.addClass("text-danger");
+    h.html(m);
+    if (typeof(callback) == "string" && callback != "") {
+      o.find(":button").attr("onclick", callback);
+    }
+    o.modal("show");
+  },
+
+  /**
+   * 修复开关插件Bug（点击开关插件时，不改变Radio值）
+   * @return void
+   */
+  changeSwitchRadioValue: function() {
+    $(".make-switch").each(function() {
+      var inputSelector = 'input[type!="hidden"]';
+      $(this).find(inputSelector).on('change', function (e, skipOnChange) {
+        var o = $(this).parent();
+        var r = o.find(":radio");
+        var isOn = o.hasClass("switch-on");
+        r.val(isOn ? "y" : "n");
+      });
+    });
+  },
+
+  /**
+   * 提交表单
+   * @param string type 保存行为类型
+   * @param string form 表单名
+   * @return void
+   */
+  formSubmit: function(type, form) {
+    // 修复开关插件Bug（开关插件在关闭的状态下不传值）
+    var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
+
+    $(".make-switch > .switch-animate").find(":radio").each(function() {
+      var e = $(this).parent();
+      if (e.hasClass("switch-on")) { $(this).val("y"); }
+      else if (e.hasClass("switch-off")) {
+        e.append("<input type='hidden' name='" + $(this).attr("name") + "' value='n'>");
+      }
+    });
+
+    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type);
+    o.submit();
+  },
+
+  /**
+   * 匹配字符串前缀
+   * @param string E
+   * @param string pre
+   * @return boolean
+   */
+  startWith: function(E, pre) {
+    var len = pre.length;
+    return E.substr(0, len) == pre;
+  },
+
+  /**
    * 获取所有被选中的checkbox框
    * @param string name
    * @return array of object HTMLInputElement
@@ -112,92 +220,29 @@ Core = {
   },
 
   /**
-   * 确认对话框：删除数据时弹出
-   * @param string url 删除数据连接
-   * @return void
+   * 获取URL
+   * @param string act
+   * @param string ctrl
+   * @param string mod
+   * @param array params
+   * @return string
    */
-  dialogRemove: function(url) {
-    $(":hidden[name='dialog_remove_trash_action']").val(url);
-    $("#dialog_remove").modal("show");
-  },
-
-  /**
-   * 确认对话框：将数据移至回收站时弹出
-   * @param string url 将数据移至回收站连接
-   * @return void
-   */
-  dialogTrash: function(url) {
-    $(":hidden[name='dialog_remove_trash_action']").val(url);
-    $("#dialog_trash").modal("show");
-  },
-
-  /**
-   * 提交删除数据链接
-   * @return void
-   */
-  removeTrash: function() {
-    var url = $(":hidden[name='dialog_remove_trash_action']").val();
-    location.href = url;
-  },
-
-  /**
-   * Ajax方式删除数据
-   * @return void
-   */
-  ajaxRemoveTrash: function() {
-    var url = $(":hidden[name='dialog_remove_trash_action']").val();
-    alert(url);
-  },
-
-  /**
-   * 展示对话框：Ajax方式展示数据
-   * @param string url Ajax请求展示数据连接
-   * @param string title 对话框标题
-   * @return void
-   */
-  dialogAjaxView: function(url, title) {
-    if (title != undefined) {
-      $("#dialog_ajax_view_title").html(title);
-    }
-    $("#dialog_ajax_view").modal("show");
-  },
-
-  /**
-   * 修复开关插件Bug（点击开关插件时，不改变Radio值）
-   * @return void
-   */
-  changeSwitchRadioValue: function() {
-    $(".make-switch").each(function() {
-      var inputSelector = 'input[type!="hidden"]';
-      $(this).find(inputSelector).on('change', function (e, skipOnChange) {
-        var o = $(this).parent();
-        var r = o.find(":radio");
-        var isOn = o.hasClass("switch-on");
-        r.val(isOn ? "y" : "n");
-      });
-    });
-  },
-
-  /**
-   * 提交表单
-   * @param string type 保存行为类型
-   * @param string form 表单名
-   * @return void
-   */
-  formSubmit: function(type, form) {
-    // 修复开关插件Bug（开关插件在关闭的状态下不传值）
-    var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
-
-    $(".make-switch > .switch-animate").find(":radio").each(function() {
-      var e = $(this).parent();
-      if (e.hasClass("switch-on")) { $(this).val("y"); }
-      else if (e.hasClass("switch-off")) {
-        e.append("<input type='hidden' name='" + $(this).attr("name") + "' value='n'>");
+  getUrl: function(mod, ctrl, act, params) {
+    url = g_url + "?r=" + mod + "/" + ctrl + "/" + act;
+    if (typeof(params) == "object") {
+      for (var key in params) {
+        url += "&" + key + "=" + params[key];
       }
-    });
+    }
+    return url;
+  },
 
-    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type);
-    o.submit();
+  /**
+   * 刷新页面
+   * @return void
+   */
+  refresh: function() {
+    window.location.href = window.location.href;
   },
 
   /**

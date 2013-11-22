@@ -409,6 +409,7 @@ abstract class Model
 	 */
 	public function insert(array $attributes = array(), $ignore = false)
 	{
+		$this->filterAttributes($attributes);
 		if (empty($attributes)) {
 			$errNo = ErrorNo::ERROR_ARGS_INSERT;
 			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_INSERT');
@@ -422,7 +423,7 @@ abstract class Model
 		}
 
 		$filter = Singleton::getInstance('tfc\\validator\\Filter');
-		
+
 		$rules = $this->getCleanRulesBeforeValidator();
 		if (is_array($rules)) {
 			$filter->clean($rules, $attributes);
@@ -498,6 +499,7 @@ abstract class Model
 			);
 		}
 
+		$this->filterAttributes($attributes);
 		if (empty($attributes)) {
 			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
 			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
@@ -745,14 +747,20 @@ abstract class Model
 	 * 通过过滤数组，只保留指定的字段名，为INSERT、UPDATE服务
 	 * @param array $attributes
 	 * @param mixed $columnNames
+	 * @param boolean $autoIncrement
 	 * @return void
 	 */
-	public function filterAttributes(array &$attributes = array(), $columnNames)
+	public function filterAttributes(array &$attributes = array(), $columnNames = null, $autoIncrement = true)
 	{
-		$columnNames = (array) $columnNames;
-		foreach ($attributes as $key => $value) {
-			if (!in_array($key, $columnNames)) {
-				unset($attributes[$key]);
+		if ($columnNames === null) {
+			$this->getDb()->filterAttributes($attributes, $autoIncrement);
+		}
+		else {
+			$columnNames = (array) $columnNames;
+			foreach ($attributes as $key => $value) {
+				if (!in_array($key, $columnNames)) {
+					unset($attributes[$key]);
+				}
 			}
 		}
 	}
