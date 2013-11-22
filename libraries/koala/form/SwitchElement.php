@@ -65,6 +65,6 @@ class SwitchElement extends InputElement
 		}
 
 		$html = $this->getHtml();
-		return $html->tag('div', $attributes, $html->radio($name, $this->value, $this->checked));
+		return $html->tag('div', $attributes, $html->checkbox($name, $this->value, $this->checked));
 	}
 }

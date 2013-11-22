@@ -58,11 +58,6 @@ class IndexController extends BaseController
 		$req = Ap::getRequest();
 		$do = $req->getParam('do');
 		if ($do == 'post') {
-			
-			echo '<pre>';
-			print_r($req->getPost());
-			exit;
-			
 			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$this->forward($ret);

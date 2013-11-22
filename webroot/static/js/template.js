@@ -6,11 +6,7 @@ $(document).ready(function() {
     increaseArea: "20%" // optional
   });
   Core.checkedToggle();
-  Core.changeSwitchRadioValue();
-
-  if (typeof(callback) == "function") {
-    callback();
-  }
+  Core.changeSwitchValue();
 });
 
 /**
@@ -101,17 +97,16 @@ Core = {
   },
 
   /**
-   * 修复开关插件Bug（点击开关插件时，不改变Radio值）
+   * 修复开关插件（点击开关插件时，不改变Radio值）
    * @return void
    */
-  changeSwitchRadioValue: function() {
+  changeSwitchValue: function() {
     $(".make-switch").each(function() {
       var inputSelector = 'input[type!="hidden"]';
-      $(this).find(inputSelector).on('change', function (e, skipOnChange) {
+      $(this).find(inputSelector).on("change", function (e, skipOnChange) {
         var o = $(this).parent();
-        var r = o.find(":radio");
-        var isOn = o.hasClass("switch-on");
-        r.val(isOn ? "y" : "n");
+        var v = o.hasClass("switch-on") ? "n" : "y";
+        o.find(":checkbox").val(v);
       });
     });
   },
@@ -123,10 +118,9 @@ Core = {
    * @return void
    */
   formSubmit: function(type, form) {
-    // 修复开关插件Bug（开关插件在关闭的状态下不传值）
     var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
-
-    $(".make-switch > .switch-animate").find(":radio").each(function() {
+    // 修复开关插件Bug（开关插件在关闭的状态下不传值）
+    $(".make-switch > .switch-animate").find(":checkbox").each(function() {
       var e = $(this).parent();
       if (e.hasClass("switch-on")) { $(this).val("y"); }
       else if (e.hasClass("switch-off")) {

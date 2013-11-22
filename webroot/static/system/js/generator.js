@@ -1,11 +1,6 @@
 $(document).ready(function() {
-  $(":radio").each(function() {
-    var o = $(this);
-    if (Core.startWith(o.attr("name"), "tbl_profile")) {
-      o.change(function() {
-        Generator.ajaxModifyTblProfile(o);
-      });
-    }
+  $(":checkbox[name='tbl_profile']").change(function() {
+    Generator.ajaxModifyTblProfile($(this));
   });
 });
 
@@ -20,9 +15,10 @@ Generator = {
    * @return void
    */
   ajaxModifyTblProfile: function(o) {
-    var generatorId = o.attr("name").substr(o.attr("name").lastIndexOf("_") + 1);
+    var id = o.parent().parent().attr("id");
+    var generatorId = id.substr(id.lastIndexOf("_") + 1);
     if (!Core.isInt(generatorId)) return false;
-    var tblProfile = (o.val() == "y") ? "n" : "y";
+    var tblProfile = o.val();
     var url = Core.getUrl(g_mod, g_ctrl, "ajaxmodify");
     var params = {"tbl_profile" : tblProfile, "id" : generatorId};
 
