@@ -550,7 +550,7 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
-				'value' => self::TRASH_Y,
+				'value' => self::TRASH_N,
 				'label' => $label,
 			);
 		}
