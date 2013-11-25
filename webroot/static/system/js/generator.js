@@ -17,14 +17,14 @@ Generator = {
   ajaxModifyTblProfile: function(o) {
     var id = o.parent().parent().attr("id");
     var generatorId = id.substr(id.lastIndexOf("_") + 1);
-    if (!Core.isInt(generatorId)) return false;
+    if (!Trotri.isInt(generatorId)) { return false; }
     var tblProfile = o.val();
     var url = Core.getUrl(g_mod, g_ctrl, "ajaxmodify");
     var params = {"tbl_profile" : tblProfile, "id" : generatorId};
 
     $.getJSON(url, params, function(data) {
       var hasErr = (data.err_no > 0);
-      Core.dialogAlert(data.err_msg, hasErr, hasErr ? "Core.refresh();" : "");
+      Core.dialogAlert(data.err_msg, hasErr, hasErr ? "Trotri.refresh();" : "");
     });
   }
 }

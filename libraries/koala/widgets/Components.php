@@ -43,6 +43,11 @@ class Components
 	const GLYPHICON_TRASH = 'trash';
 
 	/**
+	 * @var string Glyphicons图标：彻底删除
+	 */
+	const GLYPHICON_REMOVE = 'remove-sign';
+
+	/**
 	 * @var instance of tfc\mvc\Html
 	 */
 	protected static $_html = null;

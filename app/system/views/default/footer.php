@@ -1,6 +1,7 @@
 <!-- Footer -->
 <hr>
 
+<?php $this->display('dialogs/trash_remove'); ?>
 <?php $this->display('dialogs/alert'); ?>
 
 <footer>

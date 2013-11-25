@@ -65,16 +65,6 @@ class Generators extends Model
 	}
 
 	/**
-	 * 通过主键，删除一条记录
-	 * @param integer $value
-	 * @return array
-	 */
-	public function removeByPk($value)
-	{
-		return $this->deleteByPk($value);
-	}
-
-	/**
 	 * (non-PHPdoc)
 	 * @see koala.Model::getInsertRules()
 	 */

@@ -20,11 +20,9 @@ Core = {
    * @return void
    */
   checkedToggle: function() {
-    var o = Core.getInput("checkbox", "checked_toggle");
-    if (o == undefined) {
-      return ;
-    }
-    var a = Core.getInputs("checkbox", o.value);
+    var o = Trotri.getInput("checkbox", "checked_toggle");
+    if (o == undefined) { return ; }
+    var a = Trotri.getInputs("checkbox", o.value);
     o.onclick = function() {
       for (var i in a) {
         a[i].checked = o.checked;
@@ -32,43 +30,93 @@ Core = {
     }
     for (var i in a) {
       a[i].onclick = function() {
-        o.checked = (Core.getCheckeds(o.value).length == a.length);
+        o.checked = (Trotri.getCheckeds(o.value).length == a.length);
       }
     }
   },
 
   /**
    * 确认对话框：删除数据时弹出
-   * @param string url 删除数据连接
+   * @param string url 删除数据链接
    * @return void
    */
   dialogRemove: function(url) {
-    $(":hidden[name='dialog_remove_trash_action']").val(url);
-    $("#dialog_remove").modal("show");
+    Core._dialogBatchTrash(url, false, false);
   },
 
   /**
    * 确认对话框：将数据移至回收站时弹出
-   * @param string url 将数据移至回收站连接
+   * @param string url 将数据移至回收站链接
    * @return void
    */
   dialogTrash: function(url) {
-    $(":hidden[name='dialog_remove_trash_action']").val(url);
-    $("#dialog_trash").modal("show");
+    Core._dialogBatchTrash(url, true, false);
   },
 
   /**
-   * 关闭确认对话框后，提交删除数据链接
+   * 确认对话框：批量删除数据时弹出
+   * @param string url 批量删除数据链接
    * @return void
    */
-  afterDialogRemoveTrash: function() {
-    var url = $(":hidden[name='dialog_remove_trash_action']").val();
-    Core.href(url);
+  dialogBatchRemove: function(url) {
+    Core._dialogBatchTrash(url, false, true);
+  },
+
+  /**
+   * 确认对话框：将数据批量移至回收站时弹出
+   * @param string url 将数据批量移至回收站链接
+   * @return void
+   */
+  dialogBatchTrash: function(url) {
+    Core._dialogBatchTrash(url, true, true);
+  },
+
+  /**
+   * 确认对话框：删除或移至回收站时弹出
+   * @param string url
+   * @param boolean isTrash
+   * @param boolean isBatch
+   * @return void
+   */
+  _dialogBatchTrash: function(url, isTrash, isBatch) {
+    $(":hidden[name='dialog_trash_remove_url']").val(url);
+    if (isTrash) {
+      $("#dialog_trash_remove_view_body").html("确定要移至回收站吗？");
+      $("#dialog_trash_remove_view_body").addClass("text-warning").removeClass("text-danger");
+    }
+    else {
+      $("#dialog_trash_remove_view_body").html("确定要删除吗？删除后将无法恢复！");
+      $("#dialog_trash_remove_view_body").addClass("text-danger").removeClass("text-warning");
+    }
+
+    $(":hidden[name='dialog_trash_remove_is_batch']").val(isBatch ? "1" : "0");
+    var ids = "";
+    if (isBatch) {
+      var n = $(":checkbox[name='checked_toggle']").val();
+      var ids = Trotri.getCheckedValues(n);
+      if (ids == "") { $("#dialog_trash_remove_view_body").html("请选中删除项！"); }
+    }
+    $(":hidden[name='dialog_trash_remove_ids']").val(ids);
+    $("#dialog_trash_remove").modal("show");
+  },
+
+  /**
+   * 关闭确认对话框后，提交到删除或移至回收站的链接
+   * @return void
+   */
+  afterDialogTrashRemove: function() {
+    var url = $(":hidden[name='dialog_trash_remove_url']").val();
+    var isBatch = $(":hidden[name='dialog_trash_remove_is_batch']").val();
+    var ids = $(":hidden[name='dialog_trash_remove_ids']").val();
+    if (isBatch == "0") { Trotri.href(url); return ; }
+    if (ids == "") { $("#dialog_trash_remove").modal("hide"); return ; }
+    url += "&ids=" + ids;
+    Trotri.href(url);
   },
 
   /**
    * 展示对话框：Ajax方式展示数据
-   * @param string url Ajax请求展示数据连接
+   * @param string url Ajax请求展示数据链接
    * @param string title 对话框标题
    * @return void
    */
@@ -133,87 +181,6 @@ Core = {
   },
 
   /**
-   * 匹配字符串前缀
-   * @param string E
-   * @param string pre
-   * @return boolean
-   */
-  startWith: function(E, pre) {
-    var len = pre.length;
-    return E.substr(0, len) == pre;
-  },
-
-  /**
-   * 获取所有被选中的checkbox框
-   * @param string name
-   * @return array of object HTMLInputElement
-   */
-  getCheckeds: function(name) {
-    var r = []; var n = 0;
-    var a = Core.getInputs("checkbox", name);
-    for (var i in a) {
-      if (!Core.isInt(i)) {
-        continue;
-      }
-      if (a[i].checked) {
-        r[n++] = a[i];
-      }
-    }
-    return r;
-  },
-
-  /**
-   * 通过类型和名称过滤Input，并获取第一个Input
-   * @param string type
-   * @param string name
-   * @return object HTMLInputElement | undefined
-   */
-  getInput: function(type, name) {
-    var a = Core.getInputs(type, name);
-    if (a.length > 0) {
-      return a[0];
-    }
-    return undefined;
-  },
-
-  /**
-   * 通过类型和名称过滤Input
-   * @param string type
-   * @param string name
-   * @return array of object HTMLInputElement
-   */
-  getInputs: function(type, name) {
-    var r = []; var n = 0;
-    var a = document.getElementsByTagName("input");
-    for (var i in a) {
-      if (!Core.isInt(i)) {
-        continue;
-      }
-      if (type != undefined && a[i].type != type) {
-        continue;
-      }
-      if (name != undefined && a[i].name != name) {
-        continue;
-      }
-      r[n++] = a[i];
-    }
-    return r;
-  },
-
-  /**
-   * 判断是否是整数
-   * @param integer E
-   * @return boolean
-   */
-  isInt: function(E) {
-    var pattern = /^[0-9]+$/ ;
-    if (E == "" || !pattern.test(E)) {
-      return false;
-    }
-    return true;
-  },
-
-  /**
    * 获取URL
    * @param string act
    * @param string ctrl
@@ -230,27 +197,4 @@ Core = {
     }
     return url;
   },
-
-  /**
-   * 刷新页面
-   * @return void
-   */
-  refresh: function() {
-    window.location.href = window.location.href;
-  },
-
-  /**
-   * 页面跳转
-   * @param string url
-   * @return void
-   */
-  href: function(url) {
-    window.location.href = url;
-    return false;
-  },
-
-  search: function(url) {
-    window.location.href = url;
-    return false;
-  }
 }

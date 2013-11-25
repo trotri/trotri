@@ -97,22 +97,6 @@ class IndexController extends BaseController
 	}
 
 	/**
-	 * 批量移至回收站
-	 * @return void
-	 */
-	public function batchtrashAction()
-	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
-
-		$id = $req->getInteger('id');
-		$ret = $mod->trashByPk($id);
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
-	}
-
-	/**
 	 * 移至回收站
 	 * @return void
 	 */
@@ -125,6 +109,22 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->trashByPk($id);
+		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+	}
+
+	/**
+	 * 批量移至回收站
+	 * @return void
+	 */
+	public function batchtrashAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$ids = explode(',', $req->getParam('ids'));
+		$ret = $mod->batchTrashByPk($ids);
 		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
 	}
 

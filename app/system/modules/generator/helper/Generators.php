@@ -933,8 +933,8 @@ class Generators extends ElementCollections
 			'continue' => Util::getRequestUri()
 		);
 
+		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
 		$trash = 'Core.dialogTrash(\'' . Util::getUrl('trash', '', '', $params) . '\')';
-		$modify = 'Core.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
 
 		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, '编辑生成代码')
 			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, '移至回收站');

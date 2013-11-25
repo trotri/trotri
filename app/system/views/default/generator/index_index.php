@@ -49,6 +49,4 @@ $this->widget(
 
 <?php $this->widget('koala\widgets\PaginatorBuilder', $this->paginator); ?>
 
-<?php $this->display('dialogs/trash'); ?>
-
 <?php echo $this->getHtml()->jsFile($this->base_url . '/static/system/js/generator.js'); ?>

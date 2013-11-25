@@ -423,7 +423,6 @@ abstract class Model
 		}
 
 		$filter = Singleton::getInstance('tfc\\validator\\Filter');
-
 		$rules = $this->getCleanRulesBeforeValidator();
 		if (is_array($rules)) {
 			$filter->clean($rules, $attributes);
@@ -514,7 +513,6 @@ abstract class Model
 		}
 
 		$filter = Singleton::getInstance('tfc\\validator\\Filter');
-
 		$rules = $this->getCleanRulesBeforeValidator();
 		if (is_array($rules)) {
 			$filter->clean($rules, $attributes);
@@ -585,6 +583,115 @@ abstract class Model
 	}
 
 	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param array $values
+	 * @param array $attributes
+	 * @return integer
+	 */
+	public function batchUpdateByPk(array $values, array $attributes = array())
+	{
+		$values = array_map('intval', $values);
+		$value = implode(',', $values);
+		foreach ($values as $_) {
+			if ($_ <= 0) {
+				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+				Log::warning(sprintf(
+					'%s pks "%s"', $errMsg, $value
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'ids' => $value
+				);
+			}
+		}
+
+		$this->filterAttributes($attributes);
+		if (empty($attributes)) {
+			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+			Log::warning(sprintf(
+				'%s pks "%s", attributes empty', $errMsg, $value
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		$filter = Singleton::getInstance('tfc\\validator\\Filter');
+		$rules = $this->getCleanRulesBeforeValidator();
+		if (is_array($rules)) {
+			$filter->clean($rules, $attributes);
+		}
+
+		$rules = $this->getUpdateRules();
+		if (is_array($rules)) {
+			if (!$filter->run($rules, $attributes, false)) {
+				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+				$errors = $filter->getErrors(true);
+				Log::warning(sprintf(
+					'%s pks "%s", attributes "%s", errors "%s"', $errMsg, $value, serialize($attributes), serialize($errors)
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'errors' => $errors,
+					'ids' => $value
+				);
+			}
+		}
+
+		$rules = $this->getCleanRulesAfterValidator();
+		if (is_array($rules)) {
+			$filter->clean($rules, $attributes);
+		}
+
+		$rowCount = $this->getDb()->batchUpdateByPk($value, $attributes);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_DB_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_UPDATE');
+			Log::warning(sprintf(
+				'%s pks "%s", attributes "%s"', $errMsg, $value, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		if ($rowCount <= 0) {
+			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+			Log::warning(sprintf(
+				'%s pks "%s", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_UPDATE');
+		Log::notice(sprintf(
+			'%s pks "%s", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+		), __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount,
+			'ids' => $value
+		);
+	}
+
+	/**
 	 * 通过主键，将一条记录移至回收站。不支持联合主键
 	 * @param integer $value
 	 * @param string $columnName
@@ -649,6 +756,73 @@ abstract class Model
 	}
 
 	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $values
+	 * @param string $columnName
+	 * @return array
+	 */
+	public function batchTrashByPk(array $values, $columnName = 'trash')
+	{
+		$values = array_map('intval', $values);
+		$value = implode(',', $values);
+		foreach ($values as $_) {
+			if ($_ <= 0) {
+				$errNo = ErrorNo::ERROR_ARGS_DELETE;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_DELETE');
+				Log::warning(sprintf(
+					'%s pks "%s"', $errMsg, $value
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'ids' => $value
+				);
+			}
+		}
+
+		$attributes = array($columnName => 'y');
+		$rowCount = $this->getDb()->batchUpdateByPk($value, $attributes);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_DB_DELETE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_DELETE');
+			Log::warning(sprintf(
+				'%s pks "%s", attributes "%s"', $errMsg, $value, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		if ($rowCount <= 0) {
+			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+			Log::warning(sprintf(
+				'%s pks "%s", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_DELETE');
+		Log::notice(sprintf(
+			'%s pks "%s", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+		), __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount,
+			'ids' => $value
+		);
+	}
+
+	/**
 	 * 通过主键，删除一条记录。不支持联合主键
 	 * @param integer $value
 	 * @return array
@@ -707,6 +881,71 @@ abstract class Model
 			'err_msg' => $errMsg,
 			'row_count' => $rowCount,
 			'id' => $value
+		);
+	}
+
+	/**
+	 * 通过主键，删除多条记录。不支持联合主键
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchDeleteByPk(array $values)
+	{
+		$values = array_map('intval', $values);
+		$value = implode(',', $values);
+		foreach ($values as $_) {
+			if ($_ <= 0) {
+				$errNo = ErrorNo::ERROR_ARGS_DELETE;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_DELETE');
+				Log::warning(sprintf(
+					'%s pks "%s"', $errMsg, $value
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'ids' => $value
+				);
+			}
+		}
+
+		$rowCount = $this->getDb()->batchDeleteByPk($value);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_DB_DELETE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_DELETE');
+			Log::warning(sprintf(
+				'%s pks "%s"', $errMsg, $value
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		if ($rowCount <= 0) {
+			$errNo = ErrorNo::ERROR_DB_AFFECTS_ZERO;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+			Log::warning(sprintf(
+				'%s pks "%s", rowCount "%d"', $errMsg, $value, $rowCount
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_DELETE');
+		Log::notice(sprintf(
+			'%s pks "%s", rowCount "%d"', $errMsg, $value, $rowCount
+		), __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount,
+			'ids' => $value
 		);
 	}
 

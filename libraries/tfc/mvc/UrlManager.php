@@ -75,6 +75,15 @@ class UrlManager
     }
 
     /**
+     * 获取要访问的页面名
+     * @return string
+     */
+    public function getRequestUri()
+    {
+    	return Ap::getRequest()->getRequestUri();
+    }
+
+    /**
      * 通过路由类型，获取QueryString值
      * @param string $action
      * @param string $controller
