@@ -3,10 +3,28 @@
   <div class="list-group">
     <a href="<?php echo $this->urls['generator_index']['href']; ?>" class="list-group-item active">
       生成代码管理
-      <span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="新建生成代码" onclick="return Core.href('<?php echo $this->urls['generator_create']['href']; ?>');"></span>
+      <span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="新建生成代码" onclick="return Trotri.href('<?php echo $this->urls['generator_create']['href']; ?>');"></span>
     </a>
     <a href="<?php echo $this->urls['generator_index_trash']['href']; ?>" class="list-group-item">生成代码回收站</a>
   </div><!--/.list-group-->
+<?php
+$this->widget('koala\widgets\SearchBuilder', 
+	array(
+		'action' => $this->urls['generator_index']['href'],
+		'values' => &$_GET,
+		'elementCollections' => $this->helper,
+		'elements' => array(
+			'generator_name',
+			'generator_id',	
+			'tbl_name',
+			'tbl_profile',
+			'tbl_engine',
+			'tbl_charset',
+			'app_name'
+		)
+	)
+);
+?>
 
   <div class="list-group">
     <button type="button" class="btn btn-primary btn-block" onclick="return Core.search('<?php echo $this->urls['generator_index']['href']; ?>');">

@@ -1,5 +1,5 @@
 <form class="form-inline">
-  <button type="button" class="btn btn-primary" onclick="return Core.href('<?php echo $this->urls['generator_create']['href']; ?>');">
+  <button type="button" class="btn btn-primary" onclick="return Trotri.href('<?php echo $this->urls['generator_create']['href']; ?>');">
     <span class="glyphicon glyphicon-plus-sign"></span>
     新增生成代码
   </button>
