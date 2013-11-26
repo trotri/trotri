@@ -37,7 +37,7 @@ class FormBuilder extends form\FormBuilder
 	 * @var array Input表单元素分类标签
 	 */
 	protected $_tabs = array(
-		'main' => array('tid' => 'main', 'prompt' => '主要信息', 'active' => true)
+		'main' => array('tid' => 'main', 'prompt' => 'Main', 'active' => true)
 	);
 
 	/**

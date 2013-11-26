@@ -119,7 +119,7 @@ abstract class BaseController extends Controller
 		$this->assignUser();
 		$this->assignHelper();
 		$this->assignCfgUrls();
-		$this->assignGblLang();
+		$this->assignLanguage();
 
 		$view = Mvc::getView();
 		$view->addLayoutName('layouts' . DS . $this->layoutName);
@@ -214,10 +214,12 @@ abstract class BaseController extends Controller
 	 * 将公共的语言包信息设置到模板变量中
 	 * @return void
 	 */
-	public function assignGblLang()
+	public function assignLanguage()
 	{
 		$view = Mvc::getView();
-		$view->assign(Text::parse('gbl_language'));
+
+		Text::_('GBL_LANGUAGE__');
+		$view->assign(Text::getStrings());
 	}
 
 	/**

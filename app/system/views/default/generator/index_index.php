@@ -17,17 +17,17 @@ $this->widget(
 			'ctrl_name',
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
-				'label' => $this->GBL_LANGUAGE_FIELD_GROUPS,
+				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_GROUPS,
 				'callback' => array($this->helper, 'getGeneratorFieldGroupsLabel')
 			),
 			'generator_field_types' => array(
 				'name' => 'generator_field_types',
-				'label' => $this->GBL_LANGUAGE_FIELD_TYPES,
+				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_TYPES,
 				'callback' => array($this->helper, 'getGeneratorFieldTypesLabel')
 			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
-				'label' => $this->GBL_LANGUAGE_FIELDS,
+				'label' => $this->MOD_GENERATOR_GENERATOR_FIELDS,
 				'callback' => array($this->helper, 'getGeneratorFieldsLabel')
 			),
 			'generator_id',

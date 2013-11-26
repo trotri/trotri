@@ -103,45 +103,23 @@ class Generators extends ElementCollections
 	);
 
 	/**
-	 * @var array 数据列表每行操作Btn
-	 */
-	public static $indexRowBtns = array(
-		self::INDEX_ROW_BTNS_PENCIL => '编辑',
-		self::INDEX_ROW_BTNS_TRASH => '放入回收站',
-		self::INDEX_ROW_BTNS_REMOVE => '彻底删除'
-	);
-
-	/**
-	 * @var array 是否生成扩展表
-	 */
-	public static $tblProfiles = array(
-		self::TBL_PROFILE_Y => '是',
-		self::TBL_PROFILE_N => '否'
-	);
-
-	/**
-	 * @var array 是否删除
-	 */
-	public static $trashs = array(
-		self::TRASH_Y => '是',
-		self::TRASH_N => '否'
-	);
-
-	/**
-	 * @var array Input表单元素分类标签
-	 */
-	public static $tabs = array(
-		'act' => array('tid' => 'act', 'prompt' => '行动名'),
-		'system' => array('tid' => 'system', 'prompt' => '系统信息')
-	);
-
-	/**
 	 * (non-PHPdoc)
 	 * @see koala\widgets.ElementCollections::getViewTabs()
 	 */
 	public function getViewTabs()
 	{
-		return self::$tabs;
+		$output = array(
+			'act' => array(
+				'tid' => 'act', 
+				'prompt' => Text::_('MOD_GENERATOR_GENERATORS_VIEWTAB_ACT_PROMPT')
+			),
+			'system' => array(
+				'tid' => 'system', 
+				'prompt' => Text::_('MOD_GENERATOR_GENERATORS_VIEWTAB_SYSTEM_PROMPT')
+			)
+		);
+
+		return $output;
 	}
 
 	/**
@@ -261,6 +239,11 @@ class Generators extends ElementCollections
 	{
 		$output = array();
 
+		$tblProfiles = array(
+			self::TBL_PROFILE_Y => Text::_('GBL_LANGUAGE_YES'),
+			self::TBL_PROFILE_N => Text::_('GBL_LANGUAGE_NO')
+		);
+
 		$name = 'tbl_profile';
 
 		if ($type === self::TYPE_TABLE) {
@@ -273,15 +256,15 @@ class Generators extends ElementCollections
 			$output = array(
 				'type' => 'switch',
 				'value' => self::TBL_PROFILE_N,
-				'options' => self::$tblProfiles,
+				'options' => $tblProfiles,
 				'label' => Text::_('MOD_GENERATOR_TBL_PROFILE_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
-					array_keys(self::$tblProfiles),
-					sprintf(Text::_('MOD_GENERATOR_TBL_PROFILE_INARRAY'), implode('、', self::$tblProfiles))
+					array_keys($tblProfiles),
+					sprintf(Text::_('MOD_GENERATOR_TBL_PROFILE_INARRAY'), implode('、', $tblProfiles))
 				)
 			);
 		}
@@ -289,7 +272,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'type' => 'select',
 				'placeholder' => Text::_('MOD_GENERATOR_TBL_PROFILE_LABEL'),
-				'options' => self::$tblProfiles,
+				'options' => $tblProfiles,
 			);
 		}
 
@@ -534,6 +517,12 @@ class Generators extends ElementCollections
 	{
 		$output = array();
 
+		$indexRowBtns = array(
+			self::INDEX_ROW_BTNS_PENCIL => Text::_('GBL_LANGUAGE_MODIFY'),
+			self::INDEX_ROW_BTNS_TRASH => Text::_('GBL_LANGUAGE_TRASH'),
+			self::INDEX_ROW_BTNS_REMOVE => Text::_('GBL_LANGUAGE_REMOVE')
+		);
+
 		$name = 'index_row_btns';
 
 		if ($type === self::TYPE_TABLE) {
@@ -545,14 +534,14 @@ class Generators extends ElementCollections
 			$output = array(
 				'type' => 'checkbox',
 				'label' => Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_LABEL'),
-				'options' => self::$indexRowBtns
+				'options' => $indexRowBtns
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
-					array_keys(self::$indexRowBtns),
-					sprintf(Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_INARRAY'), implode('、', self::$indexRowBtns))
+					array_keys($indexRowBtns),
+					sprintf(Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_INARRAY'), implode('、', $indexRowBtns))
 				)
 			);
 		}
@@ -595,6 +584,11 @@ class Generators extends ElementCollections
 	{
 		$output = array();
 
+		$trashs = array(
+			self::TRASH_Y => Text::_('GBL_LANGUAGE_YES'),
+			self::TRASH_N => Text::_('GBL_LANGUAGE_NO')
+		);
+
 		$name = 'trash';
 
 		if ($type === self::TYPE_TABLE) {
@@ -612,8 +606,8 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
-					array_keys(self::$trashs),
-					sprintf(Text::_('MOD_GENERATOR_TRASH_INARRAY'), implode('、', self::$trashs))
+					array_keys($trashs),
+					sprintf(Text::_('MOD_GENERATOR_TRASH_INARRAY'), implode('、', $trashs))
 				)
 			);
 		}
@@ -935,8 +929,8 @@ class Generators extends ElementCollections
 	 */
 	public function getGeneratorFieldGroupsLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', '浏览表单字段组') 
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', '新增表单字段组');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
 
 		return $ret;
 	}
@@ -948,8 +942,8 @@ class Generators extends ElementCollections
 	 */
 	public function getGeneratorFieldTypesLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', '浏览表单字段类型')
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', '新增表单字段类型');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_CREATE'));
 
 		return $ret;
 	}
@@ -961,8 +955,8 @@ class Generators extends ElementCollections
 	 */
 	public function getGeneratorFieldsLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', '浏览表单字段')
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', '新增表单字段');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_CREATE'));
 
 		return $ret;
 	}
@@ -982,8 +976,8 @@ class Generators extends ElementCollections
 		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
 		$trash = 'Core.dialogTrash(\'' . Util::getUrl('trash', '', '', $params) . '\')';
 
-		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, '编辑生成代码')
-			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, '移至回收站');
+		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_MODIFY'))
+			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('GBL_LANGUAGE_TRASH'));
 
 		return $ret;
 	}

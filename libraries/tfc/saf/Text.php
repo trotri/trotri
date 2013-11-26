@@ -46,8 +46,17 @@ class Text
      */
     public static function parse($fileName)
     {
-    	$fileName = self::getLanguage()->getType() . '.' . $fileName . '.ini';
-    	return self::getLanguage()->parse($fileName);
+        $fileName = self::getLanguage()->getType() . '.' . $fileName . '.ini';
+        return self::getLanguage()->parse($fileName);
+    }
+
+    /**
+     * 获取解析过的所有语言串
+     * @return array
+     */
+    public static function getStrings()
+    {
+        return self::getLanguage()->getStrings();
     }
 
     /**
