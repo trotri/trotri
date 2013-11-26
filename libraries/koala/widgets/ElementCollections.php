@@ -34,9 +34,14 @@ class ElementCollections
 	const TYPE_FORM = 2;
 
 	/**
+	 * @var integer 表单元素配置类型：查询表单类型
+	 */
+	const TYPE_SEARCH = 3;
+
+	/**
 	 * @var integer 表单元素配置类型：验证规则类型
 	 */
-	const TYPE_RULE = 3;
+	const TYPE_RULE = 4;
 
 	/**
 	 * @var array 寄存所有的表单元素配置类型
@@ -44,6 +49,7 @@ class ElementCollections
 	protected static $types = array(
 		self::TYPE_TABLE,
 		self::TYPE_FORM,
+		self::TYPE_SEARCH,
 		self::TYPE_RULE
 	);
 

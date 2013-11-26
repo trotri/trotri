@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <li class="dropdown active">
-        <a href="<?php echo $this->generator_index['href']; ?>" class="dropdown-toggle" data-toggle="dropdown">生成代码 <b class="caret"></b></a>
+        <a href="<?php echo $this->generator_index['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->generator_index['label']; ?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="<?php echo $this->generator_index['href']; ?>"><?php echo $this->generator_index['label']; ?></a></li>
             <li class="divider"></li>

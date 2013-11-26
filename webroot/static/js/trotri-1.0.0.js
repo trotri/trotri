@@ -337,6 +337,7 @@ Trotri = {
    */
   refresh: function() {
     window.location.href = window.location.href;
+    return false;
   },
 
   /**
@@ -346,5 +347,6 @@ Trotri = {
    */
   href: function(url) {
     window.location.href = url;
+    return false;
   }
 }

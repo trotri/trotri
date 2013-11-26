@@ -40,6 +40,17 @@ class Text
     }
 
     /**
+     * 解析当前语种的ini语言包
+     * @param string $fileName
+     * @return array
+     */
+    public static function parse($fileName)
+    {
+    	$fileName = self::getLanguage()->getType() . '.' . $fileName . '.ini';
+    	return self::getLanguage()->parse($fileName);
+    }
+
+    /**
      * 获取国际化管理类
      * @return tfc\util\Language
      */

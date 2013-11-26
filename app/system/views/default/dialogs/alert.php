@@ -6,7 +6,7 @@
         <h2 id="dialog_alert_view_body">...</h2>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"><?php echo $this->GBL_LANGUAGE_CONFIRM; ?></button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

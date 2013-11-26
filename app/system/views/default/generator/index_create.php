@@ -29,28 +29,28 @@ $this->widget('koala\widgets\FormBuilder',
 			'dt_modified',
 			'button_save' => array(
 				'type' => 'button',
-				'label' => '保存',
+				'label' => $this->GBL_LANGUAGE_SAVE,
 				'glyphicon' => 'save',
 				'class' => 'btn btn-primary',
 				'onclick' => "return Core.formSubmit('save', 'create');"
 			),
 			'button_save2close' => array(
 				'type' => 'button',
-				'label' => '保存并关闭',
+				'label' => $this->GBL_LANGUAGE_SAVE2CLOSE,
 				'glyphicon' => 'ok-sign',
 				'class' => 'btn btn-default',
 				'onclick' => "return Core.formSubmit('save_close', 'create');"
 			),
 			'button_save2new' => array(
 				'type' => 'button',
-				'label' => '保存并新建',
+				'label' => $this->GBL_LANGUAGE_SAVE2NEW,
 				'glyphicon' => 'plus-sign',
 				'class' => 'btn btn-default',
 				'onclick' => "return Core.formSubmit('save_new', 'create');"
 			),
 			'button_cancel' => array(
 				'type' => 'button',
-				'label' => '取消',
+				'label' => $this->GBL_LANGUAGE_CANCEL,
 				'glyphicon' => 'remove-sign',
 				'class' => 'btn btn-danger',
 				'onclick' => 'return Core.href(\'' . $this->getUrlManager()->getUrl('index') . '\');'

@@ -16,6 +16,7 @@ use tfc\ap\Ap;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\util\String;
+use tfc\saf\Text;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
 use helper\Util;
@@ -117,6 +118,8 @@ abstract class BaseController extends Controller
 		$this->assignUrl();
 		$this->assignUser();
 		$this->assignHelper();
+		$this->assignCfgUrls();
+		$this->assignGblLang();
 
 		$view = Mvc::getView();
 		$view->addLayoutName('layouts' . DS . $this->layoutName);
@@ -157,7 +160,6 @@ abstract class BaseController extends Controller
 		$view->assign('action', 	Mvc::$action);
 		$view->assign('sidebar', 	Mvc::$module . '/' . Mvc::$controller . '_sidebar');
 		$view->assign('log_id', 	Log::getId());
-		$view->assign('urls', 		Cfg::getApp('urls'));
 
 		if (($wfBackTrace = Registry::get('warning_backtrace')) !== null) {
 			$view->assign('warning_backtrace', $wfBackTrace);
@@ -185,6 +187,37 @@ abstract class BaseController extends Controller
 		$view->assign('js_url',     $staticUrl . '/js');
 		$view->assign('css_url',    $staticUrl . '/css');
 		$view->assign('imgs_url',   $staticUrl . '/imgs');
+	}
+
+	/**
+	 * 将配置中的链接信息设置到模板变量中
+	 * @return void
+	 */
+	public function assignCfgUrls()
+	{
+		$view = Mvc::getView();
+
+		$urls = Cfg::getApp('urls');
+		foreach ($urls as $key => $router) {
+			$action = isset($router['a']) ? $router['a'] : '';
+			$controller = isset($router['c']) ? $router['c'] : '';
+			$module = isset($router['m']) ? $router['m'] : '';
+			$params = isset($router['p']) ? (array) $router['p'] : array();
+			$urls[$key]['href'] = Util::getUrl($action, $controller, $module, $params);
+			$urls[$key]['label'] = Text::_('CFG_SYSTEM_URLS_' . strtoupper($key) . '_LABEL');
+		}
+
+		$view->assign('urls', $urls);
+	}
+
+	/**
+	 * 将公共的语言包信息设置到模板变量中
+	 * @return void
+	 */
+	public function assignGblLang()
+	{
+		$view = Mvc::getView();
+		$view->assign(Text::parse('gbl_language'));
 	}
 
 	/**

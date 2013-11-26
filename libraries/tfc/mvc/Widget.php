@@ -212,6 +212,15 @@ abstract class Widget implements interfaces\View
     }
 
     /**
+     * 获取URL管理类
+     * @return tfc\mvc\UrlManager
+     */
+    public function getUrlManager()
+    {
+        return $this->getView()->getUrlManager();
+    }
+
+    /**
      * 获取JavaScript文件名，默认文件名：default.js
      * @return string
      */

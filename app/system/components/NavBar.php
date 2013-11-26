@@ -3,6 +3,7 @@ namespace components;
 
 use tfc\mvc\Widget;
 use tfc\saf\Cfg;
+use tfc\saf\Text;
 
 /**
  * NavBar class file
@@ -20,7 +21,9 @@ class NavBar extends Widget
 	 */
 	public function run()
 	{
-		$this->assign($this->getView()->urls);
+		$urls = $this->getView()->urls;
+
+		$this->assign($urls);
 		$this->display();
 	}
 }

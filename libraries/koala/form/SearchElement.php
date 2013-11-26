@@ -44,7 +44,7 @@ class SearchElement extends form\InputElement
 	 */
 	public function fetch()
 	{
-		return $this->getInput() . $this->getHr();
+		return $this->getHr() . $this->getInput();
 	}
 
 	/**

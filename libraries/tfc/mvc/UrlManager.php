@@ -58,11 +58,7 @@ class UrlManager
     {
         $url = $this->getScriptUrl();
         $queryString = $this->getQueryString($action, $controller, $module, $params);
-        if ($queryString !== '') {
-            $url .= '?' . $queryString;
-        }
-
-        return $url;
+        return $url . $queryString;
     }
 
     /**
@@ -134,7 +130,7 @@ class UrlManager
             $url .= '&' . $key . '=' . urlencode($value);
         }
 
-        $url = $this->applySimpleParams($url, $params);
+        $url = '?' . $this->applySimpleParams($url, $params);
         return $url;
     }
 
@@ -154,7 +150,7 @@ class UrlManager
             $url .= 'r=' . implode('/', $routes);
         }
 
-        $url = $this->applySimpleParams($url, $params);
+        $url = '?' . $this->applySimpleParams($url, $params);
         return $url;
     }
 

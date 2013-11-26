@@ -145,6 +145,32 @@ class Generators extends ElementCollections
 	}
 
 	/**
+	 * 获取“生成代码ID”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getGeneratorId($type)
+	{
+		$output = array();
+
+		$name = 'generator_id';
+
+		if ($type === self::TYPE_TABLE) {
+			$output = array(
+				'label' => 'ID'
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => 'ID'
+			);
+		}
+
+		return $output;
+	}
+
+	/**
 	 * 获取“生成代码名”表单元素和验证规则
 	 * @param integer $type
 	 * @return array
@@ -175,6 +201,12 @@ class Generators extends ElementCollections
 				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATOR_NAME_MAXLENGTH'))
 			);
 		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => Text::_('MOD_GENERATOR_GENERATOR_NAME_LABEL'),
+			);
+		}
 
 		return $output;
 	}
@@ -189,26 +221,31 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'tbl_name';
-		$label = '表名';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
-				'label' => $label,
-				'hint' => $label . '由2~12个英文字母、数字或下划线组成',
+				'label' => Text::_('MOD_GENERATOR_TBL_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_TBL_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'AlphaNum' => array(true, $label . '只能由英文字母、数字或下划线组成.'),
-				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label. '“%value%”长度不能大于%option%个字符.')
+				'AlphaNum' => array(true, Text::_('MOD_GENERATOR_TBL_NAME_ALPHANUM')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_TBL_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_TBL_NAME_MAXLENGTH'))
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => Text::_('MOD_GENERATOR_TBL_NAME_LABEL'),
 			);
 		}
 
@@ -225,11 +262,10 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'tbl_profile';
-		$label = '是否生成扩展表';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_PROFILE_LABEL'),
 				'callback' => array($this, 'getTblProfileSwitchLabel')
 			);
 		}
@@ -237,15 +273,23 @@ class Generators extends ElementCollections
 			$output = array(
 				'type' => 'switch',
 				'value' => self::TBL_PROFILE_N,
-				'label' => $label,
+				'options' => self::$tblProfiles,
+				'label' => Text::_('MOD_GENERATOR_TBL_PROFILE_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblProfiles),
-					'必须选择' . $label . '，值只能是' . implode('、', self::$tblProfiles) . '.'
+					sprintf(Text::_('MOD_GENERATOR_TBL_PROFILE_INARRAY'), implode('、', self::$tblProfiles))
 				)
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_GENERATOR_TBL_PROFILE_LABEL'),
+				'options' => self::$tblProfiles,
 			);
 		}
 
@@ -260,20 +304,19 @@ class Generators extends ElementCollections
 	public function getTblEngine($type)
 	{
 		$output = array();
-		
+
 		$name = 'tbl_engine';
-		$label = '表引擎';
-		
+
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_ENGINE_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
 				'value' => self::TBL_ENGINE_INNODB,
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_ENGINE_LABEL'),
 				'options' => self::$tblEngines
 			);
 		}
@@ -281,8 +324,15 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblEngines),
-					'必须选择' . $label . '，值只能是' . implode('、', self::$tblEngines) . '.'
+					sprintf(Text::_('MOD_GENERATOR_TBL_ENGINE_INARRAY'), implode('、', self::$tblEngines))
 				)
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_GENERATOR_TBL_ENGINE_LABEL'),
+				'options' => self::$tblEngines
 			);
 		}
 
@@ -299,18 +349,17 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'tbl_charset';
-		$label = '表编码';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_CHARSET_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'radio',
 				'value' => self::TBL_CHARSET_UTF8,
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_CHARSET_LABEL'),
 				'options' => self::$tblCharsets
 			);
 		}
@@ -318,8 +367,15 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$tblCharsets),
-					'必须选择' . $label . '，值只能是' . implode('、', self::$tblCharsets) . '.'
+					sprintf(Text::_('MOD_GENERATOR_TBL_CHARSET_INARRAY'), implode('、', self::$tblCharsets))
 				)
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_GENERATOR_TBL_CHARSET_LABEL'),
+				'options' => self::$tblCharsets
 			);
 		}
 
@@ -334,25 +390,24 @@ class Generators extends ElementCollections
 	public function getTblComment($type)
 	{
 		$output = array();
-		
+
 		$name = 'tbl_comment';
-		$label = '表描述';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_COMMENT_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TBL_COMMENT_LABEL'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'NotEmpty' => array(true, '必须填写' . $label . '.')
+				'NotEmpty' => array(true, Text::_('MOD_GENERATOR_TBL_COMMENT_NOTEMPTY'))
 			);
 		}
 
@@ -369,26 +424,31 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'app_name';
-		$label = '应用名';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_APP_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
-				'label' => $label,
-				'hint' => $label . '由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_APP_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_APP_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_APP_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_APP_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_APP_NAME_MAXLENGTH'))
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => Text::_('MOD_GENERATOR_APP_NAME_LABEL'),
 			);
 		}
 
@@ -405,26 +465,25 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'mod_name';
-		$label = '模块名';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_MOD_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
-				'label' => $label,
-				'hint' => $label . '由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_MOD_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_MOD_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_MOD_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_MOD_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_MOD_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -441,26 +500,25 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'ctrl_name';
-		$label = '控制器名';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_CTRL_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'text',
-				'label' => $label,
-				'hint' => $label . '由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_CTRL_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_CTRL_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_CTRL_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_CTRL_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_CTRL_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -477,17 +535,16 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'index_row_btns';
-		$label = '列表每行操作按钮';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'checkbox',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_LABEL'),
 				'options' => self::$indexRowBtns
 			);
 		}
@@ -495,7 +552,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$indexRowBtns),
-					'必须选择' . $label . '，值只能是' . implode('、', self::$indexRowBtns) . '.'
+					sprintf(Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_INARRAY'), implode('、', self::$indexRowBtns))
 				)
 			);
 		}
@@ -513,17 +570,16 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'description';
-		$label = '描述';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_DESCRIPTION_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'textarea',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_DESCRIPTION_LABEL'),
 			);
 		}
 
@@ -540,25 +596,24 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'trash';
-		$label = '放入回收站';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TRASH_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'switch',
 				'value' => self::TRASH_N,
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_TRASH_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
 				'InArray' => array(
 					array_keys(self::$trashs),
-					'必须选择是否' . $label . '，值只能是' . implode('、', self::$trashs) . '.'
+					sprintf(Text::_('MOD_GENERATOR_TRASH_INARRAY'), implode('、', self::$trashs))
 				)
 			);
 		}
@@ -576,11 +631,10 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'act_index_name';
-		$label = '数据列表';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_ACT_INDEX_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -588,16 +642,16 @@ class Generators extends ElementCollections
 				'__tid__' => 'act',
 				'type' => 'text',
 				'value' => 'index',
-				'label' => $label,
-				'hint' => $label . '行动名由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_ACT_INDEX_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_ACT_INDEX_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_INDEX_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_INDEX_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_ACT_INDEX_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -614,11 +668,10 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'act_view_name';
-		$label = '数据详情';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_ACT_VIEW_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -626,16 +679,16 @@ class Generators extends ElementCollections
 				'__tid__' => 'act',
 				'type' => 'text',
 				'value' => 'view',
-				'label' => $label,
-				'hint' => $label . '行动名由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_ACT_VIEW_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_ACT_VIEW_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_VIEW_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_VIEW_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_ACT_VIEW_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -652,11 +705,10 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'act_create_name';
-		$label = '新增数据';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_ACT_CREATE_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -664,16 +716,16 @@ class Generators extends ElementCollections
 				'__tid__' => 'act',
 				'type' => 'text',
 				'value' => 'create',
-				'label' => $label,
-				'hint' => $label . '行动名由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_ACT_CREATE_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_ACT_CREATE_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_CREATE_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_CREATE_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_ACT_CREATE_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -690,11 +742,10 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'act_modify_name';
-		$label = '编辑数据';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -702,16 +753,16 @@ class Generators extends ElementCollections
 				'__tid__' => 'act',
 				'type' => 'text',
 				'value' => 'modify',
-				'label' => $label,
-				'hint' => $label . '行动名由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -728,11 +779,10 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'act_remove_name';
-		$label = '删除数据';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -740,16 +790,16 @@ class Generators extends ElementCollections
 				'__tid__' => 'act',
 				'type' => 'text',
 				'value' => 'remove',
-				'label' => $label,
-				'hint' => $label . '行动名由2~12个英文字母组成',
+				'label' => Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_HINT'),
 				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_RULE) {
 			$output = array(
-				'Alpha' => array(true, $label . '行动名只能由英文字母组成.'),
-				'MinLength' => array(2, $label . '行动名“%value%”长度不能小于%option%个字符.'),
-				'MaxLength' => array(12, $label . '行动名“%value%”长度不能大于%option%个字符.')
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_ALPHA')),
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -766,18 +816,17 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'creator_id';
-		$label = '创建人';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_CREATOR_ID_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_CREATOR_ID_LABEL'),
 				'disabled' => true
 			);
 		}
@@ -795,18 +844,17 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'dt_created';
-		$label = '创建时间';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_DT_CREATED_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_DT_CREATED_LABEL'),
 				'disabled' => true
 			);
 		}
@@ -824,18 +872,17 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'modifier_id';
-		$label = '上次更新人';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_MODIFIER_ID_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_MODIFIER_ID_LABEL'),
 				'disabled' => true
 			);
 		}
@@ -853,18 +900,17 @@ class Generators extends ElementCollections
 		$output = array();
 
 		$name = 'dt_modified';
-		$label = '上次更新时间';
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_DT_MODIFIED_LABEL'),
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'system',
 				'type' => 'text',
-				'label' => $label,
+				'label' => Text::_('MOD_GENERATOR_DT_MODIFIED_LABEL'),
 				'disabled' => true
 			);
 		}

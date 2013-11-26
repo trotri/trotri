@@ -20,13 +20,22 @@ use tfc\mvc\form;
  * @package koala.form
  * @since 1.0
  */
-class HiddenElement extends form\Element
+class HiddenElement extends form\InputElement
 {
 	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\form.Element::fetch()
 	 */
 	public function fetch()
+	{
+		return $this->getInput();
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.Element::getInput()
+	 */
+	public function getInput()
 	{
 		return $this->getHtml()->hidden($this->getName(true), $this->value, $this->getAttributes());
 	}

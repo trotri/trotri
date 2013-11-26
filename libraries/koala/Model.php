@@ -11,6 +11,7 @@
 namespace koala;
 
 use tfc\ap\Singleton;
+use tfc\mvc\Mvc;
 use tfc\util\Language;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
@@ -151,7 +152,8 @@ abstract class Model
 		$ret['paginator'] = array(
 			'total_rows' => $this->getDb()->getFoundRows(),
 			'curr_page' => $pageNo,
-			'list_rows' => $listRows
+			'list_rows' => $listRows,
+			'url' => Singleton::getInstance('tfc\\mvc\\UrlManager')->getUrl(Mvc::$action, '', '', $params)
 		);
 
 		return $ret;

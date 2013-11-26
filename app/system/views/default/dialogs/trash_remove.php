@@ -9,8 +9,8 @@
         <input type="hidden" name="dialog_trash_remove_url">
         <input type="hidden" name="dialog_trash_remove_is_batch" value="0">
         <input type="hidden" name="dialog_trash_remove_ids" value="">
-        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" onclick="return Core.afterDialogTrashRemove();">确定</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo $this->GBL_LANGUAGE_CANCEL; ?></button>
+        <button type="button" class="btn btn-primary" onclick="return Core.afterDialogTrashRemove();"><?php echo $this->GBL_LANGUAGE_CONFIRM; ?></button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

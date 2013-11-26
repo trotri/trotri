@@ -120,6 +120,10 @@ class PaginatorBuilder extends Widget
 			$paginator->setCurrPage($currPage);
 		}
 
+		if (isset($this->_tplVars['url'])) {
+			$paginator->setUrl($this->_tplVars['url']);
+		}
+
 		return $paginator;
 	}
 }

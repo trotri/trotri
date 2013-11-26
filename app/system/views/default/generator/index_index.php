@@ -17,22 +17,20 @@ $this->widget(
 			'ctrl_name',
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
-				'label' => '字段组',
+				'label' => $this->GBL_LANGUAGE_FIELD_GROUPS,
 				'callback' => array($this->helper, 'getGeneratorFieldGroupsLabel')
 			),
 			'generator_field_types' => array(
 				'name' => 'generator_field_types',
-				'label' => '字段类型',
+				'label' => $this->GBL_LANGUAGE_FIELD_TYPES,
 				'callback' => array($this->helper, 'getGeneratorFieldTypesLabel')
 			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
-				'label' => '字段管理',
+				'label' => $this->GBL_LANGUAGE_FIELDS,
 				'callback' => array($this->helper, 'getGeneratorFieldsLabel')
 			),
-			'generator_id' => array(
-				'label' => 'ID',
-			),
+			'generator_id',
 			'operate' => array(
 				'label' => '操作',
 				'callback' => array($this->helper, 'getOperateLabel')
@@ -47,6 +45,11 @@ $this->widget(
 
 <?php $this->display('generator/index_index_btns'); ?>
 
-<?php $this->widget('koala\widgets\PaginatorBuilder', $this->paginator); ?>
+<?php
+$this->widget(
+	'koala\widgets\PaginatorBuilder',
+	$this->paginator
+);
+?>
 
 <?php echo $this->getHtml()->jsFile($this->base_url . '/static/system/js/generator.js'); ?>

@@ -40,8 +40,44 @@ class IndexController extends BaseController
 	 */
 	public function indexAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
 		$pageNo = Util::getCurrPage();
-		$attributes = array('trash' => 'n');
+		$attributes = array();
+
+		if (($trash = $req->getTrim('trash', '')) !== 'y') {
+			$trash = 'n';
+		}
+		$attributes['trash'] = $trash;
+
+		if (($generatorName = $req->getTrim('generator_name', '')) !== '') {
+			$attributes['generator_name'] = $generatorName;
+		}
+
+		if (($generatorId = $req->getInteger('generator_id', 0)) > 0) {
+			$attributes['generator_id'] = $generatorId;
+		}
+
+		if (($tblName = $req->getTrim('tbl_name', '')) !== '') {
+			$attributes['tbl_name'] = $tblName;
+		}
+
+		if (($tblProfile = $req->getTrim('tbl_profile', '')) !== '') {
+			$attributes['tbl_profile'] = $tblProfile;
+		}
+
+		if (($tblEngine = $req->getTrim('tbl_engine', '')) !== '') {
+			$attributes['tbl_engine'] = $tblEngine;
+		}
+
+		if (($tblCharset = $req->getTrim('tbl_charset', '')) !== '') {
+			$attributes['tbl_charset'] = $tblCharset;
+		}
+
+		if (($appName = $req->getTrim('app_name', '')) !== '') {
+			$attributes['app_name'] = $appName;
+		}
 
 		$ret = Util::getModel('Generators', 'generator')->findIndexByAttributes($attributes, '', $pageNo);
 		$this->render($ret);

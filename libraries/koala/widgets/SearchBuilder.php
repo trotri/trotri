@@ -40,7 +40,7 @@ class SearchBuilder extends form\FormBuilder
 	protected static $_typeObjectMap = array(
 		'text'     => 'koala\\form\\SearchElement',
 		'select'   => 'koala\\form\\SearchElement',
-		'submit'   => 'koala\\form\\ButtonElement',
+		'hidden'   => 'koala\\form\\HiddenElement',
 	);
 
 	/**
@@ -49,8 +49,8 @@ class SearchBuilder extends form\FormBuilder
 	 */
 	protected function _init()
 	{
-		$this->initElementCollections();
 		$this->initAction();
+		$this->initElementCollections();
 
 		parent::_init();
 	}
@@ -61,32 +61,18 @@ class SearchBuilder extends form\FormBuilder
 	 */
 	public function run()
 	{
-		echo $this->openWrap(),
-			 $this->openForm(), "\n",
-			 $this->getButtons(),
-			 $this->getHr(),
-			 $this->getInputs(),
-			 $this->getButtons(),
-			 $this->closeForm(),
-			 $this->closeWrap();
+		parent::run();
+		$this->displayJs();
 	}
 
 	/**
-	 * 获取表单元素最外层HTML开始标签
-	 * @return string
+	 * 将JS内容输出到浏览器
+	 * @return void
 	 */
-	public function openWrap()
+	public function displayJs()
 	{
-		return $this->getHtml()->openTag('div', array('class' => 'list-group')) . "\n";
-	}
-
-	/**
-	 * 获取表单元素最外层HTML结束标签
-	 * @return string
-	 */
-	public function closeWrap()
-	{
-		return "\n" . $this->getHtml()->closeTag('div');
+		$this->assign('id', $this->getId());
+		$this->display($this->getJsName());
 	}
 
 	/**
@@ -111,7 +97,7 @@ class SearchBuilder extends form\FormBuilder
 	{
 		if (isset($this->_tplVars['values'])) {
 			if (!is_array($this->_tplVars['values'])) {
-				throw new ErrorException('SearchBuilder TplVars.values invalid, values must be array.');
+				throw new ErrorException('FormBuilder TplVars.values invalid, values must be array.');
 			}
 
 			$this->values = $this->_tplVars['values'];
@@ -160,7 +146,7 @@ class SearchBuilder extends form\FormBuilder
 		foreach ($elements as $columnName => $columnValue) {
 			if (is_int($columnName) && is_string($columnValue)) {
 				$_tmpColumnName = $columnValue;
-				$columnValue = $this->_elementCollections->getElement(ElementCollections::TYPE_FORM, $_tmpColumnName);
+				$columnValue = $this->_elementCollections->getElement(ElementCollections::TYPE_SEARCH, $_tmpColumnName);
 				if (!isset($columnValue['name'])) {
 					$columnValue['name'] = $_tmpColumnName;
 				}
@@ -175,25 +161,33 @@ class SearchBuilder extends form\FormBuilder
 				}
 			}
 
-			if (isset($columnValue['label'])) {
-				if (isset($columnValue['options'])) {
-					$elements[$columnName]['options'][""] = '--' . $columnValue['label'] . '--';
-				}
-				else {
-					$elements[$columnName]['placeholder'] = $columnValue['label'];
-				}
+			if (isset($columnValue['options']) && isset($columnValue['placeholder'])) {
+				$elements[$columnName]['options'] = array("" => '--' . $columnValue['placeholder'] . '--') + $columnValue['options'];
 			}
 		}
+
+		// 设置查询按钮
+		$elements['button_search'] = array(
+			'type' => 'button',
+			'__object__' => 'koala\\form\\ButtonElement',
+			'label' => 'Search',
+			'glyphicon' => 'search',
+			'class' => 'btn btn-primary btn-block'
+		);
 
 		parent::setElements($elements);
 	}
 
 	/**
-	 * 获取分隔线
-	 * @return string
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Widget::getWidgetDirectory()
 	 */
-	public function getHr()
+	public function getWidgetDirectory()
 	{
-		return $this->getHtml()->tag('hr', array('class' => 'hr-condensed')) . "\n";
+		if ($this->_widgetDirectory === null) {
+			$this->_widgetDirectory = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'searchbuilder';
+		}
+
+		return $this->_widgetDirectory;
 	}
 }
