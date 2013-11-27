@@ -13,13 +13,7 @@ $this->widget('koala\widgets\SearchBuilder',
 		'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'index', 'generator'),
 		'elementCollections' => $this->helper,
 		'elements' => array(
-			'generator_name',
-			'generator_id',
-			'tbl_name',
-			'tbl_profile',
-			'tbl_engine',
-			'tbl_charset',
-			'app_name',
+			
 		)
 	)
 );

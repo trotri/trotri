@@ -11,6 +11,9 @@
 namespace modules\generator\controller;
 
 use library\BaseController;
+use tfc\ap\Ap;
+use library\ErrorNo;
+use helper\Util;
 
 /**
  * GroupsController class file
@@ -23,19 +26,22 @@ use library\BaseController;
 class GroupsController extends BaseController
 {
 	/**
+	 * 构造方法：初始化业务辅助类
+	 */
+	public function __construct()
+	{
+		$this->helper = Util::getHelper('Groups', 'generator');
+	}
+
+	/**
 	 * 数据列表
 	 * @author 宋欢 <trotri@yeah.net>
 	 */
 	public function indexAction()
 	{
-	}
+		$ret = array();
 
-	/**
-	 * 数据详情
-	 * @author 宋欢 <trotri@yeah.net>
-	 */
-	public function viewAction()
-	{
+		$this->render($ret);
 	}
 
 	/**
@@ -44,6 +50,18 @@ class GroupsController extends BaseController
 	 */
 	public function createAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$do = $req->getParam('do');
+		if ($do == 'post') {
+			$ret = Util::getModel('Groups', 'generator')->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$this->forward($ret);
+			}
+		}
+
+		$this->render($ret);
 	}
 
 	/**
@@ -59,6 +77,14 @@ class GroupsController extends BaseController
 	 * @author 宋欢 <trotri@yeah.net>
 	 */
 	public function removeAction()
+	{
+	}
+
+	/**
+	 * 数据详情
+	 * @author 宋欢 <trotri@yeah.net>
+	 */
+	public function viewAction()
 	{
 	}
 }

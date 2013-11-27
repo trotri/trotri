@@ -31,7 +31,7 @@ class IndexController extends BaseController
 	 */
 	public function __construct()
 	{
-		$this->helper = Util::getHelper('Generators', 'generator');
+		$this->helper = Util::getHelper('generators', 'generator');
 	}
 
 	/**
@@ -48,7 +48,7 @@ class IndexController extends BaseController
 		$params = $req->getQuery();
 		$params['trash'] = 'n';
 
-		$ret = Util::getModel('Generators', 'generator')->search($pageNo, $params);
+		$ret = Util::getModel('generators', 'generator')->search($pageNo, $params);
 		$this->render($ret);
 	}
 
@@ -66,7 +66,7 @@ class IndexController extends BaseController
 		$params = $req->getQuery();
 		$params['trash'] = 'y';
 
-		$ret = Util::getModel('Generators', 'generator')->search($pageNo, $params);
+		$ret = Util::getModel('generators', 'generator')->search($pageNo, $params);
 		$this->render($ret);
 	}
 
@@ -81,7 +81,7 @@ class IndexController extends BaseController
 		$req = Ap::getRequest();
 		$do = $req->getParam('do');
 		if ($do == 'post') {
-			$ret = Util::getModel('Generators', 'generator')->create($req->getPost());
+			$ret = Util::getModel('generators', 'generator')->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$this->forward($ret);
 			}
@@ -99,7 +99,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$id = $req->getInteger('id');
 		$do = $req->getParam('do');
@@ -128,7 +128,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$id = $req->getInteger('id');
 		$columnName = $req->getTrim('column_name', '');
@@ -147,7 +147,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$ids = explode(',', $req->getParam('ids'));
 		$columnName = $req->getTrim('column_name', '');
@@ -166,7 +166,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$id = $req->getInteger('id');
 		$ret = $mod->trashByPk($id);
@@ -182,7 +182,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchTrashByPk($ids);
@@ -198,7 +198,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
@@ -214,7 +214,7 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('Generators', 'generator');
+		$mod = Util::getModel('generators', 'generator');
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchdeleteByPk($ids);

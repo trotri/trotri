@@ -951,8 +951,11 @@ class Generators extends ElementCollections
 	 */
 	public function getGeneratorFieldGroupsLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
+		$params = array('generator_id' => $data['generator_id']);
+		$index = 'Trotri.href(\'' . Util::getUrl('index', 'groups', 'generator', $params) . '\')';
+		$create = 'Trotri.href(\'' . Util::getUrl('create', 'groups', 'generator', $params) . '\')';
+		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
+			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
 
 		return $ret;
 	}
