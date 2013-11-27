@@ -30,28 +30,28 @@ $this->widget('koala\widgets\FormBuilder',
 			'dt_modified',
 			'button_save' => array(
 				'type' => 'button',
-				'label' => $this->GBL_LANGUAGE_SAVE,
+				'label' => $this->CFG_SYSTEM_GLOBAL_SAVE,
 				'glyphicon' => 'save',
 				'class' => 'btn btn-primary',
 				'onclick' => "return Core.formSubmit('save', 'modify');"
 			),
 			'button_save2close' => array(
 				'type' => 'button',
-				'label' => $this->GBL_LANGUAGE_SAVE2CLOSE,
+				'label' => $this->CFG_SYSTEM_GLOBAL_SAVE2CLOSE,
 				'glyphicon' => 'ok-sign',
 				'class' => 'btn btn-default',
 				'onclick' => "return Core.formSubmit('save_close', 'modify');"
 			),
 			'button_save2new' => array(
 				'type' => 'button',
-				'label' => $this->GBL_LANGUAGE_SAVE2NEW,
+				'label' => $this->CFG_SYSTEM_GLOBAL_SAVE2NEW,
 				'glyphicon' => 'plus-sign',
 				'class' => 'btn btn-default',
 				'onclick' => "return Core.formSubmit('save_new', 'modify');"
 			),
 			'button_cancel' => array(
 				'type' => 'button',
-				'label' => $this->GBL_LANGUAGE_CANCEL,
+				'label' => $this->CFG_SYSTEM_GLOBAL_CANCEL,
 				'glyphicon' => 'remove-sign',
 				'class' => 'btn btn-danger',
 				'onclick' => 'return Core.href(\'' . $this->getUrlManager()->getUrl('index') . '\');'

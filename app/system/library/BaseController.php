@@ -227,7 +227,10 @@ abstract class BaseController extends Controller
 	{
 		$view = Mvc::getView();
 
-		$strings = Text::parse('gbl_language');
+		Text::_('CFG_SYSTEM__');
+		Text::_('MOD_' . strtoupper(Mvc::$module) . '__');
+
+		$strings = Text::getStrings();
 		$view->assign($strings);
 	}
 

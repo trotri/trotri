@@ -16,11 +16,11 @@ $url = $this->getUrlManager()->getUrl(
   <button type="button" class="btn btn-default"
           onclick="return Core.batchRestore('<?php echo $url; ?>');">
     <span class="glyphicon glyphicon-ok-sign"></span>
-    <?php echo $this->GBL_LANGUAGE_BATCH_RESTORE; ?>
+    <?php echo $this->CFG_SYSTEM_GLOBAL_BATCH_RESTORE; ?>
   </button>
   <button type="button" class="btn btn-default"
           onclick="return Core.dialogBatchRemove('<?php echo $this->getUrlManager()->getUrl('batchremove', '', '', array('continue' => $this->getUrlManager()->getRequestUri())); ?>');">
     <span class="glyphicon glyphicon-remove-sign"></span>
-    <?php echo $this->GBL_LANGUAGE_BATCH_REMOVE; ?>
+    <?php echo $this->CFG_SYSTEM_GLOBAL_BATCH_REMOVE; ?>
   </button>
 </form>
