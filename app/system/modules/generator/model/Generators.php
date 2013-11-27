@@ -34,6 +34,55 @@ class Generators extends Model
 		parent::__construct($db);
 	}
 
+	public function search($pageNo, array $params)
+	{
+		$pageNo = max(1, (int) $pageNo);
+
+		$trash = isset($params['trash']) ? trim($params['trash']) : '';
+		$generatorName = isset($params['generator_name']) ? trim($params['generator_name']) : '';
+		$generatorId = isset($params['generator_id']) ? (int) $params['generator_id'] : 0;
+		$tblName = isset($params['tbl_name']) ? trim($params['tbl_name']) : '';
+		$tblProfile = isset($params['tbl_profile']) ? trim($params['tbl_profile']) : '';
+		$tblEngine = isset($params['tbl_engine']) ? trim($params['tbl_engine']) : '';
+		$tblCharset = isset($params['tbl_charset']) ? trim($params['tbl_charset']) : '';
+		$appName = isset($params['app_name']) ? trim($params['app_name']) : '';
+
+		if ($trash !== '') {
+			$attributes['trash'] = $trash;
+		}
+
+		if ($generatorName !== '') {
+			$attributes['generator_name'] = $generatorName;
+		}
+
+		if ($generatorId > 0) {
+			$attributes['generator_id'] = $generatorId;
+		}
+
+		if ($tblName !== '') {
+			$attributes['tbl_name'] = $tblName;
+		}
+
+		if ($tblProfile !== '') {
+			$attributes['tbl_profile'] = $tblProfile;
+		}
+
+		if ($tblEngine !== '') {
+			$attributes['tbl_engine'] = $tblEngine;
+		}
+
+		if ($tblCharset !== '') {
+			$attributes['tbl_charset'] = $tblCharset;
+		}
+
+		if ($appName !== '') {
+			$attributes['app_name'] = $appName;
+		}
+
+		$ret = Util::getModel('Generators', 'generator')->findIndexByAttributes($attributes, '', $pageNo);
+		return $ret;
+	}
+
 	/**
 	 * 新增一条记录
 	 * @param array $params
@@ -71,7 +120,7 @@ class Generators extends Model
 	public function getInsertRules()
 	{
 		$helper = $this->getHelper();
-		$type = $helper::TYPE_RULE;
+		$type = $helper::TYPE_FILTER;
 
 		$output = array(
 			'generator_name' => $helper->getGeneratorName($type),
@@ -102,7 +151,7 @@ class Generators extends Model
 	public function getUpdateRules()
 	{
 		$helper = $this->getHelper();
-		$type = $helper::TYPE_RULE;
+		$type = $helper::TYPE_FILTER;
 
 		$output = array(
 			'generator_name' => $helper->getGeneratorName($type),

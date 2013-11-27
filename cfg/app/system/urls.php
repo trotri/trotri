@@ -11,10 +11,7 @@
 return array (
 	'index' => array('m' => 'generator', 'c' => 'index', 'a' => 'index'),
 	'generator_index' => array('m' => 'generator', 'c' => 'index', 'a' => 'index'),
-	'generator_index_trash' => array(
-		'm' => 'generator', 'c' => 'index', 'a' => 'index',
-		'p' => array('trash' => 'y')
-	),
+	'generator_trash_index' => array('m' => 'generator', 'c' => 'index', 'a' => 'trashindex'),
 	'generator_view' => array('m' => 'generator', 'c' => 'index', 'a' => 'view'),
 	'generator_create' => array('m' => 'generator', 'c' => 'index', 'a' => 'create'),
 	'generator_modify' => array('m' => 'generator', 'c' => 'index', 'a' => 'modify'),

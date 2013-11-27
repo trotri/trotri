@@ -17,22 +17,22 @@ $this->widget(
 			'ctrl_name',
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
-				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_GROUPS,
+				'label' => $this->GBL_LANGUAGE_GENERATOR_GENERATOR_FIELD_GROUPS,
 				'callback' => array($this->helper, 'getGeneratorFieldGroupsLabel')
 			),
 			'generator_field_types' => array(
 				'name' => 'generator_field_types',
-				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_TYPES,
+				'label' => $this->GBL_LANGUAGE_GENERATOR_GENERATOR_FIELD_TYPES,
 				'callback' => array($this->helper, 'getGeneratorFieldTypesLabel')
 			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
-				'label' => $this->MOD_GENERATOR_GENERATOR_FIELDS,
+				'label' => $this->GBL_LANGUAGE_GENERATOR_GENERATOR_FIELDS,
 				'callback' => array($this->helper, 'getGeneratorFieldsLabel')
 			),
 			'generator_id',
 			'operate' => array(
-				'label' => '操作',
+				'label' => $this->GBL_LANGUAGE_OPERATE,
 				'callback' => array($this->helper, 'getOperateLabel')
 			),
 		),

@@ -115,6 +115,18 @@ Core = {
   },
 
   /**
+   * 批量还原数据
+   * @return void
+   */
+  batchRestore: function(url) {
+    var n = $(":checkbox[name='checked_toggle']").val();
+    var ids = Trotri.getCheckedValues(n);
+    if (ids == "") { Core.dialogAlert("请选中还原项！"); return ""; }
+    url += "&ids=" + ids;
+    Trotri.href(url);
+  },
+
+  /**
    * 展示对话框：Ajax方式展示数据
    * @param string url Ajax请求展示数据链接
    * @param string title 对话框标题

@@ -83,17 +83,24 @@ abstract class BaseController extends Controller
 	 */
 	public function forward(array $params, $submitType = '')
 	{
+		$continue = Ap::getRequest()->getQuery('continue', '');
 		if ($submitType === '') {
 			$submitType = Ap::getRequest()->getParam('submit_type');
 		}
 
 		$submitType = strtoupper($submitType);
+
+		if ($submitType === self::FORWARD_SAVE_CLOSE && $continue !== '') {
+			$url = Util::applyParams($continue, $params);
+			Ap::getResponse()->redirect($url);
+			exit;
+		}
+
 		$forwardAction = '';
 		switch ($submitType)
 		{
 			case self::FORWARD_SAVE_CLOSE:
-				$continue = Ap::getRequest()->getQuery('continue', '');
-				$forwardAction = ($continue === '') ? $this->forwardIndex : $continue;
+				$forwardAction = $this->forwardIndex;
 				break;
 			case self::FORWARD_SAVE_NEW:
 				$forwardAction = $this->forwardCreate;
@@ -174,19 +181,21 @@ abstract class BaseController extends Controller
 	{
 		$view = Mvc::getView();
 
-		$baseUrl   = Ap::getRequest()->getBaseUrl();
-		$basePath  = Ap::getRequest()->getBasePath();
-		$scriptUrl = Ap::getRequest()->getScriptUrl();
-		$staticUrl = $baseUrl . '/static/' . APP_NAME . '/' . $view->skinName;
+		$baseUrl    = Ap::getRequest()->getBaseUrl();
+		$basePath   = Ap::getRequest()->getBasePath();
+		$scriptUrl  = Ap::getRequest()->getScriptUrl();
+		$requestUri = Ap::getRequest()->getRequestUri();
+		$staticUrl  = $baseUrl . '/static/' . APP_NAME . '/' . $view->skinName;
 
-		$view->assign('root_url',   $baseUrl . '/..');
-		$view->assign('base_path',  $basePath);
-		$view->assign('base_url',   $baseUrl);
-		$view->assign('script_url', $scriptUrl);
-		$view->assign('static_url', $staticUrl);
-		$view->assign('js_url',     $staticUrl . '/js');
-		$view->assign('css_url',    $staticUrl . '/css');
-		$view->assign('imgs_url',   $staticUrl . '/imgs');
+		$view->assign('root_url',    $baseUrl . '/..');
+		$view->assign('base_path',   $basePath);
+		$view->assign('base_url',    $baseUrl);
+		$view->assign('script_url',  $scriptUrl);
+		$view->assign('request_uri', $requestUri);
+		$view->assign('static_url',  $staticUrl);
+		$view->assign('js_url',      $staticUrl . '/js');
+		$view->assign('css_url',     $staticUrl . '/css');
+		$view->assign('imgs_url',    $staticUrl . '/imgs');
 	}
 
 	/**
@@ -218,8 +227,8 @@ abstract class BaseController extends Controller
 	{
 		$view = Mvc::getView();
 
-		Text::_('GBL_LANGUAGE__');
-		$view->assign(Text::getStrings());
+		$strings = Text::parse('gbl_language');
+		$view->assign($strings);
 	}
 
 	/**

@@ -43,6 +43,11 @@ class Components
 	const GLYPHICON_TRASH = 'trash';
 
 	/**
+	 * @var string Glyphicons图标：还原
+	 */
+	const GLYPHICON_OK = 'ok-sign';
+
+	/**
 	 * @var string Glyphicons图标：彻底删除
 	 */
 	const GLYPHICON_REMOVE = 'remove-sign';
@@ -57,9 +62,10 @@ class Components
 	 * @param integer $id
 	 * @param string $name
 	 * @param string $value
+	 * @param string $attributes
 	 * @return string
 	 */
-	public static function getSwitch($id, $name, $value = 'n')
+	public static function getSwitch($id, $name, $value = 'n', $href = '')
 	{
 		$attributes = array(
 			'id'             => 'label_switch_' . $name . '_' . $id,
@@ -68,6 +74,10 @@ class Components
 			'data-on-label'  => '是',
 			'data-off-label' => '否',
 		);
+
+		if ($href !== '') {
+			$attributes['href'] = $href;
+		}
 
 		$html = self::getHtml();
 		return $html->tag('div', $attributes, $html->checkbox($name, $value, ($value === 'y')));

@@ -15,7 +15,7 @@
 <?php echo $this->getHtml()->cssFile($this->base_url . '/static/css/template.css?v=' . $this->version); ?>
 
 <script type="text/javascript">
-var g_url = "<?php echo $this->script_url; ?>"; var g_logId = "<?php echo $this->log_id; ?>";
+var g_url = "<?php echo $this->script_url; ?>"; var g_uri = "<?php echo $this->request_uri; ?>"; var g_logId = "<?php echo $this->log_id; ?>";
 var g_mod = "<?php echo $this->module; ?>"; var g_ctrl = "<?php echo $this->controller; ?>"; var g_act = "<?php echo $this->action; ?>";
 </script>
 

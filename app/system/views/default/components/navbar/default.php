@@ -18,7 +18,7 @@
             <li class="divider"></li>
             <li><a href="<?php echo $this->generator_create['href']; ?>"><?php echo $this->generator_create['label']; ?></a></li>
             <li class="divider"></li>
-            <li><a href="<?php echo $this->generator_index_trash['href']; ?>"><?php echo $this->generator_index_trash['label']; ?></a></li>
+            <li><a href="<?php echo $this->generator_trash_index['href']; ?>"><?php echo $this->generator_trash_index['label']; ?></a></li>
           </ul>
         </li>
         <li><a href="#about">About</a></li>

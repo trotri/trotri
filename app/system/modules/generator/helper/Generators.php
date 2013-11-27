@@ -10,6 +10,7 @@
 
 namespace modules\generator\helper;
 
+use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use koala\widgets\Components;
 use koala\widgets\ElementCollections;
@@ -86,23 +87,6 @@ class Generators extends ElementCollections
 	const INDEX_ROW_BTNS_REMOVE = 'remove';
 
 	/**
-	 * @var array 数据库表引擎
-	 */
-	public static $tblEngines = array(
-		self::TBL_ENGINE_INNODB => self::TBL_ENGINE_INNODB,
-		self::TBL_ENGINE_MYISAM => self::TBL_ENGINE_MYISAM
-	);
-
-	/**
-	 * @var array 数据库表编码方式
-	 */
-	public static $tblCharsets = array(
-		self::TBL_CHARSET_UTF8 => self::TBL_CHARSET_UTF8,
-		self::TBL_CHARSET_GBK => self::TBL_CHARSET_GBK,
-		self::TBL_CHARSET_GB2312 => self::TBL_CHARSET_GB2312
-	);
-
-	/**
 	 * (non-PHPdoc)
 	 * @see koala\widgets.ElementCollections::getViewTabs()
 	 */
@@ -173,7 +157,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'MinLength' => array(6, Text::_('MOD_GENERATOR_GENERATOR_NAME_MINLENGTH')),
 				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATOR_NAME_MAXLENGTH'))
@@ -213,7 +197,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'AlphaNum' => array(true, Text::_('MOD_GENERATOR_TBL_NAME_ALPHANUM')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_TBL_NAME_MINLENGTH')),
@@ -260,7 +244,7 @@ class Generators extends ElementCollections
 				'label' => Text::_('MOD_GENERATOR_TBL_PROFILE_LABEL'),
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'InArray' => array(
 					array_keys($tblProfiles),
@@ -275,6 +259,9 @@ class Generators extends ElementCollections
 				'options' => $tblProfiles,
 			);
 		}
+		elseif ($type === self::TYPE_OPTIONS) {
+			$output = $tblProfiles;
+		}
 
 		return $output;
 	}
@@ -288,6 +275,11 @@ class Generators extends ElementCollections
 	{
 		$output = array();
 
+		$tblEngines = array(
+			self::TBL_ENGINE_INNODB => self::TBL_ENGINE_INNODB,
+			self::TBL_ENGINE_MYISAM => self::TBL_ENGINE_MYISAM
+		);
+
 		$name = 'tbl_engine';
 
 		if ($type === self::TYPE_TABLE) {
@@ -300,14 +292,14 @@ class Generators extends ElementCollections
 				'type' => 'radio',
 				'value' => self::TBL_ENGINE_INNODB,
 				'label' => Text::_('MOD_GENERATOR_TBL_ENGINE_LABEL'),
-				'options' => self::$tblEngines
+				'options' => $tblEngines
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'InArray' => array(
-					array_keys(self::$tblEngines),
-					sprintf(Text::_('MOD_GENERATOR_TBL_ENGINE_INARRAY'), implode('、', self::$tblEngines))
+					array_keys($tblEngines),
+					sprintf(Text::_('MOD_GENERATOR_TBL_ENGINE_INARRAY'), implode('、', $tblEngines))
 				)
 			);
 		}
@@ -315,8 +307,11 @@ class Generators extends ElementCollections
 			$output = array(
 				'type' => 'select',
 				'placeholder' => Text::_('MOD_GENERATOR_TBL_ENGINE_LABEL'),
-				'options' => self::$tblEngines
+				'options' => $tblEngines
 			);
+		}
+		elseif ($type === self::TYPE_OPTIONS) {
+			$output = $tblEngines;
 		}
 
 		return $output;
@@ -331,6 +326,12 @@ class Generators extends ElementCollections
 	{
 		$output = array();
 
+		$tblCharsets = array(
+			self::TBL_CHARSET_UTF8 => self::TBL_CHARSET_UTF8,
+			self::TBL_CHARSET_GBK => self::TBL_CHARSET_GBK,
+			self::TBL_CHARSET_GB2312 => self::TBL_CHARSET_GB2312
+		);
+
 		$name = 'tbl_charset';
 
 		if ($type === self::TYPE_TABLE) {
@@ -343,14 +344,14 @@ class Generators extends ElementCollections
 				'type' => 'radio',
 				'value' => self::TBL_CHARSET_UTF8,
 				'label' => Text::_('MOD_GENERATOR_TBL_CHARSET_LABEL'),
-				'options' => self::$tblCharsets
+				'options' => $tblCharsets
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'InArray' => array(
-					array_keys(self::$tblCharsets),
-					sprintf(Text::_('MOD_GENERATOR_TBL_CHARSET_INARRAY'), implode('、', self::$tblCharsets))
+					array_keys($tblCharsets),
+					sprintf(Text::_('MOD_GENERATOR_TBL_CHARSET_INARRAY'), implode('、', $tblCharsets))
 				)
 			);
 		}
@@ -358,8 +359,11 @@ class Generators extends ElementCollections
 			$output = array(
 				'type' => 'select',
 				'placeholder' => Text::_('MOD_GENERATOR_TBL_CHARSET_LABEL'),
-				'options' => self::$tblCharsets
+				'options' => $tblCharsets
 			);
+		}
+		elseif ($type === self::TYPE_OPTIONS) {
+			$output = $tblCharsets;
 		}
 
 		return $output;
@@ -388,7 +392,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'NotEmpty' => array(true, Text::_('MOD_GENERATOR_TBL_COMMENT_NOTEMPTY'))
 			);
@@ -421,7 +425,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_APP_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_APP_NAME_MINLENGTH')),
@@ -462,7 +466,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_MOD_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_MOD_NAME_MINLENGTH')),
@@ -497,7 +501,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_CTRL_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_CTRL_NAME_MINLENGTH')),
@@ -537,13 +541,16 @@ class Generators extends ElementCollections
 				'options' => $indexRowBtns
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'InArray' => array(
 					array_keys($indexRowBtns),
 					sprintf(Text::_('MOD_GENERATOR_INDEX_ROW_BTNS_INARRAY'), implode('、', $indexRowBtns))
 				)
 			);
+		}
+		elseif ($type === self::TYPE_OPTIONS) {
+			$output = $indexRowBtns;
 		}
 
 		return $output;
@@ -603,13 +610,16 @@ class Generators extends ElementCollections
 				'label' => Text::_('MOD_GENERATOR_TRASH_LABEL'),
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'InArray' => array(
 					array_keys($trashs),
 					sprintf(Text::_('MOD_GENERATOR_TRASH_INARRAY'), implode('、', $trashs))
 				)
 			);
+		}
+		elseif ($type === self::TYPE_OPTIONS) {
+			$output = $trashs;
 		}
 
 		return $output;
@@ -641,7 +651,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_INDEX_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_INDEX_NAME_MINLENGTH')),
@@ -678,7 +688,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_VIEW_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_VIEW_NAME_MINLENGTH')),
@@ -715,7 +725,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_CREATE_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_CREATE_NAME_MINLENGTH')),
@@ -752,7 +762,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_MODIFY_NAME_MINLENGTH')),
@@ -789,7 +799,7 @@ class Generators extends ElementCollections
 				'required' => true
 			);
 		}
-		elseif ($type === self::TYPE_RULE) {
+		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_ACT_REMOVE_NAME_MINLENGTH')),
@@ -919,7 +929,19 @@ class Generators extends ElementCollections
 	 */
 	public function getTblProfileSwitchLabel($data)
 	{
-		return Components::getSwitch($data['generator_id'], 'tbl_profile', $data['tbl_profile']);
+		if ($data['trash'] === 'y') {
+			$tblProfiles = $this->getTblProfile(self::TYPE_OPTIONS);
+			return $tblProfiles[$data['tbl_profile']];
+		}
+
+		$params = array(
+			'id' => $data['generator_id'],
+			'column_name' => 'tbl_profile',
+			'continue' => Util::getRequestUri()
+		);
+
+		$href = Util::getUrl('singlemodify', 'index', 'generator', $params);
+		return Components::getSwitch($data['generator_id'], 'tbl_profile', $data['tbl_profile'], $href);
 	}
 
 	/**
@@ -975,9 +997,20 @@ class Generators extends ElementCollections
 
 		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
 		$trash = 'Core.dialogTrash(\'' . Util::getUrl('trash', '', '', $params) . '\')';
+		$remove = 'Core.dialogRemove(\'' . Util::getUrl('remove', '', '', $params) . '\')';
 
-		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_MODIFY'))
-			 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('GBL_LANGUAGE_TRASH'));
+		$params['column_name'] = 'trash';
+		$params['value'] = 'n';
+		$restore = 'Trotri.href(\'' . Util::getUrl('singlemodify', '', '', $params) . '\')';
+
+		if ($data['trash'] === 'n') {
+			$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_MODIFY'))
+				 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('GBL_LANGUAGE_TRASH'));
+		}
+		else {
+			$ret = Components::getGlyphicon(Components::GLYPHICON_OK, $restore, Text::_('GBL_LANGUAGE_RESTORE'))
+				 . Components::getGlyphicon(Components::GLYPHICON_REMOVE, $remove, Text::_('GBL_LANGUAGE_REMOVE'));
+		}
 
 		return $ret;
 	}

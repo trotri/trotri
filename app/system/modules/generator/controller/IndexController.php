@@ -44,42 +44,29 @@ class IndexController extends BaseController
 
 		$req = Ap::getRequest();
 		$pageNo = Util::getCurrPage();
-		$attributes = array();
 
-		if (($trash = $req->getTrim('trash', '')) !== 'y') {
-			$trash = 'n';
-		}
-		$attributes['trash'] = $trash;
+		$params = $req->getQuery();
+		$params['trash'] = 'n';
 
-		if (($generatorName = $req->getTrim('generator_name', '')) !== '') {
-			$attributes['generator_name'] = $generatorName;
-		}
+		$ret = Util::getModel('Generators', 'generator')->search($pageNo, $params);
+		$this->render($ret);
+	}
 
-		if (($generatorId = $req->getInteger('generator_id', 0)) > 0) {
-			$attributes['generator_id'] = $generatorId;
-		}
+	/**
+	 * 回收站数据列表
+	 * @return void
+	 */
+	public function trashindexAction()
+	{
+		$ret = array();
 
-		if (($tblName = $req->getTrim('tbl_name', '')) !== '') {
-			$attributes['tbl_name'] = $tblName;
-		}
+		$req = Ap::getRequest();
+		$pageNo = Util::getCurrPage();
+	
+		$params = $req->getQuery();
+		$params['trash'] = 'y';
 
-		if (($tblProfile = $req->getTrim('tbl_profile', '')) !== '') {
-			$attributes['tbl_profile'] = $tblProfile;
-		}
-
-		if (($tblEngine = $req->getTrim('tbl_engine', '')) !== '') {
-			$attributes['tbl_engine'] = $tblEngine;
-		}
-
-		if (($tblCharset = $req->getTrim('tbl_charset', '')) !== '') {
-			$attributes['tbl_charset'] = $tblCharset;
-		}
-
-		if (($appName = $req->getTrim('app_name', '')) !== '') {
-			$attributes['app_name'] = $appName;
-		}
-
-		$ret = Util::getModel('Generators', 'generator')->findIndexByAttributes($attributes, '', $pageNo);
+		$ret = Util::getModel('Generators', 'generator')->search($pageNo, $params);
 		$this->render($ret);
 	}
 
@@ -133,6 +120,44 @@ class IndexController extends BaseController
 	}
 
 	/**
+	 * 编辑单个字段
+	 * @return void
+	 */
+	public function singlemodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$id = $req->getInteger('id');
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+
+		$ret = $mod->updateByPk($id, array($columnName => $value));
+		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+	}
+
+	/**
+	 * 批量编辑单个字段
+	 * @return void
+	 */
+	public function batchsinglemodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$ids = explode(',', $req->getParam('ids'));
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+
+		$ret = $mod->batchupdateByPk($ids, array($columnName => $value));
+		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+	}
+
+	/**
 	 * 移至回收站
 	 * @return void
 	 */
@@ -165,10 +190,10 @@ class IndexController extends BaseController
 	}
 
 	/**
-	 * Ajax编辑“是否生成扩展表”
+	 * 删除数据
 	 * @return void
 	 */
-	public function ajaxmodifyAction()
+	public function removeAction()
 	{
 		$ret = array();
 
@@ -176,16 +201,24 @@ class IndexController extends BaseController
 		$mod = Util::getModel('Generators', 'generator');
 
 		$id = $req->getInteger('id');
-		$ret = $mod->modifyByPk($id, $req->getQuery());
-		$this->display($ret);
+		$ret = $mod->deleteByPk($id);
+		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
 	}
 
 	/**
-	 * 删除数据
+	 * 批量删除数据
 	 * @return void
 	 */
-	public function removeAction()
+	public function batchremoveAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('Generators', 'generator');
+
+		$ids = explode(',', $req->getParam('ids'));
+		$ret = $mod->batchdeleteByPk($ids);
+		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
 	}
 
 	/**

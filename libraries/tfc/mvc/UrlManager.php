@@ -76,7 +76,7 @@ class UrlManager
      */
     public function getRequestUri()
     {
-    	return Ap::getRequest()->getRequestUri();
+        return Ap::getRequest()->getRequestUri();
     }
 
     /**
@@ -155,6 +155,19 @@ class UrlManager
     }
 
     /**
+     * 通过路由类型，在URL后拼接QueryString参数
+     * @param string $url
+     * @param array $params
+     * @return string
+     */
+    public function applyParams($url, array $params = array())
+    {
+        $method = 'apply' . $this->getRouteType() . 'Params';
+        $url = $this->$method($url, $params);
+        return $url;
+    }
+
+    /**
      * 在URL后拼接QueryString参数，QueryString：/k1/v1/k2/v2/k3/v3
      * @param string $url
      * @param array $params
@@ -169,6 +182,17 @@ class UrlManager
         }
 
         return $url;
+    }
+
+    /**
+     * 在URL后拼接QueryString参数，QueryString：&k1=v1&k2=v2&k3=v3
+     * @param string $url
+     * @param array $params
+     * @return string
+     */
+    public function applySupervarParams($url, array $params = array())
+    {
+        return $this->applySimpleParams($url, $params);
     }
 
     /**

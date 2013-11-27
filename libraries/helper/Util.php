@@ -58,6 +58,17 @@ class Util
 	}
 
 	/**
+     * 通过路由类型，在URL后拼接QueryString参数
+     * @param string $url
+     * @param array $params
+     * @return string
+     */
+	public static function applyParams($url, array $params = array())
+	{
+		return self::getUrlManager()->applyParams($url, $params);
+	}
+
+	/**
 	 * 通过路由类型，获取URL
 	 * 如果指定了Action，但没指定Controller，则Controller默认为当前Controller
 	 * 如果指定了Controller，但没指定Module，则Module默认为当前Module

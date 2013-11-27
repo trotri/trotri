@@ -41,7 +41,12 @@ class ElementCollections
 	/**
 	 * @var integer 表单元素配置类型：验证规则类型
 	 */
-	const TYPE_RULE = 4;
+	const TYPE_FILTER = 4;
+
+	/**
+	 * @var integer 表单元素配置类型：选项
+	 */
+	const TYPE_OPTIONS = 5;
 
 	/**
 	 * @var array 寄存所有的表单元素配置类型
@@ -50,7 +55,8 @@ class ElementCollections
 		self::TYPE_TABLE,
 		self::TYPE_FORM,
 		self::TYPE_SEARCH,
-		self::TYPE_RULE
+		self::TYPE_FILTER,
+		self::TYPE_OPTIONS
 	);
 
 	/**
