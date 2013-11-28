@@ -129,6 +129,22 @@ abstract class Db
 	}
 
 	/**
+	 * 通过条件，查询多条记录，只查询指定的字段
+	 * @param array $columnNames
+	 * @param string $attributes
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @param string $option
+	 * @return array
+	 */
+	public function findColumnsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
+	{
+		$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
+		return $this->findColumnsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset, $option);
+	}
+
+	/**
 	 * 通过多个字段名和值，统计记录数，字段之间用简单的AND连接
 	 * @param array $attributes
 	 * @return integer
@@ -200,6 +216,23 @@ abstract class Db
 	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition, $order, $limit, $offset, $option);
+		return $this->getDbProxy()->fetchAll($sql, $params);
+	}
+
+	/**
+	 * 通过条件，查询多条记录，只查询指定的字段
+	 * @param array $columnNames
+	 * @param string $condition
+	 * @param mixed $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @param string $option
+	 * @return array
+	 */
+	public function findColumnsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
+	{
+		$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $columnNames, $condition, $order, $limit, $offset, $option);
 		return $this->getDbProxy()->fetchAll($sql, $params);
 	}
 

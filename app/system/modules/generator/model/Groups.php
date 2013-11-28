@@ -14,14 +14,14 @@ use koala\Model;
 use helper\Util;
 
 /**
- * Generators class file
+ * Groups class file
  * 业务处理层类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Generators.php 1 2013-05-18 14:58:59Z huan.song $
+ * @version $Id: Groups.php 1 2013-05-18 14:58:59Z huan.song $
  * @package modules.generator.model
  * @since 1.0
  */
-class Generators extends Model
+class Groups extends Model
 {
 	/**
 	 * 构造方法：初始化当前业务类对应的数据库操作类
@@ -32,7 +32,33 @@ class Generators extends Model
 		parent::__construct($db);
 	}
 
+	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @return array
+	 */
+	public function create(array $params)
+	{
+		return $this->insert($params);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getInsertRules()
+	 */
+	public function getInsertRules()
+	{
+		$helper = $this->getHelper();
+		$type = $helper::TYPE_FILTER;
 	
+		$output = array(
+			'group_name' => $helper->getGroupName($type),
+			'generator_id' => $helper->getGeneratorId($type),
+			'sort' => $helper->getSort($type),
+		);
+
+		return $output;
+	}
 
 	/**
 	 * 获取业务辅助类

@@ -6,6 +6,10 @@ $this->widget('koala\widgets\FormBuilder',
 		'errors' => $this->errors,
 		'elementCollections' => $this->helper,
 		'elements' => array(
+			'group_name',
+			'generator_id',
+			'sort',
+			'description',
 			'button_save' => array(
 				'type' => 'button',
 				'label' => $this->CFG_SYSTEM_GLOBAL_SAVE,

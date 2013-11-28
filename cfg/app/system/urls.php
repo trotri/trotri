@@ -9,12 +9,13 @@
  */
 
 return array (
-	'index' => array('m' => 'generator', 'c' => 'index', 'a' => 'index'),
-	'generator_index' => array('m' => 'generator', 'c' => 'index', 'a' => 'index'),
-	'generator_trash_index' => array('m' => 'generator', 'c' => 'index', 'a' => 'trashindex'),
-	'generator_view' => array('m' => 'generator', 'c' => 'index', 'a' => 'view'),
-	'generator_create' => array('m' => 'generator', 'c' => 'index', 'a' => 'create'),
-	'generator_modify' => array('m' => 'generator', 'c' => 'index', 'a' => 'modify'),
-	'generator_trash' => array('m' => 'generator', 'c' => 'index', 'a' => 'trash'),
-	'generator_remove' => array('m' => 'generator', 'c' => 'index', 'a' => 'remove'),
+	'top' => array(
+		0 => array('m' => 'generator', 'c' => 'index', 'a' => 'index'),
+		1 => array('m' => 'generator', 'c' => 'index', 'a' => 'index'),
+		2 => array('m' => 'generator', 'c' => 'index', 'a' => 'index')
+	),
+	1 => array(
+		0 => array('m' => 'generator', 'c' => 'index', 'a' => 'create'),
+		1 => array('m' => 'generator', 'c' => 'index', 'a' => 'trashindex'),
+	)
 );

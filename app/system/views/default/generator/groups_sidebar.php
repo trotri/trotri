@@ -7,22 +7,5 @@
     </a>
     <a href="<?php echo $this->urls['generator_trash_index']['href']; ?>" class="list-group-item"><?php echo $this->urls['generator_trash_index']['label']; ?></a>
   </div><!--/.list-group-->
-<?php
-$this->widget('koala\widgets\SearchBuilder', 
-	array(
-		'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'index', 'generator'),
-		'elementCollections' => $this->helper,
-		'elements' => array(
-			'generator_name',
-			'generator_id',
-			'tbl_name',
-			'tbl_profile',
-			'tbl_engine',
-			'tbl_charset',
-			'app_name',
-		)
-	)
-);
-?>
 </div><!-- /.col-xs-6 col-sm-2 -->
 <!-- /SideBar -->

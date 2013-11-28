@@ -30,7 +30,7 @@ class GroupsController extends BaseController
 	 */
 	public function __construct()
 	{
-		$this->helper = Util::getHelper('Groups', 'generator');
+		$this->helper = Util::getHelper('groups', 'generator');
 	}
 
 	/**
@@ -40,6 +40,11 @@ class GroupsController extends BaseController
 	public function indexAction()
 	{
 		$ret = array();
+
+		$req = Ap::getRequest();
+
+		$generatorId = $req->getInteger('generator_id');
+		$ret = Util::getModel('groups', 'generator')->findIndexByAttributes(array('generator_id' => $generatorId), 'sort');
 
 		$this->render($ret);
 	}
@@ -55,7 +60,7 @@ class GroupsController extends BaseController
 		$req = Ap::getRequest();
 		$do = $req->getParam('do');
 		if ($do == 'post') {
-			$ret = Util::getModel('Groups', 'generator')->create($req->getPost());
+			$ret = Util::getModel('groups', 'generator')->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$this->forward($ret);
 			}

@@ -14,6 +14,7 @@ use koala\Model;
 use tfc\ap\UserIdentity;
 use tfc\util\String;
 use helper\Util;
+use library\ErrorNo;
 
 /**
  * Generators class file
@@ -34,6 +35,12 @@ class Generators extends Model
 		parent::__construct($db);
 	}
 
+	/**
+	 * 查询数据
+	 * @param integer $pageNo
+	 * @param array $params
+	 * @return array
+	 */
 	public function search($pageNo, array $params)
 	{
 		$pageNo = max(1, (int) $pageNo);
@@ -81,6 +88,20 @@ class Generators extends Model
 
 		$ret = Util::getModel('Generators', 'generator')->findIndexByAttributes($attributes, '', $pageNo);
 		return $ret;
+	}
+
+	/**
+	 * 获取Select表单元素
+	 * @return array
+	 */
+	public function getOptions()
+	{
+		$ret = $this->findPairsByAttributes(array('generator_id', 'generator_name'), array('trash' => 'n'));
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return array();
+		}
+
+		return $ret['data'];
 	}
 
 	/**

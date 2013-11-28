@@ -57,7 +57,7 @@ abstract class Model
 	}
 
 	/**
-	 * 通过多个字段名和值，获取某个列的值，字段之间用简单的AND连接
+	 * 通过多个字段名和值，获取某个列的值，字段之间用简单的AND连接，字段之间用简单的AND连接
 	 * @param string $columnName
 	 * @param array $attributes
 	 * @return array
@@ -66,6 +66,38 @@ abstract class Model
 	{
 		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->getByCondition($columnName, $condition, $attributes);
+	}
+
+	/**
+	 * 通过多个字段名和值，查询两个字段记录，字段之间用简单的AND连接，并且以键值对方式返回
+	 * @param array $columnNames
+	 * @param array $attributes
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @param string $option
+	 * @return array
+	 */
+	public function findPairsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
+	{
+		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
+		return $this->findPairsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset, $option);
+	}
+
+	/**
+	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接，只查询指定的字段
+	 * @param array $columnNames
+	 * @param array $attributes
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @param string $option
+	 * @return array
+	 */
+	public function findColumnsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
+	{
+		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
+		return $this->findColumnsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -160,6 +192,67 @@ abstract class Model
 	}
 
 	/**
+	 * 通过条件，查询两个字段记录，并且以键值对方式返回
+	 * @param array $columnNames
+	 * @param string $condition
+	 * @param mixed $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @param string $option
+	 * @return array
+	 */
+	public function findPairsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
+	{
+		$ret = $this->findColumnsByCondition($columnNames, $condition, $params, $order, $limit, $offset, $option);
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			$data = array();
+			$columnName0 = $columnNames[0];
+			$columnName1 = $columnNames[1];
+			foreach ($ret['data'] as $row) {
+				$data[$row[$columnName0]] = $row[$columnName1];
+			}
+	
+			$ret['data'] = $data;
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * 通过条件，查询多条记录，只查询指定的字段
+	 * @param string $condition
+	 * @param mixed $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @param string $option
+	 * @return array
+	 */
+	public function findColumnsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
+	{
+		$data = $this->getDb()->findColumnsByCondition($columnNames, $condition, $params, $order, $limit, $offset, $option);
+		if ($data === false) {
+			$errNo = ErrorNo::ERROR_DB_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT');
+			Log::warning(sprintf(
+				'%s columnNames "%s", condition "%s", params "%s", order "%s", limit "%d", offset "%d", option "%s"',
+				$errMsg, implode(',', $columnNames), $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg
+			);
+		}
+
+		return array(
+			'err_no' => ErrorNo::SUCCESS_NUM,
+			'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
+			'data' => $data
+		);
+	}
+
+	/**
 	 * 通过条件，查询多条记录
 	 * @param string $condition
 	 * @param mixed $params
@@ -176,8 +269,8 @@ abstract class Model
 			$errNo = ErrorNo::ERROR_DB_SELECT;
 			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT');
 			Log::warning(sprintf(
-				'%s condition "%s", params "%s", order "%s", limit "%d", offset "%d"',
-				$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset
+				'%s condition "%s", params "%s", order "%s", limit "%d", offset "%d", option "%s"',
+				$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
