@@ -125,7 +125,6 @@ abstract class BaseController extends Controller
 		$this->assignUrl();
 		$this->assignUser();
 		$this->assignHelper();
-		$this->assignCfgUrls();
 		$this->assignLanguage();
 
 		$view = Mvc::getView();
@@ -196,27 +195,6 @@ abstract class BaseController extends Controller
 		$view->assign('js_url',      $staticUrl . '/js');
 		$view->assign('css_url',     $staticUrl . '/css');
 		$view->assign('imgs_url',    $staticUrl . '/imgs');
-	}
-
-	/**
-	 * 将配置中的链接信息设置到模板变量中
-	 * @return void
-	 */
-	public function assignCfgUrls()
-	{
-		$view = Mvc::getView();
-
-		$urls = Cfg::getApp('urls');
-		foreach ($urls as $key => $router) {
-			$action = isset($router['a']) ? $router['a'] : '';
-			$controller = isset($router['c']) ? $router['c'] : '';
-			$module = isset($router['m']) ? $router['m'] : '';
-			$params = isset($router['p']) ? (array) $router['p'] : array();
-			$urls[$key]['href'] = Util::getUrl($action, $controller, $module, $params);
-			$urls[$key]['label'] = Text::_('CFG_SYSTEM_URLS_' . strtoupper($key) . '_LABEL');
-		}
-
-		$view->assign('urls', $urls);
 	}
 
 	/**

@@ -111,7 +111,6 @@ class Generators extends Model
 	 */
 	public function create(array $params)
 	{
-		$params['creator_id'] = UserIdentity::getId();
 		$params['dt_created'] = Util::getNowTime();
 		if (!isset($params['index_row_btns']) || !is_array($params['index_row_btns'])) {
 			$params['index_row_btns'] = array();
@@ -128,7 +127,6 @@ class Generators extends Model
 	 */
 	public function modifyByPk($value, array $params)
 	{
-		$params['modifier_id'] = UserIdentity::getId();
 		$params['dt_modified'] = Util::getNowTime();
 
 		return $this->updateByPk($value, $params);
@@ -159,7 +157,6 @@ class Generators extends Model
 			'act_create_name' => $helper->getActCreateName($type),
 			'act_modify_name' => $helper->getActModifyName($type),
 			'act_remove_name' => $helper->getActRemoveName($type),
-			'creator_id' => $helper->getCreatorId($type)
 		);
 
 		return $output;
@@ -190,7 +187,6 @@ class Generators extends Model
 			'act_create_name' => $helper->getActCreateName($type),
 			'act_modify_name' => $helper->getActModifyName($type),
 			'act_remove_name' => $helper->getActRemoveName($type),
-			'modifier_id' => $helper->getCreatorId($type)
 		);
 
 		return $output;
@@ -215,8 +211,6 @@ class Generators extends Model
 			'act_create_name' => 'trim',
 			'act_modify_name' => 'trim',
 			'act_remove_name' => 'trim',
-			'creator_id' => 'intval',
-			'modifier_id' => 'intval'
 		);
 
 		return $output;

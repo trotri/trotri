@@ -7,22 +7,11 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="<?php echo $this->index['href']; ?>">Trotri</a>
+      <a class="navbar-brand" href="<?php echo $this->getUrlManager()->getUrl('index', 'index', 'generator'); ?>">Trotri</a>
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown active">
-        <a href="<?php echo $this->generator_index['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->generator_index['label']; ?> <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="<?php echo $this->generator_index['href']; ?>"><?php echo $this->generator_index['label']; ?></a></li>
-            <li class="divider"></li>
-            <li><a href="<?php echo $this->generator_create['href']; ?>"><?php echo $this->generator_create['label']; ?></a></li>
-            <li class="divider"></li>
-            <li><a href="<?php echo $this->generator_trash_index['href']; ?>"><?php echo $this->generator_trash_index['label']; ?></a></li>
-          </ul>
-        </li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <?php echo $this->navs; ?>
       </ul>
       <ul class="nav navbar-nav pull-right">
         <li class="dropdown">

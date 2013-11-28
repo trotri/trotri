@@ -1,7 +1,7 @@
 <form class="form-inline">
-  <button type="button" class="btn btn-primary" onclick="return Trotri.href('<?php echo $this->urls['generator_create']['href']; ?>');">
+  <button type="button" class="btn btn-primary" onclick="return Trotri.href('<?php echo $this->getUrlManager()->getUrl('create', '', ''); ?>');">
     <span class="glyphicon glyphicon-plus-sign"></span>
-    <?php echo $this->urls['generator_create']['label']; ?>
+    <?php echo $this->MOD_GENERATOR_GENERATORS_CREATE; ?>
   </button>
   <button type="button" class="btn btn-default"
           onclick="return Core.dialogBatchTrash('<?php echo $this->getUrlManager()->getUrl('batchtrash', '', '', array('continue' => $this->getUrlManager()->getRequestUri())); ?>');">

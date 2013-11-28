@@ -21,9 +21,7 @@ CREATE TABLE `tr_generators` (
   `act_remove_name` varchar(100) NOT NULL DEFAULT 'remove' COMMENT '行动名-删除数据',
   `index_row_btns` varchar(100) NOT NULL DEFAULT 'pencil|trash' COMMENT '数据列表每行操作Btn，更新：pencil、放入回收站：trash、彻底删除：remove',
   `description` text COMMENT '描述',
-  `creator_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '创建人ID',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `modifier_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '上次更新人ID',
   `dt_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新时间',
   `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
   PRIMARY KEY (`generator_id`),
@@ -33,7 +31,6 @@ CREATE TABLE `tr_generators` (
   KEY `tbl_engine` (`tbl_engine`),
   KEY `tbl_charset` (`tbl_charset`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
-  KEY `creator_id` (`creator_id`),
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
