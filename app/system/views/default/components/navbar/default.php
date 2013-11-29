@@ -11,7 +11,7 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <?php echo $this->navs; ?>
+<?php echo $this->menus; ?>
       </ul>
       <ul class="nav navbar-nav pull-right">
         <li class="dropdown">

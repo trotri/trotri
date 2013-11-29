@@ -11,6 +11,7 @@
 namespace components;
 
 use tfc\mvc\Widget;
+use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
 
@@ -34,67 +35,107 @@ class NavBar extends Widget
 
 		$html = $this->getHtml();
 		$urls = Cfg::getApp('navbar', 'urls');
-		foreach ($urls as $navs) {
-			$nav = array_shift($navs);
-			if (!is_array($nav)) {
+		foreach ($urls as $menus) {
+			$main = array_shift($menus);
+			if (!is_array($main)) {
 				continue;
 			}
 
-			if (!$navs) {
-				$output .= $html->tag('li', array(), $this->a($nav)) . "\n";
+			// 主菜单
+			if (!$menus) {
+				$output .= $html->tag('li', $this->getAttributes($main, false), $this->a($main)) . "\n";
 				continue;
 			}
 
-			$output .= $html->openTag('li', array('class' => 'dropdown')) . "\n";
-			$output .= $this->a($nav, true) . "\n";
+			// 主菜单外开始标签
+			$output .= $html->openTag('li', $this->getAttributes($main, true)) . "\n";
+			$output .= $this->a($main, true) . "\n";
 
+			// 下拉子菜单外开始标签
 			$output .= $html->openTag('ul', array('class' => 'dropdown-menu')) . "\n";
 
-			foreach ($navs as $nav) {
-				$output .= $html->tag('li', array(), $this->a($nav)) . "\n";
-				$output .= $html->tag('li', array('class' => 'divider'), '') . "\n";
+			// 下拉子菜单列表
+			$total = count($menus);
+			$curr = 0;
+			foreach ($menus as $menu) {
+				$output .= $html->tag('li', array(), $this->a($menu)) . "\n";
+				if (++$curr < $total) {
+					$output .= $html->tag('li', array('class' => 'divider'), '') . "\n";
+				}
 			}
 
+			// 下拉子菜单外结束标签
 			$output .= $html->closeTag('ul') . "\n";
+
+			// 主菜单外结束标签
 			$output .= $html->closeTag('li') . "\n";
 		}
 
-		$this->assign('navs', $output);
+		$this->assign('menus', $output);
 		$this->display();
 	}
 
 	/**
 	 * 通过导航信息获取A标签
-	 * @param array $nav
+	 * @param array $cfg
 	 * @param boolean $isDropdown
 	 * @return string
 	 */
-	public function a(array $nav, $isDropdown = false)
+	public function a(array $cfg, $isDropdown = false)
 	{
 		$html = $this->getHtml();
-		$url = $this->getUrl($nav);
+		$url = $this->getUrl($cfg);
+		$label = isset($cfg['label']) ? $cfg['label'] : '';
 		if ($isDropdown) {
 			return $html->a(
-				Text::_($nav['label']) . ' ' . $html->tag('b', array('class' => 'caret'), ''),
+				Text::_($label) . ' ' . $html->tag('b', array('class' => 'caret'), ''),
 				$url,
 				array('class' => 'dropdown-toggle', 'data-toggle' => 'dropdown')
 			);
 		}
 
-		return $html->a(Text::_($nav['label']), $url);
+		return $html->a(Text::_($label), $url);
 	}
 
 	/**
-	 * 通过导航信息获取链接
-	 * @param array $nav
+	 * 通过导航配置获取<li>标签的属性
+	 * @param array $cfg
+	 * @param boolean $isDropdown
+	 * @return array
+	 */
+	public function getAttributes(array $cfg, $isDropdown = false)
+	{
+		$isActive = $this->isActive($cfg);
+		$className = ($isDropdown ? 'dropdown ' : '') . ($isActive ? 'active' : '');
+		if (($className = trim($className)) !== '') {
+			return array('class' => $className);
+		}
+
+		return array();
+	}
+
+	/**
+	 * 通过导航配置判断当前链接是否是Active状态
+	 * @param array $cfg
+	 * @return boolean
+	 */
+	public function isActive(array $cfg)
+	{
+		$mod = isset($cfg['m']) ? $cfg['m'] : '';
+		return ($mod === Mvc::$module);
+	}
+
+	/**
+	 * 通过导航配置获取链接
+	 * @param array $cfg
 	 * @return string
 	 */
-	public function getUrl(array $nav)
+	public function getUrl(array $cfg)
 	{
-		$mod = isset($nav['m']) ? $nav['m'] : '';
-		$ctrl = isset($nav['c']) ? $nav['c'] : '';
-		$act = isset($nav['a']) ? $nav['a'] : '';
-		$params = isset($nav['p']) ? (array) $nav['p'] : array();
+		$mod    = isset($cfg['m'])      ? $cfg['m'] : '';
+		$ctrl   = isset($cfg['c'])      ? $cfg['c'] : '';
+		$act    = isset($cfg['a'])      ? $cfg['a'] : '';
+		$params = isset($cfg['params']) ? (array) $cfg['params'] : array();
 
 		return $this->getUrlManager()->getUrl($act, $ctrl, $mod, $params);
 	}

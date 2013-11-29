@@ -31,7 +31,7 @@ return array(
 		1 => array(
 			0 => array(
 				'label' => 'CFG_SYSTEM_URLS_ABOUT_LABEL',
-				'm' => 'generator', 'c' => 'index', 'a' => 'index'
+				'm' => 'test', 'c' => 'test', 'a' => 'index'
 			)
 		),
 	),

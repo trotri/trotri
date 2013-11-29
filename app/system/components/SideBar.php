@@ -11,6 +11,7 @@
 namespace components;
 
 use tfc\mvc\Widget;
+use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
 
@@ -40,48 +41,79 @@ class SideBar extends Widget
 		$html = $this->getHtml();
 		$urls = Cfg::getApp($name, 'sidebar', 'urls');
 
+		// 菜单最外围开始标签
 		$output .= $html->openTag('div', array('class' => 'list-group'));
 
-		foreach ($urls as $nav) {
+		// 菜单列表
+		foreach ($urls as $menu) {
+			$label = isset($menu['label']) ? $menu['label'] : '';
 			$output .= $html->a(
-				Text::_($nav['label']) . (isset($nav['icon']) ? $this->getIcon($nav['icon']) : ''), 
-				$this->getUrl($nav), 
-				array('class' => 'list-group-item')
+				Text::_($label) . (isset($menu['icon']) ? $this->getIcon($menu['icon']) : ''), 
+				$this->getUrl($menu), 
+				$this->getAttributes($menu)
 			);
 		}
 
+		// 菜单最外围结束标签
 		$output .= $html->closeTag('div') . '<!--/.list-group-->' . "\n";
 		echo $output;
 	}
 
 	/**
 	 * 获取Icon标签
-	 * @param array $nav
+	 * @param array $cfg
 	 * @return string
 	 */
-	public function getIcon(array $nav)
+	public function getIcon(array $cfg)
 	{
+		$label = isset($cfg['label']) ? $cfg['label'] : '';
 		return $this->getHtml()->tag('span', array(
-			'class' => 'glyphicon glyphicon-plus-sign pull-right',
-			'data-toggle' => 'tooltip',
-			'data-placement' => 'left',
-			'data-original-title' => Text::_($nav['label']),
-			'onclick' => 'return Trotri.href(\'' . $this->getUrl($nav) . '\')'
+			'class'               => 'glyphicon glyphicon-plus-sign pull-right',
+			'data-toggle'         => 'tooltip',
+			'data-placement'      => 'left',
+			'data-original-title' => Text::_($label),
+			'onclick' => 'return Trotri.href(\'' . $this->getUrl($cfg) . '\')'
 		), '');
 	}
 
 	/**
-	 * 通过导航信息获取链接
-	 * @param array $nav
+	 * 通过导航配置获取<a>标签的属性
+	 * @param array $cfg
+	 * @param boolean $isDropdown
+	 * @return array
+	 */
+	public function getAttributes(array $cfg, $isDropdown = false)
+	{
+		$isActive = $this->isActive($cfg);
+		$className = 'list-group-item' . ($isActive ? ' active' : '');
+		return array('class' => $className);
+	}
+
+	/**
+	 * 通过导航配置判断当前链接是否是Active状态
+	 * @param array $cfg
+	 * @return boolean
+	 */
+	public function isActive(array $cfg)
+	{
+		$mod  = isset($cfg['m']) ? $cfg['m'] : '';
+		$ctrl = isset($cfg['c']) ? $cfg['c'] : '';
+		$act  = isset($cfg['a']) ? $cfg['a'] : '';
+		return ($mod === Mvc::$module && $ctrl === Mvc::$controller && $act === Mvc::$action);
+	}
+
+	/**
+	 * 通过导航配置获取链接
+	 * @param array $cfg
 	 * @return string
 	 */
-	public function getUrl(array $nav)
+	public function getUrl(array $cfg)
 	{
-		$mod = isset($nav['m']) ? $nav['m'] : '';
-		$ctrl = isset($nav['c']) ? $nav['c'] : '';
-		$act = isset($nav['a']) ? $nav['a'] : '';
-		$params = isset($nav['p']) ? (array) $nav['p'] : array();
-	
+		$mod    = isset($cfg['m'])      ? $cfg['m'] : '';
+		$ctrl   = isset($cfg['c'])      ? $cfg['c'] : '';
+		$act    = isset($cfg['a'])      ? $cfg['a'] : '';
+		$params = isset($cfg['params']) ? (array) $cfg['params'] : array();
+
 		return $this->getUrlManager()->getUrl($act, $ctrl, $mod, $params);
 	}
 }
