@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,17 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala\widgets;
+namespace ui\bootstrap\widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\form;
+use ui\ElementCollections;
+use ui\bootstrap\Components;
 
 /**
  * FormBuilder class file
- * 表单处理类，基于Bootstrap-CSS框架
+ * 表单处理类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FormBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala.widgets
+ * @package ui.bootstrap.widgets
  * @since 1.0
  */
 class FormBuilder extends form\FormBuilder
@@ -41,7 +43,7 @@ class FormBuilder extends form\FormBuilder
 	);
 
 	/**
-	 * @var instance of koala\widgets\ElementCollections
+	 * @var instance of ui\ElementCollections
 	 */
 	protected $_elementCollections = null;
 
@@ -122,7 +124,7 @@ class FormBuilder extends form\FormBuilder
 	/**
 	 * 设置多个Input表单元素分类标签
 	 * @param array $tabs
-	 * @return koala\widgets\FormBuilder
+	 * @return ui\bootstrap\widgets\FormBuilder
 	 */
 	public function setTabs(array $tabs = array())
 	{
@@ -150,7 +152,7 @@ class FormBuilder extends form\FormBuilder
 	 * @param string $tid
 	 * @param string $prompt
 	 * @param boolean $active
-	 * @return koala\widgets\FormBuilder
+	 * @return ui\bootstrap\widgets\FormBuilder
 	 */
 	public function addTab($tid, $prompt, $active = false)
 	{
@@ -215,13 +217,13 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function createElement($className, array $config = array())
 	{
-		$className = 'koala\\form\\' . $className;
+		$className = 'ui\\bootstrap\\form\\' . $className;
 		return parent::createElement($className, $config);
 	}
 
 	/**
 	 * 初始化表单Action
-	 * @return koala\widgets\FormBuilder
+	 * @return ui\bootstrap\widgets\FormBuilder
 	 */
 	public function initAction()
 	{
@@ -235,10 +237,12 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化分类标签
-	 * @return koala\widgets\FormBuilder
+	 * @return ui\bootstrap\widgets\FormBuilder
 	 */
 	public function initTabs()
 	{
+		$this->_tabs['main']['prompt'] = Components::_('UI_BOOTSTRAP_VIEWTAB_MAIN_PROMPT');
+
 		if (isset($this->_tplVars['tabs'])) {
 			$this->setTabs($this->_tplVars['tabs']);
 			unset($this->_tplVars['tabs']);
@@ -255,8 +259,8 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化表单元素集合类
-	 * @return koala\widgets\FormBuilder
-	 * @throws ErrorException 如果表单元素集合类不是对象或不是ElementCollections子类，抛出异常
+	 * @return ui\bootstrap\widgets\FormBuilder
+	 * @throws ErrorException 如果表单元素集合类不是对象或不是ui\ElementCollections子类，抛出异常
 	 */
 	public function initElementCollections()
 	{
@@ -273,7 +277,7 @@ class FormBuilder extends form\FormBuilder
 
 		if (!$this->_elementCollections instanceof ElementCollections) {
 			throw new ErrorException(sprintf(
-				'Property "%s.%s" is not instanceof koala\widgets\ElementCollections.', get_class($this), '_elementCollections'
+				'Property "%s.%s" is not instanceof ui\ElementCollections.', get_class($this), '_elementCollections'
 			));
 		}
 

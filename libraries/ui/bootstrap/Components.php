@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -16,7 +16,7 @@ use tfc\util\Language;
 
 /**
  * Components class file
- * 页面小组件类，基于Bootstrap-v3框架
+ * 页面小组件类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Components.php 1 2013-05-18 14:58:59Z huan.song $
  * @package ui.bootstrap
@@ -33,6 +33,11 @@ class Components
 	 * @var string Glyphicons图标：加号按钮
 	 */
 	const GLYPHICON_PLUS_SIGN = 'plus-sign';
+
+	/**
+	 * @var string Glyphicons图标：保存按钮
+	 */
+	const GLYPHICON_SAVE = 'save';
 
 	/**
 	 * @var string Glyphicons图标：编辑铅笔按钮
@@ -63,6 +68,75 @@ class Components
 	 * @var instance of tfc\util\Language
 	 */
 	protected static $_language = null;
+
+	/**
+	 * 获取表单的“保存”按钮信息
+	 * @return array
+	 */
+	public static function getButtonSave()
+	{
+		$output = array(
+			'type'      => 'button',
+			'label'     => self::_('UI_BOOTSTRAP_SAVE'),
+			'glyphicon' => self::GLYPHICON_SAVE,
+			'class'     => 'btn btn-primary',
+			'onclick'   => 'return Core.formSubmit(this, \'save\');'
+		);
+
+		return $output;
+	}
+
+	/**
+	 * 获取表单的“保存并关闭”按钮信息
+	 * @return array
+	 */
+	public static function getButtonSaveClose()
+	{
+		$output = array(
+			'type'      => 'button',
+			'label'     => self::_('UI_BOOTSTRAP_SAVE_CLOSE'),
+			'glyphicon' => self::GLYPHICON_OK_SIGN,
+			'class'     => 'btn btn-default',
+			'onclick'   => 'return Core.formSubmit(this, \'save_close\');'
+		);
+
+		return $output;
+	}
+
+	/**
+	 * 获取表单的“保存并新建”按钮信息
+	 * @return array
+	 */
+	public static function getButtonSaveNew()
+	{
+		$output = array(
+			'type'      => 'button',
+			'label'     => self::_('UI_BOOTSTRAP_SAVE_NEW'),
+			'glyphicon' => self::GLYPHICON_PLUS_SIGN,
+			'class'     => 'btn btn-default',
+			'onclick'   => 'return Core.formSubmit(this, \'save_new\');'
+		);
+
+		return $output;
+	}
+
+	/**
+	 * 获取表单的“取消”按钮信息
+	 * @param string $url
+	 * @return array
+	 */
+	public static function getButtonCancel($url)
+	{
+		$output = array(
+			'type'      => 'button',
+			'label'     => self::_('UI_BOOTSTRAP_CANCEL'),
+			'glyphicon' => self::GLYPHICON_REMOVE_SIGN,
+			'class'     => 'btn btn-danger',
+			'onclick'   => 'return Core.href(\'' . $url . '\');'
+		);
+
+		return $output;
+	}
 
 	/**
 	 * 获取美化版“是|否”选择项表单元素

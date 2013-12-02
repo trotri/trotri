@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,16 +8,16 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala\form;
+namespace ui\bootstrap\form;
 
 use tfc\mvc\form;
 
 /**
  * InputElement class file
- * 输入框类表单元素
+ * 输入框类表单元素，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: InputElement.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala.form
+ * @package ui.bootstrap.form
  * @since 1.0
  */
 class InputElement extends form\InputElement
@@ -41,7 +41,7 @@ class InputElement extends form\InputElement
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\form.Element::_init()
 	 */
-	public function _init()
+	protected function _init()
 	{
 		if ($this->_className !== '') {
 			$this->setClass($this->_className);

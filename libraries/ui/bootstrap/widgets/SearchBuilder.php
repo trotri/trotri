@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,18 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala\widgets;
+namespace ui\bootstrap\widgets;
 
 use tfc\mvc\form;
 use tfc\ap\Ap;
 use tfc\ap\ErrorException;
+use ui\ElementCollections;
 
 /**
  * SearchBuilder class file
- * 查询表单处理类，基于Bootstrap-CSS框架
+ * 查询表单处理类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: SearchBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala.widgets
+ * @package ui.bootstrap.widgets
  * @since 1.0
  */
 class SearchBuilder extends form\FormBuilder
@@ -30,7 +31,7 @@ class SearchBuilder extends form\FormBuilder
 	public $method = 'get';
 
 	/**
-	 * @var instance of koala\widgets\ElementCollections
+	 * @var instance of ui\ElementCollections
 	 */
 	protected $_elementCollections = null;
 
@@ -38,9 +39,9 @@ class SearchBuilder extends form\FormBuilder
 	 * @var array 类型和Element关联表
 	 */
 	protected static $_typeObjectMap = array(
-		'text'     => 'koala\\form\\SearchElement',
-		'select'   => 'koala\\form\\SearchElement',
-		'hidden'   => 'koala\\form\\HiddenElement',
+		'text'     => 'ui\\bootstrap\\form\\SearchElement',
+		'select'   => 'ui\\bootstrap\\form\\SearchElement',
+		'hidden'   => 'ui\\bootstrap\\form\\HiddenElement',
 	);
 
 	/**
@@ -77,7 +78,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化表单Action
-	 * @return koala\widgets\SearchBuilder
+	 * @return ui\bootstrap\widgets\SearchBuilder
 	 */
 	public function initAction()
 	{
@@ -112,8 +113,8 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化表单元素集合类
-	 * @return koala\widgets\SearchBuilder
-	 * @throws ErrorException 如果表单元素集合类不是对象或不是ElementCollections子类，抛出异常
+	 * @return ui\bootstrap\widgets\SearchBuilder
+	 * @throws ErrorException 如果表单元素集合类不是对象或不是ui\ElementCollections子类，抛出异常
 	 */
 	public function initElementCollections()
 	{
@@ -130,7 +131,7 @@ class SearchBuilder extends form\FormBuilder
 
 		if (!$this->_elementCollections instanceof ElementCollections) {
 			throw new ErrorException(sprintf(
-				'Property "%s.%s" is not instanceof koala\widgets\ElementCollections.', get_class($this), '_elementCollections'
+				'Property "%s.%s" is not instanceof ui\ElementCollections.', get_class($this), '_elementCollections'
 			));
 		}
 
@@ -169,7 +170,7 @@ class SearchBuilder extends form\FormBuilder
 		// 设置查询按钮
 		$elements['button_search'] = array(
 			'type' => 'button',
-			'__object__' => 'koala\\form\\ButtonElement',
+			'__object__' => 'ui\\bootstrap\\form\\ButtonElement',
 			'label' => 'Search',
 			'glyphicon' => 'search',
 			'class' => 'btn btn-primary btn-block'

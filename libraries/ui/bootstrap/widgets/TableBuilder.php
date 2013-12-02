@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,17 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala\widgets;
+namespace ui\bootstrap\widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
+use ui\ElementCollections;
 
 /**
  * TableBuilder class file
- * 表格处理类，基于Bootstrap-CSS框架
+ * 表格处理类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: TableBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala.widgets
+ * @package ui.bootstrap.widgets
  * @since 1.0
  */
 class TableBuilder extends Widget
@@ -44,7 +45,7 @@ class TableBuilder extends Widget
 	protected $_columns = array();
 
 	/**
-	 * @var instance of koala\widgets\ElementCollections
+	 * @var instance of ui\ElementCollections
 	 */
 	protected $_elementCollections = null;
 
@@ -148,12 +149,11 @@ class TableBuilder extends Widget
 	 */
 	public function getTfoot()
 	{
-		
 	}
 
 	/**
 	 * 初始化所有的列信息
-	 * @return koala\widgets\TableBuilder
+	 * @return ui\bootstrap\widgets\TableBuilder
 	 * @throws ErrorException 如果模板参数columns不存在或不是数组，抛出异常
 	 */
 	public function initColumns()
@@ -190,7 +190,7 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化表格首列全选按钮
-	 * @return koala\widgets\TableBuilder
+	 * @return ui\bootstrap\widgets\TableBuilder
 	 */
 	public function initCheckedToggle()
 	{
@@ -208,8 +208,8 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化表单元素集合类
-	 * @return koala\widgets\TableBuilder
-	 * @throws ErrorException 如果表单元素集合类不是对象或不是ElementCollections子类，抛出异常
+	 * @return ui\bootstrap\widgets\TableBuilder
+	 * @throws ErrorException 如果表单元素集合类不是对象或不是ui\ElementCollections子类，抛出异常
 	 */
 	public function initElementCollections()
 	{
@@ -226,7 +226,7 @@ class TableBuilder extends Widget
 
 		if (!$this->_elementCollections instanceof ElementCollections) {
 			throw new ErrorException(sprintf(
-				'Property "%s.%s" is not instanceof koala\widgets\ElementCollections.', get_class($this), '_elementCollections'
+				'Property "%s.%s" is not instanceof ui\ElementCollections.', get_class($this), '_elementCollections'
 			));
 		}
 

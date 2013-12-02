@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,14 +8,16 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala\form;
+namespace ui\bootstrap\form;
+
+use ui\bootstrap\Components;
 
 /**
  * SwitchElement class file
- * 美化版“是|否”选择项表单元素，基于Bootstrap-CSS框架的switch开关控件
+ * 美化版“是|否”选择项表单元素，基于Bootstrap-v3前端开发框架的switch开关控件
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: SwitchElement.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala.form
+ * @package ui.bootstrap.form
  * @since 1.0
  */
 class SwitchElement extends InputElement
@@ -38,12 +40,23 @@ class SwitchElement extends InputElement
 	/**
 	 * @var string 选项“是”标签
 	 */
-	public $swOn = '是';
+	public $swOn = '';
 
 	/**
 	 * @var string 选项“否”标签
 	 */
-	public $swOff = '否';
+	public $swOff = '';
+
+	/**
+	 * (non-PHPdoc)
+	 * @see ui\bootstrap\form.InputElement::_init()
+	 */
+	protected function _init()
+	{
+		$this->swOn = Components::_('UI_BOOTSTRAP_YES');
+		$this->swOff = Components::_('UI_BOOTSTRAP_NO');
+		parent::_init();
+	}
 
 	/**
 	 * (non-PHPdoc)
@@ -52,7 +65,7 @@ class SwitchElement extends InputElement
 	public function getInput()
 	{
 		$name = $this->getName(true);
-		
+
 		$attributes = array(
 			'id'             => $this->swId . '_' . $name,
 			'class'          => $this->swClass,

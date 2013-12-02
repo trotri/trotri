@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui Bootstrap
+ * Trotri Ui
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,7 +8,9 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala\widgets;
+namespace ui\bootstrap\widgets;
+
+use ui\bootstrap\Components;
 
 use tfc\mvc\Widget;
 use tfc\ap\ErrorException;
@@ -17,34 +19,14 @@ use tfc\saf\Cfg;
 
 /**
  * PaginatorBuilder class file
- * 分页处理类，基于Bootstrap-CSS框架
+ * 分页处理类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: PaginatorBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala.widgets
+ * @package ui.bootstrap.widgets
  * @since 1.0
  */
 class PaginatorBuilder extends Widget
 {
-	/**
-	 * @var string 首页
-	 */
-	const PAGE_BEGIN = '首页';
-
-	/**
-	 * @var string 上一页
-	 */
-	const PAGE_PREV = '上一页';
-
-	/**
-	 * @var string 下一页
-	 */
-	const PAGE_NEXT = '下一页';
-
-	/**
-	 * @var string 尾页
-	 */
-	const PAGE_END = '尾页';
-
 	/**
 	 * @var string 样式名
 	 */
@@ -74,12 +56,14 @@ class PaginatorBuilder extends Widget
 		$html = $this->getHtml();
 		$disabledAttribute = array('class' => $this->disabledClassName);
 		$activeAttribute = array('class' => $this->activeClassName);
+		$prevPage = Components::_('UI_BOOTSTRAP_PAGE_PREV');
+		$nextPage = Components::_('UI_BOOTSTRAP_PAGE_NEXT');
 		$pages = $paginator->getPages();
 
-		$link = $html->a(self::PAGE_PREV, $paginator->getUrl($pages['prev']));
+		$link = $html->a($prevPage, $paginator->getUrl($pages['prev']));
 		$prev = $html->tag('li', (($pages['curr'] <= 1) ? $disabledAttribute : array()), $link);
 
-		$link = $html->a(self::PAGE_NEXT, $paginator->getUrl($pages['next']));
+		$link = $html->a($nextPage, $paginator->getUrl($pages['next']));
 		$next = $html->tag('li', (($pages['curr'] >= $pages['end']) ? $disabledAttribute : array()), $link);
 
 		$lists = '';
