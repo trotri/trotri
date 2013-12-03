@@ -10,6 +10,8 @@
 
 namespace ui\bootstrap\widgets;
 
+use ui\bootstrap\Components;
+
 use tfc\mvc\form;
 use tfc\ap\Ap;
 use tfc\ap\ErrorException;
@@ -171,7 +173,7 @@ class SearchBuilder extends form\FormBuilder
 		$elements['button_search'] = array(
 			'type' => 'button',
 			'__object__' => 'ui\\bootstrap\\form\\ButtonElement',
-			'label' => 'Search',
+			'label' => Components::_('UI_BOOTSTRAP_SEARCH'),
 			'glyphicon' => 'search',
 			'class' => 'btn btn-primary btn-block'
 		);

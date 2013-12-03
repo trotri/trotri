@@ -43,8 +43,11 @@ class Groups
 	 */
 	public function getButtonSaveClose()
 	{
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
-		$url = Util::getUrl('index', 'groups', 'generator', array('generator_id' => $generatorId));
+		if (($url = Ap::getRequest()->getQuery('continue', '')) === '') {
+			$generatorId = Ap::getRequest()->getInteger('generator_id');
+			$url = Util::getUrl('index', 'groups', 'generator', array('generator_id' => $generatorId));
+		}
+
 		return Components::getButtonSaveClose($url);
 	}
 
@@ -80,6 +83,7 @@ class Groups
 	{
 		$params = array(
 			'id' => $data['group_id'],
+			'generator_id' => $data['generator_id'],
 			'continue' => Util::getRequestUri()
 		);
 
@@ -99,7 +103,11 @@ class Groups
 	 */
 	public function getGroupNameUrl($data)
 	{
-		$params = array('generator_id' => $data['generator_id']);
+		$params = array(
+			'id' => $data['group_id'],
+			'generator_id' => $data['generator_id'],
+			'continue' => Util::getRequestUri()
+		);
 		return Components::getHtml()->a($data['group_name'], Util::getUrl('modify', 'groups', 'generator', $params));
 	}
 

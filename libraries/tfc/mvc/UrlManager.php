@@ -58,8 +58,8 @@ class UrlManager
     public function getUrl($action = '', $controller = '', $module = '', array $params = array())
     {
         $url = $this->getScriptUrl();
-        $queryString = $this->getQueryString($action, $controller, $module, $params);
-        return $url . $queryString;
+        $url = $this->applyQueryString($url, $action, $controller, $module, $params);
+        return $url;
     }
 
     /**
@@ -81,32 +81,33 @@ class UrlManager
     }
 
     /**
-     * 通过路由类型，获取QueryString值
+     * 通过路由类型，在URL后拼接该路由的QueryString参数
+     * @param string $url
      * @param string $action
      * @param string $controller
      * @param string $module
      * @param array $params
      * @return string
      */
-    public function getQueryString($action = '', $controller = '', $module = '', array $params = array())
+    public function applyQueryString($url, $action = '', $controller = '', $module = '', array $params = array())
     {
-        $method = 'get' . $this->getRouteType() . 'query';
-        $queryString = $this->$method($action, $controller, $module, $params);
-        return $queryString;
+        $method = 'apply' . $this->getRouteType() . 'query';
+        $url = $this->$method($url, $action, $controller, $module, $params);
+        return $url;
     }
 
     /**
-     * 获取QueryString值，QueryString：/module/controller/action/k1/v1/k2/v2/k3/v3
+     * 在URL后拼接Rewrite路由的QueryString，QueryString：/module/controller/action/k1/v1/k2/v2/k3/v3
+     * @param string $url
      * @param string $action
      * @param string $controller
      * @param string $module
      * @param array $params
      * @return string
      */
-    public function getRewriteQuery($action = '', $controller = '', $module = '', array $params = array())
+    public function applyRewriteQuery($url, $action = '', $controller = '', $module = '', array $params = array())
     {
         $routes = $this->getCleanRoutes($action, $controller, $module);
-        $url = '';
         if ($routes !== array()) {
             $url .= '/' . implode('/', $routes);
         }
@@ -116,42 +117,50 @@ class UrlManager
     }
 
     /**
-     * 获取QueryString值，QueryString：m=module&c=controller&a=action&k1=v1&k2=v2&k3=v3
+     * 在URL后拼接Simple路由的QueryString，QueryString：?m=module&c=controller&a=action&k1=v1&k2=v2&k3=v3
+     * @param string $url
      * @param string $action
      * @param string $controller
      * @param string $module
      * @param array $params
      * @return string
      */
-    public function getSimpleQuery($action = '', $controller = '', $module = '', array $params = array())
+    public function applySimpleQuery($url, $action = '', $controller = '', $module = '', array $params = array())
     {
         $routes = $this->getCleanRoutes($action, $controller, $module);
-        $url = '';
+        if (strpos($url, '?') === false) {
+            $url .= '?';
+        }
+
         foreach ($routes as $key => $value) {
             $url .= '&' . $key . '=' . String::urlencode($value);
         }
 
-        $url = '?' . $this->applySimpleParams($url, $params);
+        $url = $this->applySimpleParams($url, $params);
         return $url;
     }
 
     /**
-     * 获取QueryString值，QueryString：r=module/controller/action&k1=v1&k2=v2&k3=v3
+     * 在URL后拼接Supervar路由的QueryString，QueryString：?r=module/controller/action&k1=v1&k2=v2&k3=v3
+     * @param string $url
      * @param string $action
      * @param string $controller
      * @param string $module
      * @param array $params
      * @return string
      */
-    public function getSupervarQuery($action = '', $controller = '', $module = '', array $params = array())
+    public function applySupervarQuery($url, $action = '', $controller = '', $module = '', array $params = array())
     {
         $routes = $this->getCleanRoutes($action, $controller, $module);
-        $url = '';
+        if (strpos($url, '?') === false) {
+            $url .= '?';
+        }
+
         if ($routes !== array()) {
             $url .= 'r=' . implode('/', $routes);
         }
 
-        $url = '?' . $this->applySimpleParams($url, $params);
+        $url = $this->applySimpleParams($url, $params);
         return $url;
     }
 
@@ -205,6 +214,10 @@ class UrlManager
     public function applySimpleParams($url, array $params = array())
     {
         if ($params !== null) {
+            if (strpos($url, '?') === false) {
+                $url .= '?';
+            }
+
             foreach ($params as $key => $value) {
                 $url .= '&' . $key . '=' . String::urlencode($value);
             }

@@ -78,6 +78,27 @@ class GroupsController extends BaseController
 	 */
 	public function modifyAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('groups', 'generator');
+
+		$id = $req->getInteger('id');
+		$do = $req->getParam('do');
+		if ($do == 'post') {
+			$ret = $mod->modifyByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$this->forward($ret);
+			}
+
+			$ret['data'] = $req->getPost();
+		}
+		else {
+			$ret = $mod->findByPk($id);
+		}
+
+		$ret['id'] = $id;
+		$this->render($ret);
 	}
 
 	/**
@@ -86,6 +107,14 @@ class GroupsController extends BaseController
 	 */
 	public function removeAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Util::getModel('groups', 'generator');
+
+		$id = $req->getInteger('id');
+		$ret = $mod->deleteByPk($id);
+		$this->forward($ret);
 	}
 
 	/**

@@ -18,7 +18,6 @@ $this->widget(
 				'callback' => array($uiComponents, 'getOperateLabel')
 			),
 		),
-		'checkedToggle' => 'group_id',
 		'data' => $this->data
 	)
 );

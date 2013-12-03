@@ -43,6 +43,17 @@ class Groups extends Model
 	}
 
 	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($value, array $params)
+	{
+		return $this->updateByPk($value, $params);
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see koala.Model::getInsertRules()
 	 */

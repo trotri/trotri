@@ -10,6 +10,7 @@
 
 namespace modules\generator\ui\bootstrap;
 
+use tfc\ap\Ap;
 use tfc\saf\Text;
 use helper\Util;
 use ui\ElementCollections;
@@ -41,7 +42,10 @@ class Generators
 	 */
 	public function getButtonSaveClose()
 	{
-		$url = Util::getUrl('index', 'index', 'generator');
+		if (($url = Ap::getRequest()->getQuery('continue', '')) === '') {
+			$url = Util::getUrl('index', 'index', 'generator');
+		}
+
 		return Components::getButtonSaveClose($url);
 	}
 
@@ -171,7 +175,11 @@ class Generators
 	 */
 	public function getGeneratorNameUrl($data)
 	{
-		$params = array('id' => $data['generator_id']);
+		$params = array(
+			'id' => $data['generator_id'],
+			'continue' => Util::getRequestUri()
+		);
+
 		return Components::getHtml()->a($data['generator_name'], Util::getUrl('modify', '', '', $params));
 	}
 }
