@@ -118,14 +118,14 @@ class Util
 	}
 
 	/**
-	 * 获取业务辅助类
+	 * 获取字段信息配置类，包括表格、表单、验证规则、选项
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return koala\widgets\ElementCollections
+	 * @return ui\ElementCollections
 	 */
-	public static function getHelper($className, $moduleName)
+	public static function getElements($className, $moduleName)
 	{
-		$className = 'modules\\' . strtolower($moduleName) . '\\helper\\' . $className;
+		$className = 'modules\\' . strtolower($moduleName) . '\\elements\\' . $className;
 		return Singleton::getInstance($className);
 	}
 

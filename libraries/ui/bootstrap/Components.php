@@ -13,6 +13,7 @@ namespace ui\bootstrap;
 use tfc\ap\Singleton;
 use tfc\saf\Cfg;
 use tfc\util\Language;
+use tfc\util\String;
 
 /**
  * Components class file
@@ -73,14 +74,15 @@ class Components
 	 * 获取表单的“保存”按钮信息
 	 * @return array
 	 */
-	public static function getButtonSave()
+	public static function getButtonSave($url)
 	{
+		$url = String::urlencode($url);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE'),
 			'glyphicon' => self::GLYPHICON_SAVE,
 			'class'     => 'btn btn-primary',
-			'onclick'   => 'return Core.formSubmit(this, \'save\');'
+			'onclick'   => 'return Core.formSubmit(this, \'save\', \'' . $url . '\');'
 		);
 
 		return $output;
@@ -90,14 +92,15 @@ class Components
 	 * 获取表单的“保存并关闭”按钮信息
 	 * @return array
 	 */
-	public static function getButtonSaveClose()
+	public static function getButtonSaveClose($url)
 	{
+		$url = String::urlencode($url);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_CLOSE'),
 			'glyphicon' => self::GLYPHICON_OK_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'save_close\');'
+			'onclick'   => 'return Core.formSubmit(this, \'save_close\', \'' . $url . '\');'
 		);
 
 		return $output;
@@ -107,14 +110,15 @@ class Components
 	 * 获取表单的“保存并新建”按钮信息
 	 * @return array
 	 */
-	public static function getButtonSaveNew()
+	public static function getButtonSaveNew($url)
 	{
+		$url = String::urlencode($url);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_NEW'),
 			'glyphicon' => self::GLYPHICON_PLUS_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'save_new\');'
+			'onclick'   => 'return Core.formSubmit(this, \'save_new\', \'' . $url . '\');'
 		);
 
 		return $output;
@@ -132,7 +136,7 @@ class Components
 			'label'     => self::_('UI_BOOTSTRAP_CANCEL'),
 			'glyphicon' => self::GLYPHICON_REMOVE_SIGN,
 			'class'     => 'btn btn-danger',
-			'onclick'   => 'return Core.href(\'' . $url . '\');'
+			'onclick'   => 'return Trotri.href(\'' . $url . '\');'
 		);
 
 		return $output;

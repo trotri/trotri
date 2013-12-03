@@ -13,6 +13,7 @@ namespace tfc\mvc;
 use tfc\ap\Ap;
 use tfc\ap\InvalidArgumentException;
 use tfc\mvc\routes;
+use tfc\util\String;
 
 /**
  * UrlManager class file
@@ -127,7 +128,7 @@ class UrlManager
         $routes = $this->getCleanRoutes($action, $controller, $module);
         $url = '';
         foreach ($routes as $key => $value) {
-            $url .= '&' . $key . '=' . urlencode($value);
+            $url .= '&' . $key . '=' . String::urlencode($value);
         }
 
         $url = '?' . $this->applySimpleParams($url, $params);
@@ -177,7 +178,7 @@ class UrlManager
     {
         if ($params !== null) {
             foreach ($params as $key => $value) {
-                $url .= '/' . $key . '/' . urlencode($value);
+                $url .= '/' . $key . '/' . String::urlencode($value);
             }
         }
 
@@ -205,7 +206,7 @@ class UrlManager
     {
         if ($params !== null) {
             foreach ($params as $key => $value) {
-                $url .= '&' . $key . '=' . urlencode($value);
+                $url .= '&' . $key . '=' . String::urlencode($value);
             }
         }
 

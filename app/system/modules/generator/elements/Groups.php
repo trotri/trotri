@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\generator\helper;
+namespace modules\generator\elements;
 
-use koala\widgets\ElementCollections;
+use tfc\ap\Ap;
 use tfc\saf\Text;
-use koala\widgets\Components;
+use ui\ElementCollections;
 use helper\Util;
 
 /**
  * Groups class file
- * 业务辅助层类
+ * 字段信息配置类，包括表格、表单、验证规则、选项
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Groups.php 1 2013-05-18 14:58:59Z huan.song $
- * @package modules.generator.helper
+ * @package modules.generator.elements
  * @since 1.0
  */
 class Groups extends ElementCollections
@@ -58,7 +58,8 @@ class Groups extends ElementCollections
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => Text::_('MOD_GENERATOR_GROUPS_GROUP_NAME_LABEL')
+				'label' => Text::_('MOD_GENERATOR_GROUPS_GROUP_NAME_LABEL'),
+				'callback' => array($this->getUiComponentsInstance(), 'getGroupNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -89,24 +90,53 @@ class Groups extends ElementCollections
 		$output = array();
 
 		$name = 'generator_id';
+		$generatorId = Ap::getRequest()->getInteger('generator_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
-				'label' => Text::_('MOD_GENERATOR_GROUPS_GENERATOR_ID_LABEL')
+				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
+				'callback' => array($this->getUiComponentsInstance(), 'getGeneratorNameByGeneratorId')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
-			$options = Util::getModel('Generators', 'generator')->getOptions();
 			$output = array(
-				'type' => 'select',
+				'type' => 'hidden',
 				'label' => Text::_('MOD_GENERATOR_GROUPS_GENERATOR_ID_LABEL'),
-				'options' => $options,
-				'required' => true
+				'value' => $generatorId
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'Integer' => array(true, Text::_('MOD_GENERATOR_GROUPS_GENERATOR_ID_INTEGER'))
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“生成代码ID”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getGeneratorName($type)
+	{
+		$output = array();
+
+		$name = 'generator_name';
+
+		if ($type === self::TYPE_TABLE) {
+			$output = array(
+				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL')
+			);
+		}
+		elseif ($type === self::TYPE_FORM) {
+			$generatorId = Ap::getRequest()->getInteger('generator_id');
+			$generatorName = Util::getModel('Generators', 'generator')->getGeneratorNameByGeneratorId($generatorId);
+			$output = array(
+				'type' => 'string',
+				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
+				'value' => $generatorName
 			);
 		}
 
@@ -170,26 +200,5 @@ class Groups extends ElementCollections
 		}
 
 		return $output;
-	}
-
-	/**
-	 * 获取操作图标按钮
-	 * @param array $data
-	 * @return string
-	 */
-	public function getOperateLabel($data)
-	{
-		$params = array(
-			'id' => $data['group_id'],
-			'continue' => Util::getRequestUri()
-		);
-
-		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Util::getUrl('remove', '', '', $params) . '\')';
-
-		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_MODIFY'))
-			 . Components::getGlyphicon(Components::GLYPHICON_REMOVE, $remove, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
-
-		return $ret;
 	}
 }

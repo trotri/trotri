@@ -31,7 +31,7 @@ class IndexController extends BaseController
 	 */
 	public function __construct()
 	{
-		$this->helper = Util::getHelper('generators', 'generator');
+		$this->elementCollections = Util::getElements('generators', 'generator');
 	}
 
 	/**
@@ -135,7 +135,7 @@ class IndexController extends BaseController
 		$value = $req->getParam('value', '');
 
 		$ret = $mod->updateByPk($id, array($columnName => $value));
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+		$this->forward($ret);
 	}
 
 	/**
@@ -154,7 +154,7 @@ class IndexController extends BaseController
 		$value = $req->getParam('value', '');
 
 		$ret = $mod->batchupdateByPk($ids, array($columnName => $value));
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+		$this->forward($ret);
 	}
 
 	/**
@@ -170,7 +170,7 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->trashByPk($id);
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+		$this->forward($ret);
 	}
 
 	/**
@@ -186,7 +186,7 @@ class IndexController extends BaseController
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchTrashByPk($ids);
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+		$this->forward($ret);
 	}
 
 	/**
@@ -202,7 +202,7 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+		$this->forward($ret);
 	}
 
 	/**
@@ -218,7 +218,7 @@ class IndexController extends BaseController
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchdeleteByPk($ids);
-		$this->forward($ret, self::FORWARD_SAVE_CLOSE);
+		$this->forward($ret);
 	}
 
 	/**

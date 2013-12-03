@@ -8,6 +8,8 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
+use tfc\saf\Cfg;
+
 use tfc\ap;
 use tfc\mvc\Mvc;
 
@@ -47,6 +49,9 @@ class Bootstrap extends ap\Bootstrap
      */
     public function _initView()
     {
+    	$view = Mvc::getView();
+    	$view->skinName = Cfg::getApp('skin_name', 'view');
+    	$view->tpl_extension = Cfg::getApp('tpl_extension', 'view');
     }
 
     /**

@@ -61,6 +61,7 @@ class FormBuilder extends form\FormBuilder
 		'switch'   => 'SwitchElement',
 		'textarea' => 'TextareaElement',
 		'select'   => 'InputElement',
+		'string'   => 'StringElement'
 	);
 
 	/**
@@ -248,7 +249,7 @@ class FormBuilder extends form\FormBuilder
 			unset($this->_tplVars['tabs']);
 		}
 		else {
-			$tabs = $this->_elementCollections->getViewTabs();
+			$tabs = $this->_elementCollections->getViewTabsRender();
 			if (is_array($tabs)) {
 				$this->setTabs($tabs);
 			}

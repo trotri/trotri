@@ -48,24 +48,24 @@ class Groups extends Model
 	 */
 	public function getInsertRules()
 	{
-		$helper = $this->getHelper();
-		$type = $helper::TYPE_FILTER;
-	
+		$elements = $this->getElements();
+		$type = $elements::TYPE_FILTER;
+
 		$output = array(
-			'group_name' => $helper->getGroupName($type),
-			'generator_id' => $helper->getGeneratorId($type),
-			'sort' => $helper->getSort($type),
+			'group_name' => $elements->getGroupName($type),
+			'generator_id' => $elements->getGeneratorId($type),
+			'sort' => $elements->getSort($type),
 		);
 
 		return $output;
 	}
 
 	/**
-	 * 获取业务辅助类
-	 * @return koala\widgets\ElementCollections
+	 * 获取字段信息配置类，包括表格、表单、验证规则、选项
+	 * @return ui\ElementCollections
 	 */
-	public function getHelper()
+	public function getElements()
 	{
-		return Util::getHelper('groups', 'generator');
+		return Util::getElements('groups', 'generator');
 	}
 }

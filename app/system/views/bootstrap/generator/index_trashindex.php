@@ -1,10 +1,12 @@
 <?php $this->display('generator/index_trashindex_btns'); ?>
 
 <?php
+$elementCollections = $this->elementCollections;
+$uiComponents = $elementCollections->getUiComponentsInstance();
 $this->widget(
-	'koala\widgets\TableBuilder',
+	'ui\bootstrap\widgets\TableBuilder',
 	array(
-		'elementCollections' => $this->helper,
+		'elementCollections' => $elementCollections,
 		'columns' => array(
 			'generator_name',
 			'tbl_name',
@@ -18,23 +20,23 @@ $this->widget(
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_GROUPS,
-				'callback' => array($this->helper, 'getGeneratorFieldGroupsLabel')
+				'callback' => array($uiComponents, 'getGeneratorFieldGroupsLabel')
 			),
 			'generator_field_types' => array(
 				'name' => 'generator_field_types',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_TYPES,
-				'callback' => array($this->helper, 'getGeneratorFieldTypesLabel')
+				'callback' => array($uiComponents, 'getGeneratorFieldTypesLabel')
 			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELDS,
-				'callback' => array($this->helper, 'getGeneratorFieldsLabel')
+				'callback' => array($uiComponents, 'getGeneratorFieldsLabel')
 			),
 			'generator_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($this->helper, 'getOperateLabel')
-			),
+				'callback' => array($uiComponents, 'getOperate')
+			)
 		),
 		'checkedToggle' => 'generator_id',
 		'data' => $this->data
@@ -47,7 +49,7 @@ $this->widget(
 
 <?php
 $this->widget(
-	'koala\widgets\PaginatorBuilder',
+	'ui\bootstrap\widgets\PaginatorBuilder',
 	$this->paginator
 );
 ?>

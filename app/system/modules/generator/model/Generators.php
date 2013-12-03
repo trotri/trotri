@@ -91,6 +91,21 @@ class Generators extends Model
 	}
 
 	/**
+	 * 通过generator_id获取generator_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getGeneratorNameByGeneratorId($value)
+	{
+		$ret = $this->getByPk('generator_name', $value);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return '';
+		}
+
+		return $ret['generator_name'];
+	}
+
+	/**
 	 * 获取Select表单元素
 	 * @return array
 	 */
@@ -138,25 +153,25 @@ class Generators extends Model
 	 */
 	public function getInsertRules()
 	{
-		$helper = $this->getHelper();
-		$type = $helper::TYPE_FILTER;
+		$elements = $this->getElements();
+		$type = $elements::TYPE_FILTER;
 
 		$output = array(
-			'generator_name' => $helper->getGeneratorName($type),
-			'tbl_name' => $helper->getTblName($type),
-			'tbl_engine' => $helper->getTblEngine($type),
-			'tbl_charset' => $helper->getTblCharset($type),
-			'tbl_comment' => $helper->getTblComment($type),
-			'app_name' => $helper->getAppName($type),
-			'mod_name' => $helper->getModName($type),
-			'ctrl_name' => $helper->getCtrlName($type),
-			'index_row_btns' => $helper->getIndexRowBtns($type),
-			'trash' => $helper->getTrash($type),
-			'act_index_name' => $helper->getActIndexName($type),
-			'act_view_name' => $helper->getActViewName($type),
-			'act_create_name' => $helper->getActCreateName($type),
-			'act_modify_name' => $helper->getActModifyName($type),
-			'act_remove_name' => $helper->getActRemoveName($type),
+			'generator_name' => $elements->getGeneratorName($type),
+			'tbl_name' => $elements->getTblName($type),
+			'tbl_engine' => $elements->getTblEngine($type),
+			'tbl_charset' => $elements->getTblCharset($type),
+			'tbl_comment' => $elements->getTblComment($type),
+			'app_name' => $elements->getAppName($type),
+			'mod_name' => $elements->getModName($type),
+			'ctrl_name' => $elements->getCtrlName($type),
+			'index_row_btns' => $elements->getIndexRowBtns($type),
+			'trash' => $elements->getTrash($type),
+			'act_index_name' => $elements->getActIndexName($type),
+			'act_view_name' => $elements->getActViewName($type),
+			'act_create_name' => $elements->getActCreateName($type),
+			'act_modify_name' => $elements->getActModifyName($type),
+			'act_remove_name' => $elements->getActRemoveName($type),
 		);
 
 		return $output;
@@ -168,25 +183,25 @@ class Generators extends Model
 	 */
 	public function getUpdateRules()
 	{
-		$helper = $this->getHelper();
-		$type = $helper::TYPE_FILTER;
+		$elements = $this->getElements();
+		$type = $elements::TYPE_FILTER;
 
 		$output = array(
-			'generator_name' => $helper->getGeneratorName($type),
-			'tbl_name' => $helper->getTblName($type),
-			'tbl_engine' => $helper->getTblEngine($type),
-			'tbl_charset' => $helper->getTblCharset($type),
-			'tbl_comment' => $helper->getTblComment($type),
-			'app_name' => $helper->getAppName($type),
-			'mod_name' => $helper->getModName($type),
-			'ctrl_name' => $helper->getCtrlName($type),
-			'index_row_btns' => $helper->getIndexRowBtns($type),
-			'trash' => $helper->getTrash($type),
-			'act_index_name' => $helper->getActIndexName($type),
-			'act_view_name' => $helper->getActViewName($type),
-			'act_create_name' => $helper->getActCreateName($type),
-			'act_modify_name' => $helper->getActModifyName($type),
-			'act_remove_name' => $helper->getActRemoveName($type),
+			'generator_name' => $elements->getGeneratorName($type),
+			'tbl_name' => $elements->getTblName($type),
+			'tbl_engine' => $elements->getTblEngine($type),
+			'tbl_charset' => $elements->getTblCharset($type),
+			'tbl_comment' => $elements->getTblComment($type),
+			'app_name' => $elements->getAppName($type),
+			'mod_name' => $elements->getModName($type),
+			'ctrl_name' => $elements->getCtrlName($type),
+			'index_row_btns' => $elements->getIndexRowBtns($type),
+			'trash' => $elements->getTrash($type),
+			'act_index_name' => $elements->getActIndexName($type),
+			'act_view_name' => $elements->getActViewName($type),
+			'act_create_name' => $elements->getActCreateName($type),
+			'act_modify_name' => $elements->getActModifyName($type),
+			'act_remove_name' => $elements->getActRemoveName($type),
 		);
 
 		return $output;
@@ -266,11 +281,11 @@ class Generators extends Model
 	}
 
 	/**
-	 * 获取业务辅助类
-	 * @return koala\widgets\ElementCollections
+	 * 获取字段信息配置类，包括表格、表单、验证规则、选项
+	 * @return ui\ElementCollections
 	 */
-	public function getHelper()
+	public function getElements()
 	{
-		return Util::getHelper('Generators', 'generator');
+		return Util::getElements('generators', 'generator');
 	}
 }

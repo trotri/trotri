@@ -8,20 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\generator\helper;
+namespace modules\generator\elements;
 
-use tfc\mvc\Mvc;
 use tfc\saf\Text;
-use koala\widgets\Components;
-use koala\widgets\ElementCollections;
-use helper\Util;
+use ui\ElementCollections;
 
 /**
  * Generators class file
- * 业务辅助层类
+ * 字段信息配置类，包括表格、表单、验证规则、选项
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Generators.php 1 2013-05-18 14:58:59Z huan.song $
- * @package modules.generator.helper
+ * @package modules.generator.elements
  * @since 1.0
  */
 class Generators extends ElementCollections
@@ -88,9 +85,9 @@ class Generators extends ElementCollections
 
 	/**
 	 * (non-PHPdoc)
-	 * @see koala\widgets.ElementCollections::getViewTabs()
+	 * @see ui.ElementCollections::getViewTabsRender()
 	 */
-	public function getViewTabs()
+	public function getViewTabsRender()
 	{
 		$output = array(
 			'act' => array(
@@ -146,7 +143,7 @@ class Generators extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
-				'callback' => array($this, 'getGeneratorNameUrl')
+				'callback' => array($this->getUiComponentsInstance(), 'getGeneratorNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -233,7 +230,7 @@ class Generators extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_GENERATORS_TBL_PROFILE_LABEL'),
-				'callback' => array($this, 'getTblProfileSwitchLabel')
+				'callback' => array($this->getUiComponentsInstance(), 'getTblProfileSwitchLabel')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -920,112 +917,5 @@ class Generators extends ElementCollections
 		}
 
 		return $output;
-	}
-
-	/**
-	 * 获取列表页“是否生成扩展表”美化版“是|否”选择项表单元素
-	 * @param array $data
-	 * @return string
-	 */
-	public function getTblProfileSwitchLabel($data)
-	{
-		if ($data['trash'] === 'y') {
-			$tblProfiles = $this->getTblProfile(self::TYPE_OPTIONS);
-			return $tblProfiles[$data['tbl_profile']];
-		}
-
-		$params = array(
-			'id' => $data['generator_id'],
-			'column_name' => 'tbl_profile',
-			'continue' => Util::getRequestUri()
-		);
-
-		$href = Util::getUrl('singlemodify', 'index', 'generator', $params);
-		return Components::getSwitch($data['generator_id'], 'tbl_profile', $data['tbl_profile'], $href);
-	}
-
-	/**
-	 * 获取字段组图标按钮
-	 * @param array $data
-	 * @return string
-	 */
-	public function getGeneratorFieldGroupsLabel($data)
-	{
-		$params = array('generator_id' => $data['generator_id']);
-		$index = 'Trotri.href(\'' . Util::getUrl('index', 'groups', 'generator', $params) . '\')';
-		$create = 'Trotri.href(\'' . Util::getUrl('create', 'groups', 'generator', $params) . '\')';
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
-
-		return $ret;
-	}
-
-	/**
-	 * 获取字段类型图标按钮
-	 * @param array $data
-	 * @return string
-	 */
-	public function getGeneratorFieldTypesLabel($data)
-	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_INDEX'))
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_CREATE'));
-
-		return $ret;
-	}
-
-	/**
-	 * 获取表单字段图标按钮
-	 * @param array $data
-	 * @return string
-	 */
-	public function getGeneratorFieldsLabel($data)
-	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_INDEX, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_INDEX'))
-			 . Components::getGlyphicon(Components::GLYPHICON_CREATE, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_CREATE'));
-
-		return $ret;
-	}
-
-	/**
-	 * 获取操作图标按钮
-	 * @param array $data
-	 * @return string
-	 */
-	public function getOperateLabel($data)
-	{
-		$params = array(
-			'id' => $data['generator_id'],
-			'continue' => Util::getRequestUri()
-		);
-
-		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
-		$trash = 'Core.dialogTrash(\'' . Util::getUrl('trash', '', '', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Util::getUrl('remove', '', '', $params) . '\')';
-
-		$params['column_name'] = 'trash';
-		$params['value'] = 'n';
-		$restore = 'Trotri.href(\'' . Util::getUrl('singlemodify', '', '', $params) . '\')';
-
-		if ($data['trash'] === 'n') {
-			$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATORS_MODIFY'))
-				 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('CFG_SYSTEM_GLOBAL_TRASH'));
-		}
-		else {
-			$ret = Components::getGlyphicon(Components::GLYPHICON_OK, $restore, Text::_('CFG_SYSTEM_GLOBAL_RESTORE'))
-				 . Components::getGlyphicon(Components::GLYPHICON_REMOVE, $remove, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * 获取列表页“生成代码名”的A标签
-	 * @param array $data
-	 * @return string
-	 */
-	public function getGeneratorNameUrl($data)
-	{
-		$params = array('id' => $data['generator_id']);
-		return Components::getHtml()->a($data['generator_name'], Util::getUrl('modify', '', '', $params));
 	}
 }

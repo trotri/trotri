@@ -1,10 +1,12 @@
 <?php $this->display('generator/groups_index_btns'); ?>
 
 <?php
+$elementCollections = $this->elementCollections;
+$uiComponents = $elementCollections->getUiComponentsInstance();
 $this->widget(
-	'koala\widgets\TableBuilder',
+	'ui\bootstrap\widgets\TableBuilder',
 	array(
-		'elementCollections' => $this->helper,
+		'elementCollections' => $elementCollections,
 		'columns' => array(
 			'group_name',
 			'generator_id',
@@ -13,7 +15,7 @@ $this->widget(
 			'group_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($this->helper, 'getOperateLabel')
+				'callback' => array($uiComponents, 'getOperateLabel')
 			),
 		),
 		'checkedToggle' => 'group_id',
@@ -26,7 +28,7 @@ $this->widget(
 
 <?php
 $this->widget(
-	'koala\widgets\PaginatorBuilder',
+	'ui\bootstrap\widgets\PaginatorBuilder',
 	$this->paginator
 );
 ?>

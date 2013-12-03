@@ -72,9 +72,10 @@ class TableBuilder extends Widget
 	public function getTbody()
 	{
 		$html = $this->getHtml();
-
+		$data = (array) $this->_tplVars['data'];
+		
 		$output = $html->openTag('tbody') . "\n";
-		foreach ($this->_tplVars['data'] as $row) {
+		foreach ($data as $row) {
 			$output .= $this->getTr($row);
 		}
 

@@ -12,7 +12,7 @@ return array (
 	'charset' => 'utf-8',
 	'language' => 'zh-CN',
 	'view' => array (
-		'skin_name' => 'default',
+		'skin_name' => 'bootstrap',
 		'charset' => 'utf-8',
 		'tpl_extension' => '.php',
 		'version' => '1.0',

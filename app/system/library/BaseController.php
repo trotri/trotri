@@ -32,85 +32,30 @@ use helper\Util;
 abstract class BaseController extends Controller
 {
 	/**
-	 * @var string 保存数据后执行的跳转行为，跳转到编辑页面
-	 */
-	const FORWARD_SAVE = 'SAVE';
-
-	/**
-	 * @var string 保存数据后执行的跳转行为，跳转到数据列表
-	 */
-	const FORWARD_SAVE_CLOSE = 'SAVE_CLOSE';
-
-	/**
-	 * @var string 保存数据后执行的跳转行为，跳转到新增页面
-	 */
-	const FORWARD_SAVE_NEW = 'SAVE_NEW';
-
-	/**
-	 * @var string 数据列表页面的Action
-	 */
-	public $forwardIndex = 'index';
-
-	/**
-	 * @var string 数据详情页面的Action
-	 */
-	public $forwardView = 'view';
-
-	/**
-	 * @var string 新增数据页面的Action
-	 */
-	public $forwardCreate = 'create';
-
-	/**
-	 * @var string 编辑数据页面的Action
-	 */
-	public $forwardModify = 'modify';
-
-	/**
 	 * @var string 页面首次渲染的布局名
 	 */
 	public $layoutName = 'column2';
 
 	/**
-	 * @var instance of koala\widgets\ElementCollections
+	 * @var instance of ui\ElementCollections
 	 */
-	public $helper = null;
+	public $elementCollections = null;
 
 	/**
 	 * 保存并跳转到指定的页面
 	 * @param array $params
+	 * @param string $continue
 	 * @return void
 	 */
-	public function forward(array $params, $submitType = '')
+	public function forward(array $params, $continue = null)
 	{
-		$continue = Ap::getRequest()->getQuery('continue', '');
-		if ($submitType === '') {
-			$submitType = Ap::getRequest()->getParam('submit_type');
+		if ($continue === null) {
+			$continue = Ap::getRequest()->getQuery('continue', '');
 		}
 
-		$submitType = strtoupper($submitType);
-
-		if ($submitType === self::FORWARD_SAVE_CLOSE && $continue !== '') {
-			$url = Util::applyParams($continue, $params);
-			Ap::getResponse()->redirect($url);
-			exit;
-		}
-
-		$forwardAction = '';
-		switch ($submitType)
-		{
-			case self::FORWARD_SAVE_CLOSE:
-				$forwardAction = $this->forwardIndex;
-				break;
-			case self::FORWARD_SAVE_NEW:
-				$forwardAction = $this->forwardCreate;
-				break;
-			case self::FORWARD_SAVE:
-			default:
-				$forwardAction = $this->forwardModify;
-		}
-
-		Util::forward($forwardAction, '', '', $params);
+		$url = Util::applyParams($continue, $params);
+		Ap::getResponse()->redirect($url);
+		exit;
 	}
 
 	/**
@@ -124,7 +69,7 @@ abstract class BaseController extends Controller
 		$this->assignSystem();
 		$this->assignUrl();
 		$this->assignUser();
-		$this->assignHelper();
+		$this->assignElementCollections();
 		$this->assignLanguage();
 
 		$view = Mvc::getView();
@@ -227,10 +172,10 @@ abstract class BaseController extends Controller
 	 * 将业务辅助类设置到模板变量中
 	 * @return void
 	 */
-	public function assignHelper()
+	public function assignElementCollections()
 	{
-		if ($this->helper !== null) {
-			Mvc::getView()->assign('helper', $this->helper);
+		if ($this->elementCollections !== null) {
+			Mvc::getView()->assign('elementCollections', $this->elementCollections);
 		}
 	}
 

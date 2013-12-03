@@ -66,26 +66,14 @@ return array(
 			2 => array(
 				'label' => 'CFG_SYSTEM_URLS_GENERATOR_FIELDS_INDEX_LABEL',
 				'm' => 'generator', 'c' => 'fields', 'a' => 'index',
-				'icon' => array(
-					'label' => 'CFG_SYSTEM_URLS_GENERATOR_FIELDS_CREATE_LABEL',
-					'm' => 'generator', 'c' => 'fields', 'a' => 'create'
-				)
 			),
 			3 => array(
 				'label' => 'CFG_SYSTEM_URLS_GENERATOR_GROUPS_INDEX_LABEL',
 				'm' => 'generator', 'c' => 'groups', 'a' => 'index',
-				'icon' => array(
-					'label' => 'CFG_SYSTEM_URLS_GENERATOR_GROUPS_CREATE_LABEL',
-					'm' => 'generator', 'c' => 'groups', 'a' => 'create'
-				)
 			),
 			4 => array(
 				'label' => 'CFG_SYSTEM_URLS_GENERATOR_TYPES_INDEX_LABEL',
 				'm' => 'generator', 'c' => 'types', 'a' => 'index',
-				'icon' => array(
-					'label' => 'CFG_SYSTEM_URLS_GENERATOR_TYPES_CREATE_LABEL',
-					'm' => 'generator', 'c' => 'types', 'a' => 'create'
-				)
 			),
 		),
 	)

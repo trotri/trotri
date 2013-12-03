@@ -173,12 +173,14 @@ Core = {
 
   /**
    * 提交表单
-   * @param string type 保存行为类型
-   * @param string form 表单名
+   * @param object btn  按钮的对象
+   * @param string type 按钮的类型
+   * @param string url  提交表单后跳转的链接
    * @return void
    */
-  formSubmit: function(type, form) {
-    var o = $("form" + ((form != undefined) ? "[name='" + form + "']" : ""));
+  formSubmit: function(btn, type, url) {
+    var o = $(btn).parents("form");
+
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
     $(".make-switch > .switch-animate").find(":checkbox").each(function() {
       var e = $(this).parent();
@@ -188,7 +190,7 @@ Core = {
       }
     });
 
-    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type);
+    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type + "&continue=" + url);
     o.submit();
   },
 

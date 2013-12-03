@@ -12,16 +12,18 @@ namespace ui;
 
 use tfc\ap\ErrorException;
 use tfc\ap\InvalidArgumentException;
+use tfc\ap\Singleton;
+use tfc\mvc\Mvc;
 
 /**
- * ElementCollections abstract class file
+ * ElementCollections class file
  * 字段信息寄存基类，包括表格、表单、验证规则、选项
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ElementCollections.php 1 2013-05-18 14:58:59Z huan.song $
  * @package ui
  * @since 1.0
  */
-abstract class ElementCollections
+class ElementCollections
 {
 	/**
 	 * @var integer 字段信息类型：表格信息
@@ -60,6 +62,11 @@ abstract class ElementCollections
 	);
 
 	/**
+	 * @var instance 寄存当前的页面小组件类
+	 */
+	protected $_uiComponents = null;
+
+	/**
 	 * 获取字段信息，用于FormBuilder、TableBuilder、SearchBuilder或FormValidator等
 	 * @param integer $type
 	 * @param string $columnName
@@ -86,10 +93,25 @@ abstract class ElementCollections
 	}
 
 	/**
+	 * 通过配置中的skin_name，获取对应的页面小组件类
+	 * @return object
+	 */
+	public function getUiComponentsInstance()
+	{
+		if ($this->_uiComponents === null) {
+			$skinName = Mvc::getView()->skinName;
+			$className = str_replace('elements', 'ui\\bootstrap', get_class($this));
+			$this->_uiComponents = Singleton::getInstance($className);
+		}
+
+		return $this->_uiComponents;
+	}
+
+	/**
 	 * 获取Input表单元素分类标签，需要子类重写此方法
 	 * @return array
 	 */
-	public function getViewTabs()
+	public function getViewTabsRender()
 	{
 	}
 }
