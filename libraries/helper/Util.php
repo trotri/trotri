@@ -29,7 +29,7 @@ use tfc\saf\Cfg;
 class Util
 {
 	/**
-	 * 页面重定向到当前的Action
+	 * 页面重定向到当前链接
 	 * @param array $params
 	 * @param string $message
 	 * @param integer $delay
@@ -37,11 +37,27 @@ class Util
 	 */
 	public static function refresh($params = array(), $message = '', $delay = 0)
 	{
-		self::forward(Mvc::$action, '', '', $params, $message, $delay);
+		$url = self::getUrl();
+		$url = self::applyParams($url, $params);
+		self::redirect($url, $message, $delay);
 	}
 
 	/**
-	 * 页面重定向到指定的Action
+	 * 页面重定向到上一个链接
+	 * @param string $url
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public static function referer($params = array(), $message = '', $delay = 0)
+	{
+		$url = self::getReferer();
+		$url = self::applyParams($url, $params);
+		self::redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 页面重定向到指定的路由
 	 * @param string $action
 	 * @param string $controller
 	 * @param string $module
@@ -52,24 +68,48 @@ class Util
 	 */
 	public static function forward($action = '', $controller = '', $module = '', array $params = array(), $message = '', $delay = 0)
 	{
-		$url = self::getUrl($action, $controller, $module, $params);
+		$url = self::createUrl($action, $controller, $module, $params);
+		self::redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 页面重定向到指定的链接
+	 * @param string $url
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public static function redirect($url, $message = '', $delay = 0)
+	{
 		Ap::getResponse()->redirect($url, $message, $delay);
 		exit;
 	}
 
 	/**
-     * 通过路由类型，在URL后拼接QueryString参数
-     * @param string $url
-     * @param array $params
-     * @return string
-     */
-	public static function applyParams($url, array $params = array())
+	 * 获取当前页面链接
+	 * @return string
+	 */
+	public static function getUrl()
 	{
-		return self::getUrlManager()->applyParams($url, $params);
+		return Ap::getRequest()->getRequestUri();
 	}
 
 	/**
-	 * 通过路由类型，获取URL
+	 * 获取上一个页面链接
+	 * @return string
+	 */
+	public static function getReferer()
+	{
+		$referer = Ap::getRequest()->getTrim('http_referer');
+		if ($referer !== '') {
+			return $referer;
+		}
+
+		return Ap::getRequest()->getServer('HTTP_REFERER', false);
+	}
+
+	/**
+	 * 通过路由类型，创建URL
 	 * 如果指定了Action，但没指定Controller，则Controller默认为当前Controller
 	 * 如果指定了Controller，但没指定Module，则Module默认为当前Module
 	 * @param string $action
@@ -78,18 +118,20 @@ class Util
 	 * @param array $params
 	 * @return string
 	 */
-	public static function getUrl($action = '', $controller = '', $module = '', array $params = array())
+	public static function createUrl($action = '', $controller = '', $module = '', array $params = array())
 	{
 		return self::getUrlManager()->getUrl($action, $controller, $module, $params);
 	}
 
 	/**
-	 * 获取当前链接
+	 * 通过路由类型，在URL后拼接QueryString参数
+	 * @param string $url
+	 * @param array $params
 	 * @return string
 	 */
-	public static function getRequestUri()
+	public static function applyParams($url, array $params = array())
 	{
-		return Ap::getRequest()->getRequestUri();
+		return self::getUrlManager()->applyParams($url, $params);
 	}
 
 	/**
