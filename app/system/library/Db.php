@@ -11,7 +11,6 @@
 namespace library;
 
 use koala;
-use helper\Util;
 
 /**
  * Db abstract class file
@@ -29,7 +28,7 @@ abstract class Db extends koala\Db
 	 */
 	public function __construct($tableName)
 	{
-		$dbProxy = Util::getDbProxy(Constant::DB_CLUSTER);
+		$dbProxy = Factory::getDbProxy(Constant::DB_CLUSTER);
 		parent::__construct($tableName, $dbProxy);
 	}
 }

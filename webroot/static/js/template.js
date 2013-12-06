@@ -175,10 +175,9 @@ Core = {
    * 提交表单
    * @param object btn  按钮的对象
    * @param string type 按钮的类型
-   * @param string url  提交表单后跳转的链接
    * @return void
    */
-  formSubmit: function(btn, type, url) {
+  formSubmit: function(btn, type) {
     var o = $(btn).parents("form");
 
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
@@ -190,7 +189,7 @@ Core = {
       }
     });
 
-    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type + "&continue=" + url);
+    o.attr("action", o.attr("action") + "&do=post&submit_type=" + type);
     o.submit();
   },
 

@@ -74,15 +74,14 @@ class Components
 	 * 获取表单的“保存”按钮信息
 	 * @return array
 	 */
-	public static function getButtonSave($url)
+	public static function getButtonSave()
 	{
-		$url = String::urlencode($url);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE'),
 			'glyphicon' => self::GLYPHICON_SAVE,
 			'class'     => 'btn btn-primary',
-			'onclick'   => 'return Core.formSubmit(this, \'save\', \'' . $url . '\');'
+			'onclick'   => 'return Core.formSubmit(this, \'save\');'
 		);
 
 		return $output;
@@ -92,15 +91,14 @@ class Components
 	 * 获取表单的“保存并关闭”按钮信息
 	 * @return array
 	 */
-	public static function getButtonSaveClose($url)
+	public static function getButtonSaveClose()
 	{
-		$url = String::urlencode($url);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_CLOSE'),
 			'glyphicon' => self::GLYPHICON_OK_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'save_close\', \'' . $url . '\');'
+			'onclick'   => 'return Core.formSubmit(this, \'save_close\');'
 		);
 
 		return $output;
@@ -110,15 +108,14 @@ class Components
 	 * 获取表单的“保存并新建”按钮信息
 	 * @return array
 	 */
-	public static function getButtonSaveNew($url)
+	public static function getButtonSaveNew()
 	{
-		$url = String::urlencode($url);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_NEW'),
 			'glyphicon' => self::GLYPHICON_PLUS_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'save_new\', \'' . $url . '\');'
+			'onclick'   => 'return Core.formSubmit(this, \'save_new\');'
 		);
 
 		return $output;
