@@ -188,7 +188,7 @@ class SearchBuilder extends form\FormBuilder
 	public function getWidgetDirectory()
 	{
 		if ($this->_widgetDirectory === null) {
-			$this->_widgetDirectory = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'searchbuilder';
+			$this->_widgetDirectory = dirname(__FILE__) . DS . 'views' . DS . 'searchbuilder';
 		}
 
 		return $this->_widgetDirectory;

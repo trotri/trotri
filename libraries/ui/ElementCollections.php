@@ -93,21 +93,6 @@ class ElementCollections
 	}
 
 	/**
-	 * 通过配置中的skin_name，获取对应的页面小组件类
-	 * @return object
-	 */
-	public function getUiComponentsInstance()
-	{
-		if ($this->_uiComponents === null) {
-			$skinName = Mvc::getView()->skinName;
-			$className = str_replace('elements', 'ui\\bootstrap', get_class($this));
-			$this->_uiComponents = Singleton::getInstance($className);
-		}
-
-		return $this->_uiComponents;
-	}
-
-	/**
 	 * 获取Input表单元素分类标签，需要子类重写此方法
 	 * @return array
 	 */

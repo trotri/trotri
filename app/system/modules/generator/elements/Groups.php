@@ -13,7 +13,7 @@ namespace modules\generator\elements;
 use tfc\ap\Ap;
 use tfc\saf\Text;
 use ui\ElementCollections;
-use helper\Util;
+use library\GeneratorFactory;
 
 /**
  * Groups class file
@@ -25,6 +25,19 @@ use helper\Util;
  */
 class Groups extends ElementCollections
 {
+	/**
+	 * @var ui\bootstrap object 页面小组件类
+	 */
+	public $uiComponents = null;
+
+	/**
+	 * 构造方法：初始化页面小组件类
+	 */
+	public function __construct()
+	{
+		$this->uiComponents = GeneratorFactory::getUi('Groups');
+	}
+
 	/**
 	 * 获取“字段组ID”表单元素和验证规则
 	 * @param integer $type
@@ -59,7 +72,7 @@ class Groups extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_GROUPS_GROUP_NAME_LABEL'),
-				'callback' => array($this->getUiComponentsInstance(), 'getGroupNameUrl')
+				'callback' => array($this->uiComponents, 'getGroupNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -95,7 +108,7 @@ class Groups extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
-				'callback' => array($this->getUiComponentsInstance(), 'getGeneratorNameByGeneratorId')
+				'callback' => array($this->uiComponents, 'getGeneratorNameByGeneratorId')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -124,6 +137,7 @@ class Groups extends ElementCollections
 		$output = array();
 
 		$name = 'generator_name';
+		$generatorId = Ap::getRequest()->getInteger('generator_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -131,8 +145,7 @@ class Groups extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
-			$generatorId = Ap::getRequest()->getInteger('generator_id');
-			$generatorName = Util::getModel('Generators', 'generator')->getGeneratorNameByGeneratorId($generatorId);
+			$generatorName = GeneratorFactory::getModel('Generators')->getGeneratorNameByGeneratorId($generatorId);
 			$output = array(
 				'type' => 'string',
 				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),

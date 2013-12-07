@@ -50,7 +50,7 @@ class Url
 	 */
 	public static function referer($params = array(), $message = '', $delay = 0)
 	{
-		$url = self::applyParams(self::getReferer(), $params);
+		$url = self::applyParams((string) self::getReferer(), $params);
 		self::redirect($url, $message, $delay);
 	}
 

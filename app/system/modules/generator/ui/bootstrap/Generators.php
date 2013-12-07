@@ -10,11 +10,10 @@
 
 namespace modules\generator\ui\bootstrap;
 
-use tfc\ap\Ap;
 use tfc\saf\Text;
-use helper\Util;
-use ui\ElementCollections;
 use ui\bootstrap\Components;
+use library\GeneratorFactory;
+use library\Url;
 
 /**
  * Generators class file
@@ -32,8 +31,7 @@ class Generators
 	 */
 	public function getButtonSave()
 	{
-		$url = Util::getUrl('modify', 'index', 'generator');
-		return Components::getButtonSave($url);
+		return Components::getButtonSave();
 	}
 
 	/**
@@ -42,11 +40,7 @@ class Generators
 	 */
 	public function getButtonSaveClose()
 	{
-		if (($url = Ap::getRequest()->getQuery('continue', '')) === '') {
-			$url = Util::getUrl('index', 'index', 'generator');
-		}
-
-		return Components::getButtonSaveClose($url);
+		return Components::getButtonSaveClose();
 	}
 
 	/**
@@ -55,18 +49,16 @@ class Generators
 	 */
 	public function getButtonSaveNew()
 	{
-		$url = Util::getUrl('create', 'index', 'generator');
-		return Components::getButtonSaveNew($url);
+		return Components::getButtonSaveNew();
 	}
 
 	/**
 	 * 获取表单的“取消”按钮信息
-	 * @param string $url
 	 * @return array
 	 */
 	public function getButtonCancel()
 	{
-		$url = Util::getUrl('index', 'index', 'generator');
+		$url = Url::getUrl('index', 'index', 'generator');
 		return Components::getButtonCancel($url);
 	}
 
@@ -78,18 +70,17 @@ class Generators
 	public function getTblProfileSwitchLabel($data)
 	{
 		if ($data['trash'] === 'y') {
-			$elements = Util::getElements('generators', 'generator');
+			$elements = GeneratorFactory::getElements('generators');
 			$tblProfiles = $elements->getTblProfile($elements::TYPE_OPTIONS);
 			return $tblProfiles[$data['tbl_profile']];
 		}
 
 		$params = array(
 			'id' => $data['generator_id'],
-			'column_name' => 'tbl_profile',
-			'continue' => Util::getRequestUri()
+			'column_name' => 'tbl_profile'
 		);
 
-		$href = Util::getUrl('singlemodify', 'index', 'generator', $params);
+		$href = Url::getUrl('singlemodify', 'index', 'generator', $params);
 		$ret = Components::getSwitch($data['generator_id'], 'tbl_profile', $data['tbl_profile'], $href);
 		return $ret;
 	}
@@ -101,9 +92,12 @@ class Generators
 	 */
 	public function getGeneratorFieldGroupsLabel($data)
 	{
-		$params = array('generator_id' => $data['generator_id']);
-		$index = 'Trotri.href(\'' . Util::getUrl('index', 'groups', 'generator', $params) . '\')';
-		$create = 'Trotri.href(\'' . Util::getUrl('create', 'groups', 'generator', $params) . '\')';
+		$params = array(
+			'generator_id' => $data['generator_id']
+		);
+
+		$index = 'Trotri.href(\'' . Url::getUrl('index', 'groups', 'generator', $params) . '\')';
+		$create = 'Trotri.href(\'' . Url::getUrl('create', 'groups', 'generator', $params) . '\')';
 		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
 			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
 
@@ -144,17 +138,16 @@ class Generators
 	public function getOperate($data)
 	{
 		$params = array(
-			'id' => $data['generator_id'],
-			'continue' => Util::getRequestUri()
+			'id' => $data['generator_id']
 		);
 
-		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
-		$trash = 'Core.dialogTrash(\'' . Util::getUrl('trash', '', '', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Util::getUrl('remove', '', '', $params) . '\')';
+		$modify = 'Trotri.href(\'' . Url::getUrl('modify', '', '', $params) . '\')';
+		$trash = 'Core.dialogTrash(\'' . Url::getUrl('trash', '', '', $params) . '\')';
+		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', '', '', $params) . '\')';
 
 		$params['column_name'] = 'trash';
 		$params['value'] = 'n';
-		$restore = 'Trotri.href(\'' . Util::getUrl('singlemodify', '', '', $params) . '\')';
+		$restore = 'Trotri.href(\'' . Url::getUrl('singlemodify', '', '', $params) . '\')';
 
 		if ($data['trash'] === 'n') {
 			$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATORS_MODIFY'))
@@ -176,10 +169,9 @@ class Generators
 	public function getGeneratorNameUrl($data)
 	{
 		$params = array(
-			'id' => $data['generator_id'],
-			'continue' => Util::getRequestUri()
+			'id' => $data['generator_id']
 		);
 
-		return Components::getHtml()->a($data['generator_name'], Util::getUrl('modify', '', '', $params));
+		return Components::getHtml()->a($data['generator_name'], Url::getUrl('modify', 'index', 'generator', $params));
 	}
 }

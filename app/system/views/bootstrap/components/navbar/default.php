@@ -13,14 +13,6 @@
       <ul class="nav navbar-nav">
 <?php echo $this->menus; ?>
       </ul>
-      <ul class="nav navbar-nav pull-right">
-        <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">SongHuan <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">退出登录</a></li>
-          </ul>
-        </li>
-      </ul>
     </div><!-- /.nav-collapse -->
   </div><!-- /.container -->
 </div><!-- /.navbar -->

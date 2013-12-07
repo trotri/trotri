@@ -50,8 +50,11 @@ class Bootstrap extends ap\Bootstrap
     public function _initView()
     {
     	$view = Mvc::getView();
-    	$view->skinName = Cfg::getApp('skin_name', 'view');
-    	$view->tpl_extension = Cfg::getApp('tpl_extension', 'view');
+    	$view->viewDirectory = DIR_APP_VIEWS;
+    	$view->skinName      = Cfg::getApp('skin_name', 'view');
+    	$view->tplExtension  = Cfg::getApp('tpl_extension', 'view');
+    	$view->charset       = Cfg::getApp('charset', 'view');
+    	$view->version       = Cfg::getApp('version', 'view');
     }
 
     /**

@@ -11,7 +11,7 @@
 namespace modules\generator\model;
 
 use koala\Model;
-use helper\Util;
+use library\GeneratorFactory;
 
 /**
  * Groups class file
@@ -28,7 +28,7 @@ class Groups extends Model
 	 */
 	public function __construct()
 	{
-		$db = Util::getDb('groups', 'generator');
+		$db = GeneratorFactory::getDb('Groups');
 		parent::__construct($db);
 	}
 
@@ -59,7 +59,7 @@ class Groups extends Model
 	 */
 	public function getInsertRules()
 	{
-		$elements = $this->getElements();
+		$elements = GeneratorFactory::getElements('Groups');
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
@@ -69,14 +69,5 @@ class Groups extends Model
 		);
 
 		return $output;
-	}
-
-	/**
-	 * 获取字段信息配置类，包括表格、表单、验证规则、选项
-	 * @return ui\ElementCollections
-	 */
-	public function getElements()
-	{
-		return Util::getElements('groups', 'generator');
 	}
 }

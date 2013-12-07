@@ -10,16 +10,19 @@
 
 namespace library;
 
-use tfc\mvc\Controller;
-use tfc\ap\UserIdentity;
+use tfc\util\Paginator;
+
+use tfc\ap\ErrorException;
+
+use tfc\saf\Cfg;
+
 use tfc\ap\Ap;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
+use tfc\mvc\Controller;
 use tfc\util\String;
-use tfc\saf\Text;
 use tfc\saf\Log;
-use tfc\saf\Cfg;
-use helper\Util;
+use tfc\saf\Text;
 
 /**
  * BaseController abstract class file
@@ -37,28 +40,6 @@ abstract class BaseController extends Controller
 	public $layoutName = 'column2';
 
 	/**
-	 * @var instance of ui\ElementCollections
-	 */
-	public $elementCollections = null;
-
-	/**
-	 * 保存并跳转到指定的页面
-	 * @param array $params
-	 * @param string $continue
-	 * @return void
-	 */
-	public function forward(array $params, $continue = null)
-	{
-		if ($continue === null) {
-			$continue = Ap::getRequest()->getQuery('continue', '');
-		}
-
-		$url = Util::applyParams($continue, $params);
-		Ap::getResponse()->redirect($url);
-		exit;
-	}
-
-	/**
 	 * 展示页面，输出数据
 	 * @param array $data
 	 * @param string $tplName
@@ -68,8 +49,6 @@ abstract class BaseController extends Controller
 	{
 		$this->assignSystem();
 		$this->assignUrl();
-		$this->assignUser();
-		$this->assignElementCollections();
 		$this->assignLanguage();
 
 		$view = Mvc::getView();
@@ -83,27 +62,20 @@ abstract class BaseController extends Controller
 			$data['err_msg'] = String::escapeXss(Ap::getRequest()->getString('err_msg'));
 		}
 
-		if (($continue = Ap::getRequest()->getQuery('continue', '')) !== '') {
-			$data['continue'] = $continue;
+		if (($referer = Url::getReferer()) !== false) {
+			$data['http_referer'] = $referer;
 		}
 
 		$view->render($tplName, $data);
 	}
 
 	/**
-	 * 将配置参数和常用数据设置到模板变量中
+	 * 将常用数据设置到模板变量中
 	 * @return void
 	 */
 	public function assignSystem()
 	{
 		$view = Mvc::getView();
-		$view->viewDirectory = DIR_APP_VIEWS;
-
-		$config = Cfg::getApp('view');
-		isset($config['skin_name']) || $view->skinName = $config['skin_name'];
-		isset($config['charset']) || $view->charset = $config['charset'];
-		isset($config['tpl_extension']) || $view->tplExtension = $config['tpl_extension'];
-		isset($config['version']) || $view->version = $config['version'];
 
 		$view->assign('app', 		APP_NAME);
 		$view->assign('module', 	Mvc::$module);
@@ -124,11 +96,12 @@ abstract class BaseController extends Controller
 	public function assignUrl()
 	{
 		$view = Mvc::getView();
+		$req = Ap::getRequest();
 
-		$baseUrl    = Ap::getRequest()->getBaseUrl();
-		$basePath   = Ap::getRequest()->getBasePath();
-		$scriptUrl  = Ap::getRequest()->getScriptUrl();
-		$requestUri = Ap::getRequest()->getRequestUri();
+		$baseUrl    = $req->getBaseUrl();
+		$basePath   = $req->getBasePath();
+		$scriptUrl  = $req->getScriptUrl();
+		$requestUri = $req->getRequestUri();
 		$staticUrl  = $baseUrl . '/static/' . APP_NAME . '/' . $view->skinName;
 
 		$view->assign('root_url',    $baseUrl . '/..');
@@ -143,7 +116,7 @@ abstract class BaseController extends Controller
 	}
 
 	/**
-	 * 将公共的语言包信息设置到模板变量中
+	 * 将公共的语言包和当前模块的语言包设置到模板变量中
 	 * @return void
 	 */
 	public function assignLanguage()
@@ -155,28 +128,6 @@ abstract class BaseController extends Controller
 
 		$strings = Text::getStrings();
 		$view->assign($strings);
-	}
-
-	/**
-	 * 将用户信息设置到模板变量中
-	 * @return void
-	 */
-	public function assignUser()
-	{
-		$view = Mvc::getView();
-		$view->assign('user_id', UserIdentity::getId());
-		$view->assign('name', UserIdentity::getName());
-	}
-
-	/**
-	 * 将业务辅助类设置到模板变量中
-	 * @return void
-	 */
-	public function assignElementCollections()
-	{
-		if ($this->elementCollections !== null) {
-			Mvc::getView()->assign('elementCollections', $this->elementCollections);
-		}
 	}
 
 	/**
@@ -192,6 +143,7 @@ abstract class BaseController extends Controller
 	 * Json方式输出数据，如果项目不是Utf-8编码，需要重写此方法，转换编码格式
 	 * @param mixed $data
 	 * @return void
+	 * @see getViewData
 	 */
 	public function display($data)
 	{
@@ -202,47 +154,115 @@ abstract class BaseController extends Controller
 	/**
 	 * 获取Ajax方式输出数据，规范化输出数据的格式
 	 * 默认添加的输出内容：log_id (integer)
+	 * <pre>
+	 * 一.参数是字符串：
+	 * $data = 'trotri';
+	 * 返回值：
+	 * $ret = array (
+	 *     'err_no' => 0,
+	 *     'err_msg' => '',
+ 	 *     'data' => 'trotri',
+ 	 *     'log_id' => 2000010
+	 * );
+	 *
+	 * 二.参数是数组，但是没有指定err_no和err_msg：
+	 * $data = array (
+	 *     'user_id' => 1,
+	 *     'user_name' => 'trotri'
+	 * );
+	 * 或
+	 * $data = array (
+	 *     'extra' => '', // 这个值将被丢弃
+	 *     'data' => array (
+	 *         'user_id' => 1,
+	 *         'user_name' => 'trotri'
+	 *     )
+	 * );
+	 * 返回值：
+	 * $ret = array (
+	 *     'err_no' => 0,
+	 *     'err_msg' => '',
+	 *     'data' => array (
+	 *         'user_id' => 1,
+	 *         'user_name' => 'trotri',
+	 *     ),
+	 *     'log_id' => 2000010
+	 * );
+	 *
+	 * 三.参数是数组，并且已经指定err_no和err_msg：
+	 * $data = array (
+	 *     'err_no' => 1001,
+	 *     'err_msg' => 'Login Failed',
+	 *     'user_id' => 1,
+	 *     'user_name' => 'trotri'
+	 * );
+	 * 或
+	 * $data = array (
+	 *     'err_no' => 1001,
+	 *     'err_msg' => 'Login Failed',
+	 *     'extra' => '', // 这个值将被丢弃
+	 *     'data' => array (
+	 *         'user_id' => 1,
+	 *         'user_name' => 'trotri'
+	 *     )
+	 * );
+	 * 返回值：
+	 * $ret = array (
+	 *     'err_no' => 1001,
+	 *     'err_msg' => 'Login Failed',
+	 *     'data' => array (
+	 *         'user_id' => 1,
+	 *         'user_name' => 'trotri'
+	 *     ),
+	 *     'log_id' => 2000010
+	 * );
+	 * </pre>
 	 * @param mixed $data
 	 * @return array
-	 * @throws ErrorException 如果输出数据时数组，但是不包含err_no、err_msg、data或者data不是数组，抛出异常
 	 */
 	public function getViewData($data)
 	{
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = '';
 		if (is_array($data)) {
-			if (!isset($data['err_no'])) {
-				$data['err_no'] = ErrorNo::SUCCESS_NUM;
+			if (isset($data['err_no'])) {
+				$errNo = (int) $data['err_no'];
+				unset($data['err_no']);
 			}
 
-			if (!isset($data['err_msg'])) {
-				$data['err_msg'] = '';
+			if (isset($data['err_msg'])) {
+				$errMsg = $data['err_msg'];
+				unset($data['err_msg']);
+			}
+
+			if (isset($data['data'])) {
+				$data = $data['data'];
 			}
 		}
-		else {
-			$data = array(
-				'err_no' => ErrorNo::SUCCESS_NUM,
-				'err_msg' => '',
-				'data' => $data,
-			);
-		}
 
-		$data['log_id'] = Log::getId();
-		return $data;
+		$ret = array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'data' => $data,
+			'log_id' => Log::getId()
+		);
+
+		return $ret;
 	}
 
 	/**
-	 * 检查用户是否登录，如果没有登录，跳转到登录页面
-	 * @return boolean
+	 * 获取当前页码
+	 * @return integer
 	 */
-	public function isLogin()
+	public function getCurrPage()
 	{
-		if (!UserIdentity::isLogin()) {
-			$params = array(
-				'continue' => Ap::getRequest()->getRequestUri(),
-			);
-			Util::forward('login', 'show', 'admin', $params);
-			return false;
+		try {
+			$pageVar = Cfg::getApp('page_var', 'paginator');
+		}
+		catch (ErrorException $e) {
+			$pageVar = Paginator::DEFAULT_PAGE_VAR;
 		}
 
-		return true;
+		return Ap::getRequest()->getInteger($pageVar);
 	}
 }

@@ -1,12 +1,11 @@
 <?php $this->display('generator/index_index_btns'); ?>
 
 <?php
-$elementCollections = $this->elementCollections;
-$uiComponents = $elementCollections->getUiComponentsInstance();
+$elements = $this->elementCollections;
 $this->widget(
 	'ui\bootstrap\widgets\TableBuilder',
 	array(
-		'elementCollections' => $elementCollections,
+		'elementCollections' => $elements,
 		'columns' => array(
 			'generator_name',
 			'tbl_name',
@@ -20,27 +19,26 @@ $this->widget(
 			'generator_field_groups' => array(
 				'name' => 'generator_field_groups',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_GROUPS,
-				'callback' => array($uiComponents, 'getGeneratorFieldGroupsLabel')
+				'callback' => array($elements->uiComponents, 'getGeneratorFieldGroupsLabel')
 			),
 			'generator_field_types' => array(
 				'name' => 'generator_field_types',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_TYPES,
-				'callback' => array($uiComponents, 'getGeneratorFieldTypesLabel')
+				'callback' => array($elements->uiComponents, 'getGeneratorFieldTypesLabel')
 			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELDS,
-				'callback' => array($uiComponents, 'getGeneratorFieldsLabel')
+				'callback' => array($elements->uiComponents, 'getGeneratorFieldsLabel')
 			),
 			'generator_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($uiComponents, 'getOperate')
+				'callback' => array($elements->uiComponents, 'getOperate')
 			)
 		),
 		'checkedToggle' => 'generator_id',
 		'data' => $this->data
-		// 'dataProvider' => 
 	)
 );
 ?>

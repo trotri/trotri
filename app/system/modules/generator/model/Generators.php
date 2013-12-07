@@ -10,11 +10,10 @@
 
 namespace modules\generator\model;
 
-use koala\Model;
-use tfc\ap\UserIdentity;
 use tfc\util\String;
-use helper\Util;
+use koala\Model;
 use library\ErrorNo;
+use library\GeneratorFactory;
 
 /**
  * Generators class file
@@ -31,7 +30,7 @@ class Generators extends Model
 	 */
 	public function __construct()
 	{
-		$db = Util::getDb('Generators', 'generator');
+		$db = GeneratorFactory::getDb('Generators');
 		parent::__construct($db);
 	}
 
@@ -86,7 +85,7 @@ class Generators extends Model
 			$attributes['app_name'] = $appName;
 		}
 
-		$ret = Util::getModel('Generators', 'generator')->findIndexByAttributes($attributes, '', $pageNo);
+		$ret = $this->findIndexByAttributes($attributes, '', $pageNo);
 		return $ret;
 	}
 
@@ -106,27 +105,13 @@ class Generators extends Model
 	}
 
 	/**
-	 * 获取Select表单元素
-	 * @return array
-	 */
-	public function getOptions()
-	{
-		$ret = $this->findPairsByAttributes(array('generator_id', 'generator_name'), array('trash' => 'n'));
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return array();
-		}
-
-		return $ret['data'];
-	}
-
-	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array
 	 */
 	public function create(array $params)
 	{
-		$params['dt_created'] = Util::getNowTime();
+		$params['dt_created'] = date('Y-m-d H:i:s');
 		if (!isset($params['index_row_btns']) || !is_array($params['index_row_btns'])) {
 			$params['index_row_btns'] = array();
 		}
@@ -142,7 +127,7 @@ class Generators extends Model
 	 */
 	public function modifyByPk($value, array $params)
 	{
-		$params['dt_modified'] = Util::getNowTime();
+		$params['dt_modified'] = date('Y-m-d H:i:s');
 
 		return $this->updateByPk($value, $params);
 	}
@@ -153,7 +138,7 @@ class Generators extends Model
 	 */
 	public function getInsertRules()
 	{
-		$elements = $this->getElements();
+		$elements = GeneratorFactory::getElements('Generators');
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
@@ -183,7 +168,7 @@ class Generators extends Model
 	 */
 	public function getUpdateRules()
 	{
-		$elements = $this->getElements();
+		$elements = GeneratorFactory::getElements('Generators');
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
@@ -265,8 +250,8 @@ class Generators extends Model
 	 */
 	public function cleanTblComment($value)
 	{
-		$value = String::escapeXss(trim($value));
-		return $value;
+		$ret = String::escapeXss(trim($value));
+		return $ret;
 	}
 
 	/**
@@ -276,16 +261,7 @@ class Generators extends Model
 	 */
 	public function cleanDescription($value)
 	{
-		$value = String::escapeXss(trim($value));
-		return $value;
-	}
-
-	/**
-	 * 获取字段信息配置类，包括表格、表单、验证规则、选项
-	 * @return ui\ElementCollections
-	 */
-	public function getElements()
-	{
-		return Util::getElements('generators', 'generator');
+		$ret = String::escapeXss(trim($value));
+		return $ret;
 	}
 }

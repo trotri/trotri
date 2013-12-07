@@ -12,10 +12,11 @@ namespace modules\generator\elements;
 
 use tfc\saf\Text;
 use ui\ElementCollections;
+use library\GeneratorFactory;
 
 /**
  * Generators class file
- * 字段信息配置类，包括表格、表单、验证规则、选项
+ * 字段信息配置类，包括表格, 表单, 验证规则, 选项
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Generators.php 1 2013-05-18 14:58:59Z huan.song $
  * @package modules.generator.elements
@@ -84,6 +85,19 @@ class Generators extends ElementCollections
 	const INDEX_ROW_BTNS_REMOVE = 'remove';
 
 	/**
+	 * @var ui\bootstrap object 页面小组件类
+	 */
+	public $uiComponents = null;
+
+	/**
+	 * 构造方法：初始化页面小组件类
+	 */
+	public function __construct()
+	{
+		$this->uiComponents = GeneratorFactory::getUi('Generators');
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see ui.ElementCollections::getViewTabsRender()
 	 */
@@ -143,7 +157,7 @@ class Generators extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
-				'callback' => array($this->getUiComponentsInstance(), 'getGeneratorNameUrl')
+				'callback' => array($this->uiComponents, 'getGeneratorNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -230,7 +244,7 @@ class Generators extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_GENERATORS_TBL_PROFILE_LABEL'),
-				'callback' => array($this->getUiComponentsInstance(), 'getTblProfileSwitchLabel')
+				'callback' => array($this->uiComponents, 'getTblProfileSwitchLabel')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -245,7 +259,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys($tblProfiles),
-					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TBL_PROFILE_INARRAY'), implode('、', $tblProfiles))
+					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TBL_PROFILE_INARRAY'), implode(', ', $tblProfiles))
 				)
 			);
 		}
@@ -296,7 +310,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys($tblEngines),
-					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TBL_ENGINE_INARRAY'), implode('、', $tblEngines))
+					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TBL_ENGINE_INARRAY'), implode(', ', $tblEngines))
 				)
 			);
 		}
@@ -348,7 +362,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys($tblCharsets),
-					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TBL_CHARSET_INARRAY'), implode('、', $tblCharsets))
+					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TBL_CHARSET_INARRAY'), implode(', ', $tblCharsets))
 				)
 			);
 		}
@@ -542,7 +556,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys($indexRowBtns),
-					sprintf(Text::_('MOD_GENERATOR_GENERATORS_INDEX_ROW_BTNS_INARRAY'), implode('、', $indexRowBtns))
+					sprintf(Text::_('MOD_GENERATOR_GENERATORS_INDEX_ROW_BTNS_INARRAY'), implode(', ', $indexRowBtns))
 				)
 			);
 		}
@@ -611,7 +625,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'InArray' => array(
 					array_keys($trashs),
-					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TRASH_INARRAY'), implode('、', $trashs))
+					sprintf(Text::_('MOD_GENERATOR_GENERATORS_TRASH_INARRAY'), implode(', ', $trashs))
 				)
 			);
 		}

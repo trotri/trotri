@@ -10,12 +10,6 @@
 
 namespace modules\generator\ui\bootstrap;
 
-use tfc\ap\Ap;
-use tfc\ap\Registry;
-use tfc\saf\Text;
-use helper\Util;
-use ui\bootstrap\Components;
-
 /**
  * Groups class file
  * 页面小组件类，基于Bootstrap-v3前端开发框架
@@ -24,6 +18,14 @@ use ui\bootstrap\Components;
  * @package modules.generator.ui.bootstrap
  * @since 1.0
  */
+
+use tfc\ap\Ap;
+use tfc\ap\Registry;
+use tfc\saf\Text;
+use ui\bootstrap\Components;
+use library\GeneratorFactory;
+use library\Url;
+
 class Groups
 {
 	/**
@@ -32,9 +34,7 @@ class Groups
 	 */
 	public function getButtonSave()
 	{
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
-		$url = Util::getUrl('modify', 'groups', 'generator', array('generator_id' => $generatorId));
-		return Components::getButtonSave($url);
+		return Components::getButtonSave();
 	}
 
 	/**
@@ -43,12 +43,7 @@ class Groups
 	 */
 	public function getButtonSaveClose()
 	{
-		if (($url = Ap::getRequest()->getQuery('continue', '')) === '') {
-			$generatorId = Ap::getRequest()->getInteger('generator_id');
-			$url = Util::getUrl('index', 'groups', 'generator', array('generator_id' => $generatorId));
-		}
-
-		return Components::getButtonSaveClose($url);
+		return Components::getButtonSaveClose();
 	}
 
 	/**
@@ -57,20 +52,20 @@ class Groups
 	 */
 	public function getButtonSaveNew()
 	{
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
-		$url = Util::getUrl('create', 'groups', 'generator', array('generator_id' => $generatorId));
-		return Components::getButtonSaveNew($url);
+		return Components::getButtonSaveNew();
 	}
 
 	/**
 	 * 获取表单的“取消”按钮信息
-	 * @param string $url
 	 * @return array
 	 */
 	public function getButtonCancel()
 	{
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
-		$url = Util::getUrl('index', 'groups', 'generator', array('generator_id' => $generatorId));
+		$params = array(
+			'generator_id' => Ap::getRequest()->getInteger('generator_id')
+		);
+
+		$url = Url::getUrl('index', 'groups', 'generator', $params);
 		return Components::getButtonCancel($url);
 	}
 
@@ -79,16 +74,15 @@ class Groups
 	 * @param array $data
 	 * @return string
 	 */
-	public function getOperateLabel($data)
+	public function getOperate($data)
 	{
 		$params = array(
 			'id' => $data['group_id'],
-			'generator_id' => $data['generator_id'],
-			'continue' => Util::getRequestUri()
+			'generator_id' => $data['generator_id']
 		);
 
-		$modify = 'Trotri.href(\'' . Util::getUrl('modify', '', '', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Util::getUrl('remove', '', '', $params) . '\')';
+		$modify = 'Trotri.href(\'' . Url::getUrl('modify', 'groups', 'generator', $params) . '\')';
+		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', 'groups', 'generator', $params) . '\')';
 
 		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_MODIFY'))
 			 . Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $remove, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
@@ -105,10 +99,10 @@ class Groups
 	{
 		$params = array(
 			'id' => $data['group_id'],
-			'generator_id' => $data['generator_id'],
-			'continue' => Util::getRequestUri()
+			'generator_id' => $data['generator_id']
 		);
-		return Components::getHtml()->a($data['group_name'], Util::getUrl('modify', 'groups', 'generator', $params));
+
+		return Components::getHtml()->a($data['group_name'], Url::getUrl('modify', 'groups', 'generator', $params));
 	}
 
 	/**
@@ -118,9 +112,11 @@ class Groups
 	 */
 	public function getGeneratorNameByGeneratorId($data)
 	{
-		$name = 'generator_name_' . $data['generator_id'];
+		$generatorId = (int) $data['generator_id'];
+		$name = 'Groups::generator_name_' . $generatorId;
 		if (!Registry::has($name)) {
-			$generatorName = Util::getModel('generators', 'generator')->getGeneratorNameByGeneratorId($data['generator_id']);
+			$model = GeneratorFactory::getModel('generators', 'generator');
+			$generatorName = $model->getGeneratorNameByGeneratorId($generatorId);
 			Registry::set($name, $generatorName);
 		}
 

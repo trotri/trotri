@@ -1144,7 +1144,7 @@ abstract class Model
 	{
 		if ($this->_language === null) {
 			$type = Cfg::getApp('language');
-			$baseDir = DIR_LIBRARIES . DIRECTORY_SEPARATOR . 'koala' . DIRECTORY_SEPARATOR . 'languages';
+			$baseDir = DIR_LIBRARIES . DS . 'koala' . DS . 'languages';
 			$this->_language = Language::getInstance($type, $baseDir);
 		}
 

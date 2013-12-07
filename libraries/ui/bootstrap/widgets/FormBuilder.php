@@ -292,7 +292,7 @@ class FormBuilder extends form\FormBuilder
 	public function getWidgetDirectory()
 	{
 		if ($this->_widgetDirectory === null) {
-			$this->_widgetDirectory = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'formbuilder';
+			$this->_widgetDirectory = dirname(__FILE__) . DS . 'views' . DS . 'formbuilder';
 		}
 
 		return $this->_widgetDirectory;

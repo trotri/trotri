@@ -10,6 +10,8 @@
 
 namespace modules\generator\controller;
 
+use library\GeneratorFactory;
+
 use library\BaseController;
 use tfc\ap\Ap;
 use library\ErrorNo;
@@ -26,14 +28,6 @@ use helper\Util;
 class GroupsController extends BaseController
 {
 	/**
-	 * 构造方法：初始化业务辅助类
-	 */
-	public function __construct()
-	{
-		$this->elementCollections = Util::getElements('groups', 'generator');
-	}
-
-	/**
 	 * 数据列表
 	 * @author 宋欢 <trotri@yeah.net>
 	 */
@@ -42,10 +36,12 @@ class GroupsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$pageNo = Util::getCurrPage();
+		$mod = GeneratorFactory::getModel('Groups');
+		$pageNo = $this->getCurrPage();
+		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$generatorId = $req->getInteger('generator_id');
-		$ret = Util::getModel('groups', 'generator')->findIndexByAttributes(array('generator_id' => $generatorId), 'sort', $pageNo);
+		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), 'sort', $pageNo);
 		$ret['generator_id'] = $generatorId;
 
 		$this->render($ret);
@@ -60,12 +56,14 @@ class GroupsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Groups');
+		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$do = $req->getParam('do');
 		if ($do == 'post') {
-			$ret = Util::getModel('groups', 'generator')->create($req->getPost());
+			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$this->forward($ret);
+				
 			}
 		}
 
@@ -81,14 +79,15 @@ class GroupsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('groups', 'generator');
+		$mod = GeneratorFactory::getModel('Groups');
+		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$id = $req->getInteger('id');
 		$do = $req->getParam('do');
 		if ($do == 'post') {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$this->forward($ret);
+				
 			}
 
 			$ret['data'] = $req->getPost();
@@ -110,11 +109,11 @@ class GroupsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Util::getModel('groups', 'generator');
+		$mod = GeneratorFactory::getModel('Groups');
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		$this->forward($ret);
+		
 	}
 
 	/**

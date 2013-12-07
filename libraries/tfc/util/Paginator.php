@@ -35,7 +35,7 @@ class Paginator
     /**
      * @var string 默认的从$_GET或$_POST中获取当前页的键名
      */
-    const DEFAULT_PAGE_VAR = 'page';
+    const DEFAULT_PAGE_VAR = 'paged';
 
     /**
      * @var integer|null 当前的页码
@@ -55,7 +55,7 @@ class Paginator
     /**
      * @var string 链接地址的前半部分，拼接上页码就是完整的链接
      */
-    protected $_url = '?&page=';
+    protected $_url = '?&paged=';
 
     /**
      * @var integer 每页展示的行数
@@ -73,7 +73,7 @@ class Paginator
      * @param string $url
      * @param string $pageVar
      */
-    public function __construct($totalRows, $url = '?', $pageVar = 'page')
+    public function __construct($totalRows, $url = '?', $pageVar = self::DEFAULT_PAGE_VAR)
     {
         $this->setTotalRows($totalRows);
         $this->setUrl($url);
@@ -118,8 +118,8 @@ class Paginator
             'lists' => array()
         );
 
-        for ($page = $pages['first']; $page <= $pages['last']; $page++) {
-            $links['lists'][$page] = ($page == $pages['curr']) ? $page : $this->getUrl($page);
+        for ($pageNo = $pages['first']; $pageNo <= $pages['last']; $pageNo++) {
+            $links['lists'][$pageNo] = ($pageNo == $pages['curr']) ? $pageNo : $this->getUrl($pageNo);
         }
 
         return $links;
@@ -305,16 +305,16 @@ class Paginator
 
     /**
      * 通过页码返回完整的链接
-     * @param integer|null $page
+     * @param integer|null $pageNo
      * @return string
      */
-    public function getUrl($page = null)
+    public function getUrl($pageNo = null)
     {
-        if ($page === null) {
+        if ($pageNo === null) {
              return $this->_url;
         }
 
-        return $this->_url . (int) $page;
+        return $this->_url . (int) $pageNo;
     }
 
     /**

@@ -219,7 +219,7 @@ class Components
 	{
 		if (self::$_language === null) {
 			$type = Cfg::getApp('language');
-			$baseDir = DIR_LIBRARIES . DIRECTORY_SEPARATOR . 'ui' . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'languages';
+			$baseDir = DIR_LIBRARIES . DS . 'ui' . DS . 'bootstrap' . DS . 'languages';
 			self::$_language = Language::getInstance($type, $baseDir);
 		}
 

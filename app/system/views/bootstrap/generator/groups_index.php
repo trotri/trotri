@@ -1,12 +1,11 @@
 <?php $this->display('generator/groups_index_btns'); ?>
 
 <?php
-$elementCollections = $this->elementCollections;
-$uiComponents = $elementCollections->getUiComponentsInstance();
+$elements = $this->elementCollections;
 $this->widget(
 	'ui\bootstrap\widgets\TableBuilder',
 	array(
-		'elementCollections' => $elementCollections,
+		'elementCollections' => $elements,
 		'columns' => array(
 			'group_name',
 			'generator_id',
@@ -15,7 +14,7 @@ $this->widget(
 			'group_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($uiComponents, 'getOperateLabel')
+				'callback' => array($elements->uiComponents, 'getOperateLabel')
 			),
 		),
 		'data' => $this->data

@@ -67,9 +67,9 @@ class PaginatorBuilder extends Widget
 		$next = $html->tag('li', (($pages['curr'] >= $pages['end']) ? $disabledAttribute : array()), $link);
 
 		$lists = '';
-		for ($page = $pages['first']; $page <= $pages['last']; $page++) {
-			$link = $html->a($page, $paginator->getUrl($page));
-			$lists .= $html->tag('li', (($page == $pages['curr']) ? $activeAttribute : array()), $link);
+		for ($pageNo = $pages['first']; $pageNo <= $pages['last']; $pageNo++) {
+			$link = $html->a($pageNo, $paginator->getUrl($pageNo));
+			$lists .= $html->tag('li', (($pageNo == $pages['curr']) ? $activeAttribute : array()), $link);
 		}
 
 		echo $html->tag('ul', array('class' => $this->className), $prev . $lists . $next);
