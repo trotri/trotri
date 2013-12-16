@@ -10,13 +10,14 @@
 
 namespace modules\generator\controller;
 
-use library\GeneratorFactory;
-
 use library\BaseController;
 use tfc\ap\Ap;
-use helper\Util;
-use library\ErrorNo;
+use tfc\mvc\Mvc;
 use tfc\saf\Text;
+use helper\Util;
+use library\Url;
+use library\ErrorNo;
+use library\GeneratorFactory;
 
 /**
  * IndexController class file
@@ -39,11 +40,11 @@ class IndexController extends BaseController
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Generators');
 		$pageNo = $this->getCurrPage();
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$params = $req->getQuery();
 		$params['trash'] = 'n';
 
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$ret = $mod->search($pageNo, $params);
 		$this->render($ret);
 	}
@@ -59,11 +60,11 @@ class IndexController extends BaseController
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Generators');
 		$pageNo = $this->getCurrPage();
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
-	
+
 		$params = $req->getQuery();
 		$params['trash'] = 'y';
 
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$ret = $mod->search($pageNo, $params);
 		$this->render($ret);
 	}
@@ -78,16 +79,17 @@ class IndexController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Generators');
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$do = $req->getParam('do');
 		if ($do == 'post') {
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				
+				var_dump($ret);
+				exit;
 			}
 		}
 
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$this->render($ret);
 	}
 
@@ -101,7 +103,6 @@ class IndexController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Generators');
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$id = $req->getInteger('id');
 		$do = $req->getParam('do');
@@ -118,6 +119,7 @@ class IndexController extends BaseController
 		}
 
 		$ret['id'] = $id;
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$this->render($ret);
 	}
 
@@ -135,8 +137,8 @@ class IndexController extends BaseController
 		$id = $req->getInteger('id');
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
-
 		$ret = $mod->updateByPk($id, array($columnName => $value));
+		Url::referer($ret);
 	}
 
 	/**

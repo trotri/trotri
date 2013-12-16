@@ -10,12 +10,12 @@
 
 namespace modules\generator\controller;
 
-use library\GeneratorFactory;
-
 use library\BaseController;
 use tfc\ap\Ap;
-use library\ErrorNo;
+use tfc\mvc\Mvc;
 use helper\Util;
+use library\ErrorNo;
+use library\GeneratorFactory;
 
 /**
  * GroupsController class file
@@ -38,12 +38,12 @@ class GroupsController extends BaseController
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
 		$pageNo = $this->getCurrPage();
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$generatorId = $req->getInteger('generator_id');
 		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), 'sort', $pageNo);
 		$ret['generator_id'] = $generatorId;
 
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Groups'));
 		$this->render($ret);
 	}
 
@@ -57,7 +57,6 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$do = $req->getParam('do');
 		if ($do == 'post') {
@@ -67,6 +66,7 @@ class GroupsController extends BaseController
 			}
 		}
 
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Groups'));
 		$this->render($ret);
 	}
 
@@ -80,7 +80,6 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
-		$this->elementCollections = GeneratorFactory::getElements('Generators');
 
 		$id = $req->getInteger('id');
 		$do = $req->getParam('do');
@@ -97,6 +96,7 @@ class GroupsController extends BaseController
 		}
 
 		$ret['id'] = $id;
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Groups'));
 		$this->render($ret);
 	}
 
@@ -113,7 +113,6 @@ class GroupsController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		
 	}
 
 	/**

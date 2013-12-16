@@ -265,4 +265,20 @@ abstract class BaseController extends Controller
 
 		return Ap::getRequest()->getInteger($pageVar);
 	}
+
+	/**
+	 * 获取当前表单提交方式
+	 * @return string
+	 */
+	public function getSubmitType()
+	{
+		$submitTypes = array(
+			'save', 'save_close', 'save_new'
+		);
+
+		$submitType = Ap::getRequest()->getTrim('submit_type');
+		if (in_array($submitType, $haystack)) {
+			
+		}		
+	}
 }
