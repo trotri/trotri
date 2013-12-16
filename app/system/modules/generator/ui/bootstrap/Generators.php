@@ -111,8 +111,14 @@ class Generators
 	 */
 	public function getGeneratorFieldTypesLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_INDEX'))
-			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_CREATE'));
+		$params = array(
+			'generator_id' => $data['generator_id']
+		);
+
+		$index = 'Trotri.href(\'' . Url::getUrl('index', 'types', 'generator', $params) . '\')';
+		$create = 'Trotri.href(\'' . Url::getUrl('create', 'types', 'generator', $params) . '\')';
+		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_CREATE'));
 
 		return $ret;
 	}
@@ -124,8 +130,14 @@ class Generators
 	 */
 	public function getGeneratorFieldsLabel($data)
 	{
-		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_INDEX'))
-			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, '#', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_CREATE'));
+		$params = array(
+			'generator_id' => $data['generator_id']
+		);
+
+		$index = 'Trotri.href(\'' . Url::getUrl('index', 'fields', 'generator', $params) . '\')';
+		$create = 'Trotri.href(\'' . Url::getUrl('create', 'fields', 'generator', $params) . '\')';
+		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELDS_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELDS_CREATE'));
 
 		return $ret;
 	}

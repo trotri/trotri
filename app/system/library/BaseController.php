@@ -10,19 +10,17 @@
 
 namespace library;
 
-use tfc\util\Paginator;
-
-use tfc\ap\ErrorException;
-
-use tfc\saf\Cfg;
-
 use tfc\ap\Ap;
 use tfc\ap\Registry;
+use tfc\ap\ErrorException;
 use tfc\mvc\Mvc;
 use tfc\mvc\Controller;
 use tfc\util\String;
+use tfc\util\Paginator;
+use tfc\saf\Cfg;
 use tfc\saf\Log;
 use tfc\saf\Text;
+use ui\bootstrap\Components;
 
 /**
  * BaseController abstract class file
@@ -272,13 +270,47 @@ abstract class BaseController extends Controller
 	 */
 	public function getSubmitType()
 	{
-		$submitTypes = array(
-			'save', 'save_close', 'save_new'
-		);
-
 		$submitType = Ap::getRequest()->getTrim('submit_type');
-		if (in_array($submitType, $haystack)) {
-			
-		}		
+		if (in_array($submitType, Components::$submitTypes)) {
+			return $submitType;
+		}
+
+		return Components::SUBMIT_TYPE_DEFAULT;
+	}
+
+	/**
+	 * 返回表单提交后跳转方式：是否是保存并跳转到编辑页
+	 * @return boolean
+	 */
+	public function isSubmitTypeSave()
+	{
+		return $this->getSubmitType() === Components::SUBMIT_TYPE_SAVE;
+	}
+
+	/**
+	 * 返回表单提交后跳转方式：是否是保存并跳转到列表页
+	 * @return boolean
+	 */
+	public function isSubmitTypeSaveClose()
+	{
+		return $this->getSubmitType() === Components::SUBMIT_TYPE_SAVE_CLOSE;
+	}
+
+	/**
+	 * 返回表单提交后跳转方式：是否是保存并跳转到新增页
+	 * @return boolean
+	 */
+	public function isSubmitTypeSaveNew()
+	{
+		return $this->getSubmitType() === Components::SUBMIT_TYPE_SAVE_NEW;
+	}
+
+	/**
+	 * 判断是否是提交新增或编辑表单
+	 * @return boolean
+	 */
+	public function isPost()
+	{
+		return Ap::getRequest()->getParam('do') == 'post';
 	}
 }

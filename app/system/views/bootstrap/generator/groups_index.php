@@ -14,7 +14,7 @@ $this->widget(
 			'group_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($elements->uiComponents, 'getOperateLabel')
+				'callback' => array($elements->uiComponents, 'getOperate')
 			),
 		),
 		'data' => $this->data

@@ -11,6 +11,9 @@
 namespace modules\generator\controller;
 
 use library\BaseController;
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
+use library\GeneratorFactory;
 
 /**
  * TypesController class file
@@ -28,6 +31,16 @@ class TypesController extends BaseController
 	 */
 	public function indexAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Types');
+		$pageNo = $this->getCurrPage();
+
+		$ret = $mod->findIndexByAttributes(array(), 'sort', $pageNo);
+
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
+		$this->render($ret);
 	}
 
 	/**

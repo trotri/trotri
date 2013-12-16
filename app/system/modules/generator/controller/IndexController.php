@@ -13,10 +13,8 @@ namespace modules\generator\controller;
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use tfc\saf\Text;
-use helper\Util;
-use library\Url;
 use library\ErrorNo;
+use library\Url;
 use library\GeneratorFactory;
 
 /**
@@ -80,12 +78,18 @@ class IndexController extends BaseController
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Generators');
 
-		$do = $req->getParam('do');
-		if ($do == 'post') {
+		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				var_dump($ret);
-				exit;
+				if ($this->isSubmitTypeSave()) {
+					Url::forward('modify', 'index', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'index', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					Url::forward('index', 'index', 'generator', $ret);
+				}
 			}
 		}
 
@@ -103,13 +107,26 @@ class IndexController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Generators');
+		$httpReferer = Url::getReferer();
 
 		$id = $req->getInteger('id');
-		$do = $req->getParam('do');
-		if ($do == 'post') {
+		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				
+				if ($this->isSubmitTypeSave()) {
+					Url::forward('modify', 'index', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'index', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					if ($httpReferer) {
+						Url::referer($ret);
+					}
+					else {
+						Url::forward('index', 'index', 'generator', $ret);
+					}
+				}
 			}
 
 			$ret['data'] = $req->getPost();
@@ -119,6 +136,10 @@ class IndexController extends BaseController
 		}
 
 		$ret['id'] = $id;
+		if ($httpReferer) {
+			$ret['http_referer'] = $httpReferer;
+		}
+
 		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$this->render($ret);
 	}
@@ -157,7 +178,7 @@ class IndexController extends BaseController
 		$value = $req->getParam('value', '');
 
 		$ret = $mod->batchupdateByPk($ids, array($columnName => $value));
-		
+		Url::referer($ret);
 	}
 
 	/**
@@ -173,6 +194,7 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->trashByPk($id);
+		Url::referer($ret);
 	}
 
 	/**
@@ -188,6 +210,7 @@ class IndexController extends BaseController
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchTrashByPk($ids);
+		Url::referer($ret);
 	}
 
 	/**
@@ -203,7 +226,7 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		
+		Url::referer($ret);
 	}
 
 	/**
@@ -219,7 +242,7 @@ class IndexController extends BaseController
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchdeleteByPk($ids);
-		
+		Url::referer($ret);
 	}
 
 	/**

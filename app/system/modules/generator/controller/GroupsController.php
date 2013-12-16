@@ -13,8 +13,8 @@ namespace modules\generator\controller;
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use helper\Util;
 use library\ErrorNo;
+use library\Url;
 use library\GeneratorFactory;
 
 /**
@@ -37,9 +37,9 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
+		$generatorId = $req->getInteger('generator_id');
 		$pageNo = $this->getCurrPage();
 
-		$generatorId = $req->getInteger('generator_id');
 		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), 'sort', $pageNo);
 		$ret['generator_id'] = $generatorId;
 
@@ -57,12 +57,21 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
+		$generatorId = $req->getInteger('generator_id');
 
-		$do = $req->getParam('do');
-		if ($do == 'post') {
+		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				
+				$ret['generator_id'] = $generatorId;
+				if ($this->isSubmitTypeSave()) {
+					Url::forward('modify', 'groups', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'groups', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					Url::forward('index', 'groups', 'generator', $ret);
+				}
 			}
 		}
 
@@ -80,13 +89,28 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
+		$httpReferer = Url::getReferer();
+		$generatorId = $req->getInteger('generator_id');
 
 		$id = $req->getInteger('id');
-		$do = $req->getParam('do');
-		if ($do == 'post') {
+		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				
+				$ret['generator_id'] = $generatorId;
+				if ($this->isSubmitTypeSave()) {
+					Url::forward('modify', 'groups', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'groups', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					if ($httpReferer) {
+						Url::referer($ret);
+					}
+					else {
+						Url::forward('index', 'groups', 'generator', $ret);
+					}
+				}
 			}
 
 			$ret['data'] = $req->getPost();
@@ -96,6 +120,10 @@ class GroupsController extends BaseController
 		}
 
 		$ret['id'] = $id;
+		if ($httpReferer) {
+			$ret['http_referer'] = $httpReferer;
+		}
+
 		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Groups'));
 		$this->render($ret);
 	}
@@ -107,12 +135,13 @@ class GroupsController extends BaseController
 	public function removeAction()
 	{
 		$ret = array();
-
+		
 		$req = Ap::getRequest();
 		$mod = GeneratorFactory::getModel('Groups');
-
+		
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
+		Url::referer($ret);
 	}
 
 	/**

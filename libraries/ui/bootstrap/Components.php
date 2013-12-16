@@ -26,6 +26,35 @@ use tfc\util\String;
 class Components
 {
 	/**
+	 * @var string 表单提交后跳转方式：保存并跳转到编辑页
+	 */
+	const SUBMIT_TYPE_SAVE      = 'save';
+
+	/**
+	 * @var string 表单提交后跳转方式：保存并跳转到列表页
+	 */
+	const SUBMIT_TYPE_SAVE_CLOSE = 'save_close';
+
+	/**
+	 * @var string 表单提交后跳转方式：保存并跳转到新增页
+	 */
+	const SUBMIT_TYPE_SAVE_NEW   = 'save_new';
+
+	/**
+	 * @var string 表单提交后默认的跳转方式
+	 */
+	const SUBMIT_TYPE_DEFAULT    = self::SUBMIT_TYPE_SAVE;
+
+	/**
+	 * @var string 表单提交后所有的跳转方式
+	 */
+	public static $submitTypes = array(
+		self::SUBMIT_TYPE_SAVE,
+		self::SUBMIT_TYPE_SAVE_CLOSE,
+		self::SUBMIT_TYPE_SAVE_NEW
+	);
+
+	/**
 	 * @var string Glyphicons图标：列表按钮
 	 */
 	const GLYPHICON_LIST = 'list';
@@ -81,7 +110,7 @@ class Components
 			'label'     => self::_('UI_BOOTSTRAP_SAVE'),
 			'glyphicon' => self::GLYPHICON_SAVE,
 			'class'     => 'btn btn-primary',
-			'onclick'   => 'return Core.formSubmit(this, \'save\');'
+			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE . '\');'
 		);
 
 		return $output;
@@ -98,7 +127,7 @@ class Components
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_CLOSE'),
 			'glyphicon' => self::GLYPHICON_OK_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'save_close\');'
+			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE_CLOSE . '\');'
 		);
 
 		return $output;
@@ -115,7 +144,7 @@ class Components
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_NEW'),
 			'glyphicon' => self::GLYPHICON_PLUS_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'save_new\');'
+			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE_NEW . '\');'
 		);
 
 		return $output;
