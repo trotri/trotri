@@ -446,7 +446,7 @@ class Fields extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_FIELDS_TYPE_ID_LABEL'),
-				'callback' => array($this->uiComponents, 'getGroupNameByGroupId')
+				'callback' => array($this->uiComponents, 'getTypeNameByTypeId')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {

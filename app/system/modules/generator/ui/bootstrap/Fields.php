@@ -155,4 +155,116 @@ class Fields
 	{
 		return GeneratorFactory::getModel('groups')->getGroupNameByGroupId($data['group_id']);
 	}
+
+	/**
+	 * 通过type_id获取type_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($data)
+	{
+		return GeneratorFactory::getModel('types')->getTypeNameByTypeId($data['type_id']);
+	}
+
+	/**
+	 * 获取美化版表单元素：“表单是否必填”的“是|否”选择项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getFormRequiredLabel($data)
+	{
+		$params = array(
+			'id' => $data['field_id'],
+			'column_name' => 'form_required'
+		);
+
+		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
+		$ret = Components::getSwitch($data['field_id'], 'form_required', $data['form_required'], $href);
+		return $ret;
+	}
+
+	/**
+	 * 获取美化版表单元素：“编辑表单中是否允许输入”的“是|否”选择项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getFormModifiableLabel($data)
+	{
+		$params = array(
+			'id' => $data['field_id'],
+			'column_name' => 'form_modifiable'
+		);
+
+		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
+		$ret = Components::getSwitch($data['field_id'], 'form_modifiable', $data['form_modifiable'], $href);
+		return $ret;
+	}
+
+	/**
+	 * 获取美化版表单元素：“是否在列表中展示”的“是|否”选择项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getIndexShowLabel($data)
+	{
+		$params = array(
+			'id' => $data['field_id'],
+			'column_name' => 'index_show'
+		);
+
+		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
+		$ret = Components::getSwitch($data['field_id'], 'index_show', $data['index_show'], $href);
+		return $ret;
+	}
+
+	/**
+	 * 获取美化版表单元素：“是否在新增表单中展示”的“是|否”选择项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getFormCreateShowLabel($data)
+	{
+		$params = array(
+			'id' => $data['field_id'],
+			'column_name' => 'form_create_show'
+		);
+
+		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
+		$ret = Components::getSwitch($data['field_id'], 'form_create_show', $data['form_create_show'], $href);
+		return $ret;
+	}
+
+	/**
+	 * 获取美化版表单元素：“是否在编辑表单中展示”的“是|否”选择项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getFormModifyShowLabel($data)
+	{
+		$params = array(
+			'id' => $data['field_id'],
+			'column_name' => 'form_modify_show'
+		);
+
+		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
+		$ret = Components::getSwitch($data['field_id'], 'form_modify_show', $data['form_modify_show'], $href);
+		return $ret;
+	}
+
+	/**
+	 * 获取美化版表单元素：“是否在查询表单中展示”的“是|否”选择项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getFormSearchShowLabel($data)
+	{
+		$params = array(
+			'id' => $data['field_id'],
+			'column_name' => 'form_search_show'
+		);
+
+		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
+		$ret = Components::getSwitch($data['field_id'], 'form_search_show', $data['form_search_show'], $href);
+		return $ret;
+	}
 }

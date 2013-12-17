@@ -11,6 +11,7 @@
 namespace modules\generator\model;
 
 use koala\Model;
+use tfc\ap\Registry;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -66,6 +67,24 @@ class Types extends Model
 		}
 
 		return $ret['data'];
+	}
+
+	/**
+	 * 通过type_id获取type_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($value)
+	{
+		$value = (int) $value;
+		$name = 'Types::type_name_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('type_name', $value);
+			$groupName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['type_name'];
+			Registry::set($name, $groupName);
+		}
+
+		return Registry::get($name);
 	}
 
 	/**
