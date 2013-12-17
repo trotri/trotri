@@ -11,6 +11,11 @@
 namespace modules\generator\controller;
 
 use library\BaseController;
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
+use library\ErrorNo;
+use library\Url;
+use library\GeneratorFactory;
 
 /**
  * FieldsController class file
@@ -28,14 +33,19 @@ class FieldsController extends BaseController
 	 */
 	public function indexAction()
 	{
-	}
+		$ret = array();
 
-	/**
-	 * 数据详情
-	 * @author 宋欢 <trotri@yeah.net>
-	 */
-	public function viewAction()
-	{
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Fields');
+		$generatorId = $req->getInteger('generator_id');
+		$pageNo = $this->getCurrPage();
+
+		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), '', $pageNo);
+
+		$ret['generator_id'] = $generatorId;
+
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Fields'));
+		$this->render($ret);
 	}
 
 	/**
@@ -44,6 +54,31 @@ class FieldsController extends BaseController
 	 */
 	public function createAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Fields');
+		$generatorId = $req->getInteger('generator_id');
+
+		if ($this->isPost()) {
+			$ret = $mod->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$ret['generator_id'] = $generatorId;
+				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'fields', 'generator');
+					Url::forward('modify', 'fields', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'fields', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					Url::forward('index', 'fields', 'generator', $ret);
+				}
+			}
+		}
+
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Fields'));
+		$this->render($ret);
 	}
 
 	/**
@@ -59,6 +94,14 @@ class FieldsController extends BaseController
 	 * @author 宋欢 <trotri@yeah.net>
 	 */
 	public function removeAction()
+	{
+	}
+
+	/**
+	 * 数据详情
+	 * @author 宋欢 <trotri@yeah.net>
+	 */
+	public function viewAction()
 	{
 	}
 }

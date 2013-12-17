@@ -64,6 +64,7 @@ class GroupsController extends BaseController
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$ret['generator_id'] = $generatorId;
 				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'groups', 'generator');
 					Url::forward('modify', 'groups', 'generator', $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
@@ -98,6 +99,7 @@ class GroupsController extends BaseController
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$ret['generator_id'] = $generatorId;
 				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'groups', 'generator');
 					Url::forward('modify', 'groups', 'generator', $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
@@ -120,9 +122,7 @@ class GroupsController extends BaseController
 		}
 
 		$ret['id'] = $id;
-		if ($httpReferer) {
-			$ret['http_referer'] = $httpReferer;
-		}
+		$ret['http_referer'] = $httpReferer;
 
 		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Groups'));
 		$this->render($ret);

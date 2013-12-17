@@ -82,6 +82,7 @@ class IndexController extends BaseController
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'index', 'generator');
 					Url::forward('modify', 'index', 'generator', $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
@@ -114,6 +115,7 @@ class IndexController extends BaseController
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'index', 'generator');
 					Url::forward('modify', 'index', 'generator', $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
@@ -136,9 +138,7 @@ class IndexController extends BaseController
 		}
 
 		$ret['id'] = $id;
-		if ($httpReferer) {
-			$ret['http_referer'] = $httpReferer;
-		}
+		$ret['http_referer'] = $httpReferer;
 
 		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$this->render($ret);

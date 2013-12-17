@@ -70,7 +70,7 @@ class Generators extends ElementCollections
 	const TRASH_N = 'n';
 
 	/**
-	 * @var string 数据列表每行操作Btn：更新
+	 * @var string 数据列表每行操作Btn：编辑
 	 */
 	const INDEX_ROW_BTNS_PENCIL = 'pencil';
 
@@ -878,7 +878,7 @@ class Generators extends ElementCollections
 	}
 
 	/**
-	 * 获取“上次更新人”表单元素和验证规则
+	 * 获取“上次编辑人”表单元素和验证规则
 	 * @param integer $type
 	 * @return array
 	 */
@@ -906,7 +906,7 @@ class Generators extends ElementCollections
 	}
 
 	/**
-	 * 获取“上次更新时间”表单元素和验证规则
+	 * 获取“上次编辑时间”表单元素和验证规则
 	 * @param integer $type
 	 * @return array
 	 */

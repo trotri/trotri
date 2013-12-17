@@ -11,25 +11,24 @@
 namespace modules\generator\model;
 
 use koala\Model;
-use library\ErrorNo;
 use library\GeneratorFactory;
 
 /**
- * Types class file
+ * Fields class file
  * 业务处理层类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Types.php 1 2013-05-18 14:58:59Z huan.song $
+ * @version $Id: Fields.php 1 2013-05-18 14:58:59Z huan.song $
  * @package modules.generator.model
  * @since 1.0
  */
-class Types extends Model
+class Fields extends Model
 {
 	/**
 	 * 构造方法：初始化当前业务类对应的数据库操作类
 	 */
 	public function __construct()
 	{
-		$db = GeneratorFactory::getDb('Types');
+		$db = GeneratorFactory::getDb('Fields');
 		parent::__construct($db);
 	}
 
@@ -55,20 +54,6 @@ class Types extends Model
 	}
 
 	/**
-	 * 获取所有的Types值
-	 * @return array
-	 */
-	public function getTypes()
-	{
-		$ret = $this->findPairsByAttributes(array('type_id', 'type_name'), array(), 'sort');
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return array();
-		}
-
-		return $ret['data'];
-	}
-
-	/**
 	 * (non-PHPdoc)
 	 * @see koala.Model::getInsertRules()
 	 */
@@ -78,11 +63,11 @@ class Types extends Model
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
-			'type_name' => $elements->getTypeName($type),
-			'form_type' => $elements->getFormType($type),
-			'field_type' => $elements->getFieldType($type),
-			'category' => $elements->getCategory($type),
-			'sort' => $elements->getSort($type),
+			'field_name' => $elements->getFieldName($type),
+			'column_length' => $elements->getColumnLength($type),
+			'column_auto_increment' => $elements->getColumnAutoIncrement($type),
+			'column_unsigned' => $elements->getColumnUnsigned($type),
+			'column_comment' => $elements->getColumnComment($type),
 		);
 
 		return $output;
@@ -98,11 +83,7 @@ class Types extends Model
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
-			'type_name' => $elements->getTypeName($type),
-			'form_type' => $elements->getFormType($type),
-			'field_type' => $elements->getFieldType($type),
-			'category' => $elements->getCategory($type),
-			'sort' => $elements->getSort($type),
+			
 		);
 
 		return $output;

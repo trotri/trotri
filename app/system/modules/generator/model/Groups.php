@@ -10,7 +10,9 @@
 
 namespace modules\generator\model;
 
+use tfc\ap\Registry;
 use koala\Model;
+use library\ErrorNo;
 use library\GeneratorFactory;
 
 /**
@@ -50,7 +52,41 @@ class Groups extends Model
 	 */
 	public function modifyByPk($value, array $params)
 	{
+		unset($params['generator_id']);
 		return $this->updateByPk($value, $params);
+	}
+
+	/**
+	 * 通过generator_id获取generator_name值
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getGroupsByGeneratorId($value)
+	{
+		$ret = $this->findPairsByAttributes(array('group_id', 'group_name'), array('generator_id' => $value), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return array();
+		}
+
+		return $ret['data'];
+	}
+
+	/**
+	 * 通过group_id获取group_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getGroupNameByGroupId($value)
+	{
+		$value = (int) $value;
+		$name = 'Groups::group_name_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('group_name', $value);
+			$groupName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['group_name'];
+			Registry::set($name, $groupName);
+		}
+
+		return Registry::get($name);
 	}
 
 	/**
@@ -65,6 +101,23 @@ class Groups extends Model
 		$output = array(
 			'group_name' => $elements->getGroupName($type),
 			'generator_id' => $elements->getGeneratorId($type),
+			'sort' => $elements->getSort($type),
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getUpdateRules()
+	 */
+	public function getUpdateRules()
+	{
+		$elements = GeneratorFactory::getElements('Groups');
+		$type = $elements::TYPE_FILTER;
+
+		$output = array(
+			'group_name' => $elements->getGroupName($type),
 			'sort' => $elements->getSort($type),
 		);
 

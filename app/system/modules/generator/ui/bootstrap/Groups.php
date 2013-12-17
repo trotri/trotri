@@ -10,6 +10,13 @@
 
 namespace modules\generator\ui\bootstrap;
 
+use tfc\ap\Ap;
+use tfc\ap\Registry;
+use tfc\saf\Text;
+use ui\bootstrap\Components;
+use library\GeneratorFactory;
+use library\Url;
+
 /**
  * Groups class file
  * 页面小组件类，基于Bootstrap-v3前端开发框架
@@ -18,14 +25,6 @@ namespace modules\generator\ui\bootstrap;
  * @package modules.generator.ui.bootstrap
  * @since 1.0
  */
-
-use tfc\ap\Ap;
-use tfc\ap\Registry;
-use tfc\saf\Text;
-use ui\bootstrap\Components;
-use library\GeneratorFactory;
-use library\Url;
-
 class Groups
 {
 	/**
@@ -112,14 +111,6 @@ class Groups
 	 */
 	public function getGeneratorNameByGeneratorId($data)
 	{
-		$generatorId = (int) $data['generator_id'];
-		$name = 'Groups::generator_name_' . $generatorId;
-		if (!Registry::has($name)) {
-			$model = GeneratorFactory::getModel('generators', 'generator');
-			$generatorName = $model->getGeneratorNameByGeneratorId($generatorId);
-			Registry::set($name, $generatorName);
-		}
-
-		return Registry::get($name);
+		return GeneratorFactory::getModel('generators')->getGeneratorNameByGeneratorId($data['generator_id']);
 	}
 }

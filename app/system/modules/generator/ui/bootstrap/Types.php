@@ -10,23 +10,19 @@
 
 namespace modules\generator\ui\bootstrap;
 
+use ui\bootstrap\Components;
+use tfc\saf\Text;
+use library\Url;
+
 /**
- * Groups class file
+ * Types class file
  * 页面小组件类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Groups.php 1 2013-05-18 14:58:59Z huan.song $
+ * @version $Id: Types.php 1 2013-05-18 14:58:59Z huan.song $
  * @package modules.generator.ui.bootstrap
  * @since 1.0
  */
-
-use tfc\ap\Ap;
-use tfc\ap\Registry;
-use tfc\saf\Text;
-use ui\bootstrap\Components;
-use library\GeneratorFactory;
-use library\Url;
-
-class Groups
+class Types
 {
 	/**
 	 * 获取表单的“保存”按钮信息
@@ -61,11 +57,7 @@ class Groups
 	 */
 	public function getButtonCancel()
 	{
-		$params = array(
-			'generator_id' => Ap::getRequest()->getInteger('generator_id')
-		);
-
-		$url = Url::getUrl('index', 'groups', 'generator', $params);
+		$url = Url::getUrl('index', 'types', 'generator');
 		return Components::getButtonCancel($url);
 	}
 
@@ -77,49 +69,29 @@ class Groups
 	public function getOperate($data)
 	{
 		$params = array(
-			'id' => $data['group_id'],
-			'generator_id' => $data['generator_id']
+			'id' => $data['type_id'],
 		);
 
-		$modify = 'Trotri.href(\'' . Url::getUrl('modify', 'groups', 'generator', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', 'groups', 'generator', $params) . '\')';
+		$modify = 'Trotri.href(\'' . Url::getUrl('modify', 'types', 'generator', $params) . '\')';
+		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', 'types', 'generator', $params) . '\')';
 
-		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_MODIFY'))
+		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_MODIFY'))
 			 . Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $remove, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
 		return $ret;
 	}
 
 	/**
-	 * 获取列表页“生成代码名”的A标签
+	 * 获取列表页“类型名”的A标签
 	 * @param array $data
 	 * @return string
 	 */
-	public function getGroupNameUrl($data)
+	public function getTypeNameUrl($data)
 	{
 		$params = array(
-			'id' => $data['group_id'],
-			'generator_id' => $data['generator_id']
+			'id' => $data['type_id'],
 		);
 
-		return Components::getHtml()->a($data['group_name'], Url::getUrl('modify', 'groups', 'generator', $params));
-	}
-
-	/**
-	 * 通过generator_id获取generator_name值
-	 * @param array $data
-	 * @return string
-	 */
-	public function getGeneratorNameByGeneratorId($data)
-	{
-		$generatorId = (int) $data['generator_id'];
-		$name = 'Groups::generator_name_' . $generatorId;
-		if (!Registry::has($name)) {
-			$model = GeneratorFactory::getModel('generators', 'generator');
-			$generatorName = $model->getGeneratorNameByGeneratorId($generatorId);
-			Registry::set($name, $generatorName);
-		}
-
-		return Registry::get($name);
+		return Components::getHtml()->a($data['type_name'], Url::getUrl('modify', 'types', 'generator', $params));
 	}
 }

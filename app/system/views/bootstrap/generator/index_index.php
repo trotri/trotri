@@ -21,11 +21,6 @@ $this->widget(
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_GROUPS,
 				'callback' => array($elements->uiComponents, 'getGeneratorFieldGroupsLabel')
 			),
-			'generator_field_types' => array(
-				'name' => 'generator_field_types',
-				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_TYPES,
-				'callback' => array($elements->uiComponents, 'getGeneratorFieldTypesLabel')
-			),
 			'generator_fields' => array(
 				'name' => 'generator_fields',
 				'label' => $this->MOD_GENERATOR_GENERATOR_FIELDS,

@@ -133,7 +133,11 @@ class CommandBuilder
 	 */
 	public function createAndCondition(array $columnNames = array())
 	{
-		return implode(' = ' . self::PLACE_HOLDERS . ' AND ', $this->quoteColumnNames($columnNames)) . ' = ' . self::PLACE_HOLDERS;
+		if ($columnNames) {
+			return implode(' = ' . self::PLACE_HOLDERS . ' AND ', $this->quoteColumnNames($columnNames)) . ' = ' . self::PLACE_HOLDERS;
+		}
+
+		return '';
 	}
 
 	/**

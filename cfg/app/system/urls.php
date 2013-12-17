@@ -87,7 +87,6 @@ $generatorId = isset($_GET['generator_id']) ? (int) $_GET['generator_id'] : 0;
 if ($generatorId > 0) {
 	$urls['sidebar']['generator'][2]['params']['generator_id'] = $generatorId;
 	$urls['sidebar']['generator'][3]['params']['generator_id'] = $generatorId;
-	$urls['sidebar']['generator'][4]['params']['generator_id'] = $generatorId;
 }
 
 return $urls;

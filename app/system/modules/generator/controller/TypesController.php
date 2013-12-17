@@ -13,6 +13,8 @@ namespace modules\generator\controller;
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
+use library\ErrorNo;
+use library\Url;
 use library\GeneratorFactory;
 
 /**
@@ -38,17 +40,8 @@ class TypesController extends BaseController
 		$pageNo = $this->getCurrPage();
 
 		$ret = $mod->findIndexByAttributes(array(), 'sort', $pageNo);
-
 		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
 		$this->render($ret);
-	}
-
-	/**
-	 * 数据详情
-	 * @author 宋欢 <trotri@yeah.net>
-	 */
-	public function viewAction()
-	{
 	}
 
 	/**
@@ -57,6 +50,29 @@ class TypesController extends BaseController
 	 */
 	public function createAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Types');
+
+		if ($this->isPost()) {
+			$ret = $mod->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'types', 'generator');
+					Url::forward('modify', 'types', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'types', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					Url::forward('index', 'types', 'generator', $ret);
+				}
+			}
+		}
+
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
+		$this->render($ret);
 	}
 
 	/**
@@ -65,6 +81,43 @@ class TypesController extends BaseController
 	 */
 	public function modifyAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Types');
+		$httpReferer = Url::getReferer();
+
+		$id = $req->getInteger('id');
+		if ($this->isPost()) {
+			$ret = $mod->modifyByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($this->isSubmitTypeSave()) {
+					Url::forward('modify', 'types', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'types', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					if ($httpReferer) {
+						Url::referer($ret);
+					}
+					else {
+						Url::forward('index', 'types', 'generator', $ret);
+					}
+				}
+			}
+
+			$ret['data'] = $req->getPost();
+		}
+		else {
+			$ret = $mod->findByPk($id);
+		}
+
+		$ret['id'] = $id;
+		$ret['http_referer'] = $httpReferer;
+
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
+		$this->render($ret);
 	}
 
 	/**
@@ -72,6 +125,22 @@ class TypesController extends BaseController
 	 * @author 宋欢 <trotri@yeah.net>
 	 */
 	public function removeAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Types');
+
+		$id = $req->getInteger('id');
+		$ret = $mod->deleteByPk($id);
+		Url::referer($ret);
+	}
+
+	/**
+	 * 数据详情
+	 * @author 宋欢 <trotri@yeah.net>
+	 */
+	public function viewAction()
 	{
 	}
 }

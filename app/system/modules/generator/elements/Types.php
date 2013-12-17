@@ -101,7 +101,7 @@ class Types extends ElementCollections
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_TYPES_TYPE_NAME_MINLENGTH')),
-				'MaxLength' => array(12, Text::_('MOD_GENERATOR_TYPES_TYPE_NAME_MAXLENGTH'))
+				'MaxLength' => array(50, Text::_('MOD_GENERATOR_TYPES_TYPE_NAME_MAXLENGTH'))
 			);
 		}
 
@@ -202,10 +202,10 @@ class Types extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
-				'type' => 'text',
+				'type' => 'radio',
+				'value' => self::CATEGORY_TEXT,
+				'options' => $categories,
 				'label' => Text::_('MOD_GENERATOR_TYPES_CATEGORY_LABEL'),
-				'hint' => Text::_('MOD_GENERATOR_TYPES_CATEGORY_HINT'),
-				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {

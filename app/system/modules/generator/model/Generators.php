@@ -10,6 +10,7 @@
 
 namespace modules\generator\model;
 
+use tfc\ap\Registry;
 use tfc\util\String;
 use koala\Model;
 use library\ErrorNo;
@@ -96,12 +97,15 @@ class Generators extends Model
 	 */
 	public function getGeneratorNameByGeneratorId($value)
 	{
-		$ret = $this->getByPk('generator_name', $value);
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return '';
+		$value = (int) $value;
+		$name = 'Generators::generator_name_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('generator_name', $value);
+			$generatorName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['generator_name'];
+			Registry::set($name, $generatorName);
 		}
 
-		return $ret['generator_name'];
+		return Registry::get($name);
 	}
 
 	/**

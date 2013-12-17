@@ -128,7 +128,7 @@ class Groups extends ElementCollections
 	}
 
 	/**
-	 * 获取“生成代码ID”表单元素和验证规则
+	 * 获取“生成代码名”表单元素和验证规则
 	 * @param integer $type
 	 * @return array
 	 */
