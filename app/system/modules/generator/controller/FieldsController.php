@@ -87,6 +87,46 @@ class FieldsController extends BaseController
 	 */
 	public function modifyAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Fields');
+		$httpReferer = Url::getReferer();
+		$generatorId = $req->getInteger('generator_id');
+
+		$id = $req->getInteger('id');
+		if ($this->isPost()) {
+			$ret = $mod->modifyByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$ret['generator_id'] = $generatorId;
+				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'fields', 'generator');
+					Url::forward('modify', 'fields', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					Url::forward('create', 'fields', 'generator', $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					if ($httpReferer) {
+						Url::referer($ret);
+					}
+					else {
+						Url::forward('index', 'fields', 'generator', $ret);
+					}
+				}
+			}
+
+			$ret['data'] = $req->getPost();
+		}
+		else {
+			$ret = $mod->findByPk($id);
+		}
+
+		$ret['id'] = $id;
+		$ret['http_referer'] = $httpReferer;
+
+		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Fields'));
+		$this->render($ret);
 	}
 
 	/**
@@ -95,6 +135,32 @@ class FieldsController extends BaseController
 	 */
 	public function removeAction()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Fields');
+
+		$id = $req->getInteger('id');
+		$ret = $mod->deleteByPk($id);
+		Url::referer($ret);
+	}
+
+	/**
+	 * 编辑单个字段
+	 * @return void
+	 */
+	public function singlemodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = GeneratorFactory::getModel('Fields');
+
+		$id = $req->getInteger('id');
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+		$ret = $mod->updateByPk($id, array($columnName => $value));
+		Url::referer($ret);
 	}
 
 	/**

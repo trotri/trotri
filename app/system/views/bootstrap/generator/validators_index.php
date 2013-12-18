@@ -1,4 +1,4 @@
-<?php $this->display('generator/fields_index_btns'); ?>
+<?php $this->display('generator/validators_index_btns'); ?>
 
 <?php
 $elements = $this->elementCollections;
@@ -7,18 +7,13 @@ $this->widget(
 	array(
 		'elementCollections' => $elements,
 		'columns' => array(
-			'field_name',
-			'generator_id',
-			'group_id',
-			'type_id',
+			'validator_name',
+			'field_id',
+			'options',
+			'option_category',
+			'message',
 			'sort',
-			'html_label',
-			'column_auto_increment',
-			'generator_field_validators' => array(
-				'name' => 'generator_field_validators',
-				'label' => $this->MOD_GENERATOR_GENERATOR_FIELD_VALIDATORS,
-				'callback' => array($elements->uiComponents, 'getGeneratorFieldValidatorsLabel')
-			),
+			'when',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
 				'callback' => array($elements->uiComponents, 'getOperate')
@@ -29,7 +24,7 @@ $this->widget(
 );
 ?>
 
-<?php $this->display('generator/fields_index_btns'); ?>
+<?php $this->display('generator/validators_index_btns'); ?>
 
 <?php
 $this->widget(

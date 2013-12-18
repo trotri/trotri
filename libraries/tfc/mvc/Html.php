@@ -200,7 +200,7 @@ class Html
     {
         $html = '';
         foreach ($data as $value => $prompt) {
-            $selected = (($value === $selectedValue) ? true : false);
+            $selected = (($value == $selectedValue) ? true : false);
             $html .= $this->option($prompt, $value, $selected, $attributes);
         }
 

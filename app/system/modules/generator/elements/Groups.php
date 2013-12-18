@@ -114,7 +114,6 @@ class Groups extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'type' => 'hidden',
-				'label' => Text::_('MOD_GENERATOR_GROUPS_GENERATOR_ID_LABEL'),
 				'value' => $generatorId
 			);
 		}

@@ -158,7 +158,7 @@ class Fields
 
 	/**
 	 * 通过type_id获取type_name值
-	 * @param integer $value
+	 * @param array $data
 	 * @return string
 	 */
 	public function getTypeNameByTypeId($data)
@@ -265,6 +265,25 @@ class Fields
 
 		$href = Url::getUrl('singlemodify', 'fields', 'generator', $params);
 		$ret = Components::getSwitch($data['field_id'], 'form_search_show', $data['form_search_show'], $href);
+		return $ret;
+	}
+
+	/**
+	 * 获取字段验证图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getGeneratorFieldValidatorsLabel($data)
+	{
+		$params = array(
+			'field_id' => $data['field_id']
+		);
+
+		$index = 'Trotri.href(\'' . Url::getUrl('index', 'validators', 'generator', $params) . '\')';
+		$create = 'Trotri.href(\'' . Url::getUrl('create', 'validators', 'generator', $params) . '\')';
+		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_VALIDATORS_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_VALIDATORS_CREATE'));
+
 		return $ret;
 	}
 }

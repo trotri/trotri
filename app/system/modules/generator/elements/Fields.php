@@ -119,6 +119,22 @@ class Fields extends ElementCollections
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see ui.ElementCollections::getViewTabsRender()
+	 */
+	public function getViewTabsRender()
+	{
+		$output = array(
+			'view' => array(
+				'tid' => 'view',
+				'prompt' => Text::_('MOD_GENERATOR_FIELDS_VIEWTAB_VIEW_PROMPT')
+			),
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 获取“字段ID”表单元素和验证规则
 	 * @param integer $type
 	 * @return array
@@ -373,6 +389,10 @@ class Fields extends ElementCollections
 
 		$name = 'generator_name';
 		$generatorId = Ap::getRequest()->getInteger('generator_id');
+		if ($generatorId <= 0) {
+			$fieldId = Ap::getRequest()->getInteger('id');
+			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId);
+		}
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -401,6 +421,11 @@ class Fields extends ElementCollections
 		$output = array();
 
 		$generatorId = Ap::getRequest()->getInteger('generator_id');
+		if ($generatorId <= 0) {
+			$fieldId = Ap::getRequest()->getInteger('id');
+			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId);
+		}
+
 		$groups = GeneratorFactory::getModel('groups')->getGroupsByGeneratorId($generatorId);
 
 		$name = 'group_id';
@@ -415,7 +440,8 @@ class Fields extends ElementCollections
 			$output = array(
 				'type' => 'select',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_GROUP_ID_LABEL'),
-				'options' => $groups
+				'options' => $groups,
+				'value' => 11
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
@@ -453,7 +479,7 @@ class Fields extends ElementCollections
 			$output = array(
 				'type' => 'select',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_TYPE_ID_LABEL'),
-				'options' => $types
+				'options' => $types,
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
@@ -519,6 +545,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'text',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_HTML_LABEL_LABEL'),
 				'required' => true
@@ -551,6 +578,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'text',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_FORM_PROMPT_LABEL'),
 			);
@@ -583,6 +611,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'switch',
 				'value' => self::FORM_REQUIRED_N,
 				'options' => $formRequireds,
@@ -628,6 +657,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'switch',
 				'value' => self::FORM_MODIFIABLE_N,
 				'options' => $formModifiables,
@@ -673,6 +703,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'switch',
 				'value' => self::INDEX_SHOW_N,
 				'options' => $indexShows,
@@ -712,7 +743,9 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'text',
+				'value' => 0,
 				'label' => Text::_('MOD_GENERATOR_FIELDS_INDEX_SORT_LABEL'),
 				'hint' => Text::_('MOD_GENERATOR_FIELDS_INDEX_SORT_HINT'),
 				'required' => true
@@ -751,6 +784,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'switch',
 				'value' => self::FORM_CREATE_SHOW_N,
 				'options' => $formCreateShows,
@@ -790,7 +824,9 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'text',
+				'value' => 0,
 				'label' => Text::_('MOD_GENERATOR_FIELDS_FORM_CREATE_SORT_LABEL'),
 				'hint' => Text::_('MOD_GENERATOR_FIELDS_FORM_CREATE_SORT_HINT'),
 				'required' => true
@@ -829,6 +865,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'switch',
 				'value' => self::FORM_MODIFY_SHOW_N,
 				'options' => $formModifyShows,
@@ -868,7 +905,9 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'text',
+				'value' => 0,
 				'label' => Text::_('MOD_GENERATOR_FIELDS_FORM_MODIFY_SORT_LABEL'),
 				'hint' => Text::_('MOD_GENERATOR_FIELDS_FORM_MODIFY_SORT_HINT'),
 				'required' => true
@@ -898,7 +937,7 @@ class Fields extends ElementCollections
 		);
 
 		$name = 'form_search_show';
-	
+
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_GENERATOR_FIELDS_FORM_SEARCH_SHOW_LABEL'),
@@ -907,6 +946,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'switch',
 				'value' => self::FORM_SEARCH_SHOW_N,
 				'options' => $formSearchShows,
@@ -946,7 +986,9 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
+				'__tid__' => 'view',
 				'type' => 'text',
+				'value' => 0,
 				'label' => Text::_('MOD_GENERATOR_FIELDS_FORM_SEARCH_SORT_LABEL'),
 				'hint' => Text::_('MOD_GENERATOR_FIELDS_FORM_SEARCH_SORT_HINT'),
 				'required' => true

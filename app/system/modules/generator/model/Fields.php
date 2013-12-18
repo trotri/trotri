@@ -11,6 +11,8 @@
 namespace modules\generator\model;
 
 use koala\Model;
+use tfc\ap\Registry;
+use library\ErrorNo;
 use library\GeneratorFactory;
 
 /**
@@ -54,12 +56,59 @@ class Fields extends Model
 	}
 
 	/**
+	 * 通过field_id获取field_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getFieldNameByFieldId($value)
+	{
+		$value = (int) $value;
+		$name = 'Fields::field_name_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('field_name', $value);
+			$fieldName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['field_name'];
+			Registry::set($name, $fieldName);
+		}
+
+		return Registry::get($name);
+	}
+
+	/**
+	 * 通过field_id获取generator_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getGeneratorNameByFieldId($value)
+	{
+		$generatorId = $this->getGeneratorIdByFieldId($value);
+		return GeneratorFactory::getModel('Generators')->getGeneratorNameByGeneratorId($generatorId);
+	}
+
+	/**
+	 * 通过field_id获取generator_id值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getGeneratorIdByFieldId($value)
+	{
+		$value = (int) $value;
+		$name = 'Fields::generator_id_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('generator_id', $value);
+			$generatorId = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['generator_id'];
+			Registry::set($name, $generatorId);
+		}
+
+		return Registry::get($name);
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see koala.Model::getInsertRules()
 	 */
 	public function getInsertRules()
 	{
-		$elements = GeneratorFactory::getElements('Types');
+		$elements = GeneratorFactory::getElements('Fields');
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
@@ -68,6 +117,21 @@ class Fields extends Model
 			'column_auto_increment' => $elements->getColumnAutoIncrement($type),
 			'column_unsigned' => $elements->getColumnUnsigned($type),
 			'column_comment' => $elements->getColumnComment($type),
+			'group_id' => $elements->getGroupId($type),
+			'generator_id' => $elements->getGeneratorId($type),
+			'type_id' => $elements->getTypeId($type),
+			'sort' => $elements->getSort($type),
+			'html_label' => $elements->getHtmlLabel($type),
+			'form_required' => $elements->getFormRequired($type),
+			'form_modifiable' => $elements->getFormModifiable($type),
+			'index_show' => $elements->getIndexShow($type),
+			'index_sort' => $elements->getIndexSort($type),
+			'form_create_show' => $elements->getFormCreateShow($type),
+			'form_create_sort' => $elements->getFormCreateSort($type),
+			'form_modify_show' => $elements->getFormModifyShow($type),
+			'form_modify_sort' => $elements->getFormModifySort($type),
+			'form_search_show' => $elements->getFormSearchShow($type),
+			'form_search_sort' => $elements->getFormSearchSort($type),
 		);
 
 		return $output;
@@ -79,11 +143,30 @@ class Fields extends Model
 	 */
 	public function getUpdateRules()
 	{
-		$elements = GeneratorFactory::getElements('Types');
+		$elements = GeneratorFactory::getElements('Fields');
 		$type = $elements::TYPE_FILTER;
 
 		$output = array(
-			
+			'field_name' => $elements->getFieldName($type),
+			'column_length' => $elements->getColumnLength($type),
+			'column_auto_increment' => $elements->getColumnAutoIncrement($type),
+			'column_unsigned' => $elements->getColumnUnsigned($type),
+			'column_comment' => $elements->getColumnComment($type),
+			'group_id' => $elements->getGroupId($type),
+			'generator_id' => $elements->getGeneratorId($type),
+			'type_id' => $elements->getTypeId($type),
+			'sort' => $elements->getSort($type),
+			'html_label' => $elements->getHtmlLabel($type),
+			'form_required' => $elements->getFormRequired($type),
+			'form_modifiable' => $elements->getFormModifiable($type),
+			'index_show' => $elements->getIndexShow($type),
+			'index_sort' => $elements->getIndexSort($type),
+			'form_create_show' => $elements->getFormCreateShow($type),
+			'form_create_sort' => $elements->getFormCreateSort($type),
+			'form_modify_show' => $elements->getFormModifyShow($type),
+			'form_modify_sort' => $elements->getFormModifySort($type),
+			'form_search_show' => $elements->getFormSearchShow($type),
+			'form_search_sort' => $elements->getFormSearchSort($type),
 		);
 
 		return $output;

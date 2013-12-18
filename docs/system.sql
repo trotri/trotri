@@ -115,6 +115,14 @@ CREATE TABLE `tr_generator_field_validators` (
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
 
+INSERT INTO `tr_generator_field_types` VALUES ('1', '单行文本', 'text', 'VARCHAR', 'text', '1');
+INSERT INTO `tr_generator_field_types` VALUES ('2', '密码', 'password', 'CHAR', 'text', '2');
+INSERT INTO `tr_generator_field_types` VALUES ('3', '开关选项卡', 'switch', 'ENUM', 'option', '3');
+INSERT INTO `tr_generator_field_types` VALUES ('4', '单选', 'radio', 'ENUM', 'option', '5');
+INSERT INTO `tr_generator_field_types` VALUES ('5', '多选', 'checkbox', 'VARCHAR', 'option', '6');
+INSERT INTO `tr_generator_field_types` VALUES ('6', '隐藏文本框', 'hidden', 'VARCHAR', 'text', '7');
+INSERT INTO `tr_generator_field_types` VALUES ('7', '多行文本', 'textarea', 'TEXT', 'text', '8');
+
 /*
 单行文本（text）
 多行文本（textarea）
@@ -131,4 +139,3 @@ HTML文本（ckeditor）
 重置按钮（reset）
 普通按钮（button）
 */
-
