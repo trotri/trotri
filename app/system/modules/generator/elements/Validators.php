@@ -102,6 +102,26 @@ class Validators extends ElementCollections
 	{
 		$output = array();
 
+		$validators = array(
+			'AlphaNum' => 'AlphaNum',
+			'Alpha' => 'Alpha',
+			'EqualTo' => 'EqualTo',
+			'Equal' => 'Equal',
+			'Float' => 'Float',
+			'InArray' => 'InArray',
+			'Integer' => 'Integer',
+			'Ip' => 'Ip',
+			'Mail' => 'Mail',
+			'MaxLength' => 'MaxLength',
+			'Max' => 'Max',
+			'MinLength' => 'MinLength',
+			'Min' => 'Min',
+			'NotEmpty' => 'NotEmpty',
+			'Numeric' => 'Numeric',
+			'Require' => 'Require',
+			'Url' => 'Url',
+		);
+
 		$name = 'validator_name';
 
 		if ($type === self::TYPE_TABLE) {
@@ -112,17 +132,19 @@ class Validators extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
-				'type' => 'text',
+				'type' => 'select',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_VALIDATORS_VALIDATOR_NAME_LABEL'),
 				'hint' => Text::_('MOD_GENERATOR_FIELDS_VALIDATORS_VALIDATOR_NAME_HINT'),
-				'required' => true
+				'options' => $validators,
+				'value' => 'Integer',
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Alpha' => array(true, Text::_('MOD_GENERATOR_FIELDS_VALIDATORS_VALIDATOR_NAME_ALPHA')),
-				'MinLength' => array(2, Text::_('MOD_GENERATOR_FIELDS_VALIDATORS_VALIDATOR_NAME_MINLENGTH')),
-				'MaxLength' => array(50, Text::_('MOD_GENERATOR_FIELDS_VALIDATORS_VALIDATOR_NAME_MAXLENGTH'))
+				'InArray' => array(
+					array_keys($validators),
+					sprintf(Text::_('MOD_GENERATOR_FIELDS_VALIDATORS_VALIDATOR_NAME_INARRAY'), implode(', ', $validators))
+				)
 			);
 		}
 

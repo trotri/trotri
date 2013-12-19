@@ -36,11 +36,14 @@ class TypesController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Types');
+		$ele = GeneratorFactory::getElements('Types');
 		$pageNo = $this->getCurrPage();
 
 		$ret = $mod->findIndexByAttributes(array(), 'sort', $pageNo);
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
+
+		$view->assign('elementCollections', $ele);
 		$this->render($ret);
 	}
 
@@ -53,7 +56,9 @@ class TypesController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Types');
+		$ele = GeneratorFactory::getElements('Types');
 
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
@@ -71,7 +76,7 @@ class TypesController extends BaseController
 			}
 		}
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
+		$view->assign('elementCollections', $ele);
 		$this->render($ret);
 	}
 
@@ -84,7 +89,9 @@ class TypesController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Types');
+		$ele = GeneratorFactory::getElements('Types');
 		$httpReferer = Url::getReferer();
 
 		$id = $req->getInteger('id');
@@ -113,10 +120,9 @@ class TypesController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
-		$ret['id'] = $id;
-		$ret['http_referer'] = $httpReferer;
-
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Types'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('http_referer', $httpReferer);
+		$view->assign('id', $id);
 		$this->render($ret);
 	}
 

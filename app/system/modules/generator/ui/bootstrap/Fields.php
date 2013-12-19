@@ -153,7 +153,8 @@ class Fields
 	 */
 	public function getGroupNameByGroupId($data)
 	{
-		return GeneratorFactory::getModel('groups')->getGroupNameByGroupId($data['group_id']);
+		$ret = GeneratorFactory::getModel('groups')->getGroupNameByGroupId($data['group_id']);
+		return $ret;
 	}
 
 	/**

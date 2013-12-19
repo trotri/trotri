@@ -34,8 +34,8 @@ class NavBar extends Widget
 		$output = '';
 
 		$html = $this->getHtml();
-		$urls = Cfg::getApp('navbar', 'urls');
-		foreach ($urls as $menus) {
+		$config = Cfg::getApp('navbar');
+		foreach ($config as $menus) {
 			$main = array_shift($menus);
 			if (!is_array($main)) {
 				continue;
@@ -77,15 +77,15 @@ class NavBar extends Widget
 
 	/**
 	 * 通过导航信息获取A标签
-	 * @param array $cfg
+	 * @param array $config
 	 * @param boolean $isDropdown
 	 * @return string
 	 */
-	public function a(array $cfg, $isDropdown = false)
+	public function a(array $config, $isDropdown = false)
 	{
 		$html = $this->getHtml();
-		$url = $this->getUrl($cfg);
-		$label = isset($cfg['label']) ? $cfg['label'] : '';
+		$url = $this->getUrl($config);
+		$label = isset($config['label']) ? $config['label'] : '';
 		if ($isDropdown) {
 			return $html->a(
 				Text::_($label) . ' ' . $html->tag('b', array('class' => 'caret'), ''),
@@ -99,13 +99,13 @@ class NavBar extends Widget
 
 	/**
 	 * 通过导航配置获取<li>标签的属性
-	 * @param array $cfg
+	 * @param array $config
 	 * @param boolean $isDropdown
 	 * @return array
 	 */
-	public function getAttributes(array $cfg, $isDropdown = false)
+	public function getAttributes(array $config, $isDropdown = false)
 	{
-		$isActive = $this->isActive($cfg);
+		$isActive = $this->isActive($config);
 		$className = ($isDropdown ? 'dropdown ' : '') . ($isActive ? 'active' : '');
 		if (($className = trim($className)) !== '') {
 			return array('class' => $className);
@@ -116,26 +116,26 @@ class NavBar extends Widget
 
 	/**
 	 * 通过导航配置判断当前链接是否是Active状态
-	 * @param array $cfg
+	 * @param array $config
 	 * @return boolean
 	 */
-	public function isActive(array $cfg)
+	public function isActive(array $config)
 	{
-		$mod = isset($cfg['m']) ? $cfg['m'] : '';
+		$mod = isset($config['m']) ? $config['m'] : '';
 		return ($mod === Mvc::$module);
 	}
 
 	/**
 	 * 通过导航配置获取链接
-	 * @param array $cfg
+	 * @param array $config
 	 * @return string
 	 */
-	public function getUrl(array $cfg)
+	public function getUrl(array $config)
 	{
-		$mod    = isset($cfg['m'])      ? $cfg['m'] : '';
-		$ctrl   = isset($cfg['c'])      ? $cfg['c'] : '';
-		$act    = isset($cfg['a'])      ? $cfg['a'] : '';
-		$params = isset($cfg['params']) ? (array) $cfg['params'] : array();
+		$mod    = isset($config['m'])      ? $config['m'] : '';
+		$ctrl   = isset($config['c'])      ? $config['c'] : '';
+		$act    = isset($config['a'])      ? $config['a'] : '';
+		$params = isset($config['params']) ? (array) $config['params'] : array();
 
 		return $this->getUrlManager()->getUrl($act, $ctrl, $mod, $params);
 	}

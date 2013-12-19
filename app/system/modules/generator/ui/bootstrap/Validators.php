@@ -77,6 +77,7 @@ class Validators
 	{
 		$params = array(
 			'id' => $data['validator_id'],
+			'field_id' => $data['field_id']
 		);
 
 		$modify = 'Trotri.href(\'' . Url::getUrl('modify', 'validators', 'generator', $params) . '\')';

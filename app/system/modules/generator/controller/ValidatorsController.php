@@ -36,14 +36,17 @@ class ValidatorsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Validators');
+		$ele = GeneratorFactory::getElements('Validators');
 		$fieldId = $req->getInteger('field_id');
 		$pageNo = $this->getCurrPage();
 
 		$ret = $mod->findIndexByAttributes(array('field_id' => $fieldId), 'sort', $pageNo);
-		$ret['field_id'] = $fieldId;
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Validators'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('field_id', $fieldId);
+		$view->assign('generator_id', GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId));
 		$this->render($ret);
 	}
 
@@ -56,7 +59,9 @@ class ValidatorsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Validators');
+		$ele = GeneratorFactory::getElements('Validators');
 		$fieldId = $req->getInteger('field_id');
 
 		if ($this->isPost()) {
@@ -76,7 +81,9 @@ class ValidatorsController extends BaseController
 			}
 		}
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Validators'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('field_id', $fieldId);
+		$view->assign('generator_id', GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId));
 		$this->render($ret);
 	}
 
@@ -89,7 +96,9 @@ class ValidatorsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Validators');
+		$ele = GeneratorFactory::getElements('Validators');
 		$httpReferer = Url::getReferer();
 		$fieldId = $req->getInteger('field_id');
 
@@ -121,10 +130,11 @@ class ValidatorsController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
-		$ret['id'] = $id;
-		$ret['http_referer'] = $httpReferer;
-
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Validators'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('field_id', $fieldId);
+		$view->assign('generator_id', GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId));
+		$view->assign('id', $id);
+		$view->assign('http_referer', $httpReferer);
 		$this->render($ret);
 	}
 

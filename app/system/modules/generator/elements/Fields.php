@@ -426,7 +426,9 @@ class Fields extends ElementCollections
 			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId);
 		}
 
+		$default = GeneratorFactory::getModel('groups')->getGroupsByGeneratorId(0);
 		$groups = GeneratorFactory::getModel('groups')->getGroupsByGeneratorId($generatorId);
+		$groups = $default + $groups;
 
 		$name = 'group_id';
 
@@ -440,8 +442,7 @@ class Fields extends ElementCollections
 			$output = array(
 				'type' => 'select',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_GROUP_ID_LABEL'),
-				'options' => $groups,
-				'value' => 11
+				'options' => $groups
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {

@@ -8,11 +8,14 @@ $this->widget('ui\bootstrap\widgets\FormBuilder',
 		'values' => $this->data,
 		'elementCollections' => $elements,
 		'elements' => array(
-			'group_name',
-			'generator_name',
+			'validator_name',
+			'field_id',
+			'field_name',
+			'options',
+			'option_category',
+			'message',
 			'sort',
-			'description',
-			'generator_id',
+			'when',
 			'http_referer' => array(
 				'type' => 'hidden',
 				'value' => $this->http_referer

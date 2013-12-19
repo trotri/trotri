@@ -22,5 +22,5 @@ return array (
 		'list_rows' => 15, // 每页展示的行数
 		'list_pages' => 4, // 每页展示的页码数
 	),
-	'urls' => require_once 'urls.php',
+	'navbar' => require_once 'navbar.php',
 );

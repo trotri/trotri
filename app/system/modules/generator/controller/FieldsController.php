@@ -36,15 +36,16 @@ class FieldsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Fields');
+		$ele = GeneratorFactory::getElements('Fields');
 		$generatorId = $req->getInteger('generator_id');
 		$pageNo = $this->getCurrPage();
 
 		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), '', $pageNo);
 
-		$ret['generator_id'] = $generatorId;
-
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Fields'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('generator_id', $generatorId);
 		$this->render($ret);
 	}
 
@@ -57,7 +58,9 @@ class FieldsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Fields');
+		$ele = GeneratorFactory::getElements('Fields');
 		$generatorId = $req->getInteger('generator_id');
 
 		if ($this->isPost()) {
@@ -77,7 +80,8 @@ class FieldsController extends BaseController
 			}
 		}
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Fields'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('generator_id', $generatorId);
 		$this->render($ret);
 	}
 
@@ -90,7 +94,9 @@ class FieldsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Fields');
+		$ele = GeneratorFactory::getElements('Fields');
 		$httpReferer = Url::getReferer();
 		$generatorId = $req->getInteger('generator_id');
 
@@ -122,10 +128,10 @@ class FieldsController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
-		$ret['id'] = $id;
-		$ret['http_referer'] = $httpReferer;
-
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Fields'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('generator_id', $generatorId);
+		$view->assign('id', $id);
+		$view->assign('http_referer', $httpReferer);
 		$this->render($ret);
 	}
 

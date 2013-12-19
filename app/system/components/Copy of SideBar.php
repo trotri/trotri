@@ -31,28 +31,27 @@ class SideBar extends Widget
 	 */
 	public function run()
 	{
-		$config = isset($this->_tplVars['config']) ? $this->_tplVars['config'] : array();
-		if (!is_array($config) || $config === array()) {
+		$name = isset($this->_tplVars['name']) ? $this->_tplVars['name'] : '';
+		if ($name === '') {
 			return ;
 		}
 
 		$output = '';
+
 		$html = $this->getHtml();
+		$urls = Cfg::getApp($name, 'sidebar', 'urls');
 
 		// 菜单最外围开始标签
 		$output .= $html->openTag('div', array('class' => 'list-group'));
 
 		// 菜单列表
-		foreach ($config as $value) {
-			$label = isset($value['label']) ? $value['label'] : '';
-			$icon = isset($value['icon']) ? $value['icon'] : array();
-
-			$content = Text::_($label);
-			if (is_array($icon) && $icon !== array()) {
-				$content .= $this->getIcon($icon);
-			}
-
-			$output .= $html->a($content, $this->getUrl($value), $this->getAttributes($value));
+		foreach ($urls as $menu) {
+			$label = isset($menu['label']) ? $menu['label'] : '';
+			$output .= $html->a(
+				Text::_($label) . (isset($menu['icon']) ? $this->getIcon($menu['icon']) : ''), 
+				$this->getUrl($menu), 
+				$this->getAttributes($menu)
+			);
 		}
 
 		// 菜单最外围结束标签
@@ -62,56 +61,58 @@ class SideBar extends Widget
 
 	/**
 	 * 获取Icon标签
-	 * @param array $config
+	 * @param array $cfg
 	 * @return string
 	 */
-	public function getIcon(array $config)
+	public function getIcon(array $cfg)
 	{
-		$label = isset($config['label']) ? $config['label'] : '';
+		$label = isset($cfg['label']) ? $cfg['label'] : '';
 		return $this->getHtml()->tag('span', array(
 			'class'               => 'glyphicon glyphicon-plus-sign pull-right',
 			'data-toggle'         => 'tooltip',
 			'data-placement'      => 'left',
 			'data-original-title' => Text::_($label),
-			'onclick' => 'return Trotri.href(\'' . $this->getUrl($config) . '\')'
+			'onclick' => 'return Trotri.href(\'' . $this->getUrl($cfg) . '\')'
 		), '');
 	}
 
 	/**
 	 * 通过导航配置获取<a>标签的属性
-	 * @param array $config
+	 * @param array $cfg
 	 * @param boolean $isDropdown
 	 * @return array
 	 */
-	public function getAttributes(array $config, $isDropdown = false)
+	public function getAttributes(array $cfg, $isDropdown = false)
 	{
-		$isActive = $this->isActive($config);
+		$isActive = $this->isActive($cfg);
 		$className = 'list-group-item' . ($isActive ? ' active' : '');
 		return array('class' => $className);
 	}
 
 	/**
 	 * 通过导航配置判断当前链接是否是Active状态
-	 * @param array $config
+	 * @param array $cfg
 	 * @return boolean
 	 */
-	public function isActive(array $config)
+	public function isActive(array $cfg)
 	{
-		$active = isset($config['active']) ? (boolean) $config['active'] : false;
-		return $active;
+		$mod  = isset($cfg['m']) ? $cfg['m'] : '';
+		$ctrl = isset($cfg['c']) ? $cfg['c'] : '';
+		$act  = isset($cfg['a']) ? $cfg['a'] : '';
+		return ($mod === Mvc::$module && $ctrl === Mvc::$controller && $act === Mvc::$action);
 	}
 
 	/**
 	 * 通过导航配置获取链接
-	 * @param array $config
+	 * @param array $cfg
 	 * @return string
 	 */
-	public function getUrl(array $config)
+	public function getUrl(array $cfg)
 	{
-		$mod    = isset($config['m'])      ? $config['m'] : '';
-		$ctrl   = isset($config['c'])      ? $config['c'] : '';
-		$act    = isset($config['a'])      ? $config['a'] : '';
-		$params = isset($config['params']) ? (array) $config['params'] : array();
+		$mod    = isset($cfg['m'])      ? $cfg['m'] : '';
+		$ctrl   = isset($cfg['c'])      ? $cfg['c'] : '';
+		$act    = isset($cfg['a'])      ? $cfg['a'] : '';
+		$params = isset($cfg['params']) ? (array) $cfg['params'] : array();
 
 		return $this->getUrlManager()->getUrl($act, $ctrl, $mod, $params);
 	}

@@ -2,8 +2,8 @@ CREATE DATABASE IF NOT EXISTS `ucenter`;
 
 USE `ucenter`;
 
-DROP TABLE IF EXISTS `user_amcas`;
-CREATE TABLE `user_amcas` (
+DROP TABLE IF EXISTS `tr_user_amcas`;
+CREATE TABLE `tr_user_amcas` (
   `amca_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `amca_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `amca_name` varchar(100) NOT NULL DEFAULT '' COMMENT '事件名',
@@ -16,8 +16,8 @@ CREATE TABLE `user_amcas` (
   KEY `category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户可访问的事件表';
 
-DROP TABLE IF EXISTS `user_groups`;
-CREATE TABLE `user_groups` (
+DROP TABLE IF EXISTS `tr_user_groups`;
+CREATE TABLE `tr_user_groups` (
   `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
@@ -30,8 +30,8 @@ CREATE TABLE `user_groups` (
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户分组表';
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
+DROP TABLE IF EXISTS `tr_users`;
+CREATE TABLE `tr_users` (
   `user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `login_email` varchar(100) NOT NULL DEFAULT '' COMMENT '登录邮箱',
   `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名',
@@ -58,8 +58,8 @@ CREATE TABLE `users` (
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户主表';
 
-DROP TABLE IF EXISTS `user_profile`;
-CREATE TABLE `user_profile` (
+DROP TABLE IF EXISTS `tr_user_profile`;
+CREATE TABLE `tr_user_profile` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `profile_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
   `profile_key` varchar(255) NOT NULL DEFAULT '' COMMENT '扩展Key',
@@ -68,8 +68,8 @@ CREATE TABLE `user_profile` (
   UNIQUE KEY `uk_id_key` (`profile_id`,`profile_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户扩展表';
 
-DROP TABLE IF EXISTS `user_usergroups_map`;
-CREATE TABLE `user_usergroups_map` (
+DROP TABLE IF EXISTS `tr_user_usergroups_map`;
+CREATE TABLE `tr_user_usergroups_map` (
   `user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
   `group_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '主键ID',
   PRIMARY KEY (`user_id`,`group_id`)

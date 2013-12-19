@@ -109,6 +109,20 @@ class Generators extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::findByPk()
+	 */
+	public function findByPk($value)
+	{
+		$ret = parent::findByPk($value);
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			$ret['data']['index_row_btns'] = explode(',', $ret['data']['index_row_btns']);
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array

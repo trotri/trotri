@@ -36,14 +36,17 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Generators');
+		$ele = GeneratorFactory::getElements('Generators');
 		$pageNo = $this->getCurrPage();
 
 		$params = $req->getQuery();
 		$params['trash'] = 'n';
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$ret = $mod->search($pageNo, $params);
+
+		$view->assign('elementCollections', $ele);
 		$this->render($ret);
 	}
 
@@ -56,14 +59,17 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Generators');
+		$ele = GeneratorFactory::getElements('Generators');
 		$pageNo = $this->getCurrPage();
 
 		$params = $req->getQuery();
 		$params['trash'] = 'y';
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
 		$ret = $mod->search($pageNo, $params);
+
+		$view->assign('elementCollections', $ele);
 		$this->render($ret);
 	}
 
@@ -76,7 +82,9 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Generators');
+		$ele = GeneratorFactory::getElements('Generators');
 
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
@@ -94,7 +102,7 @@ class IndexController extends BaseController
 			}
 		}
 
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
+		$view->assign('elementCollections', $ele);
 		$this->render($ret);
 	}
 
@@ -107,7 +115,9 @@ class IndexController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
+		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Generators');
+		$ele = GeneratorFactory::getElements('Generators');
 		$httpReferer = Url::getReferer();
 
 		$id = $req->getInteger('id');
@@ -137,10 +147,9 @@ class IndexController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
-		$ret['id'] = $id;
-		$ret['http_referer'] = $httpReferer;
-
-		Mvc::getView()->assign('elementCollections', GeneratorFactory::getElements('Generators'));
+		$view->assign('elementCollections', $ele);
+		$view->assign('http_referer', $httpReferer);
+		$view->assign('id', $id);
 		$this->render($ret);
 	}
 

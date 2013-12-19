@@ -171,7 +171,7 @@ class Generators extends ElementCollections
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'MinLength' => array(6, Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_MINLENGTH')),
-				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_MAXLENGTH'))
+				'MaxLength' => array(50, Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_MAXLENGTH'))
 			);
 		}
 		elseif ($type === self::TYPE_SEARCH) {
@@ -481,7 +481,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_GENERATORS_MOD_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_GENERATORS_MOD_NAME_MINLENGTH')),
-				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATORS_MOD_NAME_MAXLENGTH'))
+				'MaxLength' => array(50, Text::_('MOD_GENERATOR_GENERATORS_MOD_NAME_MAXLENGTH'))
 			);
 		}
 

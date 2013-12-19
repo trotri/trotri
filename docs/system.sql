@@ -36,7 +36,7 @@ CREATE TABLE `tr_generators` (
 
 DROP TABLE IF EXISTS `tr_generator_field_groups`;
 CREATE TABLE `tr_generator_field_groups` (
-  `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_id` smallint(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
   `generator_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '生成代码ID',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
@@ -46,6 +46,8 @@ CREATE TABLE `tr_generator_field_groups` (
   KEY `generator_id` (`generator_id`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
+
+INSERT INTO `tr_generator_field_groups` VALUES (1, '主要信息', 0, 1, '默认');
 
 DROP TABLE IF EXISTS `tr_generator_field_types`;
 CREATE TABLE `tr_generator_field_types` (
@@ -62,6 +64,16 @@ CREATE TABLE `tr_generator_field_types` (
   KEY `category` (`category`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
+
+INSERT INTO `tr_generator_field_types` VALUES (1, '单行文本', 'text', 'VARCHAR', 'text', 1);
+INSERT INTO `tr_generator_field_types` VALUES (2, '密码', 'password', 'CHAR', 'text', 2);
+INSERT INTO `tr_generator_field_types` VALUES (3, '开关选项卡', 'switch', 'ENUM', 'option', 3);
+INSERT INTO `tr_generator_field_types` VALUES (4, '单选', 'radio', 'ENUM', 'option', 4);
+INSERT INTO `tr_generator_field_types` VALUES (5, '多选', 'checkbox', 'VARCHAR', 'option', 5);
+INSERT INTO `tr_generator_field_types` VALUES (6, '单选下拉框', 'select', 'INT', 'option', 6);
+INSERT INTO `tr_generator_field_types` VALUES (7, '隐藏文本框', 'hidden', 'VARCHAR', 'text', 7);
+INSERT INTO `tr_generator_field_types` VALUES (8, '多行文本', 'textarea', 'TEXT', 'text', 8);
+INSERT INTO `tr_generator_field_types` VALUES (9, '上传文件', 'file', 'VARCHAR', 'text', 9);
 
 DROP TABLE IF EXISTS `tr_generator_fields`;
 CREATE TABLE `tr_generator_fields` (
@@ -114,28 +126,3 @@ CREATE TABLE `tr_generator_field_validators` (
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
-
-INSERT INTO `tr_generator_field_types` VALUES ('1', '单行文本', 'text', 'VARCHAR', 'text', '1');
-INSERT INTO `tr_generator_field_types` VALUES ('2', '密码', 'password', 'CHAR', 'text', '2');
-INSERT INTO `tr_generator_field_types` VALUES ('3', '开关选项卡', 'switch', 'ENUM', 'option', '3');
-INSERT INTO `tr_generator_field_types` VALUES ('4', '单选', 'radio', 'ENUM', 'option', '5');
-INSERT INTO `tr_generator_field_types` VALUES ('5', '多选', 'checkbox', 'VARCHAR', 'option', '6');
-INSERT INTO `tr_generator_field_types` VALUES ('6', '隐藏文本框', 'hidden', 'VARCHAR', 'text', '7');
-INSERT INTO `tr_generator_field_types` VALUES ('7', '多行文本', 'textarea', 'TEXT', 'text', '8');
-
-/*
-单行文本（text）
-多行文本（textarea）
-密码（password）
-隐藏文本（hidden）
-HTML文本（ckeditor）
-时间控件（datetime）
-上传文件（file）
-单选下拉框（select）
-单选选项卡（radio）
-开关选项卡（switch）
-多选选项卡（checkbox）
-提交按钮（submit）
-重置按钮（reset）
-普通按钮（button）
-*/
