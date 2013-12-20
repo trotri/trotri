@@ -36,7 +36,7 @@ CREATE TABLE `tr_generators` (
 
 DROP TABLE IF EXISTS `tr_generator_field_groups`;
 CREATE TABLE `tr_generator_field_groups` (
-  `group_id` smallint(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
   `generator_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '生成代码ID',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',

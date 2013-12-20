@@ -90,6 +90,11 @@ class Components
 	const GLYPHICON_REMOVE_SIGN = 'remove-sign';
 
 	/**
+	 * @var string Glyphicons图标：工具
+	 */
+	const GLYPHICON_WRENCH = 'wrench';
+
+	/**
 	 * @var instance of tfc\mvc\Html
 	 */
 	protected static $_html = null;

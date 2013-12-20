@@ -29,6 +29,15 @@ class Url
 	protected static $urlManager = null;
 
 	/**
+	 * 页面重定向到404页面
+	 * @return void
+	 */
+	public static function err404()
+	{
+		self::forward('err404', 'index', 'system');
+	}
+
+	/**
 	 * 页面重定向到当前页面链接
 	 * @param array $params
 	 * @param string $message

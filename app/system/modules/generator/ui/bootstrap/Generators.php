@@ -156,6 +156,7 @@ class Generators
 		$modify = 'Trotri.href(\'' . Url::getUrl('modify', '', '', $params) . '\')';
 		$trash = 'Core.dialogTrash(\'' . Url::getUrl('trash', '', '', $params) . '\')';
 		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', '', '', $params) . '\')';
+		$build = 'Trotri.href(\'' . Url::getUrl('build', '', '', $params) . '\')';
 
 		$params['column_name'] = 'trash';
 		$params['value'] = 'n';
@@ -163,7 +164,8 @@ class Generators
 
 		if ($data['trash'] === 'n') {
 			$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATORS_MODIFY'))
-				 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('CFG_SYSTEM_GLOBAL_TRASH'));
+				 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('CFG_SYSTEM_GLOBAL_TRASH'))
+				 . Components::getGlyphicon(Components::GLYPHICON_WRENCH, $build, Text::_('CFG_SYSTEM_URLS_GENERATOR_INDEX_BUILD_LABEL'));
 		}
 		else {
 			$ret = Components::getGlyphicon(Components::GLYPHICON_OK_SIGN, $restore, Text::_('CFG_SYSTEM_GLOBAL_RESTORE'))

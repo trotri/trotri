@@ -4,10 +4,10 @@ USE `ucenter`;
 
 DROP TABLE IF EXISTS `tr_user_amcas`;
 CREATE TABLE `tr_user_amcas` (
-  `amca_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `amca_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
+  `amca_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `amca_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `amca_name` varchar(100) NOT NULL DEFAULT '' COMMENT '事件名',
-  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `category` enum('app','mod','ctrl','act') NOT NULL DEFAULT 'act' COMMENT '类型，app：应用、mod：模块、ctrl：控制器、act：行动',
   PRIMARY KEY (`amca_id`),
   KEY `amca_pid` (`amca_pid`),
@@ -18,10 +18,10 @@ CREATE TABLE `tr_user_amcas` (
 
 DROP TABLE IF EXISTS `tr_user_groups`;
 CREATE TABLE `tr_user_groups` (
-  `group_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `group_pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
+  `group_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
-  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `permission` text COMMENT '权限设置，可访问的事件，由应用-模块-控制器-行动组合',
   `description` text COMMENT '描述',
   PRIMARY KEY (`group_id`),

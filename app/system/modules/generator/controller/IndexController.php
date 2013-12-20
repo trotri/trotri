@@ -255,6 +255,22 @@ class IndexController extends BaseController
 	}
 
 	/**
+	 * 生成代码
+	 * @return void
+	 */
+	public function buildAction()
+	{
+		$req = Ap::getRequest();
+		$id = $req->getInteger('id');
+		if ($id <= 0) {
+			Url::err404();
+		}
+
+		$mod = GeneratorFactory::getModel('Builder');
+		$mod->create($id);
+	}
+
+	/**
 	 * 数据详情
 	 * @return void
 	 */

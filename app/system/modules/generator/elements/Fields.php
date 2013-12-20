@@ -181,6 +181,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_MINLENGTH')),
 				'MaxLength' => array(50, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_MAXLENGTH'))
 			);
@@ -210,12 +211,11 @@ class Fields extends ElementCollections
 				'type' => 'text',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_COLUMN_LENGTH_LABEL'),
 				'hint' => Text::_('MOD_GENERATOR_FIELDS_COLUMN_LENGTH_HINT'),
-				'required' => true
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Integer' => array(2, Text::_('MOD_GENERATOR_FIELDS_COLUMN_LENGTH_INTEGER'))
+				'Numeric' => array(true, Text::_('MOD_GENERATOR_FIELDS_COLUMN_LENGTH_INTEGER'))
 			);
 		}
 
