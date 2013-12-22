@@ -10,8 +10,6 @@
 
 namespace tfc\util;
 
-use tfc\ap\ErrorException;
-
 /**
  * FileManager class file
  * 文件管理类
@@ -22,130 +20,251 @@ use tfc\ap\ErrorException;
  */
 class FileManager
 {
-	/**
-	 * 新建目录
-	 * @param string $fileName
-	 * @param integer $mode 文件权限，8进制
-	 * @param boolean $recursive 递归创建所有目录
-	 * @param resource $context
-	 * @return boolean
-	 */
-	public function mkDir($fileName, $mode = 0777, $recursive = false, $context = null)
-	{
-		if ($this->isDir($fileName)) {
-			$filePerms = $this->filePerms($fileName);
-			if ($filePerms === $mode) {
-				return true;
-			}
+    /**
+     * 重命名一个文件或目录
+     * @param string $oldName
+     * @param string $newName
+     * @return boolean
+     */
+    public function rename($oldName, $newName)
+    {
+        if (!$this->fileExists($oldName) || $this->fileExists($newName)) {
+            return false;
+        }
 
-			return $this->chmod($fileName, $mode);
-		}
+        @rename($oldName, $newName);
+        if (!$this->fileExists($oldName) && $this->fileExists($newName)) {
+            return true;
+        }
 
-		@mkdir($fileName, $mode, $recursive, $context);
-		return $this->isDir($fileName);
-	}
+        return false;
+    }
 
-	/**
-	 * 删除目录，会同时删除目录中所有文件
-	 * @param string $fileName
-	 * @return boolean
-	 */
-	public function rmDir($fileName)
-	{
-		if (!$this->isDir($fileName)) {
-			return true;
-		}
+    /**
+     * 拷贝文件，不能拷贝目录
+     * 如果目标文件已存在，将会被覆盖；如果目标文件是目录，则返回false
+     * @param string $source
+     * @param string $dest
+     * @return boolean
+     */
+    public function copy($source, $dest)
+    {
+        if (!$this->isFile($source) || $this->isDir($dest)) {
+            return false;
+        }
 
-		if ($this->clearDir($fileName)) {
-			@rmdir($fileName);
-			return !$this->isDir($fileName);
-		}
+        $ret = @copy($source, $dest);
+        return $ret;
+    }
 
-		return false;
-	}
+    /**
+     * 新建目录，如果目录存在，则改变文件权限
+     * @param string $directory
+     * @param integer $mode 文件权限，8进制
+     * @param boolean $recursive 递归创建所有目录
+     * @return boolean
+     */
+    public function mkDir($directory, $mode = 0777, $recursive = false)
+    {
+        if ($this->isFile($directory)) {
+            return false;
+        }
 
-	/**
-	 * 删除目录中所有文件
-	 * @param string $fileName
-	 * @return boolean
-	 */
-	public function clearDir($fileName)
-	{
-		if ($this->isEmpty($fileName)) {
-			return true;
-		}
+        if ($this->isDir($directory)) {
+            $filePerms = $this->filePerms($directory);
+            if ($filePerms === $mode) {
+                return true;
+            }
 
-		
-	}
+            return $this->chmod($directory, $mode);
+        }
 
-	/**
-	 * 获取目录中所有文件
-	 * @param string $fileName
-	 * @return array
-	 */
-	public function scanDir($fileName)
-	{
-		
-	}
+        @mkdir($directory, $mode, $recursive);
+        return $this->isDir($directory);
+    }
 
-	/**
-	 * 判断目录是否为空
-	 * @param string $fileName
-	 * @return boolean
-	 */
-	public function isEmpty($fileName)
-	{
-		if (!$this->isDir($fileName)) {
-			return true;
-		}
+    /**
+     * 删除目录，会递归删除目录中所有文件
+     * @param string $directory
+     * @return boolean
+     */
+    public function rmDir($directory)
+    {
+        if ($this->isFile($directory)) {
+            return false;
+        }
 
-		$dh = opendir($fileName);
-		while (($fileName = readdir($dh)) !== false) {
-			if ($fileName !== '.' && $fileName !== '..' ) {
-				return false;
-			}
-		}
+        if (!$this->isDir($directory)) {
+            return true;
+        }
 
-		return true;
-	}
+        $dh = opendir($directory);
+        while (($fileName = readdir($dh)) !== false) {
+            if ($fileName === '.' || $fileName === '..' ) {
+                continue;
+            }
 
-	/**
-	 * 判断给定文件名是否是一个目录
-	 * @param string $fileName
-	 * @return boolean
-	 */
-	public function isDir($fileName)
-	{
-		return is_dir($fileName);
-	}
+            $fileName = $directory . DIRECTORY_SEPARATOR . $fileName;
+            if ($this->isDir($fileName)) {
+                $this->rmDir($fileName);
+            }
+            else {
+                $this->unlink($fileName);
+            }
+        }
 
-	/**
-	 * 改变文件权限
-	 * @param string $fileName
-	 * @param integer $mode 文件权限，8进制
-	 * @return boolean
-	 */
-	public function chmod($fileName , $mode)
-	{
-		$ret = chmod($fileName, $mode);
-		return $ret;
-	}
+        closedir($dh);
+        @rmdir($directory);
+        return !$this->isDir($directory);
+    }
 
-	/**
-	 * 获取文件权限
-	 * @param string $fileName
-	 * @return integer|false
-	 */
-	public function filePerms($fileName)
-	{
-		$ret = fileperms($fileName);
-		if ($ret) {
-			$ret = substr(sprintf('%o', $ret), -4);
-			$ret = octdec($ret);
-		}
+    /**
+     * 删除文件
+     * @param string $fileName
+     * @return boolean
+     */
+    public function unlink($fileName)
+    {
+        if ($this->isDir($fileName)) {
+            return false;
+        }
 
-		return $ret;
-	}
-	
-	
+        if ($this->isFile($fileName)) {
+            @unlink($fileName);
+            return !$this->isFile($fileName);
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取目录中的文件
+     * @param string $directory
+     * @param boolean $recursive 是否递归获取所有目录
+     * @return array
+     */
+    public function scanDir($directory, $recursive = false)
+    {
+        $ret = array();
+        if (!$this->isDir($directory)) {
+            return $ret;
+        }
+
+        $dh = opendir($directory);
+        while (($fileName = readdir($dh)) !== false) {
+            if ($fileName === '.' || $fileName === '..' ) {
+                continue;
+            }
+
+            $ret[] = $fileName = $directory . DIRECTORY_SEPARATOR . $fileName;
+            if ($recursive && $this->isDir($fileName)) {
+                $ret[] = $this->scanDir($fileName, $recursive);
+            }
+        }
+
+        closedir($dh);
+        return $ret;
+    }
+
+    /**
+     * 判断目录是否为空，如果目录不存在或不是目录，则返回null
+     * @param string $directory
+     * @return boolean
+     */
+    public function isEmpty($directory)
+    {
+        if (!$this->isDir($directory)) {
+            return null;
+        }
+
+        $ret = true;
+        $dh = opendir($directory);
+        while (($fileName = readdir($dh)) !== false) {
+            if ($fileName !== '.' && $fileName !== '..' ) {
+                $ret = false;
+                break;
+            }
+        }
+
+        closedir($dh);
+        return $ret;
+    }
+
+    /**
+     * 检查文件或目录是否存在
+     * @param string $fileName
+     * @return boolean
+     */
+    public function fileExists($fileName)
+    {
+        return file_exists($fileName);
+    }
+
+    /**
+     * 判断给定文件名是否是一个目录
+     * @param string $fileName
+     * @return boolean
+     */
+    public function isDir($fileName)
+    {
+        return is_dir($fileName);
+    }
+
+    /**
+     * 判断给定文件名是否是一个文件
+     * @param string $fileName
+     * @return boolean
+     */
+    public function isFile($fileName)
+    {
+        return is_file($fileName);
+    }
+
+    /**
+     * 判断给定文件名是否可读
+     * @param string $fileName
+     * @return boolean
+     */
+    public function isReadable($fileName)
+    {
+        return is_readable($fileName);
+    }
+
+    /**
+     * 判断给定的文件名是否可写
+     * @param string $fileName
+     * @return boolean
+     */
+    public function isWriteable($fileName)
+    {
+        return is_writeable($fileName);
+    }
+
+    /**
+     * 改变文件权限
+     * @param string $fileName
+     * @param integer $mode 文件权限，八进制
+     * @return boolean
+     */
+    public function chmod($fileName, $mode)
+    {
+        $ret = @chmod($fileName, $mode);
+        return $ret;
+    }
+
+    /**
+     * 获取文件权限，返回十进制整型
+     * @param string $fileName
+     * @return integer|false
+     */
+    public function filePerms($fileName)
+    {
+        $ret = fileperms($fileName);
+        if ($ret) {
+            $ret = substr(sprintf('%o', $ret), -4);
+            $ret = octdec($ret);
+        }
+
+        return $ret;
+    }
 }
