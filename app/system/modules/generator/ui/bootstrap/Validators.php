@@ -80,11 +80,11 @@ class Validators
 			'field_id' => $data['field_id']
 		);
 
-		$modify = 'Trotri.href(\'' . Url::getUrl('modify', 'validators', 'generator', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', 'validators', 'generator', $params) . '\')';
+		$modify = Url::getUrl('modify', 'validators', 'generator', $params);
+		$remove = Url::getUrl('remove', 'validators', 'generator', $params);
 
-		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATOR_FIELDS_MODIFY'))
-			 . Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $remove, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
+		$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_MODIFY'))
+			 . Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $remove, 'Core.dialogRemove', Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
 		return $ret;
 	}

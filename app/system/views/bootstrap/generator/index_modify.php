@@ -27,10 +27,6 @@ $this->widget('ui\bootstrap\widgets\FormBuilder',
 			'act_remove_name',
 			'dt_created',
 			'dt_modified',
-			'http_referer' => array(
-				'type' => 'hidden',
-				'value' => $this->http_referer
-			),
 			'button_save' => $elements->uiComponents->getButtonSave(),
 			'button_save2close' => $elements->uiComponents->getButtonSaveClose(),
 			'button_save2new' => $elements->uiComponents->getButtonSaveNew(),

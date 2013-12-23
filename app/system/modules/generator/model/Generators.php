@@ -13,6 +13,7 @@ namespace modules\generator\model;
 use tfc\ap\Registry;
 use tfc\util\String;
 use koala\Model;
+use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -37,14 +38,13 @@ class Generators extends Model
 
 	/**
 	 * 查询数据
-	 * @param integer $pageNo
 	 * @param array $params
+	 * @param string $order
+	 * @param integer $pageNo
 	 * @return array
 	 */
-	public function search($pageNo, array $params)
+	public function search(array $params = array(), $order = '', $pageNo = 0)
 	{
-		$pageNo = max(1, (int) $pageNo);
-
 		$trash = isset($params['trash']) ? trim($params['trash']) : '';
 		$generatorName = isset($params['generator_name']) ? trim($params['generator_name']) : '';
 		$generatorId = isset($params['generator_id']) ? (int) $params['generator_id'] : 0;
@@ -54,6 +54,7 @@ class Generators extends Model
 		$tblCharset = isset($params['tbl_charset']) ? trim($params['tbl_charset']) : '';
 		$appName = isset($params['app_name']) ? trim($params['app_name']) : '';
 
+		$attributes = array();
 		if ($trash !== '') {
 			$attributes['trash'] = $trash;
 		}
@@ -86,6 +87,7 @@ class Generators extends Model
 			$attributes['app_name'] = $appName;
 		}
 
+		Url::setHttpReturn($pageNo, $attributes);
 		$ret = $this->findIndexByAttributes($attributes, '', $pageNo);
 		return $ret;
 	}

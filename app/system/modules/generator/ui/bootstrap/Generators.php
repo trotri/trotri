@@ -96,10 +96,10 @@ class Generators
 			'generator_id' => $data['generator_id']
 		);
 
-		$index = 'Trotri.href(\'' . Url::getUrl('index', 'groups', 'generator', $params) . '\')';
-		$create = 'Trotri.href(\'' . Url::getUrl('create', 'groups', 'generator', $params) . '\')';
-		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
-			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
+		$index = Url::getUrl('index', 'groups', 'generator', $params);
+		$create = Url::getUrl('create', 'groups', 'generator', $params);
+		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_INDEX')) 
+			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELD_GROUPS_CREATE'));
 
 		return $ret;
 	}
@@ -115,10 +115,10 @@ class Generators
 			'generator_id' => $data['generator_id']
 		);
 
-		$index = 'Trotri.href(\'' . Url::getUrl('index', 'types', 'generator', $params) . '\')';
-		$create = 'Trotri.href(\'' . Url::getUrl('create', 'types', 'generator', $params) . '\')';
-		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_INDEX'))
-			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_CREATE'));
+		$index = Url::getUrl('index', 'types', 'generator', $params);
+		$create = Url::getUrl('create', 'types', 'generator', $params);
+		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELD_TYPES_CREATE'));
 
 		return $ret;
 	}
@@ -134,10 +134,10 @@ class Generators
 			'generator_id' => $data['generator_id']
 		);
 
-		$index = 'Trotri.href(\'' . Url::getUrl('index', 'fields', 'generator', $params) . '\')';
-		$create = 'Trotri.href(\'' . Url::getUrl('create', 'fields', 'generator', $params) . '\')';
-		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, Text::_('MOD_GENERATOR_GENERATOR_FIELDS_INDEX'))
-			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, Text::_('MOD_GENERATOR_GENERATOR_FIELDS_CREATE'));
+		$index = Url::getUrl('index', 'fields', 'generator', $params);
+		$create = Url::getUrl('create', 'fields', 'generator', $params);
+		$ret = Components::getGlyphicon(Components::GLYPHICON_LIST, $index, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_INDEX'))
+			 . Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $create, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATOR_FIELDS_CREATE'));
 
 		return $ret;
 	}
@@ -153,23 +153,23 @@ class Generators
 			'id' => $data['generator_id']
 		);
 
-		$modify = 'Trotri.href(\'' . Url::getUrl('modify', '', '', $params) . '\')';
-		$trash = 'Core.dialogTrash(\'' . Url::getUrl('trash', '', '', $params) . '\')';
-		$remove = 'Core.dialogRemove(\'' . Url::getUrl('remove', '', '', $params) . '\')';
-		$build = 'Trotri.href(\'' . Url::getUrl('build', '', '', $params) . '\')';
+		$modify = Url::getUrl('modify', '', '', $params);
+		$trash = Url::getUrl('trash', '', '', $params);
+		$remove = Url::getUrl('remove', '', '', $params);
+		$build = Url::getUrl('build', '', '', $params);
 
 		$params['column_name'] = 'trash';
 		$params['value'] = 'n';
-		$restore = 'Trotri.href(\'' . Url::getUrl('singlemodify', '', '', $params) . '\')';
+		$restore = Url::getUrl('singlemodify', '', '', $params);
 
 		if ($data['trash'] === 'n') {
-			$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, Text::_('MOD_GENERATOR_GENERATORS_MODIFY'))
-				 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, Text::_('CFG_SYSTEM_GLOBAL_TRASH'))
-				 . Components::getGlyphicon(Components::GLYPHICON_WRENCH, $build, Text::_('CFG_SYSTEM_URLS_GENERATOR_INDEX_BUILD_LABEL'));
+			$ret = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modify, 'Trotri.href', Text::_('MOD_GENERATOR_GENERATORS_MODIFY'))
+				 . Components::getGlyphicon(Components::GLYPHICON_TRASH, $trash, 'Core.dialogTrash', Text::_('CFG_SYSTEM_GLOBAL_TRASH'))
+				 . Components::getGlyphicon(Components::GLYPHICON_WRENCH, $build, 'Trotri.href', Text::_('CFG_SYSTEM_URLS_GENERATOR_INDEX_BUILD_LABEL'));
 		}
 		else {
-			$ret = Components::getGlyphicon(Components::GLYPHICON_OK_SIGN, $restore, Text::_('CFG_SYSTEM_GLOBAL_RESTORE'))
-				 . Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $remove, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
+			$ret = Components::getGlyphicon(Components::GLYPHICON_OK_SIGN, $restore, 'Trotri.href', Text::_('CFG_SYSTEM_GLOBAL_RESTORE'))
+				 . Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $remove, 'Core.dialogRemove', Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 		}
 
 		return $ret;

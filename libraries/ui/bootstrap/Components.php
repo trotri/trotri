@@ -10,7 +10,9 @@
 
 namespace ui\bootstrap;
 
+use tfc\ap\Ap;
 use tfc\ap\Singleton;
+use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\util\Language;
 use tfc\util\String;
@@ -100,6 +102,11 @@ class Components
 	protected static $_html = null;
 
 	/**
+	 * @var string 返回列表页面链接
+	 */
+	protected static $_httpReturn = null;
+
+	/**
 	 * @var instance of tfc\util\Language
 	 */
 	protected static $_language = null;
@@ -110,12 +117,14 @@ class Components
 	 */
 	public static function getButtonSave()
 	{
+		$return = self::getHttpReturn();
+		$return = String::urlencode($return);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE'),
 			'glyphicon' => self::GLYPHICON_SAVE,
 			'class'     => 'btn btn-primary',
-			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE . '\');'
+			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE . '\', \'' . $return . '\');'
 		);
 
 		return $output;
@@ -127,12 +136,14 @@ class Components
 	 */
 	public static function getButtonSaveClose()
 	{
+		$return = self::getHttpReturn();
+		$return = String::urlencode($return);
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_CLOSE'),
 			'glyphicon' => self::GLYPHICON_OK_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE_CLOSE . '\');'
+			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE_CLOSE . '\', \'' . $return . '\');'
 		);
 
 		return $output;
@@ -149,7 +160,7 @@ class Components
 			'label'     => self::_('UI_BOOTSTRAP_SAVE_NEW'),
 			'glyphicon' => self::GLYPHICON_PLUS_SIGN,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE_NEW . '\');'
+			'onclick'   => 'return Core.formSubmit(this, \'' . self::SUBMIT_TYPE_SAVE_NEW . '\', \'\');'
 		);
 
 		return $output;
@@ -157,17 +168,17 @@ class Components
 
 	/**
 	 * 获取表单的“取消”按钮信息
-	 * @param string $url
 	 * @return array
 	 */
-	public static function getButtonCancel($url)
+	public static function getButtonCancel()
 	{
+		$return = self::getHttpReturn();
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_CANCEL'),
 			'glyphicon' => self::GLYPHICON_REMOVE_SIGN,
 			'class'     => 'btn btn-danger',
-			'onclick'   => 'return Trotri.href(\'' . $url . '\');'
+			'onclick'   => 'return Trotri.href(\'' . $return . '\');'
 		);
 
 		return $output;
@@ -178,10 +189,10 @@ class Components
 	 * @param integer $id
 	 * @param string $name
 	 * @param string $value
-	 * @param string $href
+	 * @param string $url
 	 * @return string
 	 */
-	public static function getSwitch($id, $name, $value = 'n', $href = '')
+	public static function getSwitch($id, $name, $value = 'n', $url = '')
 	{
 		$attributes = array(
 			'id'             => 'label_switch_' . $name . '_' . $id,
@@ -191,8 +202,9 @@ class Components
 			'data-off-label' => self::_('UI_BOOTSTRAP_NO'),
 		);
 
-		if ($href !== '') {
-			$attributes['href'] = $href;
+		if ($url !== '') {
+			$url = self::applyHttpReferer($url);
+			$attributes['href'] = $url;
 		}
 
 		$html = self::getHtml();
@@ -202,22 +214,77 @@ class Components
 	/**
 	 * 获取Glyphicons图标按钮和工具提示
 	 * @param string $type
-	 * @param string $onclick
+	 * @param string $url
+	 * @param string $func
 	 * @param string $title
 	 * @param string $placement
 	 * @return string
 	 */
-	public static function getGlyphicon($type, $onclick, $title, $placement = 'left')
+	public static function getGlyphicon($type, $url, $func, $title, $placement = 'left')
 	{
+		$url = self::applyHttpReferer($url);
+		$click = $func . '(\'' . $url . '\')';
 		$attributes = array(
 			'class'               => 'glyphicon glyphicon-' . $type,
 			'data-toggle'         => 'tooltip',
 			'data-placement'      => $placement,
 			'data-original-title' => $title,
-			'onclick'             => 'return ' . $onclick . ';'
+			'onclick'             => 'return ' . $click . ';'
 		);
 
 		return self::getHtml()->tag('span', $attributes, '');
+	}
+
+	/**
+	 * 获取返回列表页面链接
+	 * @return string
+	 */
+	public static function getHttpReturn()
+	{
+		if (self::$_httpReturn !== null) {
+			return self::$_httpReturn;
+		}
+
+		return Ap::getRequest()->getParam('http_return');
+	}
+
+	/**
+	 * 设置返回列表页面链接
+	 * @param string $return
+	 * @return void
+	 */
+	public static function setHttpReturn($return)
+	{
+		self::$_httpReturn = $return;
+	}
+
+	/**
+	 * 获取上一个页面链接
+	 * @return string
+	 */
+	public static function getHttpReferer()
+	{
+		$referer = Ap::getRequest()->getParam('http_referer');
+		if ($referer !== null) {
+			return $referer;
+		}
+
+		return Ap::getRequest()->getServer('HTTP_REFERER');
+	}
+
+	/**
+	 * 在URL后拼接HTTP_REFERER参数
+	 * @param string $url
+	 * @return string
+	 */
+	public static function applyHttpReferer($url)
+	{
+		if (($return = self::getHttpReturn()) !== null) {
+			$params = array('http_referer' => $return);
+			$url = Mvc::getView()->getUrlManager()->applyParams($url, $params);
+		}
+
+		return $url;
 	}
 
 	/**

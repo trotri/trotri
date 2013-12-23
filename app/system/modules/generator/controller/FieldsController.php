@@ -40,9 +40,10 @@ class FieldsController extends BaseController
 		$mod = GeneratorFactory::getModel('Fields');
 		$ele = GeneratorFactory::getElements('Fields');
 		$generatorId = $req->getInteger('generator_id');
-		$pageNo = $this->getCurrPage();
+		$pageNo = Url::getCurrPage();
 
-		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), '', $pageNo);
+		$params = array('generator_id' => $generatorId);
+		$ret = $mod->search($params, '', $pageNo);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('generator_id', $generatorId);

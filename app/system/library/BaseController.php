@@ -60,10 +60,6 @@ abstract class BaseController extends Controller
 			$data['err_msg'] = String::escapeXss(Ap::getRequest()->getString('err_msg'));
 		}
 
-		if (($referer = Url::getReferer()) !== false) {
-			$data['http_referer'] = $referer;
-		}
-
 		$view->render($tplName, $data);
 	}
 
@@ -246,22 +242,6 @@ abstract class BaseController extends Controller
 		);
 
 		return $ret;
-	}
-
-	/**
-	 * 获取当前页码
-	 * @return integer
-	 */
-	public function getCurrPage()
-	{
-		try {
-			$pageVar = Cfg::getApp('page_var', 'paginator');
-		}
-		catch (ErrorException $e) {
-			$pageVar = Paginator::DEFAULT_PAGE_VAR;
-		}
-
-		return Ap::getRequest()->getInteger($pageVar);
 	}
 
 	/**

@@ -12,6 +12,7 @@ namespace modules\generator\model;
 
 use koala\Model;
 use tfc\ap\Registry;
+use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -32,6 +33,27 @@ class Fields extends Model
 	{
 		$db = GeneratorFactory::getDb('Fields');
 		parent::__construct($db);
+	}
+
+	/**
+	 * 查询数据
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $pageNo
+	 * @return array
+	 */
+	public function search(array $params = array(), $order = '', $pageNo = 0)
+	{
+		$generatorId = isset($params['generator_id']) ? (int) $params['generator_id'] : 0;
+
+		$attributes = array();
+		if ($generatorId > 0) {
+			$attributes['generator_id'] = $generatorId;
+		}
+
+		Url::setHttpReturn($pageNo, $attributes);
+		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
+		return $ret;
 	}
 
 	/**

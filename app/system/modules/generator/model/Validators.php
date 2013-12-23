@@ -12,6 +12,7 @@ namespace modules\generator\model;
 
 use koala\Model;
 use tfc\ap\Registry;
+use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -32,6 +33,27 @@ class Validators extends Model
 	{
 		$db = GeneratorFactory::getDb('Validators');
 		parent::__construct($db);
+	}
+
+	/**
+	 * 查询数据
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $pageNo
+	 * @return array
+	 */
+	public function search(array $params = array(), $order = '', $pageNo = 0)
+	{
+		$fieldId = isset($params['field_id']) ? (int) $params['field_id'] : 0;
+
+		$attributes = array();
+		if ($fieldId > 0) {
+			$attributes['field_id'] = $fieldId;
+		}
+
+		Url::setHttpReturn($pageNo, $attributes);
+		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
+		return $ret;
 	}
 
 	/**

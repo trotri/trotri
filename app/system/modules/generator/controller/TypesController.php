@@ -39,9 +39,10 @@ class TypesController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Types');
 		$ele = GeneratorFactory::getElements('Types');
-		$pageNo = $this->getCurrPage();
+		$pageNo = Url::getCurrPage();
 
-		$ret = $mod->findIndexByAttributes(array(), 'sort', $pageNo);
+		$params = array();
+		$ret = $mod->search($params, 'sort', $pageNo);
 
 		$view->assign('elementCollections', $ele);
 		$this->render($ret);

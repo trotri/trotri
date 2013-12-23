@@ -11,7 +11,12 @@
 namespace library;
 
 use tfc\ap\Ap;
+use tfc\ap\ErrorException;
 use tfc\ap\Singleton;
+use tfc\mvc\Mvc;
+use tfc\util\Paginator;
+use tfc\saf\Cfg;
+use ui\bootstrap\Components;
 
 /**
  * Url class file
@@ -26,7 +31,7 @@ class Url
 	/**
 	 * @var instance of tfc\mvc\UrlManager
 	 */
-	protected static $urlManager = null;
+	protected static $_urlManager = null;
 
 	/**
 	 * 页面重定向到404页面
@@ -59,7 +64,7 @@ class Url
 	 */
 	public static function referer($params = array(), $message = '', $delay = 0)
 	{
-		$url = self::applyParams((string) self::getReferer(), $params);
+		$url = self::applyParams((string) self::getHttpReferer(), $params);
 		self::redirect($url, $message, $delay);
 	}
 
@@ -105,14 +110,35 @@ class Url
 	 * 获取上一个页面链接
 	 * @return string
 	 */
-	public static function getReferer()
+	public static function getHttpReferer()
 	{
-		$referer = Ap::getRequest()->getParam('http_referer', false);
-		if (is_string($referer)) {
-			return $referer;
+		return Components::getHttpReferer();
+	}
+
+	/**
+	 * 获取返回列表页面链接
+	 * @return string
+	 */
+	public static function getHttpReturn()
+	{
+		return Components::getHttpReturn();
+	}
+
+	/**
+	 * 设置返回列表页面链接
+	 * @param integer $pageNo
+	 * @param array $attributes
+	 * @return void
+	 */
+	public static function setHttpReturn($pageNo, array $attributes = array())
+	{
+		if (($pageNo = (int) $pageNo) > 0) {
+			$pageVar = self::getPageVar();
+			$attributes[$pageVar] = $pageNo;
 		}
 
-		return Ap::getRequest()->getServer('HTTP_REFERER', false);
+		$return = self::getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $attributes);
+		Components::setHttpReturn($return);
 	}
 
 	/**
@@ -165,15 +191,43 @@ class Url
 	}
 
 	/**
+	 * 获取当前页码
+	 * @return integer
+	 */
+	public static function getCurrPage()
+	{
+		$pageVar = self::getPageVar();
+		$currPage = Ap::getRequest()->getInteger($pageVar);
+		$currPage = max($currPage, 1);
+		return $currPage;
+	}
+
+	/**
+	 * 获取从$_GET或$_POST中取当前页的键名
+	 * @return string
+	 */
+	public static function getPageVar()
+	{
+		try {
+			$pageVar = Cfg::getApp('page_var', 'paginator');
+		}
+		catch (ErrorException $e) {
+			$pageVar = Paginator::DEFAULT_PAGE_VAR;
+		}
+
+		return $pageVar;
+	}
+
+	/**
 	 * 获取URL管理类
 	 * @return tfc\mvc\UrlManager
 	 */
 	public static function getUrlManager()
 	{
-		if (self::$urlManager === null) {
-			self::$urlManager = Singleton::getInstance('tfc\\mvc\\UrlManager');
+		if (self::$_urlManager === null) {
+			self::$_urlManager = Mvc::getView()->getUrlManager();
 		}
 
-		return self::$urlManager;
+		return self::$_urlManager;
 	}
 }

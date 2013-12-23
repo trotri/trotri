@@ -40,9 +40,10 @@ class GroupsController extends BaseController
 		$mod = GeneratorFactory::getModel('Groups');
 		$ele = GeneratorFactory::getElements('Groups');
 		$generatorId = $req->getInteger('generator_id');
-		$pageNo = $this->getCurrPage();
+		$pageNo = Url::getCurrPage();
 
-		$ret = $mod->findIndexByAttributes(array('generator_id' => $generatorId), 'sort', $pageNo);
+		$params = array('generator_id' => $generatorId);
+		$ret = $mod->search($params, 'sort', $pageNo);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('generator_id', $generatorId);

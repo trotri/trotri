@@ -40,9 +40,10 @@ class ValidatorsController extends BaseController
 		$mod = GeneratorFactory::getModel('Validators');
 		$ele = GeneratorFactory::getElements('Validators');
 		$fieldId = $req->getInteger('field_id');
-		$pageNo = $this->getCurrPage();
+		$pageNo = Url::getCurrPage();
 
-		$ret = $mod->findIndexByAttributes(array('field_id' => $fieldId), 'sort', $pageNo);
+		$params = array('field_id' => $fieldId);
+		$ret = $mod->search($params, 'sort', $pageNo);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('field_id', $fieldId);
