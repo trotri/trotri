@@ -60,11 +60,9 @@ class Validators
 	 */
 	public function getButtonCancel()
 	{
-		$params = array(
-			'field_id' => Ap::getRequest()->getInteger('field_id')
-		);
+		$fieldId = Ap::getRequest()->getInteger('field_id');
 
-		$url = Url::getUrl('index', 'validators', 'generator', $params);
+		$url = Url::getUrl('index', 'validators', 'generator', array('field_id' => $fieldId));
 		return Components::getButtonCancel($url);
 	}
 

@@ -12,11 +12,9 @@ namespace library;
 
 use tfc\ap\Ap;
 use tfc\ap\ErrorException;
-use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
 use tfc\util\Paginator;
 use tfc\saf\Cfg;
-use ui\bootstrap\Components;
 
 /**
  * Url class file
@@ -43,7 +41,7 @@ class Url
 	}
 
 	/**
-	 * 页面重定向到当前页面链接
+	 * 页面重定向到当前页面
 	 * @param array $params
 	 * @param string $message
 	 * @param integer $delay
@@ -56,7 +54,7 @@ class Url
 	}
 
 	/**
-	 * 页面重定向到上一个页面链接
+	 * 页面重定向到上一个页面
 	 * @param array $params
 	 * @param string $message
 	 * @param integer $delay
@@ -65,6 +63,19 @@ class Url
 	public static function referer($params = array(), $message = '', $delay = 0)
 	{
 		$url = self::applyParams((string) self::getHttpReferer(), $params);
+		self::redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 页面重定向到返回列表页面
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public static function httpReturn($params = array(), $message = '', $delay = 0)
+	{
+		$url = self::applyParams((string) self::getHttpReturn(), $params);
 		self::redirect($url, $message, $delay);
 	}
 
@@ -112,7 +123,12 @@ class Url
 	 */
 	public static function getHttpReferer()
 	{
-		return Components::getHttpReferer();
+		$referer = Ap::getRequest()->getParam('http_referer');
+		if ($referer !== null) {
+			return $referer;
+		}
+
+		return Ap::getRequest()->getServer('HTTP_REFERER');
 	}
 
 	/**
@@ -121,7 +137,7 @@ class Url
 	 */
 	public static function getHttpReturn()
 	{
-		return Components::getHttpReturn();
+		return Ap::getRequest()->getParam('http_return', '');
 	}
 
 	/**
@@ -138,7 +154,7 @@ class Url
 		}
 
 		$return = self::getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $attributes);
-		Components::setHttpReturn($return);
+		Ap::getRequest()->setParam('http_return', $return);
 	}
 
 	/**

@@ -11,7 +11,6 @@
 namespace ui\bootstrap;
 
 use tfc\ap\Ap;
-use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\util\Language;
@@ -30,7 +29,7 @@ class Components
 	/**
 	 * @var string 表单提交后跳转方式：保存并跳转到编辑页
 	 */
-	const SUBMIT_TYPE_SAVE      = 'save';
+	const SUBMIT_TYPE_SAVE       = 'save';
 
 	/**
 	 * @var string 表单提交后跳转方式：保存并跳转到列表页
@@ -102,11 +101,6 @@ class Components
 	protected static $_html = null;
 
 	/**
-	 * @var string 返回列表页面链接
-	 */
-	protected static $_httpReturn = null;
-
-	/**
 	 * @var instance of tfc\util\Language
 	 */
 	protected static $_language = null;
@@ -168,17 +162,21 @@ class Components
 
 	/**
 	 * 获取表单的“取消”按钮信息
+	 * @param string $url
 	 * @return array
 	 */
-	public static function getButtonCancel()
+	public static function getButtonCancel($url)
 	{
-		$return = self::getHttpReturn();
+		if (($return = self::getHttpReturn()) !== '') {
+			$url = $return;
+		}
+
 		$output = array(
 			'type'      => 'button',
 			'label'     => self::_('UI_BOOTSTRAP_CANCEL'),
 			'glyphicon' => self::GLYPHICON_REMOVE_SIGN,
 			'class'     => 'btn btn-danger',
-			'onclick'   => 'return Trotri.href(\'' . $return . '\');'
+			'onclick'   => 'return Trotri.href(\'' . $url . '\');'
 		);
 
 		return $output;
@@ -203,7 +201,7 @@ class Components
 		);
 
 		if ($url !== '') {
-			$url = self::applyHttpReferer($url);
+			$url = self::applyHttpReturn($url);
 			$attributes['href'] = $url;
 		}
 
@@ -222,7 +220,7 @@ class Components
 	 */
 	public static function getGlyphicon($type, $url, $func, $title, $placement = 'left')
 	{
-		$url = self::applyHttpReferer($url);
+		$url = self::applyHttpReturn($url);
 		$click = $func . '(\'' . $url . '\')';
 		$attributes = array(
 			'class'               => 'glyphicon glyphicon-' . $type,
@@ -236,55 +234,27 @@ class Components
 	}
 
 	/**
+	 * 在URL后拼接http_return参数
+	 * @param string $url
+	 * @return string
+	 */
+	public static function applyHttpReturn($url)
+	{
+		if (($return = self::getHttpReturn()) !== '') {
+			$params = array('http_return' => $return);
+			$url = Mvc::getView()->getUrlManager()->applyParams($url, $params);
+		}
+
+		return $url;
+	}
+
+	/**
 	 * 获取返回列表页面链接
 	 * @return string
 	 */
 	public static function getHttpReturn()
 	{
-		if (self::$_httpReturn !== null) {
-			return self::$_httpReturn;
-		}
-
-		return Ap::getRequest()->getParam('http_return');
-	}
-
-	/**
-	 * 设置返回列表页面链接
-	 * @param string $return
-	 * @return void
-	 */
-	public static function setHttpReturn($return)
-	{
-		self::$_httpReturn = $return;
-	}
-
-	/**
-	 * 获取上一个页面链接
-	 * @return string
-	 */
-	public static function getHttpReferer()
-	{
-		$referer = Ap::getRequest()->getParam('http_referer');
-		if ($referer !== null) {
-			return $referer;
-		}
-
-		return Ap::getRequest()->getServer('HTTP_REFERER');
-	}
-
-	/**
-	 * 在URL后拼接HTTP_REFERER参数
-	 * @param string $url
-	 * @return string
-	 */
-	public static function applyHttpReferer($url)
-	{
-		if (($return = self::getHttpReturn()) !== null) {
-			$params = array('http_referer' => $return);
-			$url = Mvc::getView()->getUrlManager()->applyParams($url, $params);
-		}
-
-		return $url;
+		return Ap::getRequest()->getParam('http_return', '');
 	}
 
 	/**
@@ -294,7 +264,7 @@ class Components
 	public static function getHtml()
 	{
 		if (self::$_html === null) {
-			self::$_html = Singleton::getInstance('tfc\\mvc\\Html');
+			self::$_html = Mvc::getView()->getHtml();
 		}
 
 		return self::$_html;

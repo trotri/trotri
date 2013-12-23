@@ -60,11 +60,9 @@ class Fields
 	 */
 	public function getButtonCancel()
 	{
-		$params = array(
-			'generator_id' => Ap::getRequest()->getInteger('generator_id')
-		);
+		$generatorId = Ap::getRequest()->getInteger('generator_id');
 
-		$url = Url::getUrl('index', 'fields', 'generator', $params);
+		$url = Url::getUrl('index', 'fields', 'generator', array('generator_id' => $generatorId));
 		return Components::getButtonCancel($url);
 	}
 

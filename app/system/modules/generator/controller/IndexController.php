@@ -90,13 +90,13 @@ class IndexController extends BaseController
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
-					Url::forward('modify', 'index', 'generator', $ret);
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'index', 'generator', $ret);
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					Url::forward('index', 'index', 'generator', $ret);
+					Url::forward('index', Mvc::$controller, Mvc::$module, $ret);
 				}
 			}
 		}
@@ -117,20 +117,25 @@ class IndexController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Generators');
 		$ele = GeneratorFactory::getElements('Generators');
+		$httpReturn = Url::getHttpReturn();
+		if ($httpReturn === '') {
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module);
+		}
 
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
-					$ret['http_referer'] = Url::getHttpReferer();
-					Url::forward('modify', 'index', 'generator', $ret);
+					$ret['http_return'] = $httpReturn;
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'index', 'generator', $ret);
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					Url::referer($ret);
+					$url = Url::applyParams($httpReturn, $ret);
+					Url::redirect($httpReturn);
 				}
 			}
 
@@ -160,7 +165,7 @@ class IndexController extends BaseController
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
 		$ret = $mod->updateByPk($id, array($columnName => $value));
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
@@ -179,7 +184,7 @@ class IndexController extends BaseController
 		$value = $req->getParam('value', '');
 
 		$ret = $mod->batchupdateByPk($ids, array($columnName => $value));
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
@@ -195,7 +200,7 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->trashByPk($id);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
@@ -211,7 +216,7 @@ class IndexController extends BaseController
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchTrashByPk($ids);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
@@ -227,7 +232,7 @@ class IndexController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
@@ -243,7 +248,7 @@ class IndexController extends BaseController
 
 		$ids = explode(',', $req->getParam('ids'));
 		$ret = $mod->batchdeleteByPk($ids);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**

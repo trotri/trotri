@@ -175,10 +175,10 @@ Core = {
    * 提交表单
    * @param object btn  按钮的对象
    * @param string type 按钮的类型
-   * @param string httpReferer
+   * @param string httpReturn
    * @return void
    */
-  formSubmit: function(btn, type, httpReferer) {
+  formSubmit: function(btn, type, httpReturn) {
     var o = $(btn).parents("form");
 
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
@@ -191,8 +191,8 @@ Core = {
     });
 
     action = o.attr("action") + "&do=post&submit_type=" + type;
-    if (httpReferer !== "") {
-    	action += "&http_referer=" + httpReferer;
+    if (httpReturn !== "") {
+    	action += "&http_return=" + httpReturn;
     }
 
     o.attr("action", action);
