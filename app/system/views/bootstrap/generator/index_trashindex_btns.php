@@ -9,7 +9,7 @@ $url = $this->getUrlManager()->getUrl(
 	array(
 		'column_name' => 'trash',
 		'value' => 'n',
-		'continue' => $this->getUrlManager()->getRequestUri()
+		'http_return' => $this->http_return
 	)
 );
 ?>
@@ -19,7 +19,7 @@ $url = $this->getUrlManager()->getUrl(
     <?php echo $this->CFG_SYSTEM_GLOBAL_BATCH_RESTORE; ?>
   </button>
   <button type="button" class="btn btn-default"
-          onclick="return Core.dialogBatchRemove('<?php echo $this->getUrlManager()->getUrl('batchremove', '', '', array('continue' => $this->getUrlManager()->getRequestUri())); ?>');">
+          onclick="return Core.dialogBatchRemove('<?php echo $this->getUrlManager()->getUrl('batchremove', '', '', array('http_return' => $this->http_return)); ?>');">
     <span class="glyphicon glyphicon-remove-sign"></span>
     <?php echo $this->CFG_SYSTEM_GLOBAL_BATCH_REMOVE; ?>
   </button>

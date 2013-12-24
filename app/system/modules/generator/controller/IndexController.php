@@ -47,6 +47,7 @@ class IndexController extends BaseController
 		$ret = $mod->search($params, '', $pageNo);
 
 		$view->assign('elementCollections', $ele);
+		$view->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
 
@@ -70,6 +71,7 @@ class IndexController extends BaseController
 		$ret = $mod->search($params, '', $pageNo);
 
 		$view->assign('elementCollections', $ele);
+		$view->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
 
@@ -135,7 +137,7 @@ class IndexController extends BaseController
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
 					$url = Url::applyParams($httpReturn, $ret);
-					Url::redirect($httpReturn);
+					Url::redirect($url);
 				}
 			}
 
