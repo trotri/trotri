@@ -101,19 +101,19 @@ class GroupsController extends BaseController
 		$generatorId = $req->getInteger('generator_id');
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
-			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module);
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('generator_id' => $generatorId));
 		}
 
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$ret['generator_id'] = $generatorId;
 				if ($this->isSubmitTypeSave()) {
 					$ret['http_return'] = $httpReturn;
 					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
+					$ret['generator_id'] = $generatorId;
 					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {

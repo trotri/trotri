@@ -47,6 +47,7 @@ class FieldsController extends BaseController
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('generator_id', $generatorId);
+		$view->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
 
@@ -98,28 +99,27 @@ class FieldsController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Fields');
 		$ele = GeneratorFactory::getElements('Fields');
-		$httpReferer = Url::getReferer();
 		$generatorId = $req->getInteger('generator_id');
+		$httpReturn = Url::getHttpReturn();
+		if ($httpReturn === '') {
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('generator_id' => $generatorId));
+		}
 
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$ret['generator_id'] = $generatorId;
 				if ($this->isSubmitTypeSave()) {
-					$ret['http_referer'] = Url::getUrl('index', 'fields', 'generator');
-					Url::forward('modify', 'fields', 'generator', $ret);
+					$ret['http_return'] = $httpReturn;
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
+					$ret['generator_id'] = $generatorId;
 					Url::forward('create', 'fields', 'generator', $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					if ($httpReferer) {
-						Url::referer($ret);
-					}
-					else {
-						Url::forward('index', 'fields', 'generator', $ret);
-					}
+					$url = Url::applyParams($httpReturn, $ret);
+					Url::redirect($url);
 				}
 			}
 
@@ -132,7 +132,6 @@ class FieldsController extends BaseController
 		$view->assign('elementCollections', $ele);
 		$view->assign('generator_id', $generatorId);
 		$view->assign('id', $id);
-		$view->assign('http_referer', $httpReferer);
 		$this->render($ret);
 	}
 
@@ -149,7 +148,7 @@ class FieldsController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
@@ -167,7 +166,7 @@ class FieldsController extends BaseController
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
 		$ret = $mod->updateByPk($id, array($columnName => $value));
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**
