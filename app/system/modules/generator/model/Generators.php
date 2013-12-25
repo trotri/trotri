@@ -13,7 +13,6 @@ namespace modules\generator\model;
 use tfc\ap\Registry;
 use tfc\util\String;
 use koala\Model;
-use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -87,7 +86,6 @@ class Generators extends Model
 			$attributes['app_name'] = $appName;
 		}
 
-		Url::setHttpReturn($pageNo, $attributes);
 		$ret = $this->findIndexByAttributes($attributes, '', $pageNo);
 		return $ret;
 	}

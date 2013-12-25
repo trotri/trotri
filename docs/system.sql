@@ -38,6 +38,7 @@ DROP TABLE IF EXISTS `tr_generator_field_groups`;
 CREATE TABLE `tr_generator_field_groups` (
   `group_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
+  `prompt` varchar(100) NOT NULL DEFAULT '' COMMENT '提示',
   `generator_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '生成代码ID',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `description` text COMMENT '描述',
@@ -47,7 +48,7 @@ CREATE TABLE `tr_generator_field_groups` (
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
-INSERT INTO `tr_generator_field_groups` VALUES (1, '主要信息', 0, 1, '默认');
+INSERT INTO `tr_generator_field_groups` VALUES (1, 'main', '主要信息', 0, 1, '默认');
 
 DROP TABLE IF EXISTS `tr_generator_field_types`;
 CREATE TABLE `tr_generator_field_types` (

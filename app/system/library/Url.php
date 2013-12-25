@@ -146,11 +146,15 @@ class Url
 	 * @param array $attributes
 	 * @return void
 	 */
-	public static function setHttpReturn($pageNo, array $attributes = array())
+	public static function setHttpReturn(array $attributes = array(), $pageNo = 0, $order = '')
 	{
 		if (($pageNo = (int) $pageNo) > 0) {
 			$pageVar = self::getPageVar();
 			$attributes[$pageVar] = $pageNo;
+		}
+
+		if ($order !== '') {
+			$attributes['order'] = $order;
 		}
 
 		$return = self::getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $attributes);

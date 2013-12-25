@@ -12,7 +12,6 @@ namespace modules\generator\model;
 
 use koala\Model;
 use tfc\ap\Registry;
-use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -46,7 +45,6 @@ class Types extends Model
 	{
 		$attributes = array();
 
-		Url::setHttpReturn($pageNo, $attributes);
 		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
 		return $ret;
 	}

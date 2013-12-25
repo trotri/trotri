@@ -10,7 +10,6 @@
 
 namespace modules\generator\elements;
 
-use tfc\ap\Ap;
 use tfc\saf\Text;
 use ui\ElementCollections;
 use library\GeneratorFactory;
@@ -181,7 +180,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Alpha' => array(true, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_ALPHA')),
+				'AlphaNum' => array(true, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_ALPHANUM')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_MINLENGTH')),
 				'MaxLength' => array(50, Text::_('MOD_GENERATOR_FIELDS_FIELD_NAME_MAXLENGTH'))
 			);
@@ -354,7 +353,6 @@ class Fields extends ElementCollections
 		$output = array();
 
 		$name = 'generator_id';
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -363,6 +361,7 @@ class Fields extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
+			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorId();
 			$output = array(
 				'type' => 'hidden',
 				'label' => Text::_('MOD_GENERATOR_FIELDS_GENERATOR_ID_LABEL'),
@@ -388,11 +387,6 @@ class Fields extends ElementCollections
 		$output = array();
 
 		$name = 'generator_name';
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
-		if ($generatorId <= 0) {
-			$fieldId = Ap::getRequest()->getInteger('id');
-			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId);
-		}
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -400,6 +394,7 @@ class Fields extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
+			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorId();
 			$generatorName = GeneratorFactory::getModel('Generators')->getGeneratorNameByGeneratorId($generatorId);
 			$output = array(
 				'type' => 'string',
@@ -420,15 +415,8 @@ class Fields extends ElementCollections
 	{
 		$output = array();
 
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
-		if ($generatorId <= 0) {
-			$fieldId = Ap::getRequest()->getInteger('id');
-			$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId);
-		}
-
-		$default = GeneratorFactory::getModel('groups')->getGroupsByGeneratorId(0);
-		$groups = GeneratorFactory::getModel('groups')->getGroupsByGeneratorId($generatorId);
-		$groups = $default + $groups;
+		$generatorId = GeneratorFactory::getModel('Fields')->getGeneratorId();
+		$groups = GeneratorFactory::getModel('groups')->getGroupsByGeneratorId($generatorId, true);
 
 		$name = 'group_id';
 

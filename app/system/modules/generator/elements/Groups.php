@@ -10,7 +10,6 @@
 
 namespace modules\generator\elements;
 
-use tfc\ap\Ap;
 use tfc\saf\Text;
 use ui\ElementCollections;
 use library\GeneratorFactory;
@@ -85,8 +84,43 @@ class Groups extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
+				'Alpha' => array(true, Text::_('MOD_GENERATOR_GROUPS_GROUP_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_GROUPS_GROUP_NAME_MINLENGTH')),
 				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GROUPS_GROUP_NAME_MAXLENGTH'))
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“提示”表单元素和验证规则
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getPrompt($type)
+	{
+		$output = array();
+
+		$name = 'prompt';
+
+		if ($type === self::TYPE_TABLE) {
+			$output = array(
+				'label' => Text::_('MOD_GENERATOR_GROUPS_PROMPT_LABEL'),
+			);
+		}
+		elseif ($type === self::TYPE_FORM) {
+			$output = array(
+				'type' => 'text',
+				'label' => Text::_('MOD_GENERATOR_GROUPS_PROMPT_LABEL'),
+				'hint' => Text::_('MOD_GENERATOR_GROUPS_PROMPT_HINT'),
+				'required' => true
+			);
+		}
+		elseif ($type === self::TYPE_FILTER) {
+			$output = array(
+				'MinLength' => array(2, Text::_('MOD_GENERATOR_GROUPS_PROMPT_MINLENGTH')),
+				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GROUPS_PROMPT_MAXLENGTH'))
 			);
 		}
 
@@ -103,7 +137,6 @@ class Groups extends ElementCollections
 		$output = array();
 
 		$name = 'generator_id';
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -112,6 +145,7 @@ class Groups extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
+			$generatorId = GeneratorFactory::getModel('Groups')->getGeneratorId();
 			$output = array(
 				'type' => 'hidden',
 				'value' => $generatorId
@@ -136,7 +170,6 @@ class Groups extends ElementCollections
 		$output = array();
 
 		$name = 'generator_name';
-		$generatorId = Ap::getRequest()->getInteger('generator_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -144,6 +177,7 @@ class Groups extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
+			$generatorId = GeneratorFactory::getModel('Groups')->getGeneratorId();
 			$generatorName = GeneratorFactory::getModel('Generators')->getGeneratorNameByGeneratorId($generatorId);
 			$output = array(
 				'type' => 'string',

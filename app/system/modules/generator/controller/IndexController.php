@@ -45,6 +45,7 @@ class IndexController extends BaseController
 		$params['trash'] = 'n';
 
 		$ret = $mod->search($params, '', $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('http_return', Url::getHttpReturn());
@@ -69,6 +70,7 @@ class IndexController extends BaseController
 		$params['trash'] = 'y';
 
 		$ret = $mod->search($params, '', $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('http_return', Url::getHttpReturn());

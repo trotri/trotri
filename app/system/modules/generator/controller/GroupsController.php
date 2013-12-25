@@ -44,6 +44,7 @@ class GroupsController extends BaseController
 
 		$params = array('generator_id' => $generatorId);
 		$ret = $mod->search($params, 'sort', $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('generator_id', $generatorId);
@@ -98,13 +99,13 @@ class GroupsController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Groups');
 		$ele = GeneratorFactory::getElements('Groups');
-		$generatorId = $req->getInteger('generator_id');
+		$id = $req->getInteger('id');
+		$generatorId = $mod->getGeneratorId();
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
 			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('generator_id' => $generatorId));
 		}
 
-		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {

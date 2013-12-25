@@ -44,10 +44,12 @@ class ValidatorsController extends BaseController
 
 		$params = array('field_id' => $fieldId);
 		$ret = $mod->search($params, 'sort', $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('field_id', $fieldId);
 		$view->assign('generator_id', GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId));
+		$view->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
 
@@ -70,14 +72,14 @@ class ValidatorsController extends BaseController
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$ret['field_id'] = $fieldId;
 				if ($this->isSubmitTypeSave()) {
-					$ret['http_referer'] = Url::getUrl('index', 'validators', 'generator');
-					Url::forward('modify', 'validators', 'generator', $ret);
+					$ret['http_referer'] = Url::getUrl('index', 'fields', 'generator');
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'validators', 'generator', $ret);
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					Url::forward('index', 'validators', 'generator', $ret);
+					Url::forward('index', Mvc::$controller, Mvc::$module, $ret);
 				}
 			}
 		}
@@ -100,28 +102,28 @@ class ValidatorsController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Validators');
 		$ele = GeneratorFactory::getElements('Validators');
-		$httpReferer = Url::getReferer();
-		$fieldId = $req->getInteger('field_id');
+		$id = $req->getInteger('id');
+		$fieldId = $mod->getFieldId();
+		$httpReturn = Url::getHttpReturn();
+		if ($httpReturn === '') {
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('field_id' => $fieldId));
+		}
 
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$ret['field_id'] = $fieldId;
 				if ($this->isSubmitTypeSave()) {
-					$ret['http_referer'] = Url::getUrl('index', 'groups', 'generator');
-					Url::forward('modify', 'validators', 'generator', $ret);
+					$ret['http_return'] = $httpReturn;
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'validators', 'generator', $ret);
+					$ret['field_id'] = $fieldId;
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					if ($httpReferer) {
-						Url::referer($ret);
-					}
-					else {
-						Url::forward('index', 'validators', 'generator', $ret);
-					}
+					$url = Url::applyParams($httpReturn, $ret);
+					Url::redirect($url);
 				}
 			}
 
@@ -135,7 +137,6 @@ class ValidatorsController extends BaseController
 		$view->assign('field_id', $fieldId);
 		$view->assign('generator_id', GeneratorFactory::getModel('Fields')->getGeneratorIdByFieldId($fieldId));
 		$view->assign('id', $id);
-		$view->assign('http_referer', $httpReferer);
 		$this->render($ret);
 	}
 
@@ -152,7 +153,7 @@ class ValidatorsController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**

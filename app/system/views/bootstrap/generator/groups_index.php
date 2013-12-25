@@ -9,6 +9,7 @@ $this->widget(
 		'columns' => array(
 			'group_name',
 			'generator_id',
+			'prompt',
 			'sort',
 			'description',
 			'group_id',

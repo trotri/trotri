@@ -11,8 +11,8 @@
 namespace modules\generator\model;
 
 use koala\Model;
+use tfc\ap\Ap;
 use tfc\ap\Registry;
-use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -51,9 +51,41 @@ class Validators extends Model
 			$attributes['field_id'] = $fieldId;
 		}
 
-		Url::setHttpReturn($pageNo, $attributes);
 		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
 		return $ret;
+	}
+
+	/**
+	 * 获取field_id值
+	 * @return integer
+	 */
+	public function getFieldId()
+	{
+		$fieldId = Ap::getRequest()->getInteger('field_id');
+		if ($fieldId <= 0) {
+			$id = Ap::getRequest()->getInteger('id');
+			$fieldId = $this->getFieldIdByValidatorId($id);
+		}
+
+		return $fieldId;
+	}
+
+	/**
+	 * 通过validator_id获取field_id值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getFieldIdByValidatorId($value)
+	{
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('field_id', $value);
+			$fieldId = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['field_id'];
+			Registry::set($name, $fieldId);
+		}
+
+		return Registry::get($name);
 	}
 
 	/**

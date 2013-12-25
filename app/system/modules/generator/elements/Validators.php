@@ -10,7 +10,6 @@
 
 namespace modules\generator\elements;
 
-use tfc\ap\Ap;
 use tfc\saf\Text;
 use ui\ElementCollections;
 use library\GeneratorFactory;
@@ -161,7 +160,6 @@ class Validators extends ElementCollections
 		$output = array();
 
 		$name = 'field_id';
-		$fieldId = Ap::getRequest()->getInteger('field_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -170,6 +168,7 @@ class Validators extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
+			$fieldId = GeneratorFactory::getModel('Validators')->getFieldId();
 			$output = array(
 				'type' => 'hidden',
 				'value' => $fieldId
@@ -194,7 +193,6 @@ class Validators extends ElementCollections
 		$output = array();
 
 		$name = 'field_name';
-		$fieldId = Ap::getRequest()->getInteger('field_id');
 
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
@@ -202,6 +200,7 @@ class Validators extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
+			$fieldId = GeneratorFactory::getModel('Validators')->getFieldId();
 			$fieldName = GeneratorFactory::getModel('Fields')->getFieldNameByFieldId($fieldId);
 			$output = array(
 				'type' => 'string',

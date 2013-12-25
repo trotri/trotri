@@ -11,8 +11,8 @@
 namespace modules\generator\model;
 
 use koala\Model;
+use tfc\ap\Ap;
 use tfc\ap\Registry;
-use library\Url;
 use library\ErrorNo;
 use library\GeneratorFactory;
 
@@ -51,7 +51,6 @@ class Fields extends Model
 			$attributes['generator_id'] = $generatorId;
 		}
 
-		Url::setHttpReturn($pageNo, $attributes);
 		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
 		return $ret;
 	}
@@ -78,21 +77,18 @@ class Fields extends Model
 	}
 
 	/**
-	 * 通过field_id获取field_name值
-	 * @param integer $value
-	 * @return string
+	 * 通过generator_id值
+	 * @return integer
 	 */
-	public function getFieldNameByFieldId($value)
+	public function getGeneratorId()
 	{
-		$value = (int) $value;
-		$name = 'Fields::field_name_' . $value;
-		if (!Registry::has($name)) {
-			$ret = $this->getByPk('field_name', $value);
-			$fieldName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['field_name'];
-			Registry::set($name, $fieldName);
+		$generatorId = Ap::getRequest()->getInteger('generator_id');
+		if ($generatorId <= 0) {
+			$id = Ap::getRequest()->getInteger('id');
+			$generatorId = $this->getGeneratorIdByFieldId($id);
 		}
 
-		return Registry::get($name);
+		return $generatorId;
 	}
 
 	/**
@@ -107,6 +103,24 @@ class Fields extends Model
 	}
 
 	/**
+	 * 通过field_id获取field_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getFieldNameByFieldId($value)
+	{
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('field_name', $value);
+			$fieldName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['field_name'];
+			Registry::set($name, $fieldName);
+		}
+
+		return Registry::get($name);
+	}
+
+	/**
 	 * 通过field_id获取generator_id值
 	 * @param integer $value
 	 * @return string
@@ -114,7 +128,7 @@ class Fields extends Model
 	public function getGeneratorIdByFieldId($value)
 	{
 		$value = (int) $value;
-		$name = 'Fields::generator_id_' . $value;
+		$name = __METHOD__ . '_' . $value;
 		if (!Registry::has($name)) {
 			$ret = $this->getByPk('generator_id', $value);
 			$generatorId = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['generator_id'];

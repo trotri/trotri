@@ -440,7 +440,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_GENERATOR_GENERATORS_APP_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_GENERATORS_APP_NAME_MINLENGTH')),
-				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATORS_APP_NAME_MAXLENGTH'))
+				'MaxLength' => array(50, Text::_('MOD_GENERATOR_GENERATORS_APP_NAME_MAXLENGTH'))
 			);
 		}
 		elseif ($type === self::TYPE_SEARCH) {

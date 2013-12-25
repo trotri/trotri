@@ -30,10 +30,6 @@ $this->widget('ui\bootstrap\widgets\FormBuilder',
 			'form_modify_sort',
 			'form_search_show',
 			'form_search_sort',
-			'http_referer' => array(
-				'type' => 'hidden',
-				'value' => $this->http_referer
-			),
 			'button_save' => $elements->uiComponents->getButtonSave(),
 			'button_save2close' => $elements->uiComponents->getButtonSaveClose(),
 			'button_save2new' => $elements->uiComponents->getButtonSaveNew(),

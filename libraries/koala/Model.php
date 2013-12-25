@@ -177,15 +177,22 @@ abstract class Model
 		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
 		$offset = ($pageNo - 1) * $listRows;
 		$ret = $this->findAllByCondition($condition, $params, $order, $listRows, $offset, 'SQL_CALC_FOUND_ROWS');
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return $ret;
+		$totalRows = 0;
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			$totalRows = $this->getDb()->getFoundRows();
 		}
 
 		$ret['paginator'] = array(
-			'total_rows' => $this->getDb()->getFoundRows(),
+			'total_rows' => $totalRows,
 			'curr_page' => $pageNo,
 			'list_rows' => $listRows,
-			'url' => Singleton::getInstance('tfc\\mvc\\UrlManager')->getUrl(Mvc::$action, '', '', $params)
+			'url' => Mvc::getView()->getUrlManager()->getUrl(Mvc::$action, '', '', $params)
+		);
+
+		$ret['params'] = array(
+			'attributes' => $params,
+			'curr_page' => $pageNo,
+			'order' => $order,
 		);
 
 		return $ret;

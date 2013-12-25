@@ -10,7 +10,6 @@
 
 namespace modules\generator\elements;
 
-use tfc\ap\Ap;
 use tfc\saf\Text;
 use ui\ElementCollections;
 use library\GeneratorFactory;

@@ -9,6 +9,7 @@ $this->widget('ui\bootstrap\widgets\FormBuilder',
 		'elementCollections' => $elements,
 		'elements' => array(
 			'group_name',
+			'prompt',
 			'generator_name',
 			'sort',
 			'description',

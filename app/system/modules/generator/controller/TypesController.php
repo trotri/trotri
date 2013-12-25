@@ -43,6 +43,7 @@ class TypesController extends BaseController
 
 		$params = array();
 		$ret = $mod->search($params, 'sort', $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$view->assign('elementCollections', $ele);
 		$this->render($ret);
@@ -66,13 +67,13 @@ class TypesController extends BaseController
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
 					$ret['http_referer'] = Url::getUrl('index', 'types', 'generator');
-					Url::forward('modify', 'types', 'generator', $ret);
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'types', 'generator', $ret);
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					Url::forward('index', 'types', 'generator', $ret);
+					Url::forward('index', Mvc::$controller, Mvc::$module, $ret);
 				}
 			}
 		}
@@ -93,25 +94,25 @@ class TypesController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Types');
 		$ele = GeneratorFactory::getElements('Types');
-		$httpReferer = Url::getReferer();
+		$httpReturn = Url::getHttpReturn();
+		if ($httpReturn === '') {
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module);
+		}
 
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
-					Url::forward('modify', 'types', 'generator', $ret);
+					$ret['http_return'] = $httpReturn;
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'types', 'generator', $ret);
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					if ($httpReferer) {
-						Url::referer($ret);
-					}
-					else {
-						Url::forward('index', 'types', 'generator', $ret);
-					}
+					$url = Url::applyParams($httpReturn, $ret);
+					Url::redirect($url);
 				}
 			}
 
@@ -122,7 +123,6 @@ class TypesController extends BaseController
 		}
 
 		$view->assign('elementCollections', $ele);
-		$view->assign('http_referer', $httpReferer);
 		$view->assign('id', $id);
 		$this->render($ret);
 	}
@@ -140,7 +140,7 @@ class TypesController extends BaseController
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
-		Url::referer($ret);
+		Url::httpReturn($ret);
 	}
 
 	/**

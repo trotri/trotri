@@ -44,6 +44,7 @@ class FieldsController extends BaseController
 
 		$params = array('generator_id' => $generatorId);
 		$ret = $mod->search($params, '', $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$view->assign('elementCollections', $ele);
 		$view->assign('generator_id', $generatorId);
@@ -70,14 +71,13 @@ class FieldsController extends BaseController
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				$ret['generator_id'] = $generatorId;
 				if ($this->isSubmitTypeSave()) {
-					$ret['http_referer'] = Url::getUrl('index', 'fields', 'generator');
-					Url::forward('modify', 'fields', 'generator', $ret);
+					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
-					Url::forward('create', 'fields', 'generator', $ret);
+					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					Url::forward('index', 'fields', 'generator', $ret);
+					Url::forward('index', Mvc::$controller, Mvc::$module, $ret);
 				}
 			}
 		}
@@ -99,13 +99,13 @@ class FieldsController extends BaseController
 		$view = Mvc::getView();
 		$mod = GeneratorFactory::getModel('Fields');
 		$ele = GeneratorFactory::getElements('Fields');
-		$generatorId = $req->getInteger('generator_id');
+		$id = $req->getInteger('id');
+		$generatorId = $mod->getGeneratorId();
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
 			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('generator_id' => $generatorId));
 		}
 
-		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
