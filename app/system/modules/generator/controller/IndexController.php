@@ -10,6 +10,8 @@
 
 namespace modules\generator\controller;
 
+use modules\generator\model\Builder;
+
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
@@ -267,8 +269,8 @@ class IndexController extends BaseController
 			Url::err404();
 		}
 
-		$mod = GeneratorFactory::getModel('Builder');
-		$mod->create($id);
+		$mod = new Builder($id);
+		$mod->create();
 	}
 
 	/**
