@@ -80,7 +80,7 @@ DROP TABLE IF EXISTS `tr_generator_fields`;
 CREATE TABLE `tr_generator_fields` (
   `field_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `field_name` varchar(100) NOT NULL DEFAULT '' COMMENT '字段名',
-  `column_length` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'DB字段长度',
+  `column_length` varchar(200) unsigned NOT NULL DEFAULT '0' COMMENT 'DB字段长度或用|分隔开的Enum值',
   `column_auto_increment` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否自动递增',
   `column_unsigned` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否无符号',
   `column_comment` varchar(200) NOT NULL DEFAULT '' COMMENT 'DB字段描述',

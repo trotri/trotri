@@ -106,8 +106,19 @@ class Builder
 			foreach ($fields['validators'] as $vk => $validators) {
 				$this->_fields[$fk]['validators'][$vk]['lang_key'] = $string . '_' . strtoupper($validators['validator_name']);
 			}
+
+			if ($fields['types']['field_type'] === 'ENUM') {
+				$enums = array();
+				foreach (explode('|', $fields['column_length']) as $value) {
+					$key = strtoupper($fields['field_name'] . '_' . $value);
+					$enums[$key] = $value;
+				}
+
+				$this->_fields[$fk]['enums'] = $enums;
+			}
 		}
 
+		header('Content-Type: text/html; charset=utf-8');
 		echo '<pre>';
 		print_r($this->_generators);
 		print_r($this->_groups);
@@ -116,6 +127,80 @@ class Builder
 
 		$this->touchLang();
 		$this->touchElement();
+		$this->touchDb();
+		$this->touchUi();
+	}
+
+	/**
+	 * 创建Db
+	 * @return void
+	 */
+	public function touchDb()
+	{
+		$filePath = $this->_modDir . DS . 'db' . DS . $this->_generators['class_name'] . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeComment($stream);
+
+		$package = "modules\\{$this->_generators['mod_name']}\\db";
+		fwrite($stream, "namespace {$package};\n\n");
+		fwrite($stream, "use library\\Db;\n\n");
+
+		fwrite($stream, "/**\n");
+		fwrite($stream, " * {$this->_generators['class_name']} class file\n");
+		fwrite($stream, " * 数据库操作层类\n");
+		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
+		fwrite($stream, " * @version \$Id: {$this->_generators['class_name']}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
+		fwrite($stream, " * @package {$package}\n");
+		fwrite($stream, " * @since 1.0\n");
+		fwrite($stream, " */\n");
+
+		fwrite($stream, "class {$this->_generators['class_name']} extends Db\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 构造方法：初始化表名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function __construct()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\tparent::__construct('{$this->_generators['tbl_name']}');\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "}\n");
+		fclose($stream);
+	}
+
+	/**
+	 * 创建Ui
+	 * @return void
+	 */
+	public function touchUi()
+	{
+		$filePath = $this->_modDir . DS . 'ui' . DS . 'bootstrap' . DS . $this->_generators['class_name'] . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeComment($stream);
+
+		$package = "modules\\{$this->_generators['mod_name']}\\ui\\bootstrap";
+		fwrite($stream, "namespace {$package};\n\n");
+		fwrite($stream, "use ui\\bootstrap\\Components;\n");
+		fwrite($stream, "use tfc\\ap\\Ap;\n");
+		fwrite($stream, "use tfc\\saf\\Text;\n");
+		fwrite($stream, "use library\\Url;\n");
+		fwrite($stream, "use library\\{$this->_generators['factory_name']};\n\n");
+
+		fwrite($stream, "/**\n");
+		fwrite($stream, " * {$this->_generators['class_name']} class file\n");
+		fwrite($stream, " * 页面小组件类，基于Bootstrap-v3前端开发框架\n");
+		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
+		fwrite($stream, " * @version \$Id: {$this->_generators['class_name']}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
+		fwrite($stream, " * @package {$package}\n");
+		fwrite($stream, " * @since 1.0\n");
+		fwrite($stream, " */\n");
+		fwrite($stream, "class {$this->_generators['class_name']}\n");
+		fwrite($stream, "{\n");
+		
+		
+		
+		fwrite($stream, "}\n");
+		fclose($stream);
 	}
 
 	/**
@@ -145,6 +230,18 @@ class Builder
 
 		fwrite($stream, "class {$this->_generators['class_name']} extends ElementCollections\n");
 		fwrite($stream, "{\n");
+
+		foreach ($this->_fields as $fields) {
+			if (isset($fields['enums'])) {
+				foreach ($fields['enums'] as $key => $value) {
+					fwrite($stream, "\t/**\n");
+					fwrite($stream, "\t * @var string {$fields['field_name']}：{$value}\n");
+					fwrite($stream, "\t */\n");
+					fwrite($stream, "\tconst {$key} = '{$value}';\n\n");
+				}
+			}
+		}
+
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * @var ui\\bootstrap\\Components 页面小组件类\n");
 		fwrite($stream, "\t */\n");
@@ -186,6 +283,14 @@ class Builder
 			fwrite($stream, "\tpublic function get" . $this->column2Name($fields['field_name']) . "(\$type)\n");
 			fwrite($stream, "\t{\n");
 			fwrite($stream, "\t\t\$output = array();\n");
+			if (isset($fields['enums'])) {
+				fwrite($stream, "\t\t\$options = array(\n");
+				foreach ($fields['enums'] as $key => $value) {
+					fwrite($stream, "\t\t\tself::{$key} => self::{$key},\n");
+				}
+				fwrite($stream, "\t\t);\n\n");
+			}
+
 			fwrite($stream, "\t\t\$name = '{$fields['field_name']}';\n\n");
 
 			fwrite($stream, "\t\tif (\$type === self::TYPE_TABLE) {\n");
@@ -193,47 +298,79 @@ class Builder
 			fwrite($stream, "\t\t\t\t'label' => Text::_('{$fields['lang_label']}'),\n");
 			fwrite($stream, "\t\t\t);\n");
 			fwrite($stream, "\t\t}\n");
-			
+
 			fwrite($stream, "\t\telseif (\$type === self::TYPE_FORM) {\n");
 			fwrite($stream, "\t\t\t\$output = array(\n");
+			fwrite($stream, "\t\t\t\t'__tid__' => '{$fields['groups']['group_name']}',\n");
 			fwrite($stream, "\t\t\t\t'type' => '{$fields['types']['form_type']}',\n");
 			fwrite($stream, "\t\t\t\t'label' => Text::_('{$fields['lang_label']}'),\n");
 			fwrite($stream, "\t\t\t\t'hint' => Text::_('{$fields['lang_hint']}'),\n");
 			if ($fields['form_required'] == 'y') {
 				fwrite($stream, "\t\t\t\t'required' => true,\n");
 			}
+			if ($fields['form_modifiable'] == 'y') {
+				fwrite($stream, "\t\t\t\t'disabled' => true,\n");
+			}
+			if (isset($fields['enums'])) {
+				fwrite($stream, "\t\t\t\t'options' => \$options,\n");
+				fwrite($stream, "\t\t\t\t'value' => self::" . array_shift(array_keys($fields['enums'])) . ",\n");
+			}
 			fwrite($stream, "\t\t\t);\n");
 			fwrite($stream, "\t\t}\n");
 
-			
-			/*
-			elseif ($type === self::TYPE_FORM) {
-				$output = array(
-						'type' => 'text',
-						'label' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
-						'hint' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_HINT'),
-						'required' => true
-				);
+			fwrite($stream, "\t\telseif (\$type === self::TYPE_FILTER) {\n");
+			fwrite($stream, "\t\t\t\$output = array(\n");
+			foreach ($fields['validators'] as $validators) {
+				$options = $validators['options'];
+				switch ($validators['option_category']) {
+					case 'integer' :
+						$options = (int) $options;
+						break;
+					case 'boolean' :
+						$options = $options ? 'true' : 'false';
+						break;
+					case 'array' :
+						$options = 'array()';
+						break;
+					case 'string' :
+					default :
+						$options = "'" . (string) $options . "'";
+						break;
+				}
+
+				if (isset($fields['enums'])) {
+					$options = 'array_keys($options)';
+				}
+				fwrite($stream, "\t\t\t\t'{$validators['validator_name']}' => array({$options}, Text::_('{$validators['lang_key']}')),\n");
 			}
-			elseif ($type === self::TYPE_FILTER) {
-				$output = array(
-						'MinLength' => array(6, Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_MINLENGTH')),
-						'MaxLength' => array(50, Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_MAXLENGTH'))
-				);
+			fwrite($stream, "\t\t\t);\n");
+			fwrite($stream, "\t\t}\n");
+
+			if (isset($fields['enums'])) {
+				fwrite($stream, "\t\telseif (\$type === self::TYPE_OPTIONS) {\n");
+				fwrite($stream, "\t\t\t\$output = \$options;\n");
+				fwrite($stream, "\t\t}\n");
 			}
-			elseif ($type === self::TYPE_SEARCH) {
-				$output = array(
-						'type' => 'text',
-						'placeholder' => Text::_('MOD_GENERATOR_GENERATORS_GENERATOR_NAME_LABEL'),
-				);
+
+			if ($fields['form_search_show'] === 'y') {
+				fwrite($stream, "\t\telseif (\$type === self::TYPE_SEARCH) {\n");
+				fwrite($stream, "\t\t\t\$output = array(\n");
+				if ($fields['types']['category'] === 'option') {
+					fwrite($stream, "\t\t\t\t'type' => 'select',\n");
+				}
+				else {
+					fwrite($stream, "\t\t\t\t'type' => 'text',\n");
+				}
+				fwrite($stream, "\t\t\t\t'placeholder' => Text::_('{$fields['lang_label']}'),\n");
+				fwrite($stream, "\t\t\t);\n");
+				fwrite($stream, "\t\t}\n");
 			}
-			*/
-			
-			fwrite($stream, "\t\treturn \$output;\n");
+
+			fwrite($stream, "\n\t\treturn \$output;\n");
 			fwrite($stream, "\t}\n\n");
 		}
 
-		fwrite($stream, "}\n\n");
+		fwrite($stream, "}\n");
 		fclose($stream);
 	}
 

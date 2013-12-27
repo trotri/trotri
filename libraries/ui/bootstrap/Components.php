@@ -56,6 +56,31 @@ class Components
 	);
 
 	/**
+	 * @var string JS函数：链接
+	 */
+	const JSFUNC_HREF = 'Trotri.href';
+
+	/**
+	 * @var string JS函数：删除对话框
+	 */
+	const JSFUNC_DIALOGREMOVE = 'Core.dialogRemove';
+
+	/**
+	 * @var string JS函数：放入回收站对话框
+	 */
+	const JSFUNC_DIALOGTRASH = 'Core.dialogTrash';
+
+	/**
+	 * @var string JS函数：批量删除对话框
+	 */
+	const JSFUNC_DIALOGBATCHREMOVE = 'Core.dialogBatchRemove';
+
+	/**
+	 * @var string JS函数：批量放入回收站对话框
+	 */
+	const JSFUNC_DIALOGBATCHTRASH = 'Core.dialogBatchTrash';
+
+	/**
 	 * @var string Glyphicons图标：列表按钮
 	 */
 	const GLYPHICON_LIST = 'list';

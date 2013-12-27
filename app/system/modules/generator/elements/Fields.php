@@ -214,7 +214,7 @@ class Fields extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Numeric' => array(true, Text::_('MOD_GENERATOR_FIELDS_COLUMN_LENGTH_INTEGER'))
+				
 			);
 		}
 
