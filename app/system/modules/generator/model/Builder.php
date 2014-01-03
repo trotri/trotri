@@ -182,6 +182,7 @@ class Builder
 		fwrite($stream, "namespace {$package};\n\n");
 		fwrite($stream, "use ui\\bootstrap\\Components;\n");
 		fwrite($stream, "use tfc\\ap\\Ap;\n");
+		fwrite($stream, "use tfc\\mvc\\Mvc;\n");
 		fwrite($stream, "use tfc\\saf\\Text;\n");
 		fwrite($stream, "use library\\Url;\n");
 		fwrite($stream, "use library\\{$this->_generators['factory_name']};\n\n");
@@ -196,9 +197,97 @@ class Builder
 		fwrite($stream, " */\n");
 		fwrite($stream, "class {$this->_generators['class_name']}\n");
 		fwrite($stream, "{\n");
-		
-		
-		
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 获取表单的“保存”按钮\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getButtonSave()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\treturn Components::getButtonSave();\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 获取表单的“保存并关闭”按钮\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getButtonSaveClose()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\treturn Components::getButtonSaveClose();\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 获取表单的“保存并新建”按钮\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getButtonSaveNew()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\treturn Components::getButtonSaveNew();\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 获取表单的“取消”按钮\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getButtonCancel()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$url = '--待开发--';\n");
+		fwrite($stream, "\t\treturn Components::getButtonCancel(\$url);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 获取操作图标按钮\n");
+		fwrite($stream, "\t * @param array \$data\n");
+		fwrite($stream, "\t * @return string\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getOperate(\$data)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$params = array('--待开发--');\n\n");
+
+		$indexRowBtns = array();
+
+		$createName = $this->_generators['act_create_name'];
+		$modifyName = $this->_generators['act_modify_name'];
+		$removeName = $this->_generators['act_remove_name'];
+		$trashName = 'trash';
+
+		foreach ($this->_generators['index_row_btns'] as $value) {
+			if ($value === 'pencil') {
+				$modifyUrl = '$modifyUrl = Url::getUrl(\'' . $modifyName . '\', Mvc::$controller, Mvc::$module, $params);';
+				$modifyIcon = '$modifyIcon = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modifyUrl, Components::JSFUNC_HREF, Text::_(\'CFG_SYSTEM_GLOBAL_MODIFY\'));';
+				fwrite($stream, "\t\t$modifyUrl\n");
+				fwrite($stream, "\t\t$modifyIcon\n\n");
+
+				$indexRowBtns[] = '$modifyIcon';
+			}
+			elseif ($value === 'trash') {
+				$trashUrl = '$trashUrl = Url::getUrl(\'' . $trashName . '\', Mvc::$controller, Mvc::$module, $params);';
+				$trashIcon = '$trashIcon = Components::getGlyphicon(Components::GLYPHICON_TRASH, $trashUrl, Components::JSFUNC_DIALOGTRASH, Text::_(\'CFG_SYSTEM_GLOBAL_TRASH\'));';
+				fwrite($stream, "\t\t$trashUrl\n");
+				fwrite($stream, "\t\t$trashIcon\n\n");
+
+				$indexRowBtns[] = '$trashIcon';
+			}
+			elseif ($value === 'remove') {
+				$removeUrl = '$removeUrl = Url::getUrl(\'' . $removeName . '\', Mvc::$controller, Mvc::$module, $params);';
+				$removeIcon = '$removeIcon = Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $removeUrl, Components::JSFUNC_DIALOGREMOVE, Text::_(\'CFG_SYSTEM_GLOBAL_REMOVE\'));';
+				fwrite($stream, "\t\t$removeUrl\n");
+				fwrite($stream, "\t\t$removeIcon\n\n");
+
+				$indexRowBtns[] = '$removeIcon';
+			}
+		}
+
+		if ($indexRowBtns !== array()) {
+			fwrite($stream, "\t\t\$ret = " . implode(' . ', $indexRowBtns) . ";\n");
+		}
+		else {
+			fwrite($stream, "\t\t\$ret = '';\n");
+		}
+
+		fwrite($stream, "\t\treturn \$ret;\n");
+		fwrite($stream, "\t}\n");
+
 		fwrite($stream, "}\n");
 		fclose($stream);
 	}
