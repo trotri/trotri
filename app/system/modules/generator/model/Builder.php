@@ -129,6 +129,408 @@ class Builder
 		$this->touchElement();
 		$this->touchDb();
 		$this->touchUi();
+		$this->touchModel();
+		$this->touchController();
+		$this->touchViews();
+	}
+
+	/**
+	 * 创建Views
+	 * @return void
+	 */
+	public function touchViews()
+	{
+		$createFields = array();
+		$modifyFields = array();
+		$indexFields = array();
+		foreach ($this->_fields as $fields) {
+			if ($fields['form_create_show'] == 'y') {
+				$createFields[$fields['form_create_sort']] = $fields['field_name'];
+			}
+
+			if ($fields['form_modify_show'] == 'y') {
+				$modifyFields[$fields['form_modify_sort']] = $fields['field_name'];
+			}
+
+			if ($fields['index_show'] == 'y') {
+				$indexFields[$fields['index_sort']] = $fields['field_name'];
+			}
+		}
+
+		ksort($createFields);
+		ksort($modifyFields);
+		ksort($indexFields);
+
+		$className = strtolower($this->_generators['class_name']);
+		$filePath = $this->_viewDir . DS . $className . '_' . $this->_generators['act_create_name'] . '.php';
+		$stream = $this->fopen($filePath);
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$elements = \$this->element_collections;\n");
+		fwrite($stream, "\$this->widget('ui\\bootstrap\\widgets\\FormBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'create',\n");
+		fwrite($stream, "\t\t'action' => \$this->getUrlManager()->getUrl(\$this->action),\n");
+		fwrite($stream, "\t\t'errors' => \$this->errors,\n");
+		fwrite($stream, "\t\t'elementCollections' => \$elements,\n");
+		fwrite($stream, "\t\t'elements' => array(\n");
+		foreach ($createFields as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'button_save' => \$elements->uiComponents->getButtonSave(),\n");
+		fwrite($stream, "\t\t\t'button_save2close' => \$elements->uiComponents->getButtonSaveClose(),\n");
+		fwrite($stream, "\t\t\t'button_save2new' => \$elements->uiComponents->getButtonSaveNew(),\n");
+		fwrite($stream, "\t\t\t'button_cancel' => \$elements->uiComponents->getButtonCancel()\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fclose($stream);
+
+		$filePath = $this->_viewDir . DS . $className . '_' . $this->_generators['act_modify_name'] . '.php';
+		$stream = $this->fopen($filePath);
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$elements = \$this->element_collections;\n");
+		fwrite($stream, "\$this->widget('ui\\bootstrap\\widgets\\FormBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'modify',\n");
+		fwrite($stream, "\t\t'action' => \$this->getUrlManager()->getUrl(\$this->action, '', '', array('id' => \$this->id)),\n");
+		fwrite($stream, "\t\t'errors' => \$this->errors,\n");
+		fwrite($stream, "\t\t'values' => \$this->data,\n");
+		fwrite($stream, "\t\t'elementCollections' => \$elements,\n");
+		fwrite($stream, "\t\t'elements' => array(\n");
+		foreach ($modifyFields as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'button_save' => \$elements->uiComponents->getButtonSave(),\n");
+		fwrite($stream, "\t\t\t'button_save2close' => \$elements->uiComponents->getButtonSaveClose(),\n");
+		fwrite($stream, "\t\t\t'button_save2new' => \$elements->uiComponents->getButtonSaveNew(),\n");
+		fwrite($stream, "\t\t\t'button_cancel' => \$elements->uiComponents->getButtonCancel()\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fclose($stream);
+
+		$filePath = $this->_viewDir . DS . $className . '_' . $this->_generators['act_index_name'] . '.php';
+		$stream = $this->fopen($filePath);
+		fwrite($stream, "<?php \$this->display('{$this->_generators['mod_name']}/{$className}_{$this->_generators['act_index_name']}_btns'); ?>\n\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$elements = \$this->element_collections;\n");
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'ui\\bootstrap\\widgets\\TableBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'elementCollections' => \$elements,\n");
+		fwrite($stream, "\t\t'data' => \$this->data,\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($indexFields as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'operate' => array(\n");
+		fwrite($stream, "\t\t\t\t'label' => \$this->CFG_SYSTEM_GLOBAL_OPERATE,\n");
+		fwrite($stream, "\t\t\t\t'callback' => array(\$elements->uiComponents, 'getOperate')\n");
+		fwrite($stream, "\t\t\t),\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>\n\n");
+		fwrite($stream, "<?php \$this->display('{$this->_generators['mod_name']}/{$className}_{$this->_generators['act_index_name']}_btns'); ?>\n\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'ui\\bootstrap\\widgets\\PaginatorBuilder',\n");
+		fwrite($stream, "\t\$this->paginator\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>\n\n");
+		fwrite($stream, "<?php echo \$this->getHtml()->jsFile(\$this->base_url . '/static/system/js/{$this->_generators['mod_name']}.js'); ?>\n");
+		fclose($stream);
+
+		$filePath = $this->_viewDir . DS . $className . '_' . $this->_generators['act_index_name'] . '_btns.php';
+		$stream = $this->fopen($filePath);
+		fwrite($stream, "<?php\n");
+		fclose($stream);
+
+		$filePath = $this->_viewDir . DS . $className . '_sidebar.php';
+		$stream = $this->fopen($filePath);
+		fwrite($stream, "<!-- SideBar -->\n");
+		fwrite($stream, "<div class=\"col-xs-6 col-sm-2 sidebar-offcanvas\" id=\"sidebar\">\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$config = array();\n");
+		fwrite($stream, "\$this->widget('components\\SideBar', array('config' => \$config));\n");
+		fwrite($stream, "?>\n");
+		fwrite($stream, "</div><!-- /.col-xs-6 col-sm-2 -->\n");
+		fwrite($stream, "<!-- /SideBar -->\n");
+		fclose($stream);
+	}
+
+	/**
+	 * 创建Controller
+	 * @return void
+	 */
+	public function touchController()
+	{
+		$ctrlName = ucfirst(strtolower($this->_generators['ctrl_name'])) . 'Controller';
+		$filePath = $this->_modDir . DS . 'controller' . DS . $ctrlName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeComment($stream);
+		$package = "modules\\{$this->_generators['mod_name']}\\controller";
+		fwrite($stream, "namespace {$package};\n\n");
+		fwrite($stream, "use library\\BaseController;\n");
+		fwrite($stream, "use tfc\\ap\\Ap;\n");
+		fwrite($stream, "use tfc\\mvc\\Mvc;\n");
+		fwrite($stream, "use library\\ErrorNo;\n");
+		fwrite($stream, "use library\\Url;\n");
+		fwrite($stream, "use library\\{$this->_generators['factory_name']};\n\n");
+		fwrite($stream, "/**\n");
+		fwrite($stream, " * {$ctrlName} class file\n");
+		fwrite($stream, " * 控制器类\n");
+		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
+		fwrite($stream, " * @version \$Id: {$ctrlName}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
+		fwrite($stream, " * @package " . str_replace("\\", '.', $package) . "\n");
+		fwrite($stream, " * @since 1.0\n");
+		fwrite($stream, " */\n");
+		fwrite($stream, "class {$ctrlName} extends BaseController\n");
+		fwrite($stream, "{\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 查询数据列表\n");
+		fwrite($stream, "\t * @return void\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function {$this->_generators['act_index_name']}Action()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$ret = array();\n\n");
+		fwrite($stream, "\t\t\$req = Ap::getRequest();\n");
+		fwrite($stream, "\t\t\$viw = Mvc::getView();\n");
+		fwrite($stream, "\t\t\$mod = {$this->_generators['factory_name']}::getModel('{$this->_generators['class_name']}');\n");
+		fwrite($stream, "\t\t\$ele = {$this->_generators['factory_name']}::getElements('{$this->_generators['class_name']}');\n\n");
+		fwrite($stream, "\t\t\$pageNo = Url::getCurrPage();\n");
+		fwrite($stream, "\t\t\$order = '';\n");
+		fwrite($stream, "\t\t\$params = array();\n");
+		fwrite($stream, "\t\t\$ret = \$mod->search(\$params, \$order, \$pageNo);\n");
+		fwrite($stream, "\t\tUrl::setHttpReturn(\$ret['params']['attributes'], \$ret['params']['curr_page']);\n\n");
+		fwrite($stream, "\t\t\$viw->assign('element_collections', \$ele);\n");
+		fwrite($stream, "\t\t\$viw->assign('http_return', Url::getHttpReturn());\n");
+		fwrite($stream, "\t\t\$this->render(\$ret);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 新增数据\n");
+		fwrite($stream, "\t * @return void\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function {$this->_generators['act_create_name']}Action()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$ret = array();\n\n");
+		fwrite($stream, "\t\t\$req = Ap::getRequest();\n");
+		fwrite($stream, "\t\t\$viw = Mvc::getView();\n");
+		fwrite($stream, "\t\t\$mod = {$this->_generators['factory_name']}::getModel('{$this->_generators['class_name']}');\n");
+		fwrite($stream, "\t\t\$ele = {$this->_generators['factory_name']}::getElements('{$this->_generators['class_name']}');\n\n");
+		fwrite($stream, "\t\tif (\$this->isPost()) {\n");
+		fwrite($stream, "\t\t\t\$ret = \$mod->create(\$req->getPost());\n");
+		fwrite($stream, "\t\t\tif (\$ret['err_no'] === ErrorNo::SUCCESS_NUM) {\n");
+		fwrite($stream, "\t\t\t\tif (\$this->isSubmitTypeSave()) {\n");
+		fwrite($stream, "\t\t\t\t\tUrl::forward('{$this->_generators['act_modify_name']}', Mvc::\$controller, Mvc::\$module, \$ret);\n");
+		fwrite($stream, "\t\t\t\t}\n");
+		fwrite($stream, "\t\t\t\telseif (\$this->isSubmitTypeSaveNew()) {\n");
+		fwrite($stream, "\t\t\t\t\tUrl::forward('{$this->_generators['act_create_name']}', Mvc::\$controller, Mvc::\$module, \$ret);\n");
+		fwrite($stream, "\t\t\t\t}\n");
+		fwrite($stream, "\t\t\t\telseif (\$this->isSubmitTypeSaveClose()) {\n");
+		fwrite($stream, "\t\t\t\t\tUrl::forward('{$this->_generators['act_index_name']}', Mvc::\$controller, Mvc::\$module, \$ret);\n");
+		fwrite($stream, "\t\t\t\t}\n");
+		fwrite($stream, "\t\t\t}\n");
+		fwrite($stream, "\t\t}\n\n");
+		fwrite($stream, "\t\t\$viw->assign('element_collections', \$ele);\n");
+		fwrite($stream, "\t\t\$this->render(\$ret);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 编辑数据\n");
+		fwrite($stream, "\t * @return void\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function {$this->_generators['act_modify_name']}Action()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$ret = array();\n\n");
+		fwrite($stream, "\t\t\$req = Ap::getRequest();\n");
+		fwrite($stream, "\t\t\$viw = Mvc::getView();\n");
+		fwrite($stream, "\t\t\$mod = {$this->_generators['factory_name']}::getModel('{$this->_generators['class_name']}');\n");
+		fwrite($stream, "\t\t\$ele = {$this->_generators['factory_name']}::getElements('{$this->_generators['class_name']}');\n\n");
+		fwrite($stream, "\t\t\$httpReturn = Url::getHttpReturn();\n");
+		fwrite($stream, "\t\tif (\$httpReturn === '') {\n");
+		fwrite($stream, "\t\t\t\$httpReturn = Url::getUrl('{$this->_generators['act_index_name']}', Mvc::\$controller, Mvc::\$module, array());\n");
+		fwrite($stream, "\t\t}\n\n");
+		fwrite($stream, "\t\t\$id = \$req->getInteger('id');\n");
+
+		fwrite($stream, "\t\tif (\$this->isPost()) {\n");
+		fwrite($stream, "\t\t\t\$ret = \$mod->modifyByPk(\$id, \$req->getPost());\n");
+		fwrite($stream, "\t\t\tif (\$ret['err_no'] === ErrorNo::SUCCESS_NUM) {\n");
+		fwrite($stream, "\t\t\t\tif (\$this->isSubmitTypeSave()) {\n");
+		fwrite($stream, "\t\t\t\t\t\$ret['http_return'] = \$httpReturn;\n");
+		fwrite($stream, "\t\t\t\t\tUrl::forward('{$this->_generators['act_modify_name']}', Mvc::\$controller, Mvc::\$module, \$ret);\n");
+		fwrite($stream, "\t\t\t\t}\n");
+		fwrite($stream, "\t\t\t\telseif (\$this->isSubmitTypeSaveNew()) {\n");
+		fwrite($stream, "\t\t\t\t\tUrl::forward('{$this->_generators['act_create_name']}', Mvc::\$controller, Mvc::\$module, \$ret);\n");
+		fwrite($stream, "\t\t\t\t}\n");
+		fwrite($stream, "\t\t\t\telseif (\$this->isSubmitTypeSaveClose()) {\n");
+		fwrite($stream, "\t\t\t\t\t\$url = Url::applyParams(\$httpReturn, \$ret);\n");
+		fwrite($stream, "\t\t\t\t\tUrl::redirect(\$url);\n");
+		fwrite($stream, "\t\t\t\t}\n");
+		fwrite($stream, "\t\t\t}\n\n");
+		fwrite($stream, "\t\t\t\$ret['data'] = \$req->getPost();\n");
+		fwrite($stream, "\t\t}\n");
+		fwrite($stream, "\t\telse {\n");
+		fwrite($stream, "\t\t\t\$ret = \$mod->findByPk(\$id);\n");
+		fwrite($stream, "\t\t}\n\n");
+		fwrite($stream, "\t\t\$viw->assign('element_collections', \$ele);\n");
+		fwrite($stream, "\t\t\$this->render(\$ret);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 删除数据\n");
+		fwrite($stream, "\t * @return void\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function {$this->_generators['act_remove_name']}Action()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$ret = array();\n\n");
+		fwrite($stream, "\t\t\$req = Ap::getRequest();\n");
+		fwrite($stream, "\t\t\$mod = {$this->_generators['factory_name']}::getModel('{$this->_generators['class_name']}');\n\n");
+		fwrite($stream, "\t\t\$id = \$req->getInteger('id');\n");
+		fwrite($stream, "\t\t\$ret = \$mod->deleteByPk(\$id);\n");
+		fwrite($stream, "\t\tUrl::httpReturn(\$ret);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 编辑单个字段\n");
+		fwrite($stream, "\t * @return void\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function single{$this->_generators['act_modify_name']}Action()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$ret = array();\n\n");
+		fwrite($stream, "\t\t\$req = Ap::getRequest();\n");
+		fwrite($stream, "\t\t\$mod = {$this->_generators['factory_name']}::getModel('{$this->_generators['class_name']}');\n\n");
+		fwrite($stream, "\t\t\$id = \$req->getInteger('id');\n");
+		fwrite($stream, "\t\t\$columnName = \$req->getTrim('column_name', '');\n");
+		fwrite($stream, "\t\t\$value = \$req->getParam('value', '');\n");
+		fwrite($stream, "\t\t\$ret = \$mod->updateByPk(\$id, array(\$columnName => \$value));\n");
+		fwrite($stream, "\t\tUrl::httpReturn(\$ret);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 查询数据详情\n");
+		fwrite($stream, "\t * @return void\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function {$this->_generators['act_view_name']}Action()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "}\n");
+		fclose($stream);
+	}
+
+	/**
+	 * 创建Model
+	 * @return void
+	 */
+	public function touchModel()
+	{
+		$filePath = $this->_modDir . DS . 'model' . DS . $this->_generators['class_name'] . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeComment($stream);
+
+		$package = "modules\\{$this->_generators['mod_name']}\\model";
+		fwrite($stream, "namespace {$package};\n\n");
+		fwrite($stream, "use tfc\\ap\\Ap;\n");
+		fwrite($stream, "use tfc\\ap\\Registry;\n");
+		fwrite($stream, "use koala\\Model;\n");
+		fwrite($stream, "use library\\ErrorNo;\n");
+		fwrite($stream, "use library\\{$this->_generators['factory_name']};\n\n");
+
+		fwrite($stream, "/**\n");
+		fwrite($stream, " * {$this->_generators['class_name']} class file\n");
+		fwrite($stream, " * 业务处理层类\n");
+		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
+		fwrite($stream, " * @version \$Id: {$this->_generators['class_name']}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
+		fwrite($stream, " * @package " . str_replace("\\", '.', $package) . "\n");
+		fwrite($stream, " * @since 1.0\n");
+		fwrite($stream, " */\n");
+		fwrite($stream, "class {$this->_generators['class_name']} extends Model\n");
+		fwrite($stream, "{\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 构造方法：初始化当前业务类对应的数据库操作类\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function __construct()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$db = {$this->_generators['factory_name']}::getDb('{$this->_generators['class_name']}');\n");
+		fwrite($stream, "\t\tparent::__construct(\$db);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 查询数据\n");
+		fwrite($stream, "\t * @param array \$params\n");
+		fwrite($stream, "\t * @param string \$order\n");
+		fwrite($stream, "\t * @param integer \$pageNo\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function search(array \$params = array(), \$order = '', \$pageNo = 0)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$attributes = array();\n");
+		fwrite($stream, "\t\t//--待开发--\n");
+		fwrite($stream, "\t\t\$ret = \$this->findIndexByAttributes(\$attributes, \$order, \$pageNo);\n");
+		fwrite($stream, "\t\treturn \$ret;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 新增一条记录\n");
+		fwrite($stream, "\t * @param array \$params\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function create(array \$params = array())\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t//--待开发--\n");
+		fwrite($stream, "\t\treturn \$this->insert(\$params);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 通过主键，编辑一条记录\n");
+		fwrite($stream, "\t * @param integer \$value\n");
+		fwrite($stream, "\t * @param array \$params\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function modifyByPk(\$value, array \$params)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t//--待开发--\n");
+		fwrite($stream, "\t\treturn \$this->updateByPk(\$value, \$params);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see koala.Model::getInsertRules()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getInsertRules()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$elements = {$this->_generators['factory_name']}::getElements('{$this->_generators['class_name']}');\n");
+		fwrite($stream, "\t\t\$type = \$elements::TYPE_FILTER;\n");
+		fwrite($stream, "\t\t\$output = array(\n");
+		foreach ($this->_fields as $fields) {
+			fwrite($stream, "\t\t\t'{$fields['field_name']}' => \$elements->get" . $this->column2Name($fields['field_name']) . "(\$type),\n");
+		}
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\treturn \$output;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see koala.Model::getUpdateRules()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getUpdateRules()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$elements = {$this->_generators['factory_name']}::getElements('{$this->_generators['class_name']}');\n");
+		fwrite($stream, "\t\t\$type = \$elements::TYPE_FILTER;\n");
+		fwrite($stream, "\t\t\$output = array(\n");
+		foreach ($this->_fields as $fields) {
+			fwrite($stream, "\t\t\t'{$fields['field_name']}' => \$elements->get" . $this->column2Name($fields['field_name']) . "(\$type),\n");
+		}
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\treturn \$output;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "}\n");
+		fclose($stream);
 	}
 
 	/**
@@ -150,7 +552,7 @@ class Builder
 		fwrite($stream, " * 数据库操作层类\n");
 		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
 		fwrite($stream, " * @version \$Id: {$this->_generators['class_name']}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
-		fwrite($stream, " * @package {$package}\n");
+		fwrite($stream, " * @package " . str_replace("\\", '.', $package) . "\n");
 		fwrite($stream, " * @since 1.0\n");
 		fwrite($stream, " */\n");
 
@@ -192,7 +594,7 @@ class Builder
 		fwrite($stream, " * 页面小组件类，基于Bootstrap-v3前端开发框架\n");
 		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
 		fwrite($stream, " * @version \$Id: {$this->_generators['class_name']}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
-		fwrite($stream, " * @package {$package}\n");
+		fwrite($stream, " * @package " . str_replace("\\", '.', $package) . "\n");
 		fwrite($stream, " * @since 1.0\n");
 		fwrite($stream, " */\n");
 		fwrite($stream, "class {$this->_generators['class_name']}\n");
@@ -313,7 +715,7 @@ class Builder
 		fwrite($stream, " * 字段信息配置类，包括表格、表单、验证规则、选项\n");
 		fwrite($stream, " * @author 宋欢 <trotri@yeah.net>\n");
 		fwrite($stream, " * @version \$Id: {$this->_generators['class_name']}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
-		fwrite($stream, " * @package {$package}\n");
+		fwrite($stream, " * @package " . str_replace("\\", '.', $package) . "\n");
 		fwrite($stream, " * @since 1.0\n");
 		fwrite($stream, " */\n");
 

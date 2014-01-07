@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `ucenter`;
+CREATE DATABASE IF NOT EXISTS `trotri`;
 
-USE `ucenter`;
+USE `trotri`;
 
 DROP TABLE IF EXISTS `tr_user_amcas`;
 CREATE TABLE `tr_user_amcas` (
@@ -33,7 +33,7 @@ CREATE TABLE `tr_user_groups` (
 DROP TABLE IF EXISTS `tr_users`;
 CREATE TABLE `tr_users` (
   `user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `login_email` varchar(100) NOT NULL DEFAULT '' COMMENT '登录邮箱',
+  `login_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '登录邮箱',
   `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名',
   `password` char(32) NOT NULL DEFAULT '' COMMENT '登录密码',
   `salt` char(6) NOT NULL DEFAULT '' COMMENT '随机附加混淆码',

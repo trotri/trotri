@@ -212,7 +212,7 @@ class Generators extends ElementCollections
 			$output = array(
 				'AlphaNum' => array(true, Text::_('MOD_GENERATOR_GENERATORS_TBL_NAME_ALPHANUM')),
 				'MinLength' => array(2, Text::_('MOD_GENERATOR_GENERATORS_TBL_NAME_MINLENGTH')),
-				'MaxLength' => array(12, Text::_('MOD_GENERATOR_GENERATORS_TBL_NAME_MAXLENGTH'))
+				'MaxLength' => array(20, Text::_('MOD_GENERATOR_GENERATORS_TBL_NAME_MAXLENGTH'))
 			);
 		}
 		elseif ($type === self::TYPE_SEARCH) {

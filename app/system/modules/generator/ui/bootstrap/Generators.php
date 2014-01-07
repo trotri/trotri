@@ -11,6 +11,7 @@
 namespace modules\generator\ui\bootstrap;
 
 use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use ui\bootstrap\Components;
 use library\GeneratorFactory;
@@ -59,7 +60,7 @@ class Generators
 	 */
 	public function getButtonCancel()
 	{
-		$url = Url::getUrl('index', 'index', 'generator');
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
 		return Components::getButtonCancel($url);
 	}
 

@@ -2,6 +2,32 @@ CREATE DATABASE IF NOT EXISTS `trotri`;
 
 USE `trotri`;
 
+DROP TABLE IF EXISTS `tr_generator_types`;
+CREATE TABLE `tr_generator_types` (
+  `type_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类型名，单行文本、多行文本、密码、开关选项卡、提交按钮等',
+  `form_type` varchar(100) NOT NULL DEFAULT '' COMMENT '表单类型名，HTML：text、password、button、radio等；用户自定义：ckeditor、datetime等',
+  `field_type` varchar(100) NOT NULL DEFAULT '' COMMENT '表字段类型，INT、VARCHAR、CHAR、TEXT等',
+  `category` enum('text','option','button') NOT NULL DEFAULT 'text' COMMENT '所属分类，text：文本类、option：选项类、button：按钮类',
+  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  PRIMARY KEY (`type_id`),
+  KEY `type_name` (`type_name`),
+  KEY `form_type` (`form_type`),
+  KEY `field_type` (`field_type`),
+  KEY `category` (`category`),
+  KEY `sort` (`sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
+
+INSERT INTO `tr_generator_types` VALUES (1, '单行文本', 'text', 'VARCHAR', 'text', 1);
+INSERT INTO `tr_generator_types` VALUES (2, '密码', 'password', 'CHAR', 'text', 2);
+INSERT INTO `tr_generator_types` VALUES (3, '开关选项卡', 'switch', 'ENUM', 'option', 3);
+INSERT INTO `tr_generator_types` VALUES (4, '单选', 'radio', 'ENUM', 'option', 4);
+INSERT INTO `tr_generator_types` VALUES (5, '多选', 'checkbox', 'VARCHAR', 'option', 5);
+INSERT INTO `tr_generator_types` VALUES (6, '单选下拉框', 'select', 'INT', 'option', 6);
+INSERT INTO `tr_generator_types` VALUES (7, '隐藏文本框', 'hidden', 'VARCHAR', 'text', 7);
+INSERT INTO `tr_generator_types` VALUES (8, '多行文本', 'textarea', 'TEXT', 'text', 8);
+INSERT INTO `tr_generator_types` VALUES (9, '上传文件', 'file', 'VARCHAR', 'text', 9);
+
 DROP TABLE IF EXISTS `tr_generators`;
 CREATE TABLE `tr_generators` (
   `generator_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -49,32 +75,6 @@ CREATE TABLE `tr_generator_field_groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
 INSERT INTO `tr_generator_field_groups` VALUES (1, 'main', '主要信息', 0, 1, '默认');
-
-DROP TABLE IF EXISTS `tr_generator_field_types`;
-CREATE TABLE `tr_generator_field_types` (
-  `type_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类型名，单行文本、多行文本、密码、开关选项卡、提交按钮等',
-  `form_type` varchar(100) NOT NULL DEFAULT '' COMMENT '表单类型名，HTML：text、password、button、radio等；用户自定义：ckeditor、datetime等',
-  `field_type` varchar(100) NOT NULL DEFAULT '' COMMENT '表字段类型，INT、VARCHAR、CHAR、TEXT等',
-  `category` enum('text','option','button') NOT NULL DEFAULT 'text' COMMENT '所属分类，text：文本类、option：选项类、button：按钮类',
-  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
-  PRIMARY KEY (`type_id`),
-  KEY `type_name` (`type_name`),
-  KEY `form_type` (`form_type`),
-  KEY `field_type` (`field_type`),
-  KEY `category` (`category`),
-  KEY `sort` (`sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
-
-INSERT INTO `tr_generator_field_types` VALUES (1, '单行文本', 'text', 'VARCHAR', 'text', 1);
-INSERT INTO `tr_generator_field_types` VALUES (2, '密码', 'password', 'CHAR', 'text', 2);
-INSERT INTO `tr_generator_field_types` VALUES (3, '开关选项卡', 'switch', 'ENUM', 'option', 3);
-INSERT INTO `tr_generator_field_types` VALUES (4, '单选', 'radio', 'ENUM', 'option', 4);
-INSERT INTO `tr_generator_field_types` VALUES (5, '多选', 'checkbox', 'VARCHAR', 'option', 5);
-INSERT INTO `tr_generator_field_types` VALUES (6, '单选下拉框', 'select', 'INT', 'option', 6);
-INSERT INTO `tr_generator_field_types` VALUES (7, '隐藏文本框', 'hidden', 'VARCHAR', 'text', 7);
-INSERT INTO `tr_generator_field_types` VALUES (8, '多行文本', 'textarea', 'TEXT', 'text', 8);
-INSERT INTO `tr_generator_field_types` VALUES (9, '上传文件', 'file', 'VARCHAR', 'text', 9);
 
 DROP TABLE IF EXISTS `tr_generator_fields`;
 CREATE TABLE `tr_generator_fields` (
