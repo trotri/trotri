@@ -68,24 +68,24 @@ Trotri = {
     if (E.length <= 0) return "";
     var r = "";
     for (var i in E) {
-      r += E[i].value + glue;
+      r += E[i] + glue;
     }
     return r.substr(0, r.length - glue.length);
   },
 
   /**
-   * 判断字符串是否在数组中
+   * 判断字符在数组中的位置，如果不存在，返回-1
    * @param string v
    * @param array E
-   * @return boolean
+   * @return integer
    */
   inArray: function(v, E) {
     if (typeof(v) == 'string' || typeof(v) == 'number') {
       for (var i in E) {
-        if (E[i] == v) { return true; }
+        if (E[i] == v) { return i; }
       }
     }
-    return false;
+    return -1;
   },
 
   /**
