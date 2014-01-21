@@ -108,4 +108,35 @@ class Types extends Model
 		return $output;
 	}
 
+	/**
+	 * 获取所有的Types值
+	 * @return array
+	 */
+	public function getTypes()
+	{
+		$ret = $this->findPairsByAttributes(array('type_id', 'type_name'), array(), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return array();
+		}
+
+		return $ret['data'];
+	}
+
+	/**
+	 * 通过type_id获取type_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($value)
+	{
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('type_name', $value);
+			$typeName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['type_name'];
+			Registry::set($name, $typeName);
+		}
+
+		return Registry::get($name);
+	}
 }

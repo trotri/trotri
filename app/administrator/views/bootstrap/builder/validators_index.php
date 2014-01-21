@@ -1,4 +1,4 @@
-<?php $this->display('builder/types_index_btns'); ?>
+<?php $this->display('builder/validators_index_btns'); ?>
 
 <?php
 $elements = $this->element_collections;
@@ -8,12 +8,13 @@ $this->widget(
 		'elementCollections' => $elements,
 		'data' => $this->data,
 		'columns' => array(
-			'type_name',
-			'form_type',
-			'field_type',
-			'category',
+			'validator_name',
+			'field_id',
+			'options',
+			'option_category',
+			'message',
 			'sort',
-			'type_id',
+			'when',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
 				'callback' => array($elements->uiComponents, 'getOperate')
@@ -23,7 +24,7 @@ $this->widget(
 );
 ?>
 
-<?php $this->display('builder/types_index_btns'); ?>
+<?php $this->display('builder/validators_index_btns'); ?>
 
 <?php
 $this->widget(

@@ -28,7 +28,7 @@ class AlphaNumValidator extends Validator
     /**
      * @var string 默认出错后的提醒消息
      */
-    protected $_message =  '"%value%" does not appear to be a valid alpha num.';
+    protected $_message = '"%value%" does not appear to be a valid alpha num.';
 
     /**
      * (non-PHPdoc)

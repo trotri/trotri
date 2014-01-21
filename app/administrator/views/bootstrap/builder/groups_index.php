@@ -1,4 +1,4 @@
-<?php $this->display('builder/types_index_btns'); ?>
+<?php $this->display('builder/groups_index_btns'); ?>
 
 <?php
 $elements = $this->element_collections;
@@ -8,12 +8,12 @@ $this->widget(
 		'elementCollections' => $elements,
 		'data' => $this->data,
 		'columns' => array(
-			'type_name',
-			'form_type',
-			'field_type',
-			'category',
+			'group_name',
+			'builder_name',
+			'prompt',
 			'sort',
-			'type_id',
+			'description',
+			'group_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
 				'callback' => array($elements->uiComponents, 'getOperate')
@@ -23,7 +23,7 @@ $this->widget(
 );
 ?>
 
-<?php $this->display('builder/types_index_btns'); ?>
+<?php $this->display('builder/groups_index_btns'); ?>
 
 <?php
 $this->widget(

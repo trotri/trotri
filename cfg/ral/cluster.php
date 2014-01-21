@@ -9,14 +9,6 @@
  */
 
 return array (
-  'system' => array (
-    'server' => '127.0.0.1',
-    'port' => 80,
-    'connect_time_out_ms' => 200,
-    'time_out_ms' => 500,
-    'converter' => 'json',
-    'retry' => 1,
-  ),
   'administrator' => array (
     'server' => '127.0.0.1',
     'port' => 80,

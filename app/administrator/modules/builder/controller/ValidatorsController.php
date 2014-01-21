@@ -18,14 +18,14 @@ use library\Url;
 use library\BuilderFactory;
 
 /**
- * TypesController class file
+ * ValidatorsController class file
  * 控制器类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TypesController.php 1 2014-01-07 18:07:20Z huan.song $
+ * @version $Id: ValidatorsController.php 1 2014-01-20 15:58:15Z huan.song $
  * @package modules.builder.controller
  * @since 1.0
  */
-class TypesController extends BaseController
+class ValidatorsController extends BaseController
 {
 	/**
 	 * 查询数据列表
@@ -37,16 +37,19 @@ class TypesController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = BuilderFactory::getModel('Types');
-		$ele = BuilderFactory::getElements('Types');
+		$mod = BuilderFactory::getModel('Validators');
+		$ele = BuilderFactory::getElements('Validators');
 
+		$fieldId = $req->getInteger('field_id');
 		$pageNo = Url::getCurrPage();
 		$order = 'sort';
-		$params = array();
+		$params = array('field_id' => $fieldId);
 		$ret = $mod->search($params, $order, $pageNo);
 		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$viw->assign('element_collections', $ele);
+		$viw->assign('field_id', $fieldId);
+		$viw->assign('builder_id', BuilderFactory::getModel('Fields')->getBuilderIdByFieldId($fieldId));
 		$viw->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
@@ -61,13 +64,16 @@ class TypesController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = BuilderFactory::getModel('Types');
-		$ele = BuilderFactory::getElements('Types');
+		$mod = BuilderFactory::getModel('Validators');
+		$ele = BuilderFactory::getElements('Validators');
 
+		$fieldId = $req->getInteger('field_id');
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$ret['field_id'] = $fieldId;
 				if ($this->isSubmitTypeSave()) {
+					$ret['http_referer'] = Url::getUrl('index', 'fields', Mvc::$module);
 					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
@@ -79,7 +85,14 @@ class TypesController extends BaseController
 			}
 		}
 
+		$htmlLabel = BuilderFactory::getModel('Fields')->getHtmlLabelByFieldId($fieldId);
+		$validatorMessages = $mod->getValidatorMessages($htmlLabel);
+		$validatorMessages = json_encode($validatorMessages);
+
 		$viw->assign('element_collections', $ele);
+		$viw->assign('field_id', $fieldId);
+		$viw->assign('validator_messages', $validatorMessages);
+		$viw->assign('builder_id', BuilderFactory::getModel('Fields')->getBuilderIdByFieldId($fieldId));
 		$this->render($ret);
 	}
 
@@ -93,12 +106,13 @@ class TypesController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = BuilderFactory::getModel('Types');
-		$ele = BuilderFactory::getElements('Types');
+		$mod = BuilderFactory::getModel('Validators');
+		$ele = BuilderFactory::getElements('Validators');
 
+		$fieldId = $mod->getFieldId();
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
-			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array());
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('field_id' => $fieldId));
 		}
 
 		$id = $req->getInteger('id');
@@ -124,7 +138,14 @@ class TypesController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
+		$htmlLabel = BuilderFactory::getModel('Fields')->getHtmlLabelByFieldId($fieldId);
+		$validatorMessages = $mod->getValidatorMessages($htmlLabel);
+		$validatorMessages = json_encode($validatorMessages);
+
 		$viw->assign('element_collections', $ele);
+		$viw->assign('field_id', $fieldId);
+		$viw->assign('validator_messages', $validatorMessages);
+		$viw->assign('builder_id', BuilderFactory::getModel('Fields')->getBuilderIdByFieldId($fieldId));
 		$viw->assign('id', $id);
 		$this->render($ret);
 	}
@@ -138,10 +159,28 @@ class TypesController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = BuilderFactory::getModel('Types');
+		$mod = BuilderFactory::getModel('Validators');
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
+		Url::httpReturn($ret);
+	}
+
+	/**
+	 * 编辑单个字段
+	 * @return void
+	 */
+	public function singlemodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = BuilderFactory::getModel('Validators');
+
+		$id = $req->getInteger('id');
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+		$ret = $mod->updateByPk($id, array($columnName => $value));
 		Url::httpReturn($ret);
 	}
 

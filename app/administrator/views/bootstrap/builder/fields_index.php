@@ -1,4 +1,4 @@
-<?php $this->display('builder/types_index_btns'); ?>
+<?php $this->display('builder/fields_index_btns'); ?>
 
 <?php
 $elements = $this->element_collections;
@@ -8,12 +8,18 @@ $this->widget(
 		'elementCollections' => $elements,
 		'data' => $this->data,
 		'columns' => array(
-			'type_name',
-			'form_type',
-			'field_type',
-			'category',
-			'sort',
+			'field_name',
+			'builder_id',
+			'group_id',
 			'type_id',
+			'sort',
+			'html_label',
+			'column_auto_increment',
+			'builder_field_validators' => array(
+				'name' => 'builder_field_validators',
+				'label' => $this->CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELD_VALIDATORS_INDEX_LABEL,
+				'callback' => array($elements->uiComponents, 'getBuilderFieldValidatorsLabel')
+			),
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
 				'callback' => array($elements->uiComponents, 'getOperate')
@@ -23,7 +29,7 @@ $this->widget(
 );
 ?>
 
-<?php $this->display('builder/types_index_btns'); ?>
+<?php $this->display('builder/fields_index_btns'); ?>
 
 <?php
 $this->widget(

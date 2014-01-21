@@ -18,14 +18,14 @@ use library\Url;
 use library\BuilderFactory;
 
 /**
- * Types class file
+ * Groups class file
  * 页面小组件类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Types.php 1 2014-01-07 18:07:20Z huan.song $
+ * @version $Id: Groups.php 1 2014-01-19 13:18:49Z huan.song $
  * @package modules.builder.ui.bootstrap
  * @since 1.0
  */
-class Types
+class Groups
 {
 	/**
 	 * 获取表单的“保存”按钮
@@ -60,7 +60,8 @@ class Types
 	 */
 	public function getButtonCancel()
 	{
-		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
+		$builderId = BuilderFactory::getModel('Groups')->getBuilderId();
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('builder_id' => $builderId));
 		return Components::getButtonCancel($url);
 	}
 
@@ -72,7 +73,8 @@ class Types
 	public function getOperate($data)
 	{
 		$params = array(
-			'id' => $data['type_id'],
+			'id' => $data['group_id'],
+			'builder_id' => $data['builder_id']
 		);
 
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
@@ -86,18 +88,27 @@ class Types
 	}
 
 	/**
-	 * 获取列表页“类型名”的A标签
+	 * 获取列表页“组名”的A标签
 	 * @param array $data
 	 * @return string
 	 */
-	public function getTypeNameUrl($data)
+	public function getGroupNameUrl($data)
 	{
 		$params = array(
-			'id' => $data['type_id'],
+			'id' => $data['group_id'],
+			'builder_id' => $data['builder_id']
 		);
 
-		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
-		$ret = Components::getHtml()->a($data['type_name'], $modifyUrl);
-		return $ret;
+		return Components::getHtml()->a($data['group_name'], Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params));
+	}
+
+	/**
+	 * 通过builder_id获取builder_name值
+	 * @param array $data
+	 * @return string
+	 */
+	public function getBuilderNameByBuilderId($data)
+	{
+		return BuilderFactory::getModel('Builders')->getBuilderNameByBuilderId($data['builder_id']);
 	}
 }

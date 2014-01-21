@@ -156,7 +156,7 @@ class Types extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Alpha' => array(false, Text::_('MOD_BUILDER_BUILDER_TYPES_FORM_TYPE_ALPHA')),
+				'Alpha' => array(true, Text::_('MOD_BUILDER_BUILDER_TYPES_FORM_TYPE_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_BUILDER_BUILDER_TYPES_FORM_TYPE_MINLENGTH')),
 				'MaxLength' => array(12, Text::_('MOD_BUILDER_BUILDER_TYPES_FORM_TYPE_MAXLENGTH')),
 			);
@@ -191,7 +191,7 @@ class Types extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Alpha' => array(false, Text::_('MOD_BUILDER_BUILDER_TYPES_FIELD_TYPE_ALPHA')),
+				'Alpha' => array(true, Text::_('MOD_BUILDER_BUILDER_TYPES_FIELD_TYPE_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_BUILDER_BUILDER_TYPES_FIELD_TYPE_MINLENGTH')),
 				'MaxLength' => array(12, Text::_('MOD_BUILDER_BUILDER_TYPES_FIELD_TYPE_MAXLENGTH')),
 			);
@@ -269,7 +269,7 @@ class Types extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Numeric' => array(false, Text::_('MOD_BUILDER_BUILDER_TYPES_SORT_NUMERIC')),
+				'Numeric' => array(true, Text::_('MOD_BUILDER_BUILDER_TYPES_SORT_NUMERIC')),
 			);
 		}
 

@@ -18,14 +18,14 @@ use library\Url;
 use library\BuilderFactory;
 
 /**
- * TypesController class file
+ * FieldsController class file
  * 控制器类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TypesController.php 1 2014-01-07 18:07:20Z huan.song $
+ * @version $Id: FieldsController.php 1 2014-01-19 17:52:00Z huan.song $
  * @package modules.builder.controller
  * @since 1.0
  */
-class TypesController extends BaseController
+class FieldsController extends BaseController
 {
 	/**
 	 * 查询数据列表
@@ -37,16 +37,18 @@ class TypesController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = BuilderFactory::getModel('Types');
-		$ele = BuilderFactory::getElements('Types');
+		$mod = BuilderFactory::getModel('Fields');
+		$ele = BuilderFactory::getElements('Fields');
 
+		$builderId = $req->getInteger('builder_id');
 		$pageNo = Url::getCurrPage();
 		$order = 'sort';
-		$params = array();
+		$params = array('builder_id' => $builderId);
 		$ret = $mod->search($params, $order, $pageNo);
 		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$viw->assign('element_collections', $ele);
+		$viw->assign('builder_id', $builderId);
 		$viw->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
@@ -61,12 +63,14 @@ class TypesController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = BuilderFactory::getModel('Types');
-		$ele = BuilderFactory::getElements('Types');
+		$mod = BuilderFactory::getModel('Fields');
+		$ele = BuilderFactory::getElements('Fields');
 
+		$builderId = $req->getInteger('builder_id');
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$ret['builder_id'] = $builderId;
 				if ($this->isSubmitTypeSave()) {
 					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
@@ -80,6 +84,7 @@ class TypesController extends BaseController
 		}
 
 		$viw->assign('element_collections', $ele);
+		$viw->assign('builder_id', $builderId);
 		$this->render($ret);
 	}
 
@@ -93,12 +98,13 @@ class TypesController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = BuilderFactory::getModel('Types');
-		$ele = BuilderFactory::getElements('Types');
+		$mod = BuilderFactory::getModel('Fields');
+		$ele = BuilderFactory::getElements('Fields');
 
+		$builderId = $mod->getBuilderId();
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
-			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array());
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('builder_id' => $builderId));
 		}
 
 		$id = $req->getInteger('id');
@@ -110,6 +116,7 @@ class TypesController extends BaseController
 					Url::forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveNew()) {
+					$ret['builder_id'] = $builderId;
 					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
@@ -125,6 +132,7 @@ class TypesController extends BaseController
 		}
 
 		$viw->assign('element_collections', $ele);
+		$viw->assign('builder_id', $builderId);
 		$viw->assign('id', $id);
 		$this->render($ret);
 	}
@@ -138,10 +146,28 @@ class TypesController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = BuilderFactory::getModel('Types');
+		$mod = BuilderFactory::getModel('Fields');
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
+		Url::httpReturn($ret);
+	}
+
+	/**
+	 * 编辑单个字段
+	 * @return void
+	 */
+	public function singlemodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = BuilderFactory::getModel('Fields');
+
+		$id = $req->getInteger('id');
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+		$ret = $mod->updateByPk($id, array($columnName => $value));
 		Url::httpReturn($ret);
 	}
 

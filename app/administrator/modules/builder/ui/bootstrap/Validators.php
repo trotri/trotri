@@ -18,14 +18,14 @@ use library\Url;
 use library\BuilderFactory;
 
 /**
- * Types class file
+ * Validators class file
  * 页面小组件类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Types.php 1 2014-01-07 18:07:20Z huan.song $
+ * @version $Id: Validators.php 1 2014-01-20 15:58:15Z huan.song $
  * @package modules.builder.ui.bootstrap
  * @since 1.0
  */
-class Types
+class Validators
 {
 	/**
 	 * 获取表单的“保存”按钮
@@ -60,7 +60,9 @@ class Types
 	 */
 	public function getButtonCancel()
 	{
-		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
+		$fieldId = BuilderFactory::getModel('Validators')->getFieldId();
+
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('field_id' => $fieldId));
 		return Components::getButtonCancel($url);
 	}
 
@@ -72,7 +74,8 @@ class Types
 	public function getOperate($data)
 	{
 		$params = array(
-			'id' => $data['type_id'],
+			'id' => $data['validator_id'],
+			'field_id' => $data['field_id']
 		);
 
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
@@ -86,18 +89,50 @@ class Types
 	}
 
 	/**
-	 * 获取列表页“类型名”的A标签
+	 * 获取列表页“验证类名”的A标签
 	 * @param array $data
 	 * @return string
 	 */
-	public function getTypeNameUrl($data)
+	public function getValidatorNameUrl($data)
 	{
 		$params = array(
-			'id' => $data['type_id'],
+			'id' => $data['validator_id'],
 		);
 
-		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
-		$ret = Components::getHtml()->a($data['type_name'], $modifyUrl);
-		return $ret;
+		return Components::getHtml()->a($data['validator_name'], Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params));
+	}
+
+	/**
+	 * 获取列表页“字段名”标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getFieldNameByFieldId($data)
+	{
+		return BuilderFactory::getModel('Fields')->getFieldNameByFieldId($data['field_id']);
+	}
+
+	/**
+	 * 获取“验证时对比值类型”值
+	 * @param array $data
+	 * @return string
+	 */
+	public function getOptionCategoryLabel($data)
+	{
+		$elements = BuilderFactory::getElements('Validators');
+		$categories = $elements->getOptionCategory($elements::TYPE_OPTIONS);
+		return $categories[$data['option_category']];
+	}
+
+	/**
+	 * 获取“验证环境”值
+	 * @param array $data
+	 * @return string
+	 */
+	public function getWhenLabel($data)
+	{
+		$elements = BuilderFactory::getElements('Validators');
+		$whens = $elements->getWhen($elements::TYPE_OPTIONS);
+		return $whens[$data['when']];
 	}
 }

@@ -16,7 +16,7 @@ CREATE TABLE `tr_builder_types` (
   KEY `field_type` (`field_type`),
   KEY `category` (`category`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
 
 INSERT INTO `tr_builder_types` VALUES (1, '单行文本', 'text', 'VARCHAR', 'text', 1);
 INSERT INTO `tr_builder_types` VALUES (2, '密码', 'password', 'CHAR', 'text', 2);
@@ -40,6 +40,7 @@ CREATE TABLE `tr_builders` (
   `app_name` varchar(100) NOT NULL DEFAULT '' COMMENT '应用名',
   `mod_name` varchar(100) NOT NULL DEFAULT '' COMMENT '模块名',
   `ctrl_name` varchar(100) NOT NULL DEFAULT '' COMMENT '控制器名，默认和省略前缀的表名相同',
+  `cls_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类名',
   `act_index_name` varchar(100) NOT NULL DEFAULT 'index' COMMENT '行动名-数据列表',
   `act_view_name` varchar(100) NOT NULL DEFAULT 'view' COMMENT '行动名-数据详情',
   `act_create_name` varchar(100) NOT NULL DEFAULT 'create' COMMENT '行动名-新增数据',
@@ -58,7 +59,7 @@ CREATE TABLE `tr_builders` (
   KEY `tbl_charset` (`tbl_charset`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生成代码表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
 DROP TABLE IF EXISTS `tr_builder_field_groups`;
 CREATE TABLE `tr_builder_field_groups` (
@@ -72,7 +73,7 @@ CREATE TABLE `tr_builder_field_groups` (
   KEY `group_name` (`group_name`),
   KEY `builder_id` (`builder_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
 INSERT INTO `tr_builder_field_groups` VALUES (1, 'main', '主要信息', 0, 1, '默认');
 
@@ -110,7 +111,7 @@ CREATE TABLE `tr_builder_fields` (
   KEY `form_create_sort` (`form_create_sort`),
   KEY `form_modify_sort` (`form_modify_sort`),
   KEY `form_search_sort` (`form_search_sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
 DROP TABLE IF EXISTS `tr_builder_field_validators`;
 CREATE TABLE `tr_builder_field_validators` (
@@ -126,4 +127,4 @@ CREATE TABLE `tr_builder_field_validators` (
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
