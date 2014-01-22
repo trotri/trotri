@@ -82,7 +82,6 @@ class Amcas extends Model
 		$elements = UcenterFactory::getElements('Amcas');
 		$type = $elements::TYPE_FILTER;
 		$output = array(
-			'amca_id' => $elements->getAmcaId($type),
 			'amca_pid' => $elements->getAmcaPid($type),
 			'amca_name' => $elements->getAmcaName($type),
 			'sort' => $elements->getSort($type),
@@ -101,7 +100,6 @@ class Amcas extends Model
 		$elements = UcenterFactory::getElements('Amcas');
 		$type = $elements::TYPE_FILTER;
 		$output = array(
-			'amca_id' => $elements->getAmcaId($type),
 			'amca_pid' => $elements->getAmcaPid($type),
 			'amca_name' => $elements->getAmcaName($type),
 			'sort' => $elements->getSort($type),
@@ -111,4 +109,39 @@ class Amcas extends Model
 		return $output;
 	}
 
+	/**
+	 * 通过amca_id获取category值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getCategoryByAmcaId($value)
+	{
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('category', $value);
+			$category = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['category'];
+			Registry::set($name, $category);
+		}
+
+		return Registry::get($name);
+	}
+
+	/**
+	 * 通过amca_id获取amca_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getAmcaNameByAmcaId($value)
+	{
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('amca_name', $value);
+			$amcaName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['amca_name'];
+			Registry::set($name, $amcaName);
+		}
+
+		return Registry::get($name);
+	}
 }

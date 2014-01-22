@@ -12,6 +12,7 @@ namespace modules\ucenter\validator;
 
 use tfc\ap\Ap;
 use tfc\validator\Validator;
+use library\UcenterFactory;
 
 /**
  * UserAmcasAmcaPidValidator class file
@@ -26,7 +27,7 @@ class UserAmcasAmcaPidValidator extends Validator
     /**
      * @var string 默认出错后的提醒消息
      */
-    protected $_message = '"%value%" was not found in the haystack.';
+    protected $_message = '"%value%" was not found or be deleted.';
 
     /**
      * (non-PHPdoc)
@@ -34,12 +35,19 @@ class UserAmcasAmcaPidValidator extends Validator
      */
     public function isValid()
     {
-    	$category = Ap::getRequest()->getParam('category');
-    	$amcaPid = Ap::getRequest()->getParam('amca_pid');
+    	$pId = Ap::getRequest()->getParam('amca_pid');
+    	$cCat = Ap::getRequest()->getParam('category');
+ 		if ($pId === '0' && $cCat === 'app') {
+ 			return true;
+ 		}
 
-    	echo $category;
-    	echo $amcaPid;
-    	exit();
-        return true;
+    	$pCat = UcenterFactory::getModel('Amcas')->getCategoryByAmcaId($pId);
+		if (($cCat === 'mod' && $pCat === 'app') 
+			|| ($cCat === 'ctrl' && $pCat === 'mod')
+			|| ($cCat === 'act' && $pCat === 'ctrl')) {
+			return true;
+		}
+
+        return false;
     }
 }

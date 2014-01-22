@@ -82,4 +82,38 @@ class Amcas
 		$ret = $modifyIcon . $removeIcon;
 		return $ret;
 	}
+
+	/**
+	 * 通过amca_id获取amca_name值
+	 * @param array $data
+	 * @return string
+	 */
+	public function getAmcaNameUrl($data)
+	{
+		$params = array('id' => $data['amca_id']);
+
+		return Components::getHtml()->a($data['amca_name'], Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params));
+	}
+
+	/**
+	 * 通过amca_pid获取amca_name值
+	 * @param array $data
+	 * @return string
+	 */
+	public function getAmcaNameByAmcaPid($data)
+	{
+		return UcenterFactory::getModel('Amcas')->getAmcaNameByAmcaId($data['amca_pid']);
+	}
+
+	/**
+	 * 获取列表页“类型”表单元素
+	 * @param array $data
+	 * @return string
+	 */
+	public function getCategoryLabel($data)
+	{
+		$elements = UcenterFactory::getElements('Amcas');
+		$options = $elements->getCategory($elements::TYPE_OPTIONS);
+		return isset($options[$data['category']]) ? $options[$data['category']] : '';
+	}
 }

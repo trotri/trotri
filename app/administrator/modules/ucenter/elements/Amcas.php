@@ -114,6 +114,7 @@ class Amcas extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_LABEL'),
+				'callback' => array($this->uiComponents, 'getAmcaNameByAmcaPid')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -147,6 +148,7 @@ class Amcas extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_LABEL'),
+				'callback' => array($this->uiComponents, 'getAmcaNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -222,6 +224,7 @@ class Amcas extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_LABEL'),
+				'callback' => array($this->uiComponents, 'getCategoryLabel')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {

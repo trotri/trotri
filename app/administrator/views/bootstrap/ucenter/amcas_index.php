@@ -10,9 +10,9 @@ $this->widget(
 		'columns' => array(
 			'amca_name',
 			'amca_pid',
-			'amca_id',
 			'sort',
 			'category',
+			'amca_id',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
 				'callback' => array($elements->uiComponents, 'getOperate')
