@@ -21,7 +21,7 @@ use library\UcenterFactory;
  * Amcas class file
  * 页面小组件类，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Amcas.php 1 2014-01-06 16:47:52Z huan.song $
+ * @version $Id: Amcas.php 1 2014-01-22 16:43:52Z huan.song $
  * @package modules.ucenter.ui.bootstrap
  * @since 1.0
  */
@@ -76,13 +76,10 @@ class Amcas
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
 		$modifyIcon = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modifyUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_GLOBAL_MODIFY'));
 
-		$trashUrl = Url::getUrl('trash', Mvc::$controller, Mvc::$module, $params);
-		$trashIcon = Components::getGlyphicon(Components::GLYPHICON_TRASH, $trashUrl, Components::JSFUNC_DIALOGTRASH, Text::_('CFG_SYSTEM_GLOBAL_TRASH'));
-
 		$removeUrl = Url::getUrl('remove', Mvc::$controller, Mvc::$module, $params);
 		$removeIcon = Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $removeUrl, Components::JSFUNC_DIALOGREMOVE, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
-		$ret = $modifyIcon . $trashIcon . $removeIcon;
+		$ret = $modifyIcon . $removeIcon;
 		return $ret;
 	}
 }

@@ -20,7 +20,7 @@ use library\UcenterFactory;
  * Amcas class file
  * 业务处理层类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Amcas.php 1 2014-01-06 16:47:52Z huan.song $
+ * @version $Id: Amcas.php 1 2014-01-22 16:43:52Z huan.song $
  * @package modules.ucenter.model
  * @since 1.0
  */

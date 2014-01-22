@@ -18,7 +18,7 @@ use library\UcenterFactory;
  * Amcas class file
  * 字段信息配置类，包括表格、表单、验证规则、选项
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Amcas.php 1 2014-01-06 16:47:52Z huan.song $
+ * @version $Id: Amcas.php 1 2014-01-22 16:43:52Z huan.song $
  * @package modules.ucenter.elements
  * @since 1.0
  */
@@ -90,6 +90,7 @@ class Amcas extends ElementCollections
 				'type' => 'text',
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_ID_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_ID_HINT'),
+				'required' => true,
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
@@ -118,15 +119,15 @@ class Amcas extends ElementCollections
 		elseif ($type === self::TYPE_FORM) {
 			$output = array(
 				'__tid__' => 'main',
-				'type' => 'checkbox',
+				'type' => 'select',
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_HINT'),
-				'required' => true,
+				'options' => array(0 => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_TOP_LEVEL_LABEL'))
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'InArray' => array(array(), Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_INARRAY')),
+				'modules\\ucenter\\validator\\UserAmcasAmcaPidValidator' => array(true, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_VALIDATOR')),
 			);
 		}
 
@@ -159,7 +160,7 @@ class Amcas extends ElementCollections
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Alpha' => array('', Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_ALPHA')),
+				'Alpha' => array(true, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
 				'MaxLength' => array(16, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
 			);
@@ -189,11 +190,12 @@ class Amcas extends ElementCollections
 				'type' => 'text',
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_SORT_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_SORT_HINT'),
+				'required' => true,
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
-				'Numeric' => array(0, Text::_('MOD_UCENTER_USER_AMCAS_SORT_NUMERIC')),
+				'Numeric' => array(true, Text::_('MOD_UCENTER_USER_AMCAS_SORT_NUMERIC')),
 			);
 		}
 
@@ -209,10 +211,10 @@ class Amcas extends ElementCollections
 	{
 		$output = array();
 		$options = array(
-			self::CATEGORY_APP => self::CATEGORY_APP,
-			self::CATEGORY_MOD => self::CATEGORY_MOD,
-			self::CATEGORY_CTRL => self::CATEGORY_CTRL,
-			self::CATEGORY_ACT => self::CATEGORY_ACT,
+			self::CATEGORY_APP => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_APP_LABEL'),
+			self::CATEGORY_MOD => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_MOD_LABEL'),
+			self::CATEGORY_CTRL => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_CTRL_LABEL'),
+			self::CATEGORY_ACT => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_ACT_LABEL'),
 		);
 
 		$name = 'category';
@@ -228,6 +230,7 @@ class Amcas extends ElementCollections
 				'type' => 'radio',
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_HINT'),
+				'required' => true,
 				'options' => $options,
 				'value' => self::CATEGORY_APP,
 			);
@@ -239,12 +242,6 @@ class Amcas extends ElementCollections
 		}
 		elseif ($type === self::TYPE_OPTIONS) {
 			$output = $options;
-		}
-		elseif ($type === self::TYPE_SEARCH) {
-			$output = array(
-				'type' => 'select',
-				'placeholder' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_LABEL'),
-			);
 		}
 
 		return $output;

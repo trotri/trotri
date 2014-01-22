@@ -8,6 +8,10 @@ $this->widget(
 		'elementCollections' => $elements,
 		'data' => $this->data,
 		'columns' => array(
+			'amca_name',
+			'amca_pid',
+			'amca_id',
+			'sort',
 			'category',
 			'operate' => array(
 				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
@@ -27,4 +31,4 @@ $this->widget(
 );
 ?>
 
-<?php echo $this->getHtml()->jsFile($this->base_url . '/static/system/js/ucenter.js'); ?>
+<?php echo $this->getHtml()->jsFile($this->base_url . '/static/administrator/js/ucenter.js'); ?>
