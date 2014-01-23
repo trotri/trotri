@@ -219,7 +219,7 @@ abstract class Model
 			foreach ($ret['data'] as $row) {
 				$data[$row[$columnName0]] = $row[$columnName1];
 			}
-	
+
 			$ret['data'] = $data;
 		}
 

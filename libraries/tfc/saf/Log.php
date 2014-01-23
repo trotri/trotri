@@ -169,4 +169,17 @@ class Log
     {
         return self::getLogger()->getId();
     }
+
+    /**
+     * 打印错误并退出
+     * @param integer $line
+     * @param string $errMsg
+     * @return void
+     */
+    public static function errExit($line, $errMsg)
+    {
+        echo '<font color="red">Line: ', $line, '. Msg: ', $errMsg, '</font>';
+        exit;
+    }
+
 }

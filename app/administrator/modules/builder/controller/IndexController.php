@@ -20,7 +20,7 @@ use modules\builder\model\Gc;
 
 /**
  * IndexController class file
- * 控制器类
+ * 生成代码
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: IndexController.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.controller

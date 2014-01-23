@@ -19,7 +19,7 @@ use library\UcenterFactory;
 
 /**
  * AmcasController class file
- * 控制器类
+ * 用户可访问的事件
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: AmcasController.php 1 2014-01-22 16:43:52Z huan.song $
  * @package modules.ucenter.controller
@@ -41,7 +41,7 @@ class AmcasController extends BaseController
 		$ele = UcenterFactory::getElements('Amcas');
 
 		$pageNo = Url::getCurrPage();
-		$order = '';
+		$order = 'sort';
 		$params = array();
 		$ret = $mod->search($params, $order, $pageNo);
 		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
@@ -124,6 +124,12 @@ class AmcasController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
+		$options = $ele->getCategory($ele::TYPE_OPTIONS);
+		$ret['data']['category'] = isset($options[$ret['data']['category']]) ? $options[$ret['data']['category']] : '';
+
+		$options = $ele->getAmcaPid($ele::TYPE_OPTIONS);
+		$ret['data']['amca_pid'] = isset($options[$ret['data']['amca_pid']]) ? $options[$ret['data']['amca_pid']] : '';
+
 		$viw->assign('element_collections', $ele);
 		$viw->assign('id', $id);
 		$this->render($ret);
@@ -171,4 +177,17 @@ class AmcasController extends BaseController
 	{
 	}
 
+	/**
+	 * 同步用户事件
+	 * @return void
+	 */
+	public function synchAction()
+	{
+		$req = Ap::getRequest();
+
+		$mod = UcenterFactory::getModel('Amcas');
+		$id = $req->getInteger('id');
+
+		$mod->synch($id);
+	}
 }

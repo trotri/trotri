@@ -8,6 +8,7 @@ $this->widget('ui\bootstrap\widgets\FormBuilder',
 		'elementCollections' => $elements,
 		'elements' => array(
 			'amca_name',
+			'prompt',
 			'category',
 			'amca_pid',
 			'sort',

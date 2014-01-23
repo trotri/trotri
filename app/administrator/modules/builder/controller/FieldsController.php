@@ -19,7 +19,7 @@ use library\BuilderFactory;
 
 /**
  * FieldsController class file
- * 控制器类
+ * 表单字段
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FieldsController.php 1 2014-01-19 17:52:00Z huan.song $
  * @package modules.builder.controller

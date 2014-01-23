@@ -60,7 +60,7 @@ class Amcas
 	 */
 	public function getButtonCancel()
 	{
-		$url = '--待开发--';
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
 		return Components::getButtonCancel($url);
 	}
 
@@ -71,7 +71,7 @@ class Amcas
 	 */
 	public function getOperate($data)
 	{
-		$params = array('--待开发--');
+		$params = array('id' => $data['amca_id']);
 
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
 		$modifyIcon = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modifyUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_GLOBAL_MODIFY'));
@@ -79,7 +79,14 @@ class Amcas
 		$removeUrl = Url::getUrl('remove', Mvc::$controller, Mvc::$module, $params);
 		$removeIcon = Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $removeUrl, Components::JSFUNC_DIALOGREMOVE, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
+		$synchUrl = Url::getUrl('synch', Mvc::$controller, Mvc::$module, $params);
+		$synchIcon = Components::getGlyphicon(Components::GLYPHICON_WRENCH, $synchUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_UCENTER_AMCAS_SYNCH_LABEL'));
+
 		$ret = $modifyIcon . $removeIcon;
+		if ($data['category'] === 'mod') {
+			$ret .= $synchIcon;
+		}
+
 		return $ret;
 	}
 

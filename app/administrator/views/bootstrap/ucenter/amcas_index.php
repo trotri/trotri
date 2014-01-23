@@ -9,6 +9,7 @@ $this->widget(
 		'data' => $this->data,
 		'columns' => array(
 			'amca_name',
+			'prompt',
 			'amca_pid',
 			'sort',
 			'category',

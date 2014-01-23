@@ -11,6 +11,7 @@
 namespace modules\builder\model;
 
 use tfc\util\FileManager;
+use tfc\saf\Log;
 use library\BuilderFactory;
 use library\ErrorNo;
 
@@ -74,7 +75,7 @@ class Gc
 
 		$this->_builderId = (int) $builderId;
 		if ($this->_builderId <= 0) {
-			$this->errExit(__LINE__, 'builder_id is not a integer.');
+			Log::errExit(__LINE__, 'builder_id must be a integer.');
 		}
 
 		$this->initBuilders();
@@ -136,7 +137,7 @@ class Gc
 		fwrite($stream, "use library\\{$facName};\n\n");
 		fwrite($stream, "/**\n");
 		fwrite($stream, " * {$ctrlName} class file\n");
-		fwrite($stream, " * 控制器类\n");
+		fwrite($stream, " * {$this->_builders['builder_name']}\n");
 		fwrite($stream, " * @author {$this->authorName} <{$this->authorMail}>\n");
 		fwrite($stream, " * @version \$Id: {$ctrlName}.php 1 " . date('Y-m-d H:i:s') . "Z huan.song \$\n");
 		fwrite($stream, " * @package modules.{$modName}.controller\n");
@@ -984,7 +985,7 @@ class Gc
 	{
 		$ret = BuilderFactory::getModel('Builders')->findByPk($this->_builderId);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		$builders = $ret['data'];
@@ -1014,14 +1015,14 @@ class Gc
 	{
 		$ret = BuilderFactory::getModel('Groups')->findAllByAttributes(array('builder_id' => 0), 'sort');
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		$groups = $ret['data'];
 
 		$ret = BuilderFactory::getModel('Groups')->findAllByAttributes(array('builder_id' => $this->_builderId), 'sort');
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		$groups = array_merge($groups, $ret['data']);
@@ -1040,7 +1041,7 @@ class Gc
 	{
 		$ret = BuilderFactory::getModel('Fields')->findAllByAttributes(array('builder_id' => $this->_builderId), 'sort');
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		$fields = $ret['data'];
@@ -1084,7 +1085,7 @@ class Gc
 	{
 		$ret = BuilderFactory::getModel('Types')->findByPk($typeId);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		return $ret['data'];
@@ -1099,7 +1100,7 @@ class Gc
 	{
 		$ret = BuilderFactory::getModel('Groups')->findByPk($groupId);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		return $ret['data'];
@@ -1114,7 +1115,7 @@ class Gc
 	{
 		$ret = BuilderFactory::getModel('Validators')->findAllByAttributes(array('field_id' => $fieldId), 'sort');
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->errExit(__LINE__, $ret['err_msg']);
+			Log::errExit(__LINE__, $ret['err_msg']);
 		}
 
 		return $ret['data'];
@@ -1156,7 +1157,7 @@ class Gc
 	public function fopen($filePath)
 	{
 		if (!($stream = @fopen($filePath, 'w', false))) {
-			$this->errExit(__LINE__, sprintf(
+			Log::errExit(__LINE__, sprintf(
 				'File "%s" cannot be opened with mode "w"', $filePath
 			));
 		}
@@ -1173,7 +1174,7 @@ class Gc
 	public function mkDir($directory, $mode = 0664)
 	{
 		if (!$this->_fileManager->mkDir($directory, $mode, true)) {
-			$this->errExit(__LINE__, sprintf(
+			Log::errExit(__LINE__, sprintf(
 				'Dir "%s" cannot be create with mode "%04o"', $directory, $mode
 			));
 		}
@@ -1185,14 +1186,4 @@ class Gc
 		}
 	}
 
-	/**
-	 * 打印错误并退出
-	 * @param string $errMsg
-	 * @return void
-	 */
-	public function errExit($line, $errMsg)
-	{
-		echo '<font color="red">Line: ', $line, '. Msg: ', $errMsg, '</font>';
-		exit;
-	}
 }

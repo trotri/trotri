@@ -14,7 +14,7 @@ use library\BaseController;
 
 /**
  * SiteController class file
- * 控制器类
+ * 系统首页
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: SiteController.php 1 2014-01-06 16:47:52Z huan.song $
  * @package modules.system.controller

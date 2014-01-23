@@ -19,7 +19,7 @@ use library\BuilderFactory;
 
 /**
  * GroupsController class file
- * 控制器类
+ * 表单字段组
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: GroupsController.php 1 2014-01-19 13:18:49Z huan.song $
  * @package modules.builder.controller

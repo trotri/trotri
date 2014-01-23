@@ -35,18 +35,16 @@ class UserAmcasAmcaPidValidator extends Validator
      */
     public function isValid()
     {
-    	$pId = Ap::getRequest()->getParam('amca_pid');
-    	$cCat = Ap::getRequest()->getParam('category');
- 		if ($pId === '0' && $cCat === 'app') {
- 			return true;
+    	$amcaPid = Ap::getRequest()->getParam('amca_pid');
+    	$category = Ap::getRequest()->getParam('category');
+ 		if ($category === 'app') {
+ 			return ($amcaPid === '0') ? true : false;
  		}
-
-    	$pCat = UcenterFactory::getModel('Amcas')->getCategoryByAmcaId($pId);
-		if (($cCat === 'mod' && $pCat === 'app') 
-			|| ($cCat === 'ctrl' && $pCat === 'mod')
-			|| ($cCat === 'act' && $pCat === 'ctrl')) {
-			return true;
-		}
+ 
+ 		if ($category === 'mod') {
+ 			$appAmcas = UcenterFactory::getModel('Amcas')->getAppAmcas();
+ 			return isset($appAmcas[$amcaPid]) ? true : false;
+ 		}
 
         return false;
     }

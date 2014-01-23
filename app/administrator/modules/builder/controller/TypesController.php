@@ -19,7 +19,7 @@ use library\BuilderFactory;
 
 /**
  * TypesController class file
- * 控制器类
+ * 表单字段类型
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: TypesController.php 1 2014-01-07 18:07:20Z huan.song $
  * @package modules.builder.controller

@@ -7,6 +7,7 @@ CREATE TABLE `tr_user_amcas` (
   `amca_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `amca_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `amca_name` varchar(100) NOT NULL DEFAULT '' COMMENT '事件名',
+  `prompt` varchar(100) NOT NULL DEFAULT '' COMMENT '提示',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `category` enum('app','mod','ctrl','act') NOT NULL DEFAULT 'act' COMMENT '类型，app：应用、mod：模块、ctrl：控制器、act：行动',
   PRIMARY KEY (`amca_id`),

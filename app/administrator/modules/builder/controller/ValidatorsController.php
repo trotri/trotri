@@ -19,7 +19,7 @@ use library\BuilderFactory;
 
 /**
  * ValidatorsController class file
- * 控制器类
+ * 表单字段验证
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ValidatorsController.php 1 2014-01-20 15:58:15Z huan.song $
  * @package modules.builder.controller
