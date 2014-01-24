@@ -11,7 +11,7 @@ CREATE TABLE `tr_user_amcas` (
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `category` enum('app','mod','ctrl','act') NOT NULL DEFAULT 'act' COMMENT '类型，app：应用、mod：模块、ctrl：控制器、act：行动',
   PRIMARY KEY (`amca_id`),
-  KEY `amca_pid` (`amca_pid`),
+  UNIQUE KEY `pid_name` (`amca_pid`,`amca_name`),
   KEY `amca_name` (`amca_name`),
   KEY `sort` (`sort`),
   KEY `category` (`category`)

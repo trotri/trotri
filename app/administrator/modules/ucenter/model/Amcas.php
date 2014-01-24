@@ -106,6 +106,7 @@ class Amcas extends Model
 			'amca_name' => $elements->getAmcaName($type),
 			'prompt' => $elements->getPrompt($type),
 			'sort' => $elements->getSort($type),
+			'category' => $elements->getCategory($type),
 		);
 
 		return $output;
@@ -196,20 +197,171 @@ class Amcas extends Model
 		}
 
 		$appName = $ret['data']['amca_name'];
-		$ctrls = $this->getCtrlFiles($appName, $modName);
-		
-		\tfc\saf\debug_dump($ctrls);
+		$fileAmcas = $this->refCtrlFiles($appName, $modName);
+
+		echo 'Synch Ctrl Start ...<br/>';
+		$ctrlAnalyser = $this->_getCtrlAnalyser($modId, $fileAmcas['ctrl_amcas']);
+		$this->_synchAnalyser($ctrlAnalyser);
+		echo 'Synch Ctrl End ...<br/>';
+
+		$ret = $this->findPairsByAttributes(array('amca_name', 'amca_id'), array('amca_pid' => $modId), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			Log::errExit(__LINE__, $ret['err_msg']);
+		}
+
+		echo 'Synch Act Start ...<br/>';
+		foreach ($ret['data'] as $ctrlName => $ctrlId) {
+			if (!isset($fileAmcas['act_amcas'][$ctrlName])) {
+				continue;
+			}
+
+			echo 'Synch "' . $ctrlName . '" Act Start ...<br/>';
+			$actAnalyser = $this->_getActAnalyser($ctrlId, $fileAmcas['act_amcas'][$ctrlName]);
+			$this->_synchAnalyser($actAnalyser);
+			echo 'Synch "' . $ctrlName . '" Act End ...<br/>';
+		}
+		echo 'Synch Act End ...<br/>';
+
+		echo 'Synch End ...<br/>';
 	}
 
 	/**
-	 * 通过分析文件，获取所有的控制器
+	 * 分析数据，获取对行动的增删改
+	 * @param integer $ctrlId
+	 * @param array $fileAmcas
+	 * @return array
+	 */
+	protected function _getActAnalyser($ctrlId, $fileAmcas)
+	{
+		$ctrlId = (int) $ctrlId;
+		$ret = $this->findAllByAttributes(array('amca_pid' => $ctrlId), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			Log::errExit(__LINE__, $ret['err_msg']);
+		}
+
+		$dbAmcas = array();
+		foreach ($ret['data'] as $rows) {
+			$dbAmcas[$rows['amca_name']] = $rows;
+		}
+
+		$ret = array('insert' => array(), 'update' => array(), 'delete' => array());
+
+		foreach ($fileAmcas as $actName => $fileAmca) {
+			if (isset($dbAmcas[$actName])) {
+				if ($dbAmcas[$actName]['prompt'] != $fileAmca['prompt']
+					|| $dbAmcas[$actName]['sort'] != $fileAmca['sort']) {
+					$ret['update'][$dbAmcas[$actName]['amca_id']] = $fileAmca;
+				}
+			}
+			else {
+				$fileAmca['amca_pid'] = $ctrlId;
+				$ret['insert'][] = $fileAmca;
+			}
+		}
+
+		foreach ($dbAmcas as $actName => $dbAmca) {
+			if (!isset($fileAmcas[$actName])) {
+				$ret['delete'][] = $dbAmca['amca_id'];
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * 分析数据，获取对控制器的增删改
+	 * @param integer $modId
+	 * @param array $fileAmcas
+	 * @return array
+	 */
+	protected function _getCtrlAnalyser($modId, $fileAmcas)
+	{
+		$modId = (int) $modId;
+		$ret = $this->findAllByAttributes(array('amca_pid' => $modId), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			Log::errExit(__LINE__, $ret['err_msg']);
+		}
+
+		$dbAmcas = array();
+		foreach ($ret['data'] as $rows) {
+			$dbAmcas[$rows['amca_name']] = $rows;
+		}
+
+		$ret = array('insert' => array(), 'update' => array(), 'delete' => array());
+
+		foreach ($fileAmcas as $ctrlName => $fileAmca) {
+			if (isset($dbAmcas[$ctrlName])) {
+				if ($dbAmcas[$ctrlName]['prompt'] != $fileAmca['prompt']
+					|| $dbAmcas[$ctrlName]['sort'] != $fileAmca['sort']) {
+					$ret['update'][$dbAmcas[$ctrlName]['amca_id']] = $fileAmca;
+				}
+			}
+			else {
+				$fileAmca['amca_pid'] = $modId;
+				$ret['insert'][] = $fileAmca;
+			}
+		}
+
+		foreach ($dbAmcas as $ctrlName => $dbAmca) {
+			if (!isset($fileAmcas[$ctrlName])) {
+				$ret['delete'][] = $dbAmca['amca_id'];
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * 通过分析结果，同步控制器信息
+	 * @param array $analyser
+	 * @return void
+	 */
+	protected function _synchAnalyser($analyser)
+	{
+		foreach ($analyser['insert'] as $attributes) {
+			$ret = $this->getDb()->insert($attributes);
+			if ($ret === false || $ret <= 0) {
+				Log::errExit(sprintf(
+					'%s, attributes "%s"', $this->_('ERROR_MSG_ERROR_DB_INSERT'), serialize($attributes)
+				));
+			}
+
+			echo 'Insert "' . $attributes['amca_name'] . '" ...<br/>';
+		}
+
+		foreach ($analyser['update'] as $amcaId => $attributes) {
+			$ret = $this->getDb()->updateByPk($amcaId, $attributes);
+			if ($ret === false) {
+				Log::errExit(sprintf(
+					'%s pk "%d", attributes "%s"', $this->_('ERROR_MSG_ERROR_DB_UPDATE'), $amcaId, serialize($attributes)
+				));
+			}
+
+			echo 'Update "' . $attributes['amca_name'] . '" ...<br/>';
+		}
+
+		foreach ($analyser['delete'] as $amcaId) {
+			$ret = $this->getDb()->deleteByPk($amcaId);
+			if ($ret === false) {
+				Log::errExit(sprintf(
+					'%s pk "%d"', $this->_('ERROR_MSG_ERROR_DB_DELETE'), $amcaId
+				));
+			}
+
+			echo 'Delete "' . $amcaId . '" ...<br/>';
+		}
+	}
+
+	/**
+	 * 通过分析文件，获取所有的控制器信息
 	 * @param string $appName
 	 * @param string $modName
 	 * @return array
 	 */
-	public function getCtrlFiles($appName, $modName)
+	public function refCtrlFiles($appName, $modName)
 	{
 		$ret = array();
+		$ctrlSort = 0;
 
 		$fileManager = Singleton::getInstance('tfc\util\FileManager');
 		$directory = DIR_ROOT . DS . 'app' . DS . $appName . DS . 'modules' . DS . $modName . DS . 'controller';
@@ -221,33 +373,44 @@ class Amcas extends Model
 
 		$filePaths = $fileManager->scanDir($directory);
 		foreach ($filePaths as $filePath) {
-			$clsName = basename($filePath, '.php');
-			if ($clsName === 'index.html') {
+			$ctrlName = basename($filePath, '.php');
+			if ($ctrlName === 'index.html') {
 				continue;
 			}
 
-			if (!($stream = @fopen($filePath, 'r', false))) {
-				Log::errExit(__LINE__, sprintf(
-					'File "%s" cannot be opened with mode "r"', $filePath
-				));
-			}
+			$clsName = 'modules\\' . $modName . '\\controller\\' . $ctrlName;
+			require_once $filePath;
+			$reflector = new \ReflectionClass($clsName);
 
-			$isCtrlAmcaName = false;
-			while (!feof($stream)) {
-				$line = trim(fgets($stream));
+			$ctrlPrompt = preg_replace('/.+class\s+file\s+\*\s+(\S+)\s+\*\s+\@author.+/is', '\\1', $reflector->getDocComment());
 
-				if ($isCtrlAmcaName) {
-					$ctrlAmcaName = trim(trim($line, '*'));
-					$isCtrlAmcaName = false;
+			$actAmcas = array();
+			$actSort = 0;
+			$methods = $reflector->getMethods(\ReflectionMethod::IS_PUBLIC);
+			foreach ($methods as $method) {
+				$class = $method->getDeclaringClass()->getShortName();
+				if ($class !== $ctrlName) {
+					continue;
 				}
 
-				if (preg_match('/\*\s+' . $clsName . '\s+class\s+file/', $line) ) {
-					$isCtrlAmcaName = true;
-				}
-
+				$actName = $method->getName();
+				$actPrompt = preg_replace('/.*\*\*\s+\*\s+(\S+)\s+\*.*/is', '\\1', $method->getDocComment());
+				$actAmcas[$actName] = array(
+					'amca_name' => $actName,
+					'prompt' => $actPrompt,
+					'sort' => ++$actSort,
+					'category' => 'act',
+				);
 			}
 
-			fclose($stream);
+			$ret['ctrl_amcas'][$ctrlName] = array(
+				'amca_name' => $ctrlName,
+				'prompt' => $ctrlPrompt,
+				'sort' => ++$ctrlSort,
+				'category' => 'ctrl',
+			);
+
+			$ret['act_amcas'][$ctrlName] = $actAmcas;
 		}
 
 		return $ret;

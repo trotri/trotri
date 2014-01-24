@@ -10,6 +10,7 @@
 
 namespace modules\ucenter\elements;
 
+use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use ui\ElementCollections;

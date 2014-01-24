@@ -82,9 +82,12 @@ class Amcas
 		$synchUrl = Url::getUrl('synch', Mvc::$controller, Mvc::$module, $params);
 		$synchIcon = Components::getGlyphicon(Components::GLYPHICON_WRENCH, $synchUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_UCENTER_AMCAS_SYNCH_LABEL'));
 
-		$ret = $modifyIcon . $removeIcon;
-		if ($data['category'] === 'mod') {
-			$ret .= $synchIcon;
+		$ret = '';
+		if ($data['category'] === 'app') {
+			$ret = $modifyIcon . $removeIcon;
+		}
+		elseif ($data['category'] === 'mod') {
+			$ret = $modifyIcon . $removeIcon . $synchIcon;
 		}
 
 		return $ret;
