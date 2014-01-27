@@ -129,13 +129,20 @@ Core = {
   /**
    * 展示对话框：Ajax方式展示数据
    * @param string url Ajax请求展示数据链接
-   * @param string title 对话框标题
    * @return void
    */
-  dialogAjaxView: function(url, title) {
-    if (title != undefined) {
-      $("#dialog_ajax_view_title").html(title);
-    }
+  dialogAjaxView: function(url) {
+    url += "&" + new Date().getTime();
+    $.getJSON(url, function(ret) {
+      if (ret.err_no == 0) {
+        $("#dialog_ajax_view_title").html(ret.data.title);
+        $("#dialog_ajax_view_body").html(ret.data.body);
+      }
+      else {
+        $("#dialog_ajax_view_body").html(ret.err_msg);
+      }
+    });
+
     $("#dialog_ajax_view").modal("show");
   },
 

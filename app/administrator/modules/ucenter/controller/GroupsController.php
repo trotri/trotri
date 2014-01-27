@@ -10,8 +10,6 @@
 
 namespace modules\ucenter\controller;
 
-use tfc\util\Encoder;
-
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
@@ -20,14 +18,14 @@ use library\Url;
 use library\UcenterFactory;
 
 /**
- * AmcasController class file
- * 用户可访问的事件
+ * GroupsController class file
+ * 用户分组
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: AmcasController.php 1 2014-01-22 16:43:52Z huan.song $
+ * @version $Id: GroupsController.php 1 2014-01-27 15:15:38Z huan.song $
  * @package modules.ucenter.controller
  * @since 1.0
  */
-class AmcasController extends BaseController
+class GroupsController extends BaseController
 {
 	/**
 	 * 查询数据列表
@@ -39,26 +37,17 @@ class AmcasController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Amcas');
-		$ele = UcenterFactory::getElements('Amcas');
-		$appId = $req->getInteger('app_id');
-		$appAmcas = $mod->getAppAmcas();
-		if ($appId <= 0) {
-			$appId = array_shift(array_keys($appAmcas));
-		}
+		$mod = UcenterFactory::getModel('Groups');
+		$ele = UcenterFactory::getElements('Groups');
 
-		if (!isset($appAmcas[$appId])) {
-			Url::err404();
-		}
-
-		$ret = $mod->findModCtrls($appId);
-		$return = Url::getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, array('app_id' => $appId));
-		Ap::getRequest()->setParam('http_return', $return);
+		$pageNo = Url::getCurrPage();
+		$order = '';
+		$params = array();
+		$ret = $mod->search($params, $order, $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$viw->assign('element_collections', $ele);
-		$viw->assign('app_id', $appId);
-		$viw->assign('app_amcas', $appAmcas);
-		$viw->assign('http_return', $return);
+		$viw->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
 
@@ -72,13 +61,8 @@ class AmcasController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Amcas');
-		$ele = UcenterFactory::getElements('Amcas');
-		$amcaPid = UcenterFactory::getModel('Amcas')->getAmcaPid();
-		$appAmcas = $mod->getAppAmcas();
-		if ($amcaPid > 0 && !isset($appAmcas[$amcaPid])) {
-			Url::err404();
-		}
+		$mod = UcenterFactory::getModel('Groups');
+		$ele = UcenterFactory::getElements('Groups');
 
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
@@ -90,7 +74,6 @@ class AmcasController extends BaseController
 					Url::forward('create', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($this->isSubmitTypeSaveClose()) {
-					$ret['app_id'] = $amcaPid;
 					Url::forward('index', Mvc::$controller, Mvc::$module, $ret);
 				}
 			}
@@ -110,20 +93,15 @@ class AmcasController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Amcas');
-		$ele = UcenterFactory::getElements('Amcas');
-
-		$id = $req->getInteger('id');
-		$appId = UcenterFactory::getModel('Amcas')->getAmcaPid();
-		if ($appId <= 0) {
-			$appId = $id;
-		}
+		$mod = UcenterFactory::getModel('Groups');
+		$ele = UcenterFactory::getElements('Groups');
 
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
-			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('app_id' => $appId));
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array());
 		}
 
+		$id = $req->getInteger('id');
 		if ($this->isPost()) {
 			$ret = $mod->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
@@ -146,12 +124,6 @@ class AmcasController extends BaseController
 			$ret = $mod->findByPk($id);
 		}
 
-		$options = $ele->getCategory($ele::TYPE_OPTIONS);
-		$ret['data']['category'] = isset($options[$ret['data']['category']]) ? $options[$ret['data']['category']] : '';
-
-		$options = $ele->getAmcaPid($ele::TYPE_OPTIONS);
-		$ret['data']['amca_pid'] = isset($options[$ret['data']['amca_pid']]) ? $options[$ret['data']['amca_pid']] : '';
-
 		$viw->assign('element_collections', $ele);
 		$viw->assign('id', $id);
 		$this->render($ret);
@@ -166,7 +138,7 @@ class AmcasController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = UcenterFactory::getModel('Amcas');
+		$mod = UcenterFactory::getModel('Groups');
 
 		$id = $req->getInteger('id');
 		$ret = $mod->deleteByPk($id);
@@ -182,51 +154,13 @@ class AmcasController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = UcenterFactory::getModel('Amcas');
+		$mod = UcenterFactory::getModel('Groups');
 
 		$id = $req->getInteger('id');
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
 		$ret = $mod->updateByPk($id, array($columnName => $value));
 		Url::httpReturn($ret);
-	}
-
-	/**
-	 * 浏览行动类型数据
-	 * @return void
-	 */
-	public function actsviewAction()
-	{
-		$req = Ap::getRequest();
-		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Amcas');
-		$ele = UcenterFactory::getElements('Amcas');
-
-		$ctrlId = $req->getInteger('ctrl_id');
-		$ret = $mod->findByPk($ctrlId);
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->display($ret);
-		}
-
-		$ctrlAmcas = $ret['data'];
-		$ret = $mod->findAllByAttributes(array('amca_pid' => (int) $ctrlId), 'sort');
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->display($ret);
-		}
-
-		$body = $viw->widget(
-			'ui\bootstrap\widgets\TableBuilder',
-			array(
-				'elementCollections' => $ele,
-				'data' => $ret['data'],
-				'columns' => array('amca_name', 'prompt', 'sort', 'amca_id')
-			), array(), true
-		);
-
-		$this->display(array(
-			'title' => $ctrlAmcas['prompt'] . ' ' . $ctrlAmcas['amca_name'],
-			'body' => $body
-		));
 	}
 
 	/**
@@ -237,17 +171,4 @@ class AmcasController extends BaseController
 	{
 	}
 
-	/**
-	 * 同步用户事件
-	 * @return void
-	 */
-	public function synchAction()
-	{
-		$req = Ap::getRequest();
-
-		$mod = UcenterFactory::getModel('Amcas');
-		$id = $req->getInteger('id');
-
-		$mod->synch($id);
-	}
 }

@@ -13,8 +13,10 @@ namespace modules\ucenter\model;
 use tfc\ap\Ap;
 use tfc\ap\Singleton;
 use tfc\ap\Registry;
+use tfc\mvc\Mvc;
 use tfc\saf\Log;
 use koala\Model;
+use library\Url;
 use library\ErrorNo;
 use library\UcenterFactory;
 
@@ -38,27 +40,53 @@ class Amcas extends Model
 	}
 
 	/**
-	 * 查询数据
-	 * @param array $params
-	 * @param string $order
-	 * @param integer $pageNo
+	 * 查询模块和控制器类型数据
+	 * @param integer $appId
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '', $pageNo = 0)
+	public function findModCtrls($appId)
 	{
-		$attributes = array();
-		//--待开发--
-		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
-		return $ret;
+		$data = array();
+
+		$ret = $this->findAllByAttributes(array('amca_pid' => (int) $appId), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$appAmcas = $ret['data'];
+		foreach ($appAmcas as $rows) {
+			$ret = $this->findAllByAttributes(array('amca_pid' => $rows['amca_id']), 'sort');
+			if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+				return $ret;
+			}
+
+			$ctrlAmcas = $ret['data'];
+			$data[] = $rows;
+			foreach ($ctrlAmcas as $rows) {
+				$rows['amca_name'] = ' ---- ' . $rows['amca_name'];
+				$data[] = $rows;
+			}
+		}
+
+		return array(
+			'err_no' => ErrorNo::SUCCESS_NUM,
+			'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
+			'data' => $data
+		);
 	}
 
 	/**
-	 * 新增一条记录
+	 * 新增一条记录，只能增加“应用”和“模块”类型事件
 	 * @param array $params
 	 * @return array
 	 */
 	public function create(array $params = array())
 	{
+		if (isset($params['amca_pid'])) {
+			$amcaPid = (int) $params['amca_pid'];
+			$params['category'] = ($amcaPid > 0) ? 'mod' : 'app';
+		}
+
 		return $this->insert($params);
 	}
 
@@ -70,6 +98,7 @@ class Amcas extends Model
 	 */
 	public function modifyByPk($value, array $params)
 	{
+		unset($params['amca_name']);
 		unset($params['category']);
 		unset($params['amca_pid']);
 		return $this->updateByPk($value, $params);
@@ -84,11 +113,11 @@ class Amcas extends Model
 		$elements = UcenterFactory::getElements('Amcas');
 		$type = $elements::TYPE_FILTER;
 		$output = array(
-			'amca_pid' => $elements->getAmcaPid($type),
 			'amca_name' => $elements->getAmcaName($type),
 			'prompt' => $elements->getPrompt($type),
-			'sort' => $elements->getSort($type),
 			'category' => $elements->getCategory($type),
+			'amca_pid' => $elements->getAmcaPid($type),
+			'sort' => $elements->getSort($type),
 		);
 
 		return $output;
@@ -103,10 +132,8 @@ class Amcas extends Model
 		$elements = UcenterFactory::getElements('Amcas');
 		$type = $elements::TYPE_FILTER;
 		$output = array(
-			'amca_name' => $elements->getAmcaName($type),
 			'prompt' => $elements->getPrompt($type),
 			'sort' => $elements->getSort($type),
-			'category' => $elements->getCategory($type),
 		);
 
 		return $output;
@@ -149,17 +176,78 @@ class Amcas extends Model
 	}
 
 	/**
+	 * 通过amca_id获取amca_pid值
+	 * @param integer $value
+	 * @return integer
+	 */
+	public function getAmcaPidByAmcaId($value)
+	{
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getByPk('amca_pid', $value);
+			$amcaPid = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['amca_pid'];
+			Registry::set($name, $amcaPid);
+		}
+
+		return Registry::get($name);
+	}
+
+	/**
 	 * 获取所有的应用名
 	 * @return array
 	 */
 	public function getAppAmcas()
 	{
-		$ret = $this->findPairsByAttributes(array('amca_id', 'prompt'), array('category' => 'app'), 'sort');
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return array();
+		$name = __METHOD__;
+		if (!Registry::has($name)) {
+			$ret = $this->findPairsByAttributes(array('amca_id', 'prompt'), array('category' => 'app'), 'sort');
+			$data = array();
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$data = $ret['data'];
+			}
+
+			Registry::set($name, $data);
 		}
 
-		return $ret['data'];
+		return Registry::get($name);
+	}
+
+	/**
+	 * 通过父ID和事件名统计记录数
+	 * @param integer $amcaPid
+	 * @param string $amcaName
+	 * @return integer
+	 */
+	public function countByPidAndName($amcaPid, $amcaName)
+	{
+		$ret = $this->countByAttributes(array(
+			'amca_pid' => (int) $amcaPid,
+			'amca_name' => $amcaName
+		));
+
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			return $ret['total'];
+		}
+
+		return false;
+	}
+
+	/**
+	 * 获取amca_pid值
+	 * @return integer
+	 */
+	public function getAmcaPid()
+	{
+		$amcaPid = Ap::getRequest()->getInteger('amca_pid');
+		if ($amcaPid <= 0) {
+			$id = Ap::getRequest()->getInteger('id');
+			if ($id > 0) {
+				$amcaPid = $this->getAmcaPidByAmcaId($id);
+			}
+		}
+
+		return $amcaPid;
 	}
 
 	/**
@@ -169,8 +257,6 @@ class Amcas extends Model
 	 */
 	public function synch($amcaId)
 	{
-		header('Content-Type: text/html; charset=utf-8');
-
 		echo 'Synch Start ...<br/>';
 		$modId = (int) $amcaId;
 		if ($modId <= 0) {
@@ -223,6 +309,9 @@ class Amcas extends Model
 		echo 'Synch Act End ...<br/>';
 
 		echo 'Synch End ...<br/>';
+
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('app_id' => $appId));
+		echo '<a href="' . $url . '">Go Back !!!</a>';
 	}
 
 	/**

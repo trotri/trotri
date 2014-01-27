@@ -111,11 +111,6 @@ class Amcas extends ElementCollections
 	public function getAmcaPid($type)
 	{
 		$output = array();
-		$options = array_merge(
-			array(0 => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_TOP_LEVEL_LABEL')), 
-			UcenterFactory::getModel('Amcas')->getAppAmcas()
-		);
-
 		$name = 'amca_pid';
 
 		if ($type === self::TYPE_TABLE) {
@@ -125,20 +120,23 @@ class Amcas extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
-			if (Mvc::$action === 'modify') {
+			$amcaPid = UcenterFactory::getModel('Amcas')->getAmcaPid();
+			if ($amcaPid > 0) {
 				$output = array(
 					'__tid__' => 'main',
-					'type' => 'string',
+					'type' => 'hidden',
 					'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_LABEL'),
+					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_HINT'),
+					'value' => $amcaPid,
 				);
 			}
 			else {
 				$output = array(
 					'__tid__' => 'main',
-					'type' => 'select',
+					'type' => 'hidden',
 					'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_LABEL'),
 					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_HINT'),
-					'options' => $options
+					'value' => 0,
 				);
 			}
 		}
@@ -148,7 +146,58 @@ class Amcas extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_OPTIONS) {
-			$output = $options;
+			$output = array_merge(
+				array(0 => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_TOP_LEVEL_LABEL')), 
+				UcenterFactory::getModel('Amcas')->getAppAmcas()
+			);
+		}
+
+		return $output;
+	}
+
+	/**
+	 * 获取“父类型事件名”配置
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getAmcaPname($type)
+	{
+		$output = array();
+		$name = 'amca_pid';
+
+		if ($type === self::TYPE_TABLE) {
+			$output = array(
+			);
+		}
+		elseif ($type === self::TYPE_FORM) {
+			$amcaPid = UcenterFactory::getModel('Amcas')->getAmcaPid();
+			if ($amcaPid > 0) {
+				$appAmcas = UcenterFactory::getModel('Amcas')->getAppAmcas();
+				$output = array(
+					'__tid__' => 'main',
+					'type' => 'string',
+					'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_LABEL'),
+					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_HINT'),
+					'value' => $appAmcas[$amcaPid],
+				);
+			}
+			else {
+				$output = array(
+					'__tid__' => 'main',
+					'type' => 'string',
+					'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_LABEL'),
+					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_HINT'),
+					'value' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PID_TOP_LEVEL_LABEL'),
+				);
+			}
+		}
+		elseif ($type === self::TYPE_FILTER) {
+			$output = array(
+			);
+		}
+		elseif ($type === self::TYPE_OPTIONS) {
+			$output = array(
+			);
 		}
 
 		return $output;
@@ -171,19 +220,30 @@ class Amcas extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
-			$output = array(
-				'__tid__' => 'main',
-				'type' => 'text',
-				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_LABEL'),
-				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_HINT'),
-				'required' => true,
-			);
+			if (Mvc::$action === 'create') {
+				$output = array(
+					'__tid__' => 'main',
+					'type' => 'text',
+					'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_LABEL'),
+					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_HINT'),
+					'required' => true,
+				);
+			}
+			else {
+				$output = array(
+					'__tid__' => 'main',
+					'type' => 'string',
+					'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_LABEL'),
+				);
+			}
 		}
 		elseif ($type === self::TYPE_FILTER) {
+			$amcaPid = UcenterFactory::getModel('Amcas')->getAmcaPid();
 			$output = array(
 				'Alpha' => array(true, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
 				'MaxLength' => array(16, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
+				'modules\\ucenter\\validator\\UserAmcasAmcaNameUniqueValidator' => array($amcaPid, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_UNIQUE_VALIDATOR')),
 			);
 		}
 
@@ -271,10 +331,6 @@ class Amcas extends ElementCollections
 			self::CATEGORY_CTRL => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_CTRL_LABEL'),
 			self::CATEGORY_ACT => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_ACT_LABEL'),
 		);
-		$formOptions = array(
-			self::CATEGORY_APP => $options[self::CATEGORY_APP],
-			self::CATEGORY_MOD => $options[self::CATEGORY_MOD],
-		);
 
 		$name = 'category';
 
@@ -285,26 +341,31 @@ class Amcas extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
-			if (Mvc::$action === 'modify') {
+			$amcaPid = UcenterFactory::getModel('Amcas')->getAmcaPid();
+			if ($amcaPid > 0) {
 				$output = array(
 					'__tid__' => 'main',
 					'type' => 'string',
 					'label' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_LABEL'),
+					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_HINT'),
+					'value' => $options[self::CATEGORY_MOD],
 				);
 			}
 			else {
 				$output = array(
 					'__tid__' => 'main',
-					'type' => 'radio',
+					'type' => 'string',
 					'label' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_LABEL'),
 					'hint' => Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_HINT'),
-					'required' => true,
-					'options' => $formOptions,
-					'value' => self::CATEGORY_APP,
+					'value' => $options[self::CATEGORY_APP],
 				);
 			}
 		}
 		elseif ($type === self::TYPE_FILTER) {
+			$formOptions = array(
+				self::CATEGORY_APP => $options[self::CATEGORY_APP],
+				self::CATEGORY_MOD => $options[self::CATEGORY_MOD]
+			);
 			$output = array(
 				'InArray' => array(array_keys($formOptions), sprintf(Text::_('MOD_UCENTER_USER_AMCAS_CATEGORY_INARRAY'), implode(', ', $formOptions))),
 			);

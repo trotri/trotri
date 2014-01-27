@@ -13,14 +13,14 @@ namespace modules\system\controller;
 use library\BaseController;
 
 /**
- * SiteController class file
- * 系统首页
+ * ToolsController class file
+ * 系统工具
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SiteController.php 1 2014-01-06 16:47:52Z huan.song $
+ * @version $Id: ToolsController.php 1 2014-01-06 16:47:52Z huan.song $
  * @package modules.system.controller
  * @since 1.0
  */
-class SiteController extends BaseController
+class ToolsController extends BaseController
 {
 	/**
 	 * @var string 页面首次渲染的布局名
@@ -28,32 +28,13 @@ class SiteController extends BaseController
 	public $layoutName = 'column1';
 
 	/**
-	 * 首页
+	 * 清理缓存
 	 * @return void
 	 */
-	public function indexAction()
+	public function cacheclearAction()
 	{
 		// -- 待开发 --
 		$this->render();
 	}
 
-	/**
-	 * About
-	 * @return void
-	 */
-	public function aboutAction()
-	{
-		// -- 待开发 --
-		$this->render();
-	}
-
-	/**
-	 * 404错误
-	 * @return void
-	 */
-	public function err404Action()
-	{
-		// -- 待开发 --
-		$this->render();
-	}
 }

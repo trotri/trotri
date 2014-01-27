@@ -14,19 +14,19 @@ use tfc\validator\Validator;
 use library\UcenterFactory;
 
 /**
- * UserAmcasAmcaPidValidator class file
- * 验证父事件ID：如果父ID<=0，表示“应用”类型事件；如果父ID>0，表示“模块”类型事件，判断该ID是否存在
+ * UserAmcasAmcaNameUniqueValidator class file
+ * 验证事件名：同一事件下的子事件名不能重复
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: UserAmcasAmcaPidValidator.php 1 2013-03-29 16:48:06Z huan.song $
+ * @version $Id: UserAmcasAmcaNameUniqueValidator.php 1 2013-03-29 16:48:06Z huan.song $
  * @package modules.ucenter.model.validator
  * @since 1.0
  */
-class UserAmcasAmcaPidValidator extends Validator
+class UserAmcasAmcaNameUniqueValidator extends Validator
 {
     /**
      * @var string 默认出错后的提醒消息
      */
-    protected $_message = '"%value%" was not found or be deleted.';
+    protected $_message = '"%value%" from this user amcas has the same name.';
 
     /**
      * (non-PHPdoc)
@@ -34,16 +34,10 @@ class UserAmcasAmcaPidValidator extends Validator
      */
     public function isValid()
     {
-    	$amcaPid = (int) $this->_value;
-    	if ($amcaPid === 0) {
-    		return true;
-    	}
+    	$amcaName = $this->getValue();
+    	$amcaPid = (int) $this->getOption();
 
- 		$appAmcas = UcenterFactory::getModel('Amcas')->getAppAmcas();
- 		if (isset($appAmcas[$amcaPid])) {
- 			return true;
- 		}
-
-        return false;
+    	$total = UcenterFactory::getModel('Amcas')->countByPidAndName($amcaPid, $amcaName);
+        return ($total > 0) ? false : true;
     }
 }

@@ -17,6 +17,7 @@
         <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">SongHuan <b class="caret"></b></a>
           <ul class="dropdown-menu">
+            <li><a href="<?php echo $this->getUrlManager()->getUrl('cacheclear', 'tools', 'system'); ?>">清理缓存</a></li>
             <li><a href="#">编辑账号</a></li>
             <li class="divider"></li>
             <li><a href="#">退出登录</a></li>

@@ -3,12 +3,12 @@
 <?php
 $config = array(
 	'fields' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELDS_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_FIELDS_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'fields', 'a' => 'index',
 		'params' => array('builder_id' => $this->builder_id),
 	),
 	'validators' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELD_VALIDATORS_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_VALIDATORS_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'validators', 'a' => 'index',
 		'params' => array('field_id' => $this->field_id),
 		'active' => true

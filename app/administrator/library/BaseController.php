@@ -140,6 +140,7 @@ abstract class BaseController extends Controller
 	{
 		$data = $this->getViewData($data);
 		echo json_encode($data);
+		exit;
 	}
 
 	/**

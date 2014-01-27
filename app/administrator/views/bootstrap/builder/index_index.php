@@ -19,12 +19,12 @@ $this->widget(
 			'cls_name',
 			'builder_field_groups' => array(
 				'name' => 'builder_field_groups',
-				'label' => $this->CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELD_GROUPS_INDEX_LABEL,
+				'label' => $this->CFG_SYSTEM_URLS_BUILDER_GROUPS_INDEX_LABEL,
 				'callback' => array($elements->uiComponents, 'getBuilderFieldGroupsLabel')
 			),
 			'builder_fields' => array(
 				'name' => 'builder_fields',
-				'label' => $this->CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELDS_INDEX_LABEL,
+				'label' => $this->CFG_SYSTEM_URLS_BUILDER_FIELDS_INDEX_LABEL,
 				'callback' => array($elements->uiComponents, 'getBuilderFieldsLabel')
 			),
 			'builder_id',

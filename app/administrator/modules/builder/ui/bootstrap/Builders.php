@@ -83,12 +83,12 @@ class Builders
 		$removeIcon = Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $trashUrl, Components::JSFUNC_DIALOGREMOVE, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
 		$gcUrl = Url::getUrl('gc', Mvc::$controller, Mvc::$module, $params);
-		$gcIcon = Components::getGlyphicon(Components::GLYPHICON_WRENCH, $gcUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_BUILDERS_GC_LABEL'));
+		$gcIcon = Components::getGlyphicon(Components::GLYPHICON_WRENCH, $gcUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_INDEX_GC_LABEL'));
 
 		$params['column_name'] = 'trash';
 		$params['value'] = 'n';
 		$restoreUrl = Url::getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
-		$restoreIcon = Components::getGlyphicon(Components::GLYPHICON_OK_SIGN, $restoreUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDERS_RESTORE_LABEL'));
+		$restoreIcon = Components::getGlyphicon(Components::GLYPHICON_OK_SIGN, $restoreUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_GLOBAL_RESTORE'));
 
 		if ($data['trash'] === 'n') {
 			$ret = $modifyIcon . $trashIcon . $gcIcon;
@@ -147,10 +147,10 @@ class Builders
 		);
 
 		$indexUrl = Url::getUrl('index', 'groups', Mvc::$module, $params);
-		$indexIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $indexUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDER_FIELD_GROUPS_INDEX_LABEL'));
+		$indexIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $indexUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_GROUPS_INDEX_LABEL'));
 
 		$createUrl = Url::getUrl('create', 'groups', Mvc::$module, $params);
-		$createIcon = Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $createUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDER_FIELD_GROUPS_CREATE_LABEL'));
+		$createIcon = Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $createUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_GROUPS_CREATE_LABEL'));
 
 		$ret = $indexIcon . $createIcon;
 		return $ret;
@@ -168,10 +168,10 @@ class Builders
 		);
 
 		$indexUrl = Url::getUrl('index', 'fields', Mvc::$module, $params);
-		$indexIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $indexUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDER_FIELDS_INDEX_LABEL'));
+		$indexIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $indexUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_FIELDS_INDEX_LABEL'));
 
 		$createUrl = Url::getUrl('create', 'fields', Mvc::$module, $params);
-		$createIcon = Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $createUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDER_FIELDS_CREATE_LABEL'));
+		$createIcon = Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $createUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_FIELDS_CREATE_LABEL'));
 
 		$ret = $indexIcon . $createIcon;
 		return $ret;

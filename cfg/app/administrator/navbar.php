@@ -19,25 +19,25 @@ return array(
 			'm' => 'ucenter', 'c' => 'amcas', 'a' => 'index',
 		),
 		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_CREATE_LABEL',
-			'm' => 'ucenter', 'c' => 'amcas', 'a' => 'create'
-		)
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_INDEX_LABEL',
+			'm' => 'ucenter', 'c' => 'groups', 'a' => 'index',
+		),
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_INDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX_LABEL',
 			'm' => 'builder', 'c' => 'index', 'a' => 'index'
 		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_INDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX_LABEL',
 			'm' => 'builder', 'c' => 'index', 'a' => 'index'
 		),
 		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'index', 'a' => 'create',
 		),
 		3 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_TRASHINDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX_LABEL',
 			'm' => 'builder', 'c' => 'index', 'a' => 'trashindex'
 		)
 	),

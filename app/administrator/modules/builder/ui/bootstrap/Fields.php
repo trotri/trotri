@@ -156,10 +156,10 @@ class Fields
 		);
 
 		$indexUrl = Url::getUrl('index', 'validators', Mvc::$module, $params);
-		$indexIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $indexUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_INDEX_LABEL'));
+		$indexIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $indexUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_VALIDATORS_INDEX_LABEL'));
 
 		$createUrl = Url::getUrl('create', 'validators', Mvc::$module, $params);
-		$createIcon = Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $createUrl, Components::JSFUNC_HREF, Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_CREATE_LABEL'));
+		$createIcon = Components::getGlyphicon(Components::GLYPHICON_PLUS_SIGN, $createUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_BUILDER_VALIDATORS_CREATE_LABEL'));
 
 		$ret = $indexIcon . $createIcon;
 		return $ret;

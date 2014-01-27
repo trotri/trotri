@@ -81,6 +81,11 @@ class Components
 	const JSFUNC_DIALOGBATCHTRASH = 'Core.dialogBatchTrash';
 
 	/**
+	 * @var string JS函数：Ajax方式展示数据对话框
+	 */
+	const JSFUNC_DIALOGAJAXVIEW = 'Core.dialogAjaxView';
+
+	/**
 	 * @var string Glyphicons图标：列表按钮
 	 */
 	const GLYPHICON_LIST = 'list';

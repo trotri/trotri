@@ -323,7 +323,7 @@ abstract class Model
 		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
-			'total' => $total
+			'total' => (int) $total
 		);
 	}
 

@@ -17,6 +17,8 @@ CREATE TABLE `tr_user_amcas` (
   KEY `category` (`category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户可访问的事件表';
 
+INSERT INTO `tr_user_amcas` VALUES ('1', '0', 'administrator', 'administrator', '0', 'app');
+
 DROP TABLE IF EXISTS `tr_user_groups`;
 CREATE TABLE `tr_user_groups` (
   `group_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -30,6 +32,8 @@ CREATE TABLE `tr_user_groups` (
   KEY `group_name` (`group_name`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户分组表';
+
+INSERT INTO `tr_user_groups` VALUES ('1', '0', 'Public', '0', '', '公开组，未登录用户拥有该权限');
 
 DROP TABLE IF EXISTS `tr_users`;
 CREATE TABLE `tr_users` (

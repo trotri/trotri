@@ -60,7 +60,12 @@ class Amcas
 	 */
 	public function getButtonCancel()
 	{
-		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
+		$appId = UcenterFactory::getModel('Amcas')->getAmcaPid();
+		if ($appId <= 0) {
+			$appId = Ap::getRequest()->getInteger('id');
+		}
+
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module, array('app_id' => $appId));
 		return Components::getButtonCancel($url);
 	}
 
@@ -71,7 +76,9 @@ class Amcas
 	 */
 	public function getOperate($data)
 	{
-		$params = array('id' => $data['amca_id']);
+		$params = array(
+			'id' => $data['amca_id']
+		);
 
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
 		$modifyIcon = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modifyUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_GLOBAL_MODIFY'));
@@ -82,12 +89,18 @@ class Amcas
 		$synchUrl = Url::getUrl('synch', Mvc::$controller, Mvc::$module, $params);
 		$synchIcon = Components::getGlyphicon(Components::GLYPHICON_WRENCH, $synchUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_UCENTER_AMCAS_SYNCH_LABEL'));
 
+		$viewUrl = Url::getUrl('actsview', Mvc::$controller, Mvc::$module, array('ctrl_id' => $data['amca_id']));
+		$viewIcon = Components::getGlyphicon(Components::GLYPHICON_LIST, $viewUrl, Components::JSFUNC_DIALOGAJAXVIEW, Text::_('CFG_SYSTEM_URLS_UCENTER_AMCAS_ACTSVIEW_LABEL'));
+
 		$ret = '';
 		if ($data['category'] === 'app') {
 			$ret = $modifyIcon . $removeIcon;
 		}
 		elseif ($data['category'] === 'mod') {
 			$ret = $modifyIcon . $removeIcon . $synchIcon;
+		}
+		elseif ($data['category'] === 'ctrl') {
+			$ret = $viewIcon;
 		}
 
 		return $ret;
@@ -100,9 +113,12 @@ class Amcas
 	 */
 	public function getAmcaNameUrl($data)
 	{
-		$params = array('id' => $data['amca_id']);
+		if ($data['category'] === 'mod') {
+			$params = array('id' => $data['amca_id']);
+			return Components::getHtml()->a($data['amca_name'], Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params));
+		}
 
-		return Components::getHtml()->a($data['amca_name'], Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params));
+		return $data['amca_name'];
 	}
 
 	/**

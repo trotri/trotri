@@ -17,7 +17,7 @@ $this->widget(
 			'column_auto_increment',
 			'builder_field_validators' => array(
 				'name' => 'builder_field_validators',
-				'label' => $this->CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELD_VALIDATORS_INDEX_LABEL,
+				'label' => $this->CFG_SYSTEM_URLS_BUILDER_VALIDATORS_INDEX_LABEL,
 				'callback' => array($elements->uiComponents, 'getBuilderFieldValidatorsLabel')
 			),
 			'operate' => array(

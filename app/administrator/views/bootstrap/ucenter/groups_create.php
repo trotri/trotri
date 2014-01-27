@@ -2,18 +2,15 @@
 $elements = $this->element_collections;
 $this->widget('ui\bootstrap\widgets\FormBuilder',
 	array(
-		'name' => 'modify',
-		'action' => $this->getUrlManager()->getUrl($this->action, '', '', array('id' => $this->id)),
+		'name' => 'create',
+		'action' => $this->getUrlManager()->getUrl($this->action),
 		'errors' => $this->errors,
-		'values' => $this->data,
 		'elementCollections' => $elements,
 		'elements' => array(
-			'amca_name',
-			'prompt',
-			'category',
-			'amca_pname',
-			'amca_pid',
+			'group_name',
+			'group_pid',
 			'sort',
+			'description',
 			'button_save' => $elements->uiComponents->getButtonSave(),
 			'button_save2close' => $elements->uiComponents->getButtonSaveClose(),
 			'button_save2new' => $elements->uiComponents->getButtonSaveNew(),

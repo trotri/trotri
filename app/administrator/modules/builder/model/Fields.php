@@ -201,7 +201,7 @@ class Fields extends Model
 	}
 
 	/**
-	 * 通过builder_id值
+	 * 获取builder_id值
 	 * @return integer
 	 */
 	public function getBuilderId()

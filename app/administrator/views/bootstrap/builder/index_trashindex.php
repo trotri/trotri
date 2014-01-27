@@ -13,19 +13,18 @@ $this->widget(
 			'tbl_profile',
 			'tbl_engine',
 			'tbl_charset',
-			'tbl_comment',
 			'app_name',
 			'mod_name',
 			'ctrl_name',
 			'cls_name',
 			'builder_field_groups' => array(
 				'name' => 'builder_field_groups',
-				'label' => '-待开发-',
+				'label' => $this->CFG_SYSTEM_URLS_BUILDER_GROUPS_INDEX_LABEL,
 				'callback' => array($elements->uiComponents, 'getBuilderFieldGroupsLabel')
 			),
 			'builder_fields' => array(
 				'name' => 'builder_fields',
-				'label' => '-待开发-',
+				'label' => $this->CFG_SYSTEM_URLS_BUILDER_FIELDS_INDEX_LABEL,
 				'callback' => array($elements->uiComponents, 'getBuilderFieldsLabel')
 			),
 			'builder_id',

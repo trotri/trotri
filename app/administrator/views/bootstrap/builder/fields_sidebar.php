@@ -3,38 +3,38 @@
 <?php
 $config = array(
 	'index_index' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'index', 'a' => 'index',
 		'icon' => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'index', 'a' => 'create'
 		)
 	),
 	'index_trashindex' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_TRASHINDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX_LABEL',
 		'm' => 'builder', 'c' => 'index', 'a' => 'trashindex'
 	),
 	'fields' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELDS_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_FIELDS_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'fields', 'a' => 'index',
 		'icon' => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELDS_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_FIELDS_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'fields', 'a' => 'create'
 		)
 	),
 	'groups' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELD_GROUPS_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_GROUPS_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'groups', 'a' => 'index',
 		'icon' => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_FIELD_GROUPS_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_GROUPS_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'groups', 'a' => 'create'
 		)
 	),
 	'types' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_TYPES_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'types', 'a' => 'index',
 		'icon' => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_TYPES_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'types', 'a' => 'create'
 		)
 	),

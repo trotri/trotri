@@ -3,22 +3,22 @@
 <?php
 $config = array(
 	'index_index' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'index', 'a' => 'index',
 		'icon' => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'index', 'a' => 'create'
 		)
 	),
 	'index_trashindex' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDERS_TRASHINDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX_LABEL',
 		'm' => 'builder', 'c' => 'index', 'a' => 'trashindex'
 	),
 	'types' => array(
-		'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_TYPES_INDEX_LABEL',
+		'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_INDEX_LABEL',
 		'm' => 'builder', 'c' => 'types', 'a' => 'index',
 		'icon' => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_BUILDER_TYPES_CREATE_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_CREATE_LABEL',
 			'm' => 'builder', 'c' => 'types', 'a' => 'create'
 		)
 	)
