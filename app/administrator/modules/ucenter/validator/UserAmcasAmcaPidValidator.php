@@ -34,7 +34,7 @@ class UserAmcasAmcaPidValidator extends Validator
      */
     public function isValid()
     {
-    	$amcaPid = (int) $this->_value;
+    	$amcaPid = (int) $this->getValue();
     	if ($amcaPid === 0) {
     		return true;
     	}

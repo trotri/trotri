@@ -139,6 +139,16 @@ class FormBuilder extends form\FormBuilder
 	}
 
 	/**
+     * 清除所有的分类标签
+     * @return ui\bootstrap\widgets\FormBuilder
+     */
+	public function clearTabs()
+	{
+		$this->_tabs = array();
+		return $this;
+	}
+
+	/**
 	 * 通过分类ID获取Input表单元素分类标签
 	 * @param string $tid
 	 * @return array
@@ -218,7 +228,10 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function createElement($className, array $config = array())
 	{
-		$className = 'ui\\bootstrap\\form\\' . $className;
+		if (strpos($className, '\\') === false) {
+			$className = 'ui\\bootstrap\\form\\' . $className;
+		}
+
 		return parent::createElement($className, $config);
 	}
 

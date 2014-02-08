@@ -34,6 +34,14 @@ CREATE TABLE `tr_user_groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户分组表';
 
 INSERT INTO `tr_user_groups` VALUES ('1', '0', 'Public', '0', '', '公开组，未登录用户拥有该权限');
+INSERT INTO `tr_user_groups` VALUES ('2', '1', 'Guest', '1', null, '普通会员');
+INSERT INTO `tr_user_groups` VALUES ('3', '1', 'Manager', '2', null, '普通管理员');
+INSERT INTO `tr_user_groups` VALUES ('4', '1', 'Registered', '3', null, '记名作者');
+INSERT INTO `tr_user_groups` VALUES ('5', '1', 'Super Users', '4', null, '超级会员');
+INSERT INTO `tr_user_groups` VALUES ('6', '3', 'Administrator', '1', null, '超级管理员');
+INSERT INTO `tr_user_groups` VALUES ('7', '4', 'Author', '1', null, '普通作者');
+INSERT INTO `tr_user_groups` VALUES ('8', '7', 'Editor', '1', null, '高级作者');
+INSERT INTO `tr_user_groups` VALUES ('9', '8', 'Publisher', '1', null, '出版者');
 
 DROP TABLE IF EXISTS `tr_users`;
 CREATE TABLE `tr_users` (

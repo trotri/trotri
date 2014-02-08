@@ -13,6 +13,7 @@ namespace modules\ucenter\controller;
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
+use ui\bootstrap\widgets\FormBuilder;
 use library\ErrorNo;
 use library\Url;
 use library\UcenterFactory;
@@ -40,14 +41,12 @@ class GroupsController extends BaseController
 		$mod = UcenterFactory::getModel('Groups');
 		$ele = UcenterFactory::getElements('Groups');
 
-		$pageNo = Url::getCurrPage();
-		$order = '';
-		$params = array();
-		$ret = $mod->search($params, $order, $pageNo);
-		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
+		$ret = $mod->findLists();
+		$return = Url::getUrl(Mvc::$action, Mvc::$controller, Mvc::$module);
+		Ap::getRequest()->setParam('http_return', $return);
 
 		$viw->assign('element_collections', $ele);
-		$viw->assign('http_return', Url::getHttpReturn());
+		$viw->assign('http_return', $return);
 		$this->render($ret);
 	}
 
@@ -141,7 +140,7 @@ class GroupsController extends BaseController
 		$mod = UcenterFactory::getModel('Groups');
 
 		$id = $req->getInteger('id');
-		$ret = $mod->deleteByPk($id);
+		$ret = $mod->removeByPk($id);
 		Url::httpReturn($ret);
 	}
 
@@ -161,6 +160,34 @@ class GroupsController extends BaseController
 		$value = $req->getParam('value', '');
 		$ret = $mod->updateByPk($id, array($columnName => $value));
 		Url::httpReturn($ret);
+	}
+
+	/**
+	 * 编辑编辑用户事件
+	 * @return void
+	 */
+	public function amcasmodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$viw = Mvc::getView();
+		$mod = UcenterFactory::getModel('Groups');
+		$ele = UcenterFactory::getElements('Groups');
+		if ($this->isPost()) {
+			$params = $req->getPost();
+			echo '<pre>';
+			print_r($params);
+			exit;
+		}
+
+		$tabs = $mod->getTabsByAppAmcas();
+		$amcas = UcenterFactory::getModel('Amcas')->findPairsByRecur();
+
+		$viw->assign('element_collections', $ele);
+		$viw->assign('tabs', $tabs);
+		$viw->assign('amcas', $amcas);
+		$this->render();
 	}
 
 	/**

@@ -60,7 +60,7 @@ class Groups
 	 */
 	public function getButtonCancel()
 	{
-		$url = '--待开发--';
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
 		return Components::getButtonCancel($url);
 	}
 
@@ -71,7 +71,9 @@ class Groups
 	 */
 	public function getOperate($data)
 	{
-		$params = array('--待开发--');
+		$params = array(
+			'id' => $data['group_id']
+		);
 
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
 		$modifyIcon = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modifyUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_GLOBAL_MODIFY'));
@@ -79,7 +81,10 @@ class Groups
 		$removeUrl = Url::getUrl('remove', Mvc::$controller, Mvc::$module, $params);
 		$removeIcon = Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $removeUrl, Components::JSFUNC_DIALOGREMOVE, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
-		$ret = $modifyIcon . $removeIcon;
+		$amcasUrl = Url::getUrl('amcasmodify', Mvc::$controller, Mvc::$module, $params);
+		$amcasIcon = Components::getGlyphicon(Components::GLYPHICON_WRENCH, $amcasUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_URLS_UCENTER_GROUPS_AMCASMODIFY_LABEL'));
+
+		$ret = $modifyIcon . $removeIcon . $amcasIcon;
 		return $ret;
 	}
 }

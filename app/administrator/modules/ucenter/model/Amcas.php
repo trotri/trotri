@@ -76,6 +76,57 @@ class Amcas extends Model
 	}
 
 	/**
+	 * 获取所有数据
+	 * @return array
+	 */
+	public function findPairsByRecur()
+	{
+		$amcas = array();
+
+		$ret = $this->findAllByAttributes(array('amca_pid' => 0), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $amcas;
+		}
+
+		$apps = $ret['data'];
+		foreach ($apps as $app) {
+			$ret = $this->findAllByAttributes(array('amca_pid' => $app['amca_id']), 'sort');
+			$app['rows'] = $mods = array();
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$mods = $ret['data'];
+			}
+
+			foreach ($mods as $mod) {
+				$ret = $this->findAllByAttributes(array('amca_pid' => $mod['amca_id']), 'sort');
+				$mod['rows'] = $ctrls = array();
+				if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+					$ctrls = $ret['data'];
+				}
+
+				foreach ($ctrls as $ctrl) {
+					$ret = $this->findAllByAttributes(array('amca_pid' => $ctrl['amca_id']), 'sort');
+					$ctrl['rows'] = $acts = array();
+					if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+						$acts = $ret['data'];
+					}
+
+					foreach ($acts as $act) {
+						$ctrl['rows'][$act['amca_name']] = $act;
+					}
+
+					$mod['rows'][$ctrl['amca_name']] = $ctrl;
+				}
+
+				$app['rows'][$mod['amca_name']] = $mod;
+			}
+
+			$amcas[$app['amca_name']] = $app;
+		}
+
+		return $amcas;
+	}
+
+	/**
 	 * 新增一条记录，只能增加“应用”和“模块”类型事件
 	 * @param array $params
 	 * @return array

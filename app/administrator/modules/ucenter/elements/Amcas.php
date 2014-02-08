@@ -243,7 +243,7 @@ class Amcas extends ElementCollections
 				'Alpha' => array(true, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_ALPHA')),
 				'MinLength' => array(2, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
 				'MaxLength' => array(16, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
-				'modules\\ucenter\\validator\\UserAmcasAmcaNameUniqueValidator' => array($amcaPid, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_UNIQUE_VALIDATOR')),
+				'modules\\ucenter\\validator\\UserAmcasAmcaNameUniqueValidator' => array($amcaPid, Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_UNIQUE')),
 			);
 		}
 

@@ -10,6 +10,8 @@
 
 namespace modules\ucenter\elements;
 
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use ui\ElementCollections;
 use library\UcenterFactory;
@@ -141,9 +143,11 @@ class Groups extends ElementCollections
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
+			$groupId = (Mvc::$action == 'modify') ? Ap::getRequest()->getInteger('id') : 0;
 			$output = array(
 				'MinLength' => array(2, Text::_('MOD_UCENTER_USER_GROUPS_GROUP_NAME_MINLENGTH')),
 				'MaxLength' => array(50, Text::_('MOD_UCENTER_USER_GROUPS_GROUP_NAME_MAXLENGTH')),
+				'modules\\ucenter\\validator\\UserGroupsGroupNameUniqueValidator' => array($groupId, Text::_('MOD_UCENTER_USER_GROUPS_GROUP_NAME_UNIQUE')),
 			);
 		}
 
