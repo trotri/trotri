@@ -12,8 +12,10 @@ namespace modules\ucenter\model;
 
 use tfc\ap\Ap;
 use tfc\ap\Registry;
+use tfc\mvc\Mvc;
 use tfc\saf\Log;
 use koala\Model;
+use library\Url;
 use library\ErrorNo;
 use library\UcenterFactory;
 
@@ -34,6 +36,25 @@ class Groups extends Model
 	{
 		$db = UcenterFactory::getDb('Groups');
 		parent::__construct($db);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::findByPk()
+	 */
+	public function findByPk($value)
+	{
+		$ret = parent::findByPk($value);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$ret['data']['permission'] = unserialize($ret['data']['permission']);
+		if (!is_array($ret['data']['permission'])) {
+			$ret['data']['permission'] = array();
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -106,6 +127,77 @@ class Groups extends Model
 	}
 
 	/**
+	 * 通过主键，获取组名，并依此获取上级组名
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getBreadcrumbs($value)
+	{
+		$breadcrumbs = array();
+
+		$value = (int) $value;
+		while ($value > 0) {
+			$ret = $this->findByPk($value);
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$breadcrumbs[] = array(
+					'label' => $ret['data']['group_name'],
+					'href' => Url::getUrl('amcasmodify', Mvc::$controller, Mvc::$module, array('id' => $ret['data']['group_id']))
+				);
+
+				$value = $ret['data']['group_pid'];
+			}
+		}
+
+		$breadcrumbs = array_reverse($breadcrumbs);
+		return $breadcrumbs;
+	}
+
+	/**
+	 * 通过主键，获取权限，并依此获取上级权限
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getPermissions($value)
+	{
+		$permissions = array();
+
+		$value = (int) $value;
+		while ($value > 0) {
+			$ret = $this->findByPk($value);
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$permissions[] = $ret['data']['permission'];
+				$value = $ret['data']['group_pid'];
+			}
+		}
+
+		$data = array();
+		foreach ($permissions as $permission) {
+			if (is_array($permission)) {
+				foreach ($permission as $appName => $mods) {
+					if (is_array($mods)) {
+						foreach ($mods as $modName => $ctrls) {
+							if (is_array($ctrls)) {
+								foreach ($ctrls as $ctrlName => $acts) {
+									if (is_array($acts)) {
+										foreach ($acts as $actName) {
+											if (!isset($data[$appName][$modName][$ctrlName])
+												|| !in_array($actName, $data[$appName][$modName][$ctrlName])) {
+												$data[$appName][$modName][$ctrlName][] = $actName;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array
@@ -124,6 +216,51 @@ class Groups extends Model
 	public function modifyByPk($value, array $params)
 	{
 		return $this->updateByPk($value, $params);
+	}
+
+	/**
+	 * 通过主键，编辑组的权限
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function amcasmodifyByPk($value, array $params)
+	{
+		$amcas = isset($params['amcas']) ? $params['amcas'] : null;
+		if (!is_array($amcas)) {
+			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+			Log::warning(sprintf(
+				'%s pk "%d", amcas "%s"', $errMsg, $value, serialize($amcas)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		$data = array();
+		foreach ($amcas as $appName => $mods) {
+			if (is_array($mods)) {
+				$appName = strtolower($appName);
+				foreach ($mods as $modName => $ctrls) {
+					if (is_array($ctrls)) {
+						$modName = strtolower($modName);
+						foreach ($ctrls as $ctrlName => $acts) {
+							if (is_array($acts)) {
+								$ctrlName = strtolower($ctrlName);
+								foreach ($acts as $actName) {
+									$data[$appName][$modName][$ctrlName][] = strtolower($actName);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $this->updateByPk($value, array('permission' => serialize($data)));
 	}
 
 	/**

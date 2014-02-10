@@ -10,12 +10,11 @@
 
 namespace ui\bootstrap\widgets;
 
-use ui\bootstrap\Components;
-
 use tfc\mvc\Widget;
 use tfc\ap\ErrorException;
 use tfc\util\Paginator;
 use tfc\saf\Cfg;
+use ui\bootstrap\Components;
 
 /**
  * PaginatorBuilder class file

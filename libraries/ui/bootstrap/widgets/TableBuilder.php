@@ -10,8 +10,8 @@
 
 namespace ui\bootstrap\widgets;
 
-use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
+use tfc\ap\ErrorException;
 use ui\ElementCollections;
 
 /**

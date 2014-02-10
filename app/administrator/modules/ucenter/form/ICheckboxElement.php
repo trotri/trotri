@@ -34,6 +34,11 @@ class ICheckboxElement extends form\ICheckboxElement
 	public function getInput()
 	{
 		$name = $this->getName(true);
+		if (strpos($name, '[') === false) {
+			$name .= '[]';
+			$this->setName($name);
+		}
+
 		$this->setAttribute('class', 'icheck');
 
 		$type = $this->getType();
@@ -43,26 +48,23 @@ class ICheckboxElement extends form\ICheckboxElement
 
 		$tagName = 'label';
 		$tagAttributes = array('class' => 'checkbox-inline');
-		$ctrlOptions = array_slice($this->options, 0, 1);
-		$actOptions = array_slice($this->options, 1);
 
-		$ctrlOutput = '';
-		foreach ($ctrlOptions as $value => $prompt) {
-			$ctrlOutput .= $html->tag($tagName, $tagAttributes, $prompt);
-			$ctrlOutput .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, false, $attributes));
-		}
-
-		$output = $ctrlOutput;
-
+		$output = '';
 		$count = 0;
-		foreach ($actOptions as $value => $prompt) {
+		foreach ($this->options as $value => $prompt) {
 			if ($count++ % 4 === 0) {
 				$output .= '<br/>';
 			}
 
-			$checked = (in_array($value, $values)) ? true : false;
-			$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, $checked, $attributes));
-			$output .= $html->tag($tagName, $tagAttributes, $prompt);
+			if ($name === '__ctrl__[]') {
+				$output .= $html->tag($tagName, $tagAttributes, $prompt);
+				$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, false, $attributes));
+			}
+			else {
+				$checked = (in_array($value, $values)) ? true : false;
+				$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, $checked, $attributes));
+				$output .= $html->tag($tagName, $tagAttributes, $prompt);
+			}
 		}
 
 		return $output;

@@ -10,12 +10,11 @@
 
 namespace ui\bootstrap\widgets;
 
-use ui\bootstrap\Components;
-
 use tfc\mvc\form;
 use tfc\ap\Ap;
 use tfc\ap\ErrorException;
 use ui\ElementCollections;
+use ui\bootstrap\Components;
 
 /**
  * SearchBuilder class file

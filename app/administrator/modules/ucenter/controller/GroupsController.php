@@ -169,25 +169,57 @@ class GroupsController extends BaseController
 	public function amcasmodifyAction()
 	{
 		$ret = array();
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = '';
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
 		$mod = UcenterFactory::getModel('Groups');
 		$ele = UcenterFactory::getElements('Groups');
-		if ($this->isPost()) {
-			$params = $req->getPost();
-			echo '<pre>';
-			print_r($params);
-			exit;
+
+		$httpReturn = Url::getHttpReturn();
+		if ($httpReturn === '') {
+			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array());
 		}
 
+		$id = $req->getInteger('id');
+		if ($this->isPost()) {
+			$ret = $mod->amcasmodifyByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($this->isSubmitTypeSave()) {
+					Url::forward('amcasmodify', Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					$url = Url::applyParams($httpReturn, $ret);
+					Url::redirect($url);
+				}
+			}
+			else {
+				$errNo = $ret['err_no'];
+				$errMsg = $ret['err_msg'];
+			}
+		}
+
+		$ret = $mod->findByPk($id);
+		if ($errNo !== ErrorNo::SUCCESS_NUM || $errMsg !== '') {
+			$ret['err_no'] = $errNo;
+			$ret['err_msg'] = $errMsg;
+		}
+
+		$permissions = $ret['data']['permission'];
+		$parentPermissions = $mod->getPermissions($ret['data']['group_pid']);
+		$breadcrumbs = $mod->getBreadcrumbs($id);
 		$tabs = $mod->getTabsByAppAmcas();
 		$amcas = UcenterFactory::getModel('Amcas')->findPairsByRecur();
 
 		$viw->assign('element_collections', $ele);
+		$viw->assign('id', $id);
+		$viw->assign('permissions', $permissions);
+		$viw->assign('parent_permissions', $parentPermissions);
 		$viw->assign('tabs', $tabs);
 		$viw->assign('amcas', $amcas);
-		$this->render();
+		$viw->assign('breadcrumbs', $breadcrumbs);
+		$this->render($ret);
 	}
 
 	/**
