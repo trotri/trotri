@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  Ucenter.checkedToggle();
+  Ucenter.checkedToggle(); 
 });
 
 /**
@@ -13,33 +13,16 @@ Ucenter = {
    * @return void
    */
   checkedToggle: function() {
-    var ctrls = Trotri.getInputs("checkbox", "__ctrl__[]");
-    for (var i in ctrls) {
-      var acts = Trotri.getInputs("checkbox", ctrls[i].value);
-      ctrls[i].onclick = function() {
-      	alert("aaa");
-	    for (var i in acts) {
-	      // acts[i].checked = ctrls[i];
-	      // $(acts[i]).parent().addClass("checked");
-	      alert("aaa");
-	    }
-	  }
-    };
-
- /*
-    if (o == undefined) { return ; }
-    var a = Trotri.getInputs("checkbox", o.value);
-    o.onclick = function() {
-      for (var i in a) {
-        a[i].checked = o.checked;
-      }
-    }
-   
-    for (var i in a) {
-      a[i].onclick = function() {
-        o.checked = (Trotri.getCheckeds(o.value).length == a.length);
-      }
-    }
-    */
+    $("form[name='amcasmodify']").find(".iCheck-helper").each(function() {
+      $(this).click(function() {
+        var ipt = $(this).prev(".icheck");
+        var n = ipt.attr("name");
+        var v = ipt.val();
+        var b = $(this).parent().hasClass("checked");
+        if (n == "__ctrl__[]") {
+          alert(v);
+        }
+      });
+    });
   },
 }

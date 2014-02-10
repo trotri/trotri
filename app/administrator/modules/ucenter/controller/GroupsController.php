@@ -184,6 +184,11 @@ class GroupsController extends BaseController
 
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
+			
+			echo '<pre>';
+			print_r($req->getPost());
+			exit;
+			
 			$ret = $mod->amcasmodifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($this->isSubmitTypeSave()) {
