@@ -11,16 +11,28 @@
 return array(
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_INDEX_INDEX_LABEL',
-			'm' => 'ucenter', 'c' => 'types', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX_LABEL',
+			'm' => 'ucenter', 'c' => 'users', 'a' => 'index'
 		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_INDEX_LABEL',
-			'm' => 'ucenter', 'c' => 'amcas', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX_LABEL',
+			'm' => 'ucenter', 'c' => 'users', 'a' => 'index'
 		),
 		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_CREATE_LABEL',
+			'm' => 'ucenter', 'c' => 'users', 'a' => 'create'
+		),
+		3 => array(
 			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_INDEX_LABEL',
 			'm' => 'ucenter', 'c' => 'groups', 'a' => 'index',
+		),
+		4 => array(
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_CREATE_LABEL',
+			'm' => 'ucenter', 'c' => 'groups', 'a' => 'create',
+		),
+		5 => array(
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_INDEX_LABEL',
+			'm' => 'ucenter', 'c' => 'amcas', 'a' => 'index',
 		),
 	),
 	array(

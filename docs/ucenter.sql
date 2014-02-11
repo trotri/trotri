@@ -45,28 +45,34 @@ INSERT INTO `tr_user_groups` VALUES ('9', '8', 'Publisher', '1', null, '出版�
 
 DROP TABLE IF EXISTS `tr_users`;
 CREATE TABLE `tr_users` (
-  `user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `login_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '登录邮箱',
-  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名',
+  `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号',
+  `login_type` enum('mail','name','phone') NOT NULL DEFAULT 'mail' COMMENT '通过登录名自动识别登录方式，mail：邮箱、name：用户名(不能是纯数字、不能包含@符)、phone：手机号(11位数字)',
   `password` char(32) NOT NULL DEFAULT '' COMMENT '登录密码',
   `salt` char(6) NOT NULL DEFAULT '' COMMENT '随机附加混淆码',
   `user_name` varchar(100) NOT NULL DEFAULT '' COMMENT '用户名',
+  `user_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱，可用来找回密码',
+  `user_phone` bigint(11) unsigned NOT NULL DEFAULT '0' COMMENT '手机号，可用来找回密码',
   `dt_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
   `dt_last_login` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次登录时间',
   `dt_last_repwd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新密码时间',
   `ip_registered` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册IP',
   `ip_last_login` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次登录IP',
   `ip_last_repwd` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次更新密码IP',
-  `login_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '总登录次数',
-  `repwd_count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '总更新密码次数',
+  `login_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总登录次数',
+  `repwd_count` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '总更新密码次数',
   `valid_mail` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否验证邮箱',
+  `valid_phone` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否验证手机号',
   `forbidden` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否禁用',
   `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `login_mail` (`login_mail`),
   UNIQUE KEY `login_name` (`login_name`),
+  KEY `login_type` (`login_type`),
   KEY `user_name` (`user_name`),
+  KEY `user_mail` (`user_mail`),
+  KEY `user_phone` (`user_phone`),
   KEY `valid_mail` (`valid_mail`),
+  KEY `valid_phone` (`valid_phone`),
   KEY `forbidden` (`forbidden`),
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户主表';
@@ -74,7 +80,7 @@ CREATE TABLE `tr_users` (
 DROP TABLE IF EXISTS `tr_user_profile`;
 CREATE TABLE `tr_user_profile` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `profile_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `profile_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
   `profile_key` varchar(255) NOT NULL DEFAULT '' COMMENT '扩展Key',
   `profile_value` longtext COMMENT '扩展Value',
   PRIMARY KEY (`id`),
@@ -83,7 +89,7 @@ CREATE TABLE `tr_user_profile` (
 
 DROP TABLE IF EXISTS `tr_user_usergroups_map`;
 CREATE TABLE `tr_user_usergroups_map` (
-  `user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `group_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '主键ID',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `group_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '主键ID',
   PRIMARY KEY (`user_id`,`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户和用户组关联表';

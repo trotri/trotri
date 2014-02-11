@@ -13,20 +13,19 @@ namespace modules\ucenter\controller;
 use library\BaseController;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use ui\bootstrap\widgets\FormBuilder;
 use library\ErrorNo;
 use library\Url;
 use library\UcenterFactory;
 
 /**
- * GroupsController class file
- * 用户分组
+ * UsersController class file
+ * 用户管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsController.php 1 2014-01-27 15:15:38Z huan.song $
+ * @version $Id: UsersController.php 1 2014-02-11 15:33:01Z huan.song $
  * @package modules.ucenter.controller
  * @since 1.0
  */
-class GroupsController extends BaseController
+class UsersController extends BaseController
 {
 	/**
 	 * 查询数据列表
@@ -38,15 +37,17 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Groups');
-		$ele = UcenterFactory::getElements('Groups');
+		$mod = UcenterFactory::getModel('Users');
+		$ele = UcenterFactory::getElements('Users');
 
-		$ret = $mod->findLists();
-		$return = Url::getUrl(Mvc::$action, Mvc::$controller, Mvc::$module);
-		Ap::getRequest()->setParam('http_return', $return);
+		$pageNo = Url::getCurrPage();
+		$order = '';
+		$params = array();
+		$ret = $mod->search($params, $order, $pageNo);
+		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
 		$viw->assign('element_collections', $ele);
-		$viw->assign('http_return', $return);
+		$viw->assign('http_return', Url::getHttpReturn());
 		$this->render($ret);
 	}
 
@@ -60,8 +61,8 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Groups');
-		$ele = UcenterFactory::getElements('Groups');
+		$mod = UcenterFactory::getModel('Users');
+		$ele = UcenterFactory::getElements('Users');
 
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
@@ -92,8 +93,8 @@ class GroupsController extends BaseController
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Groups');
-		$ele = UcenterFactory::getElements('Groups');
+		$mod = UcenterFactory::getModel('Users');
+		$ele = UcenterFactory::getElements('Users');
 
 		$httpReturn = Url::getHttpReturn();
 		if ($httpReturn === '') {
@@ -137,10 +138,10 @@ class GroupsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = UcenterFactory::getModel('Groups');
+		$mod = UcenterFactory::getModel('Users');
 
 		$id = $req->getInteger('id');
-		$ret = $mod->removeByPk($id);
+		$ret = $mod->deleteByPk($id);
 		Url::httpReturn($ret);
 	}
 
@@ -153,73 +154,13 @@ class GroupsController extends BaseController
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = UcenterFactory::getModel('Groups');
+		$mod = UcenterFactory::getModel('Users');
 
 		$id = $req->getInteger('id');
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
 		$ret = $mod->updateByPk($id, array($columnName => $value));
 		Url::httpReturn($ret);
-	}
-
-	/**
-	 * 编辑编辑用户事件
-	 * @return void
-	 */
-	public function amcasmodifyAction()
-	{
-		$ret = array();
-		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = '';
-
-		$req = Ap::getRequest();
-		$viw = Mvc::getView();
-		$mod = UcenterFactory::getModel('Groups');
-		$ele = UcenterFactory::getElements('Groups');
-
-		$httpReturn = Url::getHttpReturn();
-		if ($httpReturn === '') {
-			$httpReturn = Url::getUrl('index', Mvc::$controller, Mvc::$module, array());
-		}
-
-		$id = $req->getInteger('id');
-		if ($this->isPost()) {
-			$ret = $mod->amcasmodifyByPk($id, $req->getPost());
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				if ($this->isSubmitTypeSave()) {
-					Url::forward('amcasmodify', Mvc::$controller, Mvc::$module, $ret);
-				}
-				elseif ($this->isSubmitTypeSaveClose()) {
-					$url = Url::applyParams($httpReturn, $ret);
-					Url::redirect($url);
-				}
-			}
-			else {
-				$errNo = $ret['err_no'];
-				$errMsg = $ret['err_msg'];
-			}
-		}
-
-		$ret = $mod->findByPk($id);
-		if ($errNo !== ErrorNo::SUCCESS_NUM || $errMsg !== '') {
-			$ret['err_no'] = $errNo;
-			$ret['err_msg'] = $errMsg;
-		}
-
-		$permissions = $ret['data']['permission'];
-		$parentPermissions = $mod->getPermissions($ret['data']['group_pid']);
-		$breadcrumbs = $mod->getBreadcrumbs($id);
-		$tabs = $mod->getTabsByAppAmcas();
-		$amcas = UcenterFactory::getModel('Amcas')->findPairsByRecur();
-
-		$viw->assign('element_collections', $ele);
-		$viw->assign('id', $id);
-		$viw->assign('permissions', $permissions);
-		$viw->assign('parent_permissions', $parentPermissions);
-		$viw->assign('tabs', $tabs);
-		$viw->assign('amcas', $amcas);
-		$viw->assign('breadcrumbs', $breadcrumbs);
-		$this->render($ret);
 	}
 
 	/**

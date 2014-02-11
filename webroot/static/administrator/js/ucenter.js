@@ -1,5 +1,6 @@
 $(document).ready(function() {
-  Ucenter.checkedToggle(); 
+  Ucenter.initChecked();
+  Ucenter.checkedToggle();
 });
 
 /**
@@ -9,20 +10,51 @@ $(document).ready(function() {
  */
 Ucenter = {
   /**
-   * Ctrl CheckBox全选|全不选，jQuery方式有Bug：全不选后，再全选失败
+   * 初始化CheckBox全选
+   * @return void
+   */
+  initChecked: function() {
+    // 初始化Amcasmodify表单Ctrl全选
+    if (g_act == "amcasmodify") {
+      $(":checkbox[name='__ctrl__[]']").each(function() {
+        var v = $(this).val();
+        var b = ($(":checkbox[name='" + v + "']").length == $(":checkbox[name='" + v + "']:checked").length);
+        $(this).prop("checked", b);
+        b ? $(this).parent().addClass("checked") : $(this).parent().removeClass("checked");
+      });
+    }
+  },
+
+  /**
+   * CheckBox全选|全不选
    * @return void
    */
   checkedToggle: function() {
-    $("form[name='amcasmodify']").find(".iCheck-helper").each(function() {
-      $(this).click(function() {
-        var ipt = $(this).prev(".icheck");
-        var n = ipt.attr("name");
-        var v = ipt.val();
-        var b = $(this).parent().hasClass("checked");
-        if (n == "__ctrl__[]") {
-          alert(v);
-        }
+    // Amcasmodify表单全选
+    if (g_act == "amcasmodify") {
+      $(".iCheck-helper").each(function() {
+        $(this).click(function() {
+          var ipt = $(this).prev(".icheck");
+          var n = ipt.attr("name");
+          var v = ipt.val();
+          if (n == "__ctrl__[]") {
+            var b = $(this).parent().hasClass("checked");
+            $(":checkbox[name='" + v + "']").each(function() {
+              $(this).prop("checked", b);
+              b ? $(this).parent().addClass("checked") : $(this).parent().removeClass("checked");
+            });
+          }
+          else {
+            var b = ($(":checkbox[name='" + n + "']").length == $(":checkbox[name='" + n + "']:checked").length);
+            $(":checkbox[name='__ctrl__[]']").each(function() {
+              if ($(this).val() == n) {
+                $(this).prop("checked", b);
+                b ? $(this).parent().addClass("checked") : $(this).parent().removeClass("checked");
+              }
+            });
+          }
+        });
       });
-    });
-  },
+    }
+  }
 }

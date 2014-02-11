@@ -28,7 +28,7 @@ class MailValidator extends Validator
     /**
      * @var string 默认出错后的提醒消息
      */
-    protected $_message =  '"%value%" does not appear to be a valid email address.';
+    protected $_message = '"%value%" does not appear to be a valid email address.';
 
     /**
      * (non-PHPdoc)
