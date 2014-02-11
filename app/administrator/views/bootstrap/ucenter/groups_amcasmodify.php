@@ -73,7 +73,7 @@ foreach ($this->amcas[$appName]['rows'] as $modName => $mod) :
 foreach ($mod['rows'] as $ctrlName => $ctrl) :
 	$ctrlName = strtolower(substr($ctrlName, 0, -10));
 	$checkboxName = $eleName . '[' . $appName . '][' . $modName . '][' . $ctrlName . '][]';
-	echo $formBuilder->createElement('modules\\ucenter\\form\\ICheckboxElement', array(
+	echo $formBuilder->createElement('modules\\ucenter\\form\\GroupsAmcasCbElement', array(
 		'name' => '__ctrl__',
 		'options' => array($checkboxName => $ctrl['prompt'])
 	))->fetch();
@@ -90,7 +90,7 @@ foreach ($mod['rows'] as $ctrlName => $ctrl) :
 		endif;
 	endforeach;
 
-	$element = $formBuilder->createElement('modules\\ucenter\\form\\ICheckboxElement', array(
+	$element = $formBuilder->createElement('modules\\ucenter\\form\\GroupsAmcasCbElement', array(
 		'name' => $checkboxName,
 		'options' => $options,
 		'value' => isset($this->permissions[$appName][$modName][$ctrlName]) ? $this->permissions[$appName][$modName][$ctrlName] : array()

@@ -836,4 +836,40 @@ class Users extends ElementCollections
 		return $output;
 	}
 
+	/**
+	 * 获取“所属分组”配置
+	 * @param integer $type
+	 * @return array
+	 */
+	public function getGroupIds($type)
+	{
+		$output = array();
+		$options = UcenterFactory::getModel('Groups')->findPairs();
+
+		$name = 'group_ids';
+
+		if ($type === self::TYPE_TABLE) {
+			$output = array(
+				'label' => Text::_('MOD_UCENTER_USERS_GROUP_IDS_LABEL'),
+			);
+		}
+		elseif ($type === self::TYPE_FORM) {
+			$output = array(
+				'__tid__' => 'groups',
+				'__object__' => 'modules\\ucenter\\form\\UsersGroupsCbElement',
+				'type' => 'checkbox',
+				'label' => '',
+				'hint' => '',
+				'options' => $options
+			);
+		}
+		elseif ($type === self::TYPE_FILTER) {
+			$output = array(
+				'InArray' => array(array(), Text::_('MOD_UCENTER_USERS_GROUP_IDS_INARRAY')),
+			);
+		}
+
+		return $output;
+	}
+
 }

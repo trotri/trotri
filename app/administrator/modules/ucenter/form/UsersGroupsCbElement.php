@@ -13,14 +13,14 @@ namespace modules\ucenter\form;
 use ui\bootstrap\form;
 
 /**
- * ICheckboxElement class file
+ * UsersGroupsCbElement class file
  * 美化版Checkbox表单元素，，基于Bootstrap-v3前端开发框架的iCheck插件
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ICheckboxElement.php 1 2013-05-18 14:58:59Z huan.song $
+ * @version $Id: UsersGroupsCbElement.php 1 2013-05-18 14:58:59Z huan.song $
  * @package ui.bootstrap.form
  * @since 1.0
  */
-class ICheckboxElement extends form\ICheckboxElement
+class UsersGroupsCbElement extends form\ICheckboxElement
 {
 	/**
 	 * @var string 表单元素的类型
@@ -29,7 +29,7 @@ class ICheckboxElement extends form\ICheckboxElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see ui\bootstrap\form.ICheckboxElement::getInput()
+	 * @see tfc\mvc\form.InputElement::getInput()
 	 */
 	public function getInput()
 	{
@@ -50,21 +50,12 @@ class ICheckboxElement extends form\ICheckboxElement
 		$tagAttributes = array('class' => 'checkbox-inline');
 
 		$output = '';
-		$count = 0;
 		foreach ($this->options as $value => $prompt) {
-			if ($count++ % 4 === 0) {
-				$output .= '<br/>';
-			}
-
-			if ($name === '__ctrl__[]') {
-				$output .= $html->tag($tagName, $tagAttributes, $prompt);
-				$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, false, $attributes));
-			}
-			else {
-				$checked = (in_array($value, $values)) ? true : false;
-				$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, $checked, $attributes));
-				$output .= $html->tag($tagName, $tagAttributes, $prompt);
-			}
+			$checked = (in_array($value, $values)) ? true : false;
+			$output .= $html->tag('label', array('class' => 'col-lg-1 control-label'), '');
+			$output .= $html->tag($tagName, $tagAttributes, $html->$type($name, $value, $checked, $attributes));
+			$output .= $html->tag($tagName, $tagAttributes, $prompt);
+			$output .= $html->tag('br');
 		}
 
 		return $output;
