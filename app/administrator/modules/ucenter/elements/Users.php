@@ -10,8 +10,10 @@
 
 namespace modules\ucenter\elements;
 
+use tfc\ap\Registry;
 use tfc\saf\Text;
 use ui\ElementCollections;
+use library\Auth;
 use library\UcenterFactory;
 
 /**
@@ -172,7 +174,8 @@ class Users extends ElementCollections
 			$output = array(
 				'MinLength' => array(6, Text::_('MOD_UCENTER_USERS_LOGIN_NAME_MINLENGTH')),
 				'MaxLength' => array(18, Text::_('MOD_UCENTER_USERS_LOGIN_NAME_MAXLENGTH')),
-				'Mail' => array(true, Text::_('MOD_UCENTER_USERS_LOGIN_NAME_MAIL')),
+				'modules\\ucenter\\validator\\UsersLoginNameValidator' => array(true, Text::_('MOD_UCENTER_USERS_LOGIN_NAME_WRONG')),
+				'modules\\ucenter\\validator\\UsersLoginNameUniqueValidator' => array(true, Text::_('MOD_UCENTER_USERS_LOGIN_NAME_UNIQUE'))
 			);
 		}
 		elseif ($type === self::TYPE_SEARCH) {

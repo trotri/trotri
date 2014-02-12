@@ -13,6 +13,7 @@ namespace modules\ucenter\model;
 use tfc\ap\Ap;
 use tfc\ap\Registry;
 use koala\Model;
+use library\Auth;
 use library\ErrorNo;
 use library\UcenterFactory;
 
@@ -57,8 +58,50 @@ class Users extends Model
 	 */
 	public function create(array $params = array())
 	{
-		//--待开发--
-		return $this->insert($params);
+		unset($params['dt_last_repwd'], $params['ip_last_repwd']);
+		$params['dt_registered'] = $params['dt_last_login'] = date('Y-m-d H:i:s');
+		$params['ip_registered'] = $params['ip_last_login'] = Ap::getRequest()->getClientIp();
+		$params['login_count'] = 1;
+		$params['repwd_count'] = 0;
+		$params['salt'] = $salt = Auth::getSalt();
+		Registry::set(__CLASS__ . '_salt', $salt);
+
+		$params['login_name'] = $loginName = isset($params['login_name']) ? trim($params['login_name']) : '';
+		$params['login_type'] = $loginType = Auth::getLoginType($loginName);
+		$params['user_name'] = isset($params['user_name']) ? trim($params['user_name']) : '';
+		if ($params['user_name'] === '') {
+			unset($params['user_name']);
+		}
+
+		$params['user_mail'] = isset($params['user_mail']) ? trim($params['user_mail']) : '';
+		if ($params['user_mail'] === '') {
+			if ($loginType === Auth::LOGIN_TYPE_MAIL) {
+				$params['user_mail'] = $loginName;
+			}
+			else {
+				unset($params['user_mail']);
+			}
+		}
+
+		$params['user_phone'] = isset($params['user_phone']) ? trim($params['user_phone']) : '';
+		if ($params['user_phone'] === '') {
+			if ($loginType === Auth::LOGIN_TYPE_PHONE) {
+				$params['user_phone'] = $loginName;
+			}
+			else {
+				unset($params['user_phone']);
+			}
+		}
+
+		$params['password'] = isset($params['password']) ? trim($params['password']) : '';
+		$params['repassword'] = isset($params['repassword']) ? trim($params['repassword']) : '';
+
+		$ret = $this->insert($params, false);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		
 	}
 
 	/**
@@ -82,23 +125,12 @@ class Users extends Model
 		$elements = UcenterFactory::getElements('Users');
 		$type = $elements::TYPE_FILTER;
 		$output = array(
-			'user_id' => $elements->getUserId($type),
 			'login_name' => $elements->getLoginName($type),
-			'login_type' => $elements->getLoginType($type),
 			'password' => $elements->getPassword($type),
 			'repassword' => $elements->getRepassword($type),
-			'salt' => $elements->getSalt($type),
 			'user_name' => $elements->getUserName($type),
 			'user_mail' => $elements->getUserMail($type),
 			'user_phone' => $elements->getUserPhone($type),
-			'dt_registered' => $elements->getDtRegistered($type),
-			'dt_last_login' => $elements->getDtLastLogin($type),
-			'dt_last_repwd' => $elements->getDtLastRepwd($type),
-			'ip_registered' => $elements->getIpRegistered($type),
-			'ip_last_login' => $elements->getIpLastLogin($type),
-			'ip_last_repwd' => $elements->getIpLastRepwd($type),
-			'login_count' => $elements->getLoginCount($type),
-			'repwd_count' => $elements->getRepwdCount($type),
 			'valid_mail' => $elements->getValidMail($type),
 			'valid_phone' => $elements->getValidPhone($type),
 			'forbidden' => $elements->getForbidden($type),
@@ -143,4 +175,58 @@ class Users extends Model
 		return $output;
 	}
 
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesAfterValidator()
+	 */
+	public function getCleanRulesAfterValidator()
+	{
+		$output = array(
+			'password' => array($this, 'encrypt')
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::filterAttributes()
+	 */
+	public function filterAttributes(array &$attributes = array(), $columnNames = null, $autoIncrement = true)
+	{
+		$repassword = isset($attributes['repassword']) ? $attributes['repassword'] : null;
+		parent::filterAttributes($attributes, $columnNames, $autoIncrement);
+		if ($repassword !== null) {
+			$attributes['repassword'] = $repassword;
+		}
+	}
+
+	/**
+	 * 通过登录名统计记录数
+	 * @param string $loginName
+	 * @return integer
+	 */
+	public function countByLoginName($loginName)
+	{
+		$ret = $this->countByAttributes(array(
+			'login_name' => $loginName,
+		));
+
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			return $ret['total'];
+		}
+
+		return false;
+	}
+
+	/**
+	 * 加密会员登录密码
+	 * @param string $pwd
+	 * @return string
+	 */
+	public function encrypt($pwd)
+	{
+		$salt = Registry::get(__CLASS__ . '_salt');
+		return Auth::encrypt($pwd, $salt);
+	}
 }

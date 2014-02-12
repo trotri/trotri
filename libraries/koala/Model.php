@@ -506,10 +506,11 @@ abstract class Model
 	/**
 	 * 新增一条记录
 	 * @param array $attributes
+	 * @param boolean $required
 	 * @param boolean $ignore
 	 * @return array
 	 */
-	public function insert(array $attributes = array(), $ignore = false)
+	public function insert(array $attributes = array(), $required = true, $ignore = false)
 	{
 		$this->filterAttributes($attributes);
 		if (empty($attributes)) {
@@ -532,7 +533,7 @@ abstract class Model
 
 		$rules = $this->getInsertRules();
 		if (is_array($rules)) {
-			if (!$filter->run($rules, $attributes, true)) {
+			if (!$filter->run($rules, $attributes, $required)) {
 				$errNo = ErrorNo::ERROR_ARGS_INSERT;
 				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_INSERT');
 				$errors = $filter->getErrors(true);
@@ -582,9 +583,10 @@ abstract class Model
 	 * 通过主键，编辑一条记录。不支持联合主键
 	 * @param integer $value
 	 * @param array $attributes
+	 * @param boolean $required
 	 * @return array
 	 */
-	public function updateByPk($value, array $attributes = array())
+	public function updateByPk($value, array $attributes = array(), $required = false)
 	{
 		$value = (int) $value;
 		if ($value <= 0) {
@@ -622,7 +624,7 @@ abstract class Model
 
 		$rules = $this->getUpdateRules();
 		if (is_array($rules)) {
-			if (!$filter->run($rules, $attributes, false)) {
+			if (!$filter->run($rules, $attributes, $required)) {
 				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
 				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
 				$errors = $filter->getErrors(true);
