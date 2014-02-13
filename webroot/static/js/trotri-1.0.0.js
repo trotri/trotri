@@ -14,6 +14,28 @@
  */
 Trotri = {
   /**
+   * 向控制台输出信息
+   * @param string|object v
+   * @return void
+   */
+  info: function(v) {
+    if (window.console && window.console.info) {
+      window.console.info(v);
+    }
+  },
+
+  /**
+   * 向控制台输出日志
+   * @param string|object v
+   * @return void
+   */
+  log: function(v) {
+    if (window.console && window.console.log) {
+      window.console.log(v);
+    }
+  },
+
+  /**
    * 通过ID名，获取元素对象
    * @param string|object element
    * @return object
@@ -59,7 +81,7 @@ Trotri = {
   },
 
   /**
-   * 将数组连接成字符串 -- 待测试
+   * 将数组连接成字符串
    * @param string glue
    * @param array E
    * @return string
@@ -89,7 +111,7 @@ Trotri = {
   },
 
   /**
-   * 匹配字符串前缀 -- 待测试
+   * 匹配字符串前缀
    * @param string v
    * @param string E
    * @return boolean
@@ -99,7 +121,7 @@ Trotri = {
   },
 
   /**
-   * 匹配字符串后缀 -- 待测试
+   * 匹配字符串后缀
    * @param string v
    * @param string E
    * @return boolean
@@ -218,7 +240,7 @@ Trotri = {
   ajax: function(p) {
     var xhrObj = false;
     try {
-      xhrObj = new XMLHttpRequest(); // Firefox IE8和非IE内核浏览器
+      xhrObj = new XMLHttpRequest(); // Firefox IE8和非IE内核
     }
     catch (e) {
       var progid = ["MSXML2.XMLHTTP.5.0", "MSXML2.XMLHTTP.4.0", "MSXML2.XMLHTTP.3.0", "MSXML2.XMLHTTP", "Microsoft.XMLHTTP"]; // IE5.5 IE6 IE7内核
@@ -273,8 +295,8 @@ Trotri = {
    * @return string
    */
   getCheckedValues: function(name) {
-    var a = Trotri.getCheckeds(name); var l = a.length;
-    if (l <= 0) return "";
+    var a = Trotri.getCheckeds(name);
+    if (a.length <= 0) return "";
     var r = "";
     for (var i in a) {
       r += a[i].value + ",";

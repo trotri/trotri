@@ -11,6 +11,7 @@
 namespace modules\system\controller;
 
 use library\BaseController;
+use library\Factory;
 
 /**
  * SiteController class file
@@ -55,5 +56,15 @@ class SiteController extends BaseController
 	{
 		// -- 待开发 --
 		$this->render();
+	}
+
+	/**
+	 * 测试
+	 * @return void
+	 */
+	public function testAction()
+	{
+		$ret = Factory::getModel('UserGroups', 'ucenter')->findGroupIdsByUserId(4);
+		\tfc\saf\debug_dump($ret);
 	}
 }

@@ -96,12 +96,17 @@ class Users extends Model
 		$params['password'] = isset($params['password']) ? trim($params['password']) : '';
 		$params['repassword'] = isset($params['repassword']) ? trim($params['repassword']) : '';
 
-		$ret = $this->insert($params, false);
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return $ret;
-		}
+		// $ret = $this->insert($params, false);
+		// if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+		//	return $ret;
+		// }
 
-		
+		$groupIds = isset($params['group_ids']) ? (array) $params['group_ids'] : array();
+
+		echo '<pre>';
+		print_r($params);
+		echo '</pre>';
+		exit;
 	}
 
 	/**
