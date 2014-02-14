@@ -397,7 +397,7 @@ abstract class Db
 		if ($condition === null) {
 			$primaryKey = $this->getQuotePrimaryKey();
 			if (is_array($primaryKey)) {
-				$primaryKey = implode(' = ' . CommandBuilder::PLACE_HOLDERS . ', ', $primaryKey);
+				$primaryKey = implode(' = ' . CommandBuilder::PLACE_HOLDERS . ' AND ', $primaryKey);
 			}
 
 			$condition = $primaryKey . ' = ' . CommandBuilder::PLACE_HOLDERS;

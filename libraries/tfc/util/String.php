@@ -201,11 +201,22 @@ class String
 
     /**
      * 获取随机字符串，不取1和l、0和O，因为这些字符容易混淆
+     * @param integer $length
+     * @param string $format 字符格式：ALL(英文字母加数字)、LETTER(只字母)、NUMBER(只数字)
+     * @return string
+     */
+    public static function randStr($length = 4, $format = 'ALL')
+    {
+        return implode('', self::randChars($length, $format));
+    }
+
+    /**
+     * 获取随机字符，不取1和l、0和O，因为这些字符容易混淆
      * @param integer $length 字符个数
      * @param string $format 字符格式：ALL(英文字母加数字)、LETTER(只字母)、NUMBER(只数字)
      * @return array
      */
-    public static function randStr($length = 4, $format = 'ALL')
+    public static function randChars($length = 4, $format = 'ALL')
     {
         $chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
         $start = $format == 'NUMBER' ? 49 : 0;

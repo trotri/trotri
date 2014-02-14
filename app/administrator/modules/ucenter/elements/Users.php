@@ -11,6 +11,7 @@
 namespace modules\ucenter\elements;
 
 use tfc\ap\Registry;
+use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use ui\ElementCollections;
 use library\Auth;
@@ -168,6 +169,7 @@ class Users extends ElementCollections
 				'label' => Text::_('MOD_UCENTER_USERS_LOGIN_NAME_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USERS_LOGIN_NAME_HINT'),
 				'required' => true,
+				'readonly' => (Mvc::$action === 'modify') ? true : false
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
@@ -244,8 +246,8 @@ class Users extends ElementCollections
 				'__tid__' => 'main',
 				'type' => 'password',
 				'label' => Text::_('MOD_UCENTER_USERS_PASSWORD_LABEL'),
-				'hint' => Text::_('MOD_UCENTER_USERS_PASSWORD_HINT'),
-				'required' => true,
+				'hint' => (Mvc::$action === 'modify') ? Text::_('MOD_UCENTER_USERS_PASSWORD_MODIFY_HINT') : Text::_('MOD_UCENTER_USERS_PASSWORD_HINT'),
+				'required' => (Mvc::$action === 'modify') ? false : true,
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {
@@ -279,7 +281,7 @@ class Users extends ElementCollections
 				'type' => 'password',
 				'label' => Text::_('MOD_UCENTER_USERS_REPASSWORD_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USERS_REPASSWORD_HINT'),
-				'required' => true,
+				'required' => (Mvc::$action === 'modify') ? false : true,
 			);
 		}
 		elseif ($type === self::TYPE_FILTER) {

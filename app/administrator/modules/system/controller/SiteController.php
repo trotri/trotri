@@ -11,6 +11,7 @@
 namespace modules\system\controller;
 
 use library\BaseController;
+use tfc\ap\Ap;
 use library\Factory;
 
 /**
@@ -64,7 +65,11 @@ class SiteController extends BaseController
 	 */
 	public function testAction()
 	{
-		$ret = Factory::getModel('UserGroups', 'ucenter')->findGroupIdsByUserId(4);
-		\tfc\saf\debug_dump($ret);
+		$ip = Ap::getRequest()->getClientIp();
+		var_dump($ip);
+		var_dump(ip2long($ip));
+		
+		echo '<pre>';
+		print_r($_SERVER);
 	}
 }

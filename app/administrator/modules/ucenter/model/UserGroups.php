@@ -35,24 +35,82 @@ class UserGroups extends Model
 	}
 
 	/**
-	 * 编辑多条记录
+	 * 通过用户ID和用户组ID，刷新该用户所有分组
 	 * @param integer $userId
 	 * @param array $groupIds
 	 * @return array
 	 */
 	public function modify($userId, $groupIds)
 	{
-		/*
 		$userId = (int) $userId;
-		if ()
-		
-		$a = $this->findAllByAttributes();
-		
-		array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = ''
-		
-		$groupIds = (array) $groupIds;
+		if ($userId <= 0 || !is_array($groupIds)) {
+			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+			Log::warning(sprintf(
+				'%s user_id "%d", group_ids "%s"', $errMsg, $userId, serialize($groupIds)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'user_id' => $userId,
+				'group_ids' => $groupIds
+			);
+		}
 
-		*/
+		$ret = $this->findGroupIdsByUserId($userId);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			$ret['user_id'] = $userId;
+			$ret['group_ids'] = $groupIds;
+			return $ret;
+		}
+
+		$olds = $ret['data'];
+		$news = array();
+		foreach ($groupIds as $value) {
+			if (($value = (int) $value) > 0) {
+				$news[] = $value;
+			}
+		}
+
+		$groupIdCreates = array_diff($news, $olds);
+		$groupIdRemoves = array_diff($olds, $news);
+
+		$rowCountCreate = $this->getDb()->batchCreate($userId, $groupIdCreates);
+		$rowCountRemove = $this->getDb()->batchRemove($userId, $groupIdRemoves);
+
+		$totalCreate = count($groupIdCreates);
+		$totalRemove = count($groupIdRemoves);
+
+		$errorCreate = $totalCreate - $rowCountCreate;
+		$errorRemove = $totalRemove - $rowCountRemove;
+		if ($errorCreate > 0 || $errorRemove > 0) {
+			$errNo = ErrorNo::ERROR_DB_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_UPDATE');
+			Log::warning(sprintf(
+				'%s user_id "%d", group_ids "%s", Create {total "%d", success "%d", error "%d"}, Remove {total "%d", success "%d", error "%d"}', 
+				$errMsg, $userId, serialize($groupIds), $totalCreate, $rowCountCreate, $errorCreate, $totalRemove, $rowCountRemove, $errorRemove
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'user_id' => $userId,
+				'group_ids' => $groupIds
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_UPDATE');
+		Log::notice(sprintf(
+			'%s user_id "%d", group_ids "%s", Create {total "%d", success "%d", error "%d"}, Remove {total "%d", success "%d", error "%d"}', 
+			$errMsg, $userId, serialize($groupIds), $totalCreate, $rowCountCreate, $errorCreate, $totalRemove, $rowCountRemove, $errorRemove
+		), $errNo, __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'user_id' => $userId,
+			'group_ids' => $groupIds
+		);
 	}
 
 	/**
@@ -67,7 +125,7 @@ class UserGroups extends Model
 			$errNo = ErrorNo::ERROR_ARGS_SELECT;
 			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_SELECT');
 			Log::warning(sprintf(
-				'%s user id "%d"', $errMsg, $value
+				'%s user_id "%d"', $errMsg, $value
 			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,

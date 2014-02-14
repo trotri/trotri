@@ -52,7 +52,7 @@ CREATE TABLE `tr_users` (
   `salt` char(6) NOT NULL DEFAULT '' COMMENT '随机附加混淆码',
   `user_name` varchar(100) NOT NULL DEFAULT '' COMMENT '用户名',
   `user_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱，可用来找回密码',
-  `user_phone` bigint(11) unsigned NOT NULL DEFAULT '0' COMMENT '手机号，可用来找回密码',
+  `user_phone` char(11) NOT NULL DEFAULT '' COMMENT '手机号，可用来找回密码',
   `dt_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
   `dt_last_login` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次登录时间',
   `dt_last_repwd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新密码时间',
