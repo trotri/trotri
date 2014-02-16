@@ -1,10 +1,10 @@
 $(document).ready(function() {
   $(":checkbox[name='tbl_profile']").change(function() {
-    Builder.modifyTblProfile($(this));
+    Core.singleModify($(this));
   });
 
   $(":checkbox[name='column_auto_increment']").change(function() {
-    Builder.modifyTblProfile($(this));
+    Core.singleModify($(this));
   });
 
   $("select[name='validator_name']").change(function() {
@@ -22,21 +22,5 @@ $(document).ready(function() {
  * @version $Id: builder.js 1 2013-10-16 18:38:00Z $
  */
 Builder = {
-  /**
-   * 编辑“是否生成扩展表”
-   * @return void
-   */
-  modifyTblProfile: function(o) {
-    var url = o.parent().parent().attr("href") + "&value=" + o.val();
-    Trotri.href(url);
-  },
 
-  /**
-   * 编辑“是否自动递增”
-   * @return void
-   */
-  modifyColumnAutoIncrement: function(o) {
-    var url = o.parent().parent().attr("href") + "&value=" + o.val();
-    Trotri.href(url);
-  }
 }

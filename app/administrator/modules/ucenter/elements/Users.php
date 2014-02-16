@@ -160,6 +160,7 @@ class Users extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USERS_LOGIN_NAME_LABEL'),
+				'callback' => array($this->uiComponents, 'getLoginNameUrl')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -221,6 +222,13 @@ class Users extends ElementCollections
 		}
 		elseif ($type === self::TYPE_OPTIONS) {
 			$output = $options;
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_LOGIN_TYPE_LABEL'),
+				'options' => $options
+			);
 		}
 
 		return $output;
@@ -349,6 +357,12 @@ class Users extends ElementCollections
 				'MaxLength' => array(50, Text::_('MOD_UCENTER_USERS_USER_NAME_MAXLENGTH')),
 			);
 		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_USER_NAME_LABEL'),
+			);
+		}
 
 		return $output;
 	}
@@ -381,6 +395,12 @@ class Users extends ElementCollections
 				'Mail' => array(true, Text::_('MOD_UCENTER_USERS_USER_MAIL_MAIL')),
 			);
 		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_USER_MAIL_LABEL'),
+			);
+		}
 
 		return $output;
 	}
@@ -411,6 +431,12 @@ class Users extends ElementCollections
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'library\\validator\\PhoneValidator' => array(true, Text::_('MOD_UCENTER_USERS_USER_PHONE_PHONE')),
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'text',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_USER_PHONE_LABEL'),
 			);
 		}
 
@@ -691,6 +717,7 @@ class Users extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USERS_VALID_MAIL_LABEL'),
+				'callback' => array($this->uiComponents, 'getValidMailSwitchLabel')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -710,6 +737,13 @@ class Users extends ElementCollections
 		}
 		elseif ($type === self::TYPE_OPTIONS) {
 			$output = $options;
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_VALID_MAIL_LABEL'),
+				'options' => $options
+			);
 		}
 
 		return $output;
@@ -733,6 +767,7 @@ class Users extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USERS_VALID_PHONE_LABEL'),
+				'callback' => array($this->uiComponents, 'getValidPhoneSwitchLabel')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -752,6 +787,13 @@ class Users extends ElementCollections
 		}
 		elseif ($type === self::TYPE_OPTIONS) {
 			$output = $options;
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_VALID_PHONE_LABEL'),
+				'options' => $options
+			);
 		}
 
 		return $output;
@@ -775,6 +817,7 @@ class Users extends ElementCollections
 		if ($type === self::TYPE_TABLE) {
 			$output = array(
 				'label' => Text::_('MOD_UCENTER_USERS_FORBIDDEN_LABEL'),
+				'callback' => array($this->uiComponents, 'getForbiddenSwitchLabel')
 			);
 		}
 		elseif ($type === self::TYPE_FORM) {
@@ -794,6 +837,13 @@ class Users extends ElementCollections
 		}
 		elseif ($type === self::TYPE_OPTIONS) {
 			$output = $options;
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_FORBIDDEN_LABEL'),
+				'options' => $options
+			);
 		}
 
 		return $output;
@@ -871,6 +921,13 @@ class Users extends ElementCollections
 		elseif ($type === self::TYPE_FILTER) {
 			$output = array(
 				'InArray' => array(array(), Text::_('MOD_UCENTER_USERS_GROUP_IDS_INARRAY')),
+			);
+		}
+		elseif ($type === self::TYPE_SEARCH) {
+			$output = array(
+				'type' => 'select',
+				'placeholder' => Text::_('MOD_UCENTER_USERS_GROUP_IDS_LABEL'),
+				'options' => $options
 			);
 		}
 

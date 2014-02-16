@@ -207,6 +207,18 @@ Core = {
   },
 
   /**
+   * 编辑单个字段，用于列表页美化版“是|否”选择项表单元素
+   * @return void
+   */
+  singleModify: function(o) {
+    var url = o.parent().parent().attr("href");
+    if (url != undefined && url.length > 0) {
+      url += "&value=" + o.val();
+      Trotri.href(url);
+    }
+  },
+
+  /**
    * 获取URL
    * @param string act
    * @param string ctrl

@@ -238,6 +238,19 @@ class Groups extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'group_name' => 'trim',
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 通过主键，编辑组的权限
 	 * @param integer $value
 	 * @param array $params

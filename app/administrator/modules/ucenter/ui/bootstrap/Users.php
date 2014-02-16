@@ -60,7 +60,7 @@ class Users
 	 */
 	public function getButtonCancel()
 	{
-		$url = '--待开发--';
+		$url = Url::getUrl('index', Mvc::$controller, Mvc::$module);
 		return Components::getButtonCancel($url);
 	}
 
@@ -71,18 +71,81 @@ class Users
 	 */
 	public function getOperate($data)
 	{
-		$params = array('--待开发--');
+		$params = array(
+			'id' => $data['user_id'],
+		);
 
 		$modifyUrl = Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params);
 		$modifyIcon = Components::getGlyphicon(Components::GLYPHICON_PENCIL, $modifyUrl, Components::JSFUNC_HREF, Text::_('CFG_SYSTEM_GLOBAL_MODIFY'));
 
-		$trashUrl = Url::getUrl('trash', Mvc::$controller, Mvc::$module, $params);
-		$trashIcon = Components::getGlyphicon(Components::GLYPHICON_TRASH, $trashUrl, Components::JSFUNC_DIALOGTRASH, Text::_('CFG_SYSTEM_GLOBAL_TRASH'));
-
 		$removeUrl = Url::getUrl('remove', Mvc::$controller, Mvc::$module, $params);
 		$removeIcon = Components::getGlyphicon(Components::GLYPHICON_REMOVE_SIGN, $removeUrl, Components::JSFUNC_DIALOGREMOVE, Text::_('CFG_SYSTEM_GLOBAL_REMOVE'));
 
-		$ret = $modifyIcon . $trashIcon . $removeIcon;
+		$ret = $modifyIcon . $removeIcon;
 		return $ret;
 	}
+
+	/**
+	 * 获取列表页“登录名：邮箱|用户名|手机号”的A标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getLoginNameUrl($data)
+	{
+		$params = array('id' => $data['user_id']);
+
+		return Components::getHtml()->a($data['login_name'], Url::getUrl('modify', Mvc::$controller, Mvc::$module, $params));
+	}
+
+	/**
+	 * 获取列表页“是否已验证邮箱”美化版“是|否”选择项表单元素
+	 * @param array $data
+	 * @return string
+	 */
+	public function getValidMailSwitchLabel($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'column_name' => 'valid_mail'
+		);
+
+		$modifyUrl = Url::getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$ret = Components::getSwitch($data['user_id'], 'valid_mail', $data['valid_mail'], $modifyUrl);
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“是否已验证手机号”美化版“是|否”选择项表单元素
+	 * @param array $data
+	 * @return string
+	 */
+	public function getValidPhoneSwitchLabel($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'column_name' => 'valid_phone'
+		);
+
+		$modifyUrl = Url::getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$ret = Components::getSwitch($data['user_id'], 'valid_phone', $data['valid_phone'], $modifyUrl);
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“是否禁用”美化版“是|否”选择项表单元素
+	 * @param array $data
+	 * @return string
+	 */
+	public function getForbiddenSwitchLabel($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'column_name' => 'forbidden'
+		);
+
+		$modifyUrl = Url::getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$ret = Components::getSwitch($data['user_id'], 'forbidden', $data['forbidden'], $modifyUrl);
+		return $ret;
+	}
+
 }

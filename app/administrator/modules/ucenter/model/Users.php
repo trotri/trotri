@@ -12,7 +12,9 @@ namespace modules\ucenter\model;
 
 use tfc\ap\Ap;
 use tfc\ap\Singleton;
+use tfc\mvc\Mvc;
 use tfc\saf\Log;
+use tfc\saf\Cfg;
 use koala\Model;
 use library\Auth;
 use library\ErrorNo;
@@ -46,9 +48,99 @@ class Users extends Model
 	 */
 	public function search(array $params = array(), $order = '', $pageNo = 0)
 	{
+		$trash = isset($params['trash']) ? trim($params['trash']) : '';
+		$loginName = isset($params['login_name']) ? trim($params['login_name']) : '';
+		$userName = isset($params['user_name']) ? trim($params['user_name']) : '';
+		$userMail = isset($params['user_mail']) ? trim($params['user_mail']) : '';
+		$userPhone = isset($params['user_phone']) ? trim($params['user_phone']) : '';
+		$forbidden = isset($params['forbidden']) ? trim($params['forbidden']) : '';
+		$loginType = isset($params['login_type']) ? trim($params['login_type']) : '';
+		$validMail = isset($params['valid_mail']) ? trim($params['valid_mail']) : '';
+		$validPhone = isset($params['valid_phone']) ? trim($params['valid_phone']) : '';
+		$groupId = isset($params['group_ids']) ? (int) $params['group_ids'] : 0;
+
 		$attributes = array();
-		//--待开发--
-		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
+		if ($trash !== '') {
+			$attributes['trash'] = $trash;
+		}
+
+		if ($loginName !== '') {
+			$attributes['login_name'] = $loginName;
+		}
+
+		if ($userName !== '') {
+			$attributes['user_name'] = $userName;
+		}
+
+		if ($userMail !== '') {
+			$attributes['user_mail'] = $userMail;
+		}
+
+		if ($userPhone !== '') {
+			$attributes['user_phone'] = $userPhone;
+		}
+
+		if ($forbidden !== '') {
+			$attributes['forbidden'] = $forbidden;
+		}
+
+		if ($loginType !== '') {
+			$attributes['login_type'] = $loginType;
+		}
+
+		if ($validMail !== '') {
+			$attributes['valid_mail'] = $validMail;
+		}
+
+		if ($validPhone !== '') {
+			$attributes['valid_phone'] = $validPhone;
+		}
+
+		if ($groupId > 0) {
+			$attributes['group_id'] = $groupId;
+		}
+
+		$pageNo = max((int) $pageNo, 1);
+		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
+		$offset = ($pageNo - 1) * $listRows;
+		$data = $this->getDb()->search($attributes, $order, $listRows, $offset);
+		if ($data !== false) {
+			$ret = array(
+				'err_no' => ErrorNo::SUCCESS_NUM,
+				'err_msg' => $this->_('ERROR_MSG_SUCCESS_SELECT'),
+				'data' => $data
+			);
+
+			$totalRows = $this->getDb()->getFoundRows();
+		}
+		else {
+			$errNo = ErrorNo::ERROR_DB_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT');
+			Log::warning(sprintf(
+				'%s attributes "%s", order "%s", limit "%d", offset "%d"',
+			$errMsg, $attributes, $order, $listRows, $offset
+			), $errNo, __METHOD__);
+			$ret = array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg
+			);
+
+			$totalRows = 0;
+		}
+
+		$ret['paginator'] = array(
+			'total_rows' => $totalRows,
+			'curr_page' => $pageNo,
+			'list_rows' => $listRows,
+			'url' => Mvc::getView()->getUrlManager()->getUrl(Mvc::$action, '', '', $params)
+		);
+
+		$ret['params'] = array(
+			'attributes' => $params,
+			'curr_page' => $pageNo,
+			'order' => $order,
+		);
+
 		return $ret;
 	}
 

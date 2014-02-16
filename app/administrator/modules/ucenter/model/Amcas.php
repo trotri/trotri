@@ -191,6 +191,20 @@ class Amcas extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'amca_name' => 'trim',
+			'prompt' => 'trim',
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 通过amca_id获取category值
 	 * @param integer $value
 	 * @return string

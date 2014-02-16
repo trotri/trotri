@@ -41,8 +41,9 @@ class UsersController extends BaseController
 		$ele = UcenterFactory::getElements('Users');
 
 		$pageNo = Url::getCurrPage();
-		$order = '';
-		$params = array();
+		$order = 'user_id DESC';
+		$params = $req->getQuery();
+		$params['trash'] = 'n';
 		$ret = $mod->search($params, $order, $pageNo);
 		Url::setHttpReturn($ret['params']['attributes'], $ret['params']['curr_page']);
 
@@ -130,7 +131,7 @@ class UsersController extends BaseController
 	}
 
 	/**
-	 * 删除数据
+	 * 删除数据（数据被移至回收站）
 	 * @return void
 	 */
 	public function removeAction()
@@ -141,7 +142,23 @@ class UsersController extends BaseController
 		$mod = UcenterFactory::getModel('Users');
 
 		$id = $req->getInteger('id');
-		$ret = $mod->deleteByPk($id);
+		$ret = $mod->trashByPk($id);
+		Url::httpReturn($ret);
+	}
+
+	/**
+	 * 批量删除数据（数据被移至回收站）
+	 * @return void
+	 */
+	public function batchremoveAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = UcenterFactory::getModel('Users');
+
+		$ids = explode(',', $req->getParam('ids'));
+		$ret = $mod->batchTrashByPk($ids);
 		Url::httpReturn($ret);
 	}
 
@@ -160,6 +177,24 @@ class UsersController extends BaseController
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
 		$ret = $mod->updateByPk($id, array($columnName => $value));
+		Url::httpReturn($ret);
+	}
+
+	/**
+	 * 批量编辑单个字段
+	 * @return void
+	 */
+	public function batchsinglemodifyAction()
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = UcenterFactory::getModel('Users');
+
+		$ids = explode(',', $req->getParam('ids'));
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+		$ret = $mod->batchupdateByPk($ids, array($columnName => $value));
 		Url::httpReturn($ret);
 	}
 

@@ -38,4 +38,6 @@ $this->widget(
 );
 ?>
 
+<?php $this->display('dialogs/alert'); ?>
+
 <?php echo $this->getHtml()->jsFile($this->base_url . '/static/administrator/js/ucenter.js'); ?>
