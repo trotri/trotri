@@ -55,8 +55,9 @@ CREATE TABLE `tr_posts` (
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `keywords` varchar(100) NOT NULL DEFAULT '' COMMENT '内容关键字',
   `description` varchar(500) NOT NULL DEFAULT '' COMMENT '内容摘要',
-  `flags` set('h','c','j') NOT NULL DEFAULT '' COMMENT '文档标签，h：头条、c：推荐、j：跳转',
-  `little_picture` varchar(100) NOT NULL DEFAULT '' COMMENT '缩略图地址',
+  `little_picture` varchar(250) NOT NULL DEFAULT '' COMMENT '缩略图地址',
+  `is_head` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否头条',
+  `is_recommend` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否推荐',
   `is_jump` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否跳转',
   `jump_url` varchar(250) NOT NULL DEFAULT '' COMMENT '跳转链接',
   `is_html` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否生成静态页面',
@@ -76,8 +77,8 @@ CREATE TABLE `tr_posts` (
   KEY `category_id` (`category_id`),
   KEY `sort` (`sort`),
   KEY `trash_public_cat_sort` (`trash`,`is_public`,`category_id`,`sort`),
-  KEY `flags_sort` (`flags`,`sort`),
-  KEY `creator_id` (`creator_id`)
+  KEY `trash_public_head_sort` (`trash`,`is_public`,`is_head`,`sort`),
+  KEY `trash_public_recommend_sort` (`trash`,`is_public`,`is_recommend`,`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统自带的文档管理表，用户可以通过模型添加自己的内容管理表';
 
 DROP TABLE IF EXISTS `tr_post_profile`;
