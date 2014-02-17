@@ -147,6 +147,23 @@ class Fields extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'field_name' => array($this, 'cleanXss'),
+			'column_length' => array($this, 'cleanXss'),
+			'column_comment' => array($this, 'cleanXss'),
+			'html_label' => array($this, 'cleanXss'),
+			'form_prompt' => array($this, 'cleanXss')
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 通过field_id获取field_name值
 	 * @param integer $value
 	 * @return string

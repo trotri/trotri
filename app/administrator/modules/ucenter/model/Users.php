@@ -182,7 +182,7 @@ class Users extends Model
 
 		$attributes['login_name'] = $loginName = isset($params['login_name']) ? trim($params['login_name']) : '';
 		$attributes['login_type'] = $loginType = Auth::getLoginType($loginName);
-		$userName = isset($params['user_name']) ? trim($params['user_name']) : '';
+		$userName = isset($params['user_name']) ? $this->cleanXss($params['user_name']) : '';
 		if ($userName !== '') {
 			$attributes['user_name'] = $userName;
 		}
@@ -301,7 +301,7 @@ class Users extends Model
 			$attributes['repwd_count'] = ++$repwdCount;
 		}
 
-		$userName = isset($params['user_name']) ? trim($params['user_name']) : null;
+		$userName = isset($params['user_name']) ? $this->cleanXss($params['user_name']) : null;
 		if ($userName) {
 			$attributes['user_name'] = $userName;
 		}

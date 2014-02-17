@@ -13,6 +13,7 @@ namespace modules\ucenter\validator;
 use tfc\saf\Text;
 use tfc\validator\Validator;
 use tfc\validator\MailValidator;
+use tfc\validator\AlphaNumValidator;
 use library\validator\PhoneValidator;
 use library\Auth;
 
@@ -50,7 +51,13 @@ class UsersLoginNameValidator extends Validator
     	}
     	else {
     		if (strpos($loginName, '@') || is_numeric($loginName)) {
-    			$this->setMessage(Text::_('MOD_UCENTER_USERS_LOGIN_NAME_WRONG'));
+    			$this->setMessage(Text::_('MOD_UCENTER_USERS_LOGIN_NAME_ALPHANUM'));
+    			return false;
+    		}
+
+    		$alphaNumValidator = new AlphaNumValidator($loginName, true, Text::_('MOD_UCENTER_USERS_LOGIN_NAME_ALPHANUM'));
+    		if (!$alphaNumValidator->isValid()) {
+    			$this->setMessage(Text::_('MOD_UCENTER_USERS_LOGIN_NAME_ALPHANUM'));
     			return false;
     		}
     	}

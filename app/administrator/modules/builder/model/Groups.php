@@ -113,6 +113,21 @@ class Groups extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'group_name' => array($this, 'cleanXss'),
+			'prompt' => array($this, 'cleanXss'),
+			'description' => array($this, 'cleanXss'),
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 通过group_id获取group_name值
 	 * @param integer $value
 	 * @return string

@@ -12,6 +12,7 @@ namespace koala;
 
 use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
+use tfc\util\String;
 use tfc\util\Language;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
@@ -1190,5 +1191,16 @@ abstract class Model
 	 */
 	public function getCleanRulesAfterValidator()
 	{
+	}
+
+	/**
+	 * 清理字段，除去左右空格，并且escapeXss
+	 * @param string $value
+	 * @return string
+	 */
+	public function cleanXss($value)
+	{
+		$ret = String::escapeXss(trim($value));
+		return $ret;
 	}
 }

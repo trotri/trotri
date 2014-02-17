@@ -12,7 +12,6 @@ namespace modules\builder\model;
 
 use tfc\ap\Ap;
 use tfc\ap\Registry;
-use tfc\util\String;
 use koala\Model;
 use library\ErrorNo;
 use library\BuilderFactory;
@@ -189,12 +188,12 @@ class Builders extends Model
 		$output = array(
 			'builder_name' => 'trim',
 			'tbl_name' => 'trim',
-			'tbl_comment' => array($this, 'cleanTblComment'),
+			'tbl_comment' => array($this, 'cleanXss'),
 			'app_name' => 'trim',
 			'mod_name' => 'trim',
 			'ctrl_name' => 'trim',
 			'cls_name' => 'trim',
-			'description' => array($this, 'cleanDescription'),
+			'description' => array($this, 'cleanXss'),
 			'act_index_name' => 'trim',
 			'act_view_name' => 'trim',
 			'act_create_name' => 'trim',
@@ -230,28 +229,6 @@ class Builders extends Model
 		}
 
 		return $value;
-	}
-
-	/**
-	 * 清理表描述，除去左右空格，并且escapeXss
-	 * @param string $value
-	 * @return string
-	 */
-	public function cleanTblComment($value)
-	{
-		$ret = String::escapeXss(trim($value));
-		return $ret;
-	}
-
-	/**
-	 * 清理表描述，除去左右空格，并且escapeXss
-	 * @param string $value
-	 * @return string
-	 */
-	public function cleanDescription($value)
-	{
-		$ret = String::escapeXss(trim($value));
-		return $ret;
 	}
 
 	/**

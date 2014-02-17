@@ -197,8 +197,8 @@ class Amcas extends Model
 	public function getCleanRulesBeforeValidator()
 	{
 		$output = array(
-			'amca_name' => 'trim',
-			'prompt' => 'trim',
+			'amca_name' => array($this, 'cleanXss'),
+			'prompt' => array($this, 'cleanXss'),
 		);
 
 		return $output;

@@ -244,7 +244,8 @@ class Groups extends Model
 	public function getCleanRulesBeforeValidator()
 	{
 		$output = array(
-			'group_name' => 'trim',
+			'group_name' => array($this, 'cleanXss'),
+			'description' => array($this, 'cleanXss'),
 		);
 
 		return $output;

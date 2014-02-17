@@ -21,7 +21,7 @@ namespace tfc\validator;
 class AlphaNumValidator extends Validator
 {
     /**
-     * @var string 正则：英文字母数字和下划线
+     * @var string 正则：英文字母、数字和下划线
      */
     const REGEX_ALPHA_NUM = '/^\w+$/i';
 

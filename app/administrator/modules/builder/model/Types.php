@@ -109,6 +109,19 @@ class Types extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'type_name' => array($this, 'cleanXss'),
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 获取所有的Types值
 	 * @return array
 	 */

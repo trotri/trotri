@@ -116,6 +116,20 @@ class Validators extends Model
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see koala.Model::getCleanRulesBeforeValidator()
+	 */
+	public function getCleanRulesBeforeValidator()
+	{
+		$output = array(
+			'options' => array($this, 'cleanXss'),
+			'message' => array($this, 'cleanXss'),
+		);
+
+		return $output;
+	}
+
+	/**
 	 * 获取field_id值
 	 * @return integer
 	 */

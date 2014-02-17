@@ -29,7 +29,7 @@ CREATE TABLE `tr_user_groups` (
   `description` text COMMENT '描述',
   PRIMARY KEY (`group_id`),
   KEY `group_pid` (`group_pid`),
-  KEY `group_name` (`group_name`),
+  UNIQUE KEY `group_name` (`group_name`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户分组表';
 
