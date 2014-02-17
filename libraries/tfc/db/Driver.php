@@ -11,8 +11,8 @@
 namespace tfc\db;
 
 use tfc\ap\Application;
+use tfc\ap\PDOException;
 use tfc\ap\ErrorException;
-use tfc\ap\InvalidArgumentException;
 
 /**
  * Driver class file
@@ -102,6 +102,7 @@ class Driver extends Application
             }
         }
         catch (\PDOException $e) {
+        	$e = new PDOException($e);
             throw new ErrorException(sprintf(
                 'Driver PDO connect db failed, %s', $e->getMessage()
             ), (int) $e->getCode());
@@ -140,7 +141,7 @@ class Driver extends Application
             return (int) $this->getPdo()->lastInsertId();
         }
         catch (\PDOException $e) {
-            throw new InvalidArgumentException(sprintf(
+            throw new ErrorException(sprintf(
                 'Driver PDO get last insert id failed, %s', $e->getMessage()
             ), (int) $e->getCode());
         }

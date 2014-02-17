@@ -183,7 +183,7 @@ class DbProxy extends Statement
         try {
             return parent::getColumnCount();
         }
-        catch (\PDOException $e) {
+        catch (ErrorException $e) {
             Log::warning($e->getMessage(), $e->getCode(), __METHOD__);
         }
 

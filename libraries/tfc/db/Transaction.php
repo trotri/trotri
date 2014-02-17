@@ -11,7 +11,7 @@
 namespace tfc\db;
 
 use tfc\ap\Application;
-use tfc\ap\RuntimeException;
+use tfc\ap\ErrorException;
 
 /**
  * Transaction class file
@@ -60,7 +60,7 @@ class Transaction extends Application
     /**
      * 开启PDO事务
      * @return boolean
-     * @throws RuntimeException 如果开启PDO事务失败，抛出异常
+     * @throws ErrorException 如果开启PDO事务失败，抛出异常
      */
     public function beginTransaction()
     {
@@ -68,7 +68,7 @@ class Transaction extends Application
             return $this->getDriver()->getPdo()->beginTransaction();
         }
         catch (\PDOException $e) {
-            throw new RuntimeException(sprintf(
+            throw new ErrorException(sprintf(
                 'Transaction PDO begin transaction failed, %s', $e->getMessage()
             ), (int) $e->getCode());
         }
@@ -77,7 +77,7 @@ class Transaction extends Application
     /**
      * 回滚PDO事务
      * @return boolean
-     * @throws RuntimeException 如果回滚PDO事务失败，抛出异常
+     * @throws ErrorException 如果回滚PDO事务失败，抛出异常
      */
     public function rollBack()
     {
@@ -85,7 +85,7 @@ class Transaction extends Application
             return $this->getDriver()->getPdo()->rollBack();
         }
         catch (\PDOException $e) {
-            throw new RuntimeException(sprintf(
+            throw new ErrorException(sprintf(
                 'Transaction PDO roll back failed, %s', $e->getMessage()
             ), (int) $e->getCode());
         }
@@ -94,7 +94,7 @@ class Transaction extends Application
     /**
      * 提交PDO事务
      * @return boolean
-     * @throws RuntimeException 如果提交PDO事务失败，抛出异常
+     * @throws ErrorException 如果提交PDO事务失败，抛出异常
      */
     public function commit()
     {
@@ -102,7 +102,7 @@ class Transaction extends Application
             return $this->getDriver()->getPdo()->commit();
         }
         catch (\PDOException $e) {
-            throw new RuntimeException(sprintf(
+            throw new ErrorException(sprintf(
                 'Transaction PDO commit failed, %s', $e->getMessage()
             ), (int) $e->getCode());
         }
