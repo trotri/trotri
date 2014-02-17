@@ -102,7 +102,7 @@ class Driver extends Application
             }
         }
         catch (\PDOException $e) {
-        	$e = new PDOException($e);
+            $e = new PDOException($e);
             throw new ErrorException(sprintf(
                 'Driver PDO connect db failed, %s', $e->getMessage()
             ), (int) $e->getCode());
