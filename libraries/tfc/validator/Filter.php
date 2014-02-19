@@ -115,7 +115,7 @@ class Filter
      *     'user_interest' => array($foo, 'explode')
      * );
      * 参数：
-     * $params = array(
+     * $attributes = array(
      *     'user_loginname' => '  abcdefghi  ',
      *     'user_interest' => ' 1, 2'
      * );
@@ -131,7 +131,7 @@ class Filter
      *     'user_interest' => array($foo, 'implode')
      * );
      * 参数：
-     * $params = array(
+     * $attributes = array(
      *     'user_password' => '  1234  ',
      *     'user_interest' => array(1, 2)
      * );
@@ -145,19 +145,19 @@ class Filter
      * @param array $attributes
      * @return void
      */
-    public function clean(array $rules, array &$attributes)
+    public function clean(array $rules, array $attributes)
     {
         if ($rules === null || $attributes === null) {
             return ;
         }
 
-        foreach ($rules as $columnName => $rule) {
-            if (!isset($attributes[$columnName])) {
-                continue;
+        foreach ($rules as $columnName => $funcName) {
+            if (isset($attributes[$columnName])) {
+                $attributes[$columnName] = call_user_func($funcName, $attributes[$columnName]);
             }
-
-            $attributes[$columnName] = call_user_func($rule, $attributes[$columnName]);
         }
+
+        return $attributes;
     }
 
     /**

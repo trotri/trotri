@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Koala
+ * Trotri Data Objects
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace koala;
+namespace tdo;
 
 use tfc\ap\ErrorException;
 use tfc\ap\Singleton;
@@ -20,7 +20,7 @@ use tfc\saf\DbProxy;
  * 生成表的实体类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: EntityBuilder.php 1 2013-05-18 14:58:59Z huan.song $
- * @package koala
+ * @package tdo
  * @since 1.0
  */
 class EntityBuilder
@@ -31,12 +31,12 @@ class EntityBuilder
     protected $_dbProxy = null;
 
     /**
-     * @var instance of koala\Metadata
+     * @var instance of tdo\Metadata
      */
     protected $_metadata = null;
 
     /**
-     * @var array instances of koala\EntityBuilder
+     * @var array instances of tdo\EntityBuilder
      */
     protected static $_instances = array();
 
@@ -53,7 +53,7 @@ class EntityBuilder
     /**
      * 单例模式：获取本类的实例
      * @param tfc\saf\DbProxy $dbProxy
-     * @return instance of koala\EntityBuilder
+     * @return instance of tdo\EntityBuilder
      */
     public static function getInstance(DbProxy $dbProxy)
     {
@@ -144,8 +144,8 @@ class EntityBuilder
         fwrite($stream, "/**\n");
         fwrite($stream, " * {$className} class file\n");
         fwrite($stream, " * {$tableName} 表实体\n");
-        fwrite($stream, " * @author Create by koala\\EntityBuilder\n");
-        fwrite($stream, " * @version \$Id: {$className}.php 1 " . date('Y-m-d H:i:s') . "Z koala\\EntityBuilder $\n");
+        fwrite($stream, " * @author Create by tdo\\EntityBuilder\n");
+        fwrite($stream, " * @version \$Id: {$className}.php 1 " . date('Y-m-d H:i:s') . "Z tdo\\EntityBuilder $\n");
         fwrite($stream, " * @package \n");
         fwrite($stream, " * @since 1.0\n");
         fwrite($stream, " */\n");
@@ -219,7 +219,7 @@ class EntityBuilder
 
     /**
      * 获取MySQL表结构处理类
-     * @return koala\Metadata
+     * @return tdo\Metadata
      */
     public function getMetadata()
     {
