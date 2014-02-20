@@ -26,6 +26,11 @@ class Ap
     protected static $_encoding = 'UTF-8';
 
     /**
+     * @var string 项目语言种类
+     */
+    protected static $_languageType = 'zh-CN';
+
+    /**
      * @var instance of tfc\ap\HttpRequest
      */
     protected static $_request = null;
@@ -66,6 +71,25 @@ class Ap
     public static function setEncoding($encoding)
     {
         self::$_encoding = (string) $encoding;
+    }
+
+    /**
+     * 获取项目语言种类
+     * @return string
+     */
+    public static function getLanguageType()
+    {
+        return self::$_languageType;
+    }
+
+    /**
+     * 设置项目语言种类
+     * @param string $languageType
+     * @return void
+     */
+    public static function setLanguageType($languageType)
+    {
+        self::$_languageType = (string) $languageType;
     }
 
     /**

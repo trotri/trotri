@@ -26,29 +26,60 @@ use tfc\saf\Text;
  */
 class Util
 {
-	/**
-	 * @var boolean 是否还未知当前语种。如果还未知，从RGP中取；如果RGP中未设置，从配置中取
-	 */
-	protected static $_unknownLanguageType = true;
+
 
 	/**
-	 * 通过键名获取语言内容
-	 * @param string $string
-	 * @param boolean $jsSafe
-	 * @param boolean $interpretBackSlashes
-	 * @return string
+	 * 获取公用RGP参数，并设置到对象工厂类中
+	 * @return array
 	 */
-	public static function _($string, $jsSafe = false, $interpretBackSlashes = true)
+	public static function initRequestArgs()
 	{
-		if (self::$_unknownLanguageType) {
-			self::$_unknownLanguageType = false;
-			$type = Ap::getRequest()->getTrim('ol'); // out language type 输出语种
-			if ($type !== '') {
-				Text::setLanguageType($type);
+		$od = Ap::getRequest()->getTrim('od');
+		if ($od !== '') {
+			$od = strtoupper($od);
+			if (in_array($od, Factory::$dataTypes)) {
+				Factory::$od = $od;
+			}
+			else {
+				return array(
+					'err_no' => ErrorNo::ERROR_REQUEST,
+					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OD_ERR'),
+				);
 			}
 		}
 
-		return Text::_($string, $jsSafe, $interpretBackSlashes);
+		$ie = Ap::getRequest()->getTrim('ie');
+		if ($ie !== '') {
+			$ie = strtoupper($ie);
+			if (in_array($ie, Factory::$encoders)) {
+				Factory::$ie = $ie;
+			}
+			else {
+				return array(
+					'err_no' => ErrorNo::ERROR_REQUEST,
+					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_IE_ERR'),
+				);
+			}
+		}
+
+		$ol = Ap::getRequest()->getTrim('ol');
+		if ($ol !== '') {
+			$ol = strtolower(substr($ol, 0, 2)) . '_' . strtoupper(substr($ol, -2));
+			if (in_array($ol, Factory::$encoders)) {
+				Factory::$ol = $ol;
+			}
+			else {
+				return array(
+					'err_no' => ErrorNo::ERROR_REQUEST,
+					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OL_ERR'),
+				);
+			}
+		}
+
+		return array(
+			'err_no' => ErrorNo::SUCCESS_NUM,
+			'err_msg' => Text::_('ERROR_MSG_SUCCESS_NUM'),
+		);
 	}
 
 	/**

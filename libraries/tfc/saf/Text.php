@@ -10,6 +10,7 @@
 
 namespace tfc\saf;
 
+use tfc\ap\Ap;
 use tfc\util\Language;
 
 /**
@@ -26,11 +27,6 @@ class Text
      * @var instance of tfc\util\Language
      */
     protected static $_language = null;
-
-    /**
-     * @var string 当前语种
-     */
-    protected static $_languageType = null;
 
     /**
      * 通过键名获取语言内容
@@ -85,37 +81,11 @@ class Text
     public static function setLanguage(Language $language = null)
     {
         if ($language === null) {
-            $type = self::getLanguageType();
+            $type = Ap::getLanguageType();
             $baseDir = DIR_APP_LANGUAGES;
             $language = Language::getInstance($type, $baseDir);
         }
 
         self::$_language = $language;
-    }
-
-    /**
-     * 获取当前语种
-     * @return string
-     */
-    public static function getLanguageType()
-    {
-        if (self::$_languageType === null) {
-            $type = Cfg::getApp('language');
-            self::setLanguageType($type);
-        }
-
-        return self::$_languageType;
-    }
-
-    /**
-     * 设置当前语种
-     * @param string $type
-     * @return void
-     */
-    public static function setLanguageType($type = null)
-    {
-        if ($type !== null) {
-            self::$_languageType = trim($type);
-        }
     }
 }

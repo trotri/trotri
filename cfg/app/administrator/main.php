@@ -9,8 +9,8 @@
  */
 
 return array (
-	'charset' => 'utf-8',
-	'language' => 'zh-CN',
+	'charset' => 'utf-8', // 不区分大小写
+	'language' => 'zh-CN', // 区分大小写
 	'view' => array (
 		'skin_name' => 'bootstrap',
 		'charset' => 'utf-8',
