@@ -40,6 +40,15 @@ class Factory
 	}
 
 	/**
+	 * 获取数据验证类
+	 * @return instance of tfc\validator\Filter
+	 */
+	public static function getFilter()
+	{
+		return Singleton::getInstance('tfc\\validator\\Filter');
+	}
+
+	/**
 	 * 获取数据库操作层类
 	 * @param string $className
 	 * @param string $moduleName

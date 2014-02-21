@@ -150,19 +150,6 @@ class DQuery
 	}
 
 	/**
-	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接，并且返回分页信息
-	 * @param array $attributes
-	 * @param string $order
-	 * @param integer $pageNo
-	 * @return array
-	 */
-	public function findIndexByAttributes(array $attributes = array(), $order = '', $pageNo = 0)
-	{
-		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
-		return $this->findIndexByCondition($condition, $attributes, $order, $pageNo);
-	}
-
-	/**
 	 * 通过条件，查询两个字段记录，并且以键值对方式返回
 	 * @param array $columnNames
 	 * @param string $condition

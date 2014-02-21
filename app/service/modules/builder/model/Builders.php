@@ -12,6 +12,8 @@ namespace modules\builder\model;
 
 use library\Model;
 use library\BuilderFactory;
+use library\ErrorNo;
+use modules\builder\data\BuildersData;
 
 /**
  * Builders class file
@@ -33,15 +35,40 @@ class Builders extends Model
 	}
 
 	/**
-	 * 检索多条记录
+	 * 查询数据
 	 * @param array $params
 	 * @param string $order
-	 * @param integer $pageNo
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '', $pageNo = 0)
+	public function search(array $params = array(), $order = '')
 	{
-		
+		$rules = array(
+			'trash' => 'trim',
+			'builder_name' => 'trim',
+			'builder_id' => 'intval',
+			'tbl_name' => 'trim',
+			'tbl_profile' => 'trim',
+			'tbl_engine' => 'trim',
+			'tbl_charset' => 'trim',
+			'app_name' => 'trim'
+		);
+
+		$attributes = $this->filterCleanEmpty($rules, $params);
+		$ret = $this->findAllByAttributes($attributes, $order);
+		return $ret;
+	}
+
+	/**
+	 * 通过builder_id获取builder_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getBuilderNameByBuilderId($value)
+	{
+		$value = (int) $value;
+		$ret = $this->getByPk('builder_name', $value);
+		$builderName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['builder_name'];
+		return $builderName;
 	}
 
 	/**
@@ -51,7 +78,12 @@ class Builders extends Model
 	 */
 	public function create(array $params = array())
 	{
-		
+		$params['dt_created'] = date('Y-m-d H:i:s');
+		if (!isset($params['index_row_btns']) || !is_array($params['index_row_btns'])) {
+			$params['index_row_btns'] = array();
+		}
+
+		return $this->insert($params);
 	}
 
 	/**
@@ -60,16 +92,46 @@ class Builders extends Model
 	 * @param array $params
 	 * @return array
 	 */
-	public function modifyByPk($value, array $params = array())
+	public function modifyByPk($value, array $params)
 	{
-		
+		$params['dt_modified'] = date('Y-m-d H:i:s');
+		return $this->updateByPk($value, $params);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library.Model::validate()
+	 */
+	public function validate(array $attributes = array(), $required = false, $opType = '')
+	{
+		$rules = array(
+			'builder_name' => BuildersData::getBuilderNameRules(),
+			'tbl_name' => BuildersData::getTblNameRules(),
+			'tbl_profile' => BuildersData::getTblProfileRules(),
+			'tbl_engine' => BuildersData::getTblEngineRules(),
+			'tbl_charset' => BuildersData::getTblCharsetRules(),
+			'tbl_comment' => BuildersData::getTblCommentRules(),
+			'app_name' => BuildersData::getAppNameRules(),
+			'mod_name' => BuildersData::getModNameRules(),
+			'ctrl_name' => BuildersData::getCtrlNameRules(),
+			'cls_name' => BuildersData::getClsNameRules(),
+			'act_index_name' => BuildersData::getActIndexNameRules(),
+			'act_view_name' => BuildersData::getActViewNameRules(),
+			'act_create_name' => BuildersData::getActCreateNameRules(),
+			'act_modify_name' => BuildersData::getActModifyNameRules(),
+			'act_remove_name' => BuildersData::getActRemoveNameRules(),
+			'index_row_btns' => BuildersData::getIndexRowBtnsRules(),
+			'trash' => BuildersData::getTrashRules(),
+		);
+
+		return $this->runfilterValidate($rules, $attributes, $required);
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::cleanBeforeValidator()
 	 */
-	public function cleanBeforeValidator(array $attributes = array())
+	public function cleanBeforeValidator(array $attributes = array(), $opType = '')
 	{
 		$rules = array(
 			'builder_name' => 'trim',
@@ -85,97 +147,28 @@ class Builders extends Model
 			'act_create_name' => 'trim',
 			'act_modify_name' => 'trim',
 			'act_remove_name' => 'trim',
+			'tbl_profile' => 'trim',
+			'tbl_engine' => 'trim',
+			'tbl_charset' => 'trim',
+			'trash' => 'trim',
+			'index_row_btns' => array($this, 'trims')
 		);
 
-		return $this->getFilter()->clean($rules, $attributes);
+		$ret = $this->getFilter()->clean($rules, $attributes);
+		return $ret;
 	}
 
 	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::cleanAfterValidator()
 	 */
-	public function cleanAfterValidator(array $attributes = array())
+	public function cleanAfterValidator(array $attributes = array(), $opType = '')
 	{
 		$rules = array(
-			'index_row_btns' => array($this, 'joinIndexRowBtns')
+			'index_row_btns' => array($this, 'join')
 		);
 
-		return $this->getFilter()->clean($rules, $attributes);
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see koala.Model::getInsertRules()
-	 */
-	public function getInsertRules()
-	{
-		$elements = BuilderFactory::getElements('Builders');
-		$type = $elements::TYPE_FILTER;
-		$output = array(
-			'builder_name' => $elements->getBuilderName($type),
-			'tbl_name' => $elements->getTblName($type),
-			'tbl_profile' => $elements->getTblProfile($type),
-			'tbl_engine' => $elements->getTblEngine($type),
-			'tbl_charset' => $elements->getTblCharset($type),
-			'tbl_comment' => $elements->getTblComment($type),
-			'app_name' => $elements->getAppName($type),
-			'mod_name' => $elements->getModName($type),
-			'ctrl_name' => $elements->getCtrlName($type),
-			'cls_name' => $elements->getClsName($type),
-			'act_index_name' => $elements->getActIndexName($type),
-			'act_view_name' => $elements->getActViewName($type),
-			'act_create_name' => $elements->getActCreateName($type),
-			'act_modify_name' => $elements->getActModifyName($type),
-			'act_remove_name' => $elements->getActRemoveName($type),
-			'index_row_btns' => $elements->getIndexRowBtns($type),
-			'trash' => $elements->getTrash($type),
-		);
-
-		return $output;
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see koala.Model::getUpdateRules()
-	 */
-	public function getUpdateRules()
-	{
-		$elements = BuilderFactory::getElements('Builders');
-		$type = $elements::TYPE_FILTER;
-		$output = array(
-			'builder_name' => $elements->getBuilderName($type),
-			'tbl_name' => $elements->getTblName($type),
-			'tbl_profile' => $elements->getTblProfile($type),
-			'tbl_engine' => $elements->getTblEngine($type),
-			'tbl_charset' => $elements->getTblCharset($type),
-			'tbl_comment' => $elements->getTblComment($type),
-			'app_name' => $elements->getAppName($type),
-			'mod_name' => $elements->getModName($type),
-			'ctrl_name' => $elements->getCtrlName($type),
-			'cls_name' => $elements->getClsName($type),
-			'act_index_name' => $elements->getActIndexName($type),
-			'act_view_name' => $elements->getActViewName($type),
-			'act_create_name' => $elements->getActCreateName($type),
-			'act_modify_name' => $elements->getActModifyName($type),
-			'act_remove_name' => $elements->getActRemoveName($type),
-			'index_row_btns' => $elements->getIndexRowBtns($type),
-			'trash' => $elements->getTrash($type),
-		);
-
-		return $output;
-	}
-
-	/**
-	 * 将列表每行操作按钮用英文逗号连接
-	 * @param array $value
-	 * @return string
-	 */
-	public function joinIndexRowBtns($value)
-	{
-		if (is_array($value)) {
-			$value = implode(',', $value);
-		}
-
-		return $value;
+		$ret = $this->getFilter()->clean($rules, $attributes);
+		return $ret;
 	}
 }

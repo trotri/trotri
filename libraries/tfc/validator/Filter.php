@@ -143,7 +143,7 @@ class Filter
      * </pre>
      * @param array $rules
      * @param array $attributes
-     * @return void
+     * @return array
      */
     public function clean(array $rules, array $attributes)
     {

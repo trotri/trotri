@@ -12,6 +12,7 @@ namespace library;
 
 use tfc\ap\Ap;
 use tfc\mvc\Action;
+use tfc\util\Power;
 use tfc\util\Encoder;
 use tfc\saf\Log;
 use tfc\saf\Text;
@@ -27,6 +28,11 @@ use tfc\saf\Cfg;
  */
 abstract class BaseAction extends Action
 {
+	/**
+	 * @var integer 用户权限
+	 */
+	public $userMode = Power::MODE_DENY_ALL;
+
 	/**
 	 * @var string 从Request中获取的ie值（input encode）
 	 */

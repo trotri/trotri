@@ -332,6 +332,111 @@ class DOperator
 	}
 
 	/**
+	 * 通过主键，从回收站还原一条记录。不支持联合主键
+	 * @param integer $value
+	 * @param string $columnName
+	 * @return array
+	 */
+	public function restoreByPk($value, $columnName = 'trash')
+	{
+		$value = (int) $value;
+		if ($value <= 0) {
+			$errNo = ErrorNo::ERROR_ARGS_RESTORE;
+			$errMsg = Text::_('ERROR_MSG_ERROR_ARGS_RESTORE');
+			Log::warning(sprintf(
+				'%s pk "%d"', $errMsg, $value
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		$attributes = array($columnName => 'n');
+		$rowCount = $this->getDb()->updateByPk($value, $attributes);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_DB_RESTORE;
+			$errMsg = Text::_('ERROR_MSG_ERROR_DB_RESTORE');
+			Log::warning(sprintf(
+				'%s pk "%d", attributes "%s"', $errMsg, $value, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = ($rowCount > 0) ? Text::_('ERROR_MSG_SUCCESS_RESTORE') : Text::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+		Log::debug(sprintf(
+			'%s pk "%d", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+		), __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount,
+			'id' => $value
+		);
+	}
+
+	/**
+	 * 通过主键，从回收站还原多条记录。不支持联合主键
+	 * @param array $values
+	 * @param string $columnName
+	 * @return array
+	 */
+	public function batchRestoreByPk(array $values, $columnName = 'trash')
+	{
+		$values = array_map('intval', $values);
+		$value = implode(',', $values);
+		foreach ($values as $_) {
+			if ($_ <= 0) {
+				$errNo = ErrorNo::ERROR_ARGS_RESTORE;
+				$errMsg = Text::_('ERROR_MSG_ERROR_ARGS_RESTORE');
+				Log::warning(sprintf(
+					'%s pks "%s"', $errMsg, $value
+				), $errNo, __METHOD__);
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'ids' => $value
+				);
+			}
+		}
+
+		$attributes = array($columnName => 'n');
+		$rowCount = $this->getDb()->batchUpdateByPk($value, $attributes);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_DB_RESTORE;
+			$errMsg = Text::_('ERROR_MSG_ERROR_DB_RESTORE');
+			Log::warning(sprintf(
+				'%s pks "%s", attributes "%s"', $errMsg, $value, serialize($attributes)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'ids' => $value
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = ($rowCount > 0) ? Text::_('ERROR_MSG_SUCCESS_RESTORE') : Text::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+		Log::debug(sprintf(
+			'%s pks "%s", rowCount "%d", attributes "%s"', $errMsg, $value, $rowCount, serialize($attributes)
+		), __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount,
+			'ids' => $value
+		);
+	}
+
+	/**
 	 * 通过主键，删除一条记录。不支持联合主键
 	 * @param integer $value
 	 * @return array

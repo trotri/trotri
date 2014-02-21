@@ -56,6 +56,16 @@ class ErrorNo
 	const ERROR_UNKNOWN                = 2008;
 
 	/**
+	 * @var integer 验证数据结果：数据正确
+	 */
+	const SUCCESS_VALIDATE             = 10001;
+
+	/**
+	 * @var integer 验证数据结果：数据错误
+	 */
+	const ERROR_VALIDATE               = 10002;
+
+	/**
 	 * @var integer 查询成功
 	 */
 	const SUCCESS_SELECT               = 100010;
@@ -76,9 +86,14 @@ class ErrorNo
 	const SUCCESS_DELETE               = 100013;
 
 	/**
+	 * @var integer 恢复成功
+	 */
+	const SUCCESS_RESTORE              = 100014;
+
+	/**
 	 * @var integer 保存成功
 	 */
-	const SUCCESS_REPLACE              = 100014;
+	const SUCCESS_REPLACE              = 100015;
 
 	/**
 	 * @var integer 查询失败，提交内容有误
@@ -101,9 +116,14 @@ class ErrorNo
 	const ERROR_ARGS_DELETE            = 100023;
 
 	/**
+	 * @var integer 恢复失败，提交内容有误
+	 */
+	const ERROR_ARGS_RESTORE           = 100024;
+
+	/**
 	 * @var integer 保存失败，提交内容有误
 	 */
-	const ERROR_ARGS_REPLACE           = 100024;
+	const ERROR_ARGS_REPLACE           = 100025;
 
 	/**
 	 * @var integer 查询失败，数据库操作失败
@@ -126,19 +146,24 @@ class ErrorNo
 	const ERROR_DB_DELETE              = 100033;
 
 	/**
+	 * @var integer 恢复失败，数据库操作失败
+	 */
+	const ERROR_DB_RESTORE             = 100034;
+
+	/**
 	 * @var integer 保存失败，数据库操作失败
 	 */
-	const ERROR_DB_REPLACE             = 100034;
+	const ERROR_DB_REPLACE             = 100035;
 
 	/**
 	 * @var integer 查询数据库成功，但是查询结果为空
 	 */
-	const ERROR_DB_SELECT_EMPTY        = 100035;
+	const ERROR_DB_SELECT_EMPTY        = 100036;
 
 	/**
 	 * @var integer 更新数据库成功，但是影响行数为零
 	 */
-	const ERROR_DB_AFFECTS_ZERO        = 100036;
+	const ERROR_DB_AFFECTS_ZERO        = 100037;
 
 	/**
 	 * @var integer 查询失败，文件操作失败

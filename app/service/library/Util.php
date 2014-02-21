@@ -26,64 +26,36 @@ use tfc\saf\Text;
  */
 class Util
 {
-
-
 	/**
-	 * 获取公用RGP参数，并设置到对象工厂类中
-	 * @return array
+	 * 获取分页参数：当前开始查询行数
+	 * @return string
 	 */
-	public static function initRequestArgs()
+	public static function getFirstRow()
 	{
-		$od = Ap::getRequest()->getTrim('od');
-		if ($od !== '') {
-			$od = strtoupper($od);
-			if (in_array($od, Factory::$dataTypes)) {
-				Factory::$od = $od;
-			}
-			else {
-				return array(
-					'err_no' => ErrorNo::ERROR_REQUEST,
-					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OD_ERR'),
-				);
-			}
-		}
-
-		$ie = Ap::getRequest()->getTrim('ie');
-		if ($ie !== '') {
-			$ie = strtoupper($ie);
-			if (in_array($ie, Factory::$encoders)) {
-				Factory::$ie = $ie;
-			}
-			else {
-				return array(
-					'err_no' => ErrorNo::ERROR_REQUEST,
-					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_IE_ERR'),
-				);
-			}
-		}
-
-		$ol = Ap::getRequest()->getTrim('ol');
-		if ($ol !== '') {
-			$ol = strtolower(substr($ol, 0, 2)) . '_' . strtoupper(substr($ol, -2));
-			if (in_array($ol, Factory::$encoders)) {
-				Factory::$ol = $ol;
-			}
-			else {
-				return array(
-					'err_no' => ErrorNo::ERROR_REQUEST,
-					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OL_ERR'),
-				);
-			}
-		}
-
-		return array(
-			'err_no' => ErrorNo::SUCCESS_NUM,
-			'err_msg' => Text::_('ERROR_MSG_SUCCESS_NUM'),
-		);
+		$pageNo = self::getPageNo();
+		$listRows = self::getListRows();
+		$firstRow = ($pageNo - 1) * $listRows;
+		return $firstRow;
 	}
 
 	/**
-	 * 获取当前页码
+	 * 从$_GET或$_POST中获取分页参数：每页展示的行数
+	 * @return string
+	 */
+	public static function getListRows()
+	{
+		$listRows = Ap::getRequest()->getInteger('limit');
+		if ($listRows > 0) {
+			return $listRows;
+		}
+
+		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
+		$listRows = max($listRows, 1);
+		return $listRows;
+	}
+
+	/**
+	 * 从$_GET或$_POST中获取分页参数：当前页码
 	 * @return integer
 	 */
 	public static function getPageNo()
@@ -95,7 +67,7 @@ class Util
 	}
 
 	/**
-	 * 获取从$_GET或$_POST中取当前页的键名
+	 * 获取分页参数：用于从$_GET或$_POST中取当前页的键名
 	 * @return string
 	 */
 	public static function getPageVar()

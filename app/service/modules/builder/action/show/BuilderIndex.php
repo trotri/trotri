@@ -8,9 +8,9 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\controller;
+namespace modules\builder\action\show;
 
-use library\BaseController;
+use library\BaseAction;
 
 /**
  * IndexController class file
@@ -20,7 +20,7 @@ use library\BaseController;
  * @package modules.builder.controller
  * @since 1.0
  */
-class IndexController extends BaseController
+class BuilderIndex extends BaseAction
 {
 	public function actions()
 	{
