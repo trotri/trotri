@@ -10,6 +10,7 @@
 
 namespace tdo;
 
+use tfc\ap\Application;
 use tfc\ap\Singleton;
 use tfc\saf\DbProxy;
 
@@ -21,7 +22,7 @@ use tfc\saf\DbProxy;
  * @package tdo
  * @since 1.0
  */
-abstract class Db
+abstract class Db extends Application
 {
 	/**
 	 * @var instance of tfc\db\TableSchema

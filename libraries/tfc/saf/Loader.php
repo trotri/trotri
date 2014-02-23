@@ -70,6 +70,11 @@ defined('DIR_LIBRARIES') || define('DIR_LIBRARIES', substr(DIR_TFC, 0, -4));
 defined('DIR_ROOT') || define('DIR_ROOT', substr(DIR_LIBRARIES, 0, -10));
 
 /**
+ * 公共业务目录
+ */
+defined('DIR_SERVICES') || define('DIR_SERVICES', DIR_ROOT . DS . 'services');
+
+/**
  * 当前项目目录
  */
 defined('DIR_APP') || define('DIR_APP', DIR_ROOT . DS . 'app' . DS . APP_NAME);
@@ -205,7 +210,9 @@ is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entitie
 /**
  * 设置公共框架和代码库目录、当前项目的公共代码库目录、当前项目的所有模块存放目录到PHP INI自动加载目录
  */
-set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) || exit('Request Error, your server configuration not allowed to change PHP include path');
+set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_SERVICES . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) 
+ || 
+exit('Request Error, your server configuration not allowed to change PHP include path');
 
 /**
  * 自动加载PHP文件

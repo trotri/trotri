@@ -205,7 +205,7 @@ class Power
             ));
         }
 
-        return $userMode & $powerMode;
+        return (boolean) $userMode & $powerMode;
     }
 
     /**
@@ -217,6 +217,6 @@ class Power
      */
     public static function isDeny($userMode, $powerMode)
     {
-        return (int) !self::isAllow($userMode, $powerMode);
+        return !self::isAllow($userMode, $powerMode);
     }
 }

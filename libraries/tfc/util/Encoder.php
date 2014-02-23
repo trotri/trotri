@@ -39,22 +39,17 @@ class Encoder
     protected $_charset = self::CHARSET_UTF8;
 
     /**
-     * @var instance of tfc\util\Encoder
+     * @var instances of tfc\util\Encoder
      */
-    protected static $_instance = null;
+    protected static $_instances = array();
 
     /**
      * 构造方法：初始化本项目的编码方式，计算字符长度时，以此编码为准；转换字符时，此编码是默认转出编码
      * @param string $charset 'UTF-8' or 'GBK'
      * @throws ErrorException 如果指定的编码不是UTF8或GBK，抛出异常
      */
-    protected function __construct($charset = null)
+    protected function __construct($charset)
     {
-        if ($charset === null) {
-            $charset = Ap::getEncoding();
-        }
-
-        $charset = strtoupper($charset);
         if (!defined('static::CHARSET_' . str_replace('-', '', $charset))) {
             throw new ErrorException(sprintf(
                 'Encoder charset "%s" must be UTF-8 or GBK', $charset
@@ -78,11 +73,16 @@ class Encoder
      */
     public static function getInstance($charset = null)
     {
-        if (self::$_instance === null) {
-            self::$_instance = new self($charset);
+        if ($charset === null) {
+            $charset = Ap::getEncoding();
         }
 
-        return self::$_instance;
+        $charset = strtoupper($charset);
+        if (!isset(self::$_instances[$charset])) {
+            self::$_instances[$charset] = new self($charset);
+        }
+
+        return self::$_instances[$charset];
     }
 
     /**

@@ -4,29 +4,21 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright (c) 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library;
-
-use tfc\ap\Ap;
-use tfc\mvc\Action;
-use tfc\util\Power;
-use tfc\util\Encoder;
-use tfc\saf\Log;
-use tfc\saf\Text;
-use tfc\saf\Cfg;
+namespace slib;
 
 /**
- * BaseAction abstract class file
- * Action基类
+ * Service class file
+ * 业务层入口类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BaseAction.php 1 2013-04-05 01:08:06Z huan.song $
- * @package library
+ * @version $Id: Service.php 1 2013-03-29 16:48:06Z huan.song $
+ * @package slib
  * @since 1.0
  */
-abstract class BaseAction extends Action
+class Service
 {
 	/**
 	 * @var string 缺省的编码
@@ -39,45 +31,55 @@ abstract class BaseAction extends Action
 	const DEFAULT_LANGUAGE_TYPE = 'zh-CN';
 
 	/**
-	 * @var string 缺省的输出数据类型
-	 */
-	const DEFAULT_DATA_TYPE = 'JSON';
-
-	/**
-	 * @var integer 用户权限
-	 */
-	public $userMode = Power::MODE_DENY_ALL;
-
-	/**
-	 * @var string 从Request中获取的ie值（input encode）
-	 */
-	protected $_encoding = '';
-
-	/**
-	 * @var string 从Request中获取的ol值（output language type）
-	 */
-	protected $_languageType = '';
-
-	/**
-	 * @var string 从Request中获取的od值（output data type）
-	 */
-	protected $_dataType = 'JSON';
-
-	/**
-	 * @var array 项目支持的编码
+	 * @var array 支持的编码
 	 */
 	protected $_encodings = array('UTF-8', 'GBK');
 
 	/**
-	 * @var array 项目支持的语言种类
+	 * @var array 支持的语言种类
 	 */
 	protected $_languageTypes = array('zh-CN', 'en-GB');
 
 	/**
-	 * @var array 项目支持的数据类型
+	 * @var string 当前的编码
 	 */
-	protected $_dataTypes = array('JSON', 'SERIAL');
+	protected $_encoding = self::DEFAULT_ENCODING;
 
+	/**
+	 * @var string 当前的语言种类
+	 */
+	protected $_languageType = self::DEFAULT_LANGUAGE_TYPE;
+
+	/**
+	 * @var array 寄存所有调用过的模型实例
+	 */
+	protected $_modules = array();
+
+	/**
+	 * 获取模型实例
+	 * @param string $languageType
+	 * @param string $tableName
+	 * @return instance of slib\BaseModel
+	 */
+	public function getModule($modName, $languageType, $tableName = '')
+	{
+		
+	}
+
+	/**
+	 * 获取所有调用过的模型实例
+	 * @return array
+	 */
+	public function getModules()
+	{
+		return $this->_modules;
+	}
+
+	
+	
+	
+	
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc.Action::_init()
@@ -88,7 +90,7 @@ abstract class BaseAction extends Action
 		$this->_initEncoding();
 		$this->_initLanguageType();
 	}
-
+	
 	/**
 	 * 通过输出数据类型，输出数据
 	 * @param mixed $data
@@ -102,32 +104,32 @@ abstract class BaseAction extends Action
 		if ($data['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			Log::warning($data['err_msg'], $data['err_no'], __METHOD__);
 		}
-
+	
 		// 数据转Json类型后输出，如果项目不是UTF-8格式，需要先将输出数据转成UTF-8格式
 		if ($this->_od === 'JSON') {
 			if (Ap::getEncoding() !== 'UTF-8') {
 				$data = Encoder::getInstance()->convert($data, Ap::getEncoding(), 'UTF-8');
 			}
-
+	
 			echo json_encode($data);
 			exit;
 		}
-
+	
 		// 数据序列化后输出
 		if ($this->_od === 'SERIAL') {
 			echo serialize($data);
 			exit;
 		}
-
+	
 		$data = array(
-			'err_no' => ErrorNo::ERROR_REQUEST,
-			'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OD_ERR'),
+				'err_no' => ErrorNo::ERROR_REQUEST,
+				'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OD_ERR'),
 		);
 		Log::warning($data['err_msg'], $data['err_no'], __METHOD__);
 		echo json_encode($data);
 		exit;
 	}
-
+	
 	/**
 	 * 获取输出数据，规范化输出数据的格式
 	 * 默认添加的输出内容：log_id (integer)
@@ -206,27 +208,27 @@ abstract class BaseAction extends Action
 				$errNo = (int) $data['err_no'];
 				unset($data['err_no']);
 			}
-
+	
 			if (isset($data['err_msg'])) {
 				$errMsg = $data['err_msg'];
 				unset($data['err_msg']);
 			}
-
+	
 			if (isset($data['data'])) {
 				$data = $data['data'];
 			}
 		}
-
+	
 		$ret = array(
-			'err_no' => $errNo,
-			'err_msg' => $errMsg,
-			'data' => $data,
-			'log_id' => Log::getId()
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'data' => $data,
+				'log_id' => Log::getId()
 		);
-
+	
 		return $ret;
 	}
-
+	
 	/**
 	 * 初始化项目输出数据类型
 	 * @return void
@@ -242,14 +244,14 @@ abstract class BaseAction extends Action
 			}
 			else {
 				$data = array(
-					'err_no' => ErrorNo::ERROR_REQUEST,
-					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OD_ERR'),
+						'err_no' => ErrorNo::ERROR_REQUEST,
+						'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OD_ERR'),
 				);
 				$this->display($data);
 			}
 		}
 	}
-
+	
 	/**
 	 * 初始化项目编码和输入内容编码
 	 * @return void
@@ -263,12 +265,12 @@ abstract class BaseAction extends Action
 		}
 		else {
 			$data = array(
-				'err_no' => ErrorNo::ERROR_SYSTEM_RUN_ERR,
-				'err_msg' => Text::_('ERROR_MSG_ERROR_CFG_CHARSET_ERR'),
+					'err_no' => ErrorNo::ERROR_SYSTEM_RUN_ERR,
+					'err_msg' => Text::_('ERROR_MSG_ERROR_CFG_CHARSET_ERR'),
 			);
 			$this->display($data);
 		}
-
+	
 		// 从RGP中获取‘ie’的值（input encode），并验证是否合法
 		$encoding = Ap::getRequest()->getTrim('ie');
 		if ($encoding !== '') {
@@ -278,8 +280,8 @@ abstract class BaseAction extends Action
 			}
 			else {
 				$data = array(
-					'err_no' => ErrorNo::ERROR_REQUEST,
-					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_IE_ERR'),
+						'err_no' => ErrorNo::ERROR_REQUEST,
+						'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_IE_ERR'),
 				);
 				$this->display($data);
 			}
@@ -287,7 +289,7 @@ abstract class BaseAction extends Action
 		else {
 			$this->_encoding = Ap::getEncoding();
 		}
-
+	
 		// 转换输入内容编码
 		if (Ap::getEncoding() !== $this->_encoding) {
 			$encoder = Encoder::getInstance();
@@ -296,7 +298,7 @@ abstract class BaseAction extends Action
 			$_COOKIE = $encoder->convert($_COOKIE, $this->_encoding);
 		}
 	}
-
+	
 	/**
 	 * 初始化输出的语言种类
 	 * @return void
@@ -310,12 +312,12 @@ abstract class BaseAction extends Action
 		}
 		else {
 			$data = array(
-				'err_no' => ErrorNo::ERROR_SYSTEM_RUN_ERR,
-				'err_msg' => Text::_('ERROR_MSG_ERROR_CFG_LANGUAGE_ERR'),
+					'err_no' => ErrorNo::ERROR_SYSTEM_RUN_ERR,
+					'err_msg' => Text::_('ERROR_MSG_ERROR_CFG_LANGUAGE_ERR'),
 			);
 			$this->display($data);
 		}
-
+	
 		// 从RGP中获取‘ol’的值（output language type），并验证是否合法
 		$languageType = Ap::getRequest()->getTrim('ol');
 		if ($languageType !== '') {
@@ -326,8 +328,8 @@ abstract class BaseAction extends Action
 			}
 			else {
 				$data = array(
-					'err_no' => ErrorNo::ERROR_REQUEST,
-					'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OL_ERR'),
+						'err_no' => ErrorNo::ERROR_REQUEST,
+						'err_msg' => Text::_('ERROR_MSG_ERROR_REQUEST_OL_ERR'),
 				);
 				$this->display($data);
 			}
