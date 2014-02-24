@@ -14,7 +14,7 @@ use library\BaseAction;
 
 /**
  * RemoveAction abstract class file
- * RemoveAction基类，删除数据类Action
+ * RemoveAction基类，用于删除数据
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: RemoveAction.php 1 2013-04-05 01:08:06Z huan.song $
  * @package library.action

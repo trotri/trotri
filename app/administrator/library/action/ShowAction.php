@@ -21,7 +21,7 @@ use library\ErrorNo;
 
 /**
  * ShowAction abstract class file
- * ShowAction基类，数据展示类Action
+ * ShowAction基类，用于展示数据
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ShowAction.php 1 2013-04-05 01:08:06Z huan.song $
  * @package library.action

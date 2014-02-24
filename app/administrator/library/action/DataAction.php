@@ -19,7 +19,7 @@ use library\ErrorNo;
 
 /**
  * DataAction abstract class file
- * DataAction基类，用于Ajax调用和对其他项目提供的接口，所以需要规范编码和输出数据格式
+ * DataAction基类，用于Ajax调用和对其他项目提供的接口，需要规范输入数据编码和输出数据格式
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: DataAction.php 1 2013-04-05 01:08:06Z huan.song $
  * @package library.action

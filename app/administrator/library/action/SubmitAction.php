@@ -15,7 +15,7 @@ use ui\bootstrap\Components;
 
 /**
  * ShowAction abstract class file
- * ShowAction基类，表单提交类Action
+ * ShowAction基类，用于提交表单
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ShowAction.php 1 2013-04-05 01:08:06Z huan.song $
  * @package library.action

@@ -8,26 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\db;
-
-use library\Db;
+namespace library\action;
 
 /**
- * Validators class file
- * 数据库操作层类
+ * TrashAction abstract class file
+ * TrashAction基类，用于将数据放入回收站和从回收站还原数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Validators.php 1 2014-01-20 15:58:15Z huan.song $
- * @package modules.builder.db
+ * @version $Id: TrashAction.php 1 2013-04-05 01:08:06Z huan.song $
+ * @package library.action
  * @since 1.0
  */
-class Validators extends Db
+abstract class TrashAction extends ModifyAction
 {
-	/**
-	 * 构造方法：初始化表名
-	 */
-	public function __construct()
-	{
-		parent::__construct('builder_field_validators');
-	}
-
+	
 }

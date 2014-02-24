@@ -8,26 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\db;
-
-use library\Db;
+namespace library\action;
 
 /**
- * Groups class file
- * 数据库操作层类
+ * CreateAction abstract class file
+ * CreateAction基类，用于新增数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Groups.php 1 2014-01-19 13:18:49Z huan.song $
- * @package modules.builder.db
+ * @version $Id: CreateAction.php 1 2013-04-05 01:08:06Z huan.song $
+ * @package library.action
  * @since 1.0
  */
-class Groups extends Db
+abstract class CreateAction extends SubmitAction
 {
-	/**
-	 * 构造方法：初始化表名
-	 */
-	public function __construct()
-	{
-		parent::__construct('builder_field_groups');
-	}
-
+	
 }

@@ -11,7 +11,9 @@
 namespace library;
 
 use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use tfc\mvc\Action;
+use tfc\saf\Cfg;
 
 /**
  * BaseAction abstract class file
@@ -51,5 +53,133 @@ abstract class BaseAction extends Action
 				Ap::setLanguageType($languageType);
 			}
 		}
+	}
+
+	/**
+	 * 获取分页参数：当前开始查询的行数
+	 * @return integer
+	 */
+	public function getOffset()
+	{
+		$offset = Ap::getRequest()->getInteger('offset');
+		if ($offset > 0) {
+			return $offset;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * 获取分页参数：每页展示的行数
+	 * @return integer
+	 */
+	public function getLimit()
+	{
+		$limit = Ap::getRequest()->getInteger('limit');
+		if ($limit > 0) {
+			return $limit;
+		}
+
+		$limit = (int) Cfg::getApp('list_rows', 'paginator');
+		$limit = max($limit, 1);
+		return $limit;
+	}
+
+	/**
+	 * 页面重定向到上一个页面
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function httpReferer($params = array(), $message = '', $delay = 0)
+	{
+		$url = Mvc::getView()->getUrlManager()->applyParams($this->getHttpReferer(), $params);
+		$this->redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 获取上一个页面链接
+	 * @return string
+	 */
+	public function getHttpReferer()
+	{
+		$referer = Ap::getRequest()->getTrim('http_referer');
+		if ($referer !== '') {
+			return $referer;
+		}
+
+		return Ap::getRequest()->getServer('HTTP_REFERER');
+	}
+
+	/**
+	 * 页面重定向到最后一次访问的列表页面
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function httpReturn(array $params = array(), $message = '', $delay = 0)
+	{
+		$url = Mvc::getView()->getUrlManager()->applyParams($this->getHttpReturn(), $params);
+		$this->redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 获取最后一次访问的列表页链接
+	 * @return string
+	 */
+	public function getHttpReturn()
+	{
+		return Ap::getRequest()->getTrim('http_return');
+	}
+
+	/**
+	 * 设置最后一次访问的列表页链接
+	 * @param array $params
+	 * @return void
+	 */
+	public function setHttpReturn(array $params = array())
+	{
+		$return = Mvc::getView()->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
+		Ap::getRequest()->setParam('http_return', $return);
+	}
+
+	/**
+	 * 页面重定向到指定的链接
+	 * @param string $url
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function redirect($url, $message = '', $delay = 0)
+	{
+		Ap::getResponse()->redirect($url, $message, $delay);
+		exit;
+	}
+
+	/**
+	 * 页面重定向到指定的路由
+	 * @param string $action
+	 * @param string $controller
+	 * @param string $module
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function forward($action = '', $controller = '', $module = '', array $params = array(), $message = '', $delay = 0)
+	{
+		$url = Mvc::getView()->getUrlManager()->getUrl($action, $controller, $module, $params);
+		$this->redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 页面重定向到404页面
+	 * @return void
+	 */
+	public function err404()
+	{
+		$this->forward('err404', 'index', 'system');
 	}
 }

@@ -8,26 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\db;
-
-use library\Db;
+namespace library\action;
 
 /**
- * Fields class file
- * 数据库操作层类
+ * ModifyAction abstract class file
+ * ModifyAction基类，用于编辑数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Fields.php 1 2014-01-19 17:52:00Z huan.song $
- * @package modules.builder.db
+ * @version $Id: ModifyAction.php 1 2013-04-05 01:08:06Z huan.song $
+ * @package library.action
  * @since 1.0
  */
-class Fields extends Db
+abstract class ModifyAction extends SubmitAction
 {
-	/**
-	 * 构造方法：初始化表名
-	 */
-	public function __construct()
-	{
-		parent::__construct('builder_fields');
-	}
-
+	
 }

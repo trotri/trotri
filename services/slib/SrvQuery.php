@@ -200,10 +200,15 @@ class SrvQuery extends BaseService
 			$errMsg, implode(',', $columnNames), $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 		), __METHOD__);
 
+		$params = (array) $params;
+		$params['order'] = $order;
+		$params['limit'] = $limit;
+		$params['offset'] = $offset;
 		$ret = array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
-			'data' => $data
+			'data' => $data,
+			'params' => $params
 		);
 
 		return $this->applyFoundRows($ret, $option);
@@ -242,10 +247,15 @@ class SrvQuery extends BaseService
 			$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 		), __METHOD__);
 
+		$params = (array) $params;
+		$params['order'] = $order;
+		$params['limit'] = $limit;
+		$params['offset'] = $offset;
 		$ret = array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
-			'data' => $data
+			'data' => $data,
+			'params' => $params
 		);
 
 		return $this->applyFoundRows($ret, $option);
