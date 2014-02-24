@@ -10,17 +10,17 @@
 
 namespace smods\builder;
 
-use slib\BaseConst;
+use slib\BaseData;
 
 /**
- * ConstBuilders class file
- * 业务层：数据寄存器类，寄存常量、选项、验证规则
+ * DataBuilders class file
+ * 业务层：数据管理类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ConstBuilders.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: DataBuilders.php 1 2014-01-18 14:19:29Z huan.song $
  * @package smods.builder
  * @since 1.0
  */
-class ConstBuilders extends BaseConst
+class DataBuilders extends BaseData
 {
 	/**
 	 * @var string 是否生成扩展表：是

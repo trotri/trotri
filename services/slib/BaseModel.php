@@ -10,6 +10,8 @@
 
 namespace slib;
 
+use smods\builder\DbBuilders;
+
 use tfc\util\String;
 use tfc\saf\Log;
 
@@ -59,26 +61,13 @@ abstract class BaseModel extends BaseService
 	protected $_srvQuery = null;
 
 	/**
-	 * @var string 表名，需要子类重写该属性
-	 */
-	protected $_tableName = '';
-
-	/**
 	 * 构造方法：初始化数据库操作类和语言国际化管理类
-	 * @param string $languageType
-	 * @param string $tableName
+	 * @param slib\Language $language
+	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
 	 */
-	public function __construct($languageType, $tableName = '')
+	public function __construct(Language $language, $tableNum = -1)
 	{
-		if (($tableName = trim($tableName)) === '') {
-			if (($tableName = trim($this->_tableName)) === '') {
-				$className = get_class($this);
-				$tableName = strtolower(substr($className, strpos($className, '\\Mod') + 4));
-			}
-		}
-
-		$db = Db::getInstance($tableName);
-		$language = Language::getInstance($languageType);
+		$db = new DbBuilders($tableNum);
 		parent::__construct($db, $language);
 	}
 

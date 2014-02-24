@@ -12,6 +12,7 @@ namespace smods\builder;
 
 use slib\BaseModel;
 use slib\Db;
+use slib\Data;
 use slib\ErrorNo;
 
 /**
@@ -96,8 +97,8 @@ class ModBuilders extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$constBuilders = ConstBuilders::getInstance($this->getLanguage());
-		$rules = $constBuilders->getRules(array(
+		$data = Data::getInstance('builders', 'builder', $this->getLanguage());
+		$rules = $data->getRules(array(
 			'builder_name',
 			'tbl_name',
 			'tbl_profile',

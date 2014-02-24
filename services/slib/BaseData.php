@@ -11,24 +11,19 @@
 namespace slib;
 
 /**
- * BaseConst abstract class file
- * 业务层：数据寄存器基类，寄存常量、选项、验证规则
+ * BaseData abstract class file
+ * 业务层：数据管理基类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BaseConst.php 1 2013-03-29 16:48:06Z huan.song $
+ * @version $Id: BaseData.php 1 2013-03-29 16:48:06Z huan.song $
  * @package slib
  * @since 1.0
  */
-abstract class BaseConst
+abstract class BaseData
 {
 	/**
 	 * @var instance of slib\Language
 	 */
 	protected $_language = null;
-
-	/**
-	 * @var array instances of slib\BaseConst
-	 */
-	protected static $_instances = array();
 
 	/**
 	 * 构造方法：初始化语言国际化管理类
@@ -37,37 +32,6 @@ abstract class BaseConst
 	protected function __construct(Language $language)
 	{
 		$this->_language = $language;
-	}
-
-	/**
-	 * 魔术方法：禁止被克隆
-	 */
-	private function __clone()
-	{
-	}
-
-	/**
-	 * 单例模式：获取本类的实例
-	 * @param slib\Language $language
-	 * @return instance of slib\BaseConst
-	 */
-	public static function getInstance(Language $language)
-	{
-		$type = $language->getType();
-		if (!isset(self::$_instances[$type])) {
-			self::$_instances[$type] = new self($language);
-		}
-
-		return self::$_instances[$type];
-	}
-
-	/**
-	 * 获取所有本类的实例化对象
-	 * @return instances of slib\BaseConst
-	 */
-	public static function getInstances()
-	{
-		return self::$_instances;
 	}
 
 	/**

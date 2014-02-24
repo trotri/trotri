@@ -34,6 +34,26 @@ class Bootstrap extends ap\Bootstrap
 			   ->setDefaultAction('index');
 	}
 
+	/**
+	 * 初始化项目编码
+	 * @return void
+	 */
+	public function _initEncoding()
+	{
+		$encoding = strtoupper(trim(Cfg::getApp('charset')));
+		ap\Ap::setEncoding($encoding);
+	}
+
+	/**
+	 * 初始化项目语言种类
+	 * @return void
+	 */
+	public function _initLanguageType()
+	{
+		$languageType = trim(Cfg::getApp('language'));
+		ap\Ap::setLanguageType($languageType);
+	}
+
     /**
      * 初始化缓存
      * @return void
@@ -48,12 +68,6 @@ class Bootstrap extends ap\Bootstrap
      */
     public function _initView()
     {
-    	$viw = Mvc::getView();
-    	$viw->viewDirectory = DIR_APP_VIEWS;
-    	$viw->skinName      = Cfg::getApp('skin_name', 'view');
-    	$viw->tplExtension  = Cfg::getApp('tpl_extension', 'view');
-    	$viw->charset       = Cfg::getApp('charset', 'view');
-    	$viw->version       = Cfg::getApp('version', 'view');
     }
 
     /**

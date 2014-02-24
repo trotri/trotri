@@ -10,8 +10,6 @@
 
 namespace library;
 
-use koala;
-
 /**
  * ErrorNo class file
  * 常用错误码类
@@ -20,46 +18,41 @@ use koala;
  * @package library
  * @since 1.0
  */
-class ErrorNo extends koala\ErrorNo
+class ErrorNo
 {
 	/**
-	 * @var integer 登录成功
+	 * @var integer OK
 	 */
-	const SUCCESS_LOGIN           	          = 200001;
+	const SUCCESS_NUM                  = 0;
 
 	/**
-	 * @var integer 管理员没有访问本Action的权限
+	 * @var integer 参数错误
 	 */
-	const ERROR_NO_AUTH     	   		      = 200002;
+	const ERROR_REQUEST                = 400;
 
 	/**
-	 * @var integer 登录失败，用户名不存在
+	 * @var integer 用户没有访问权限
 	 */
-	const ERROR_LOGIN_FAILED_NAME_NOT_EXISTS  = 200003;
+	const ERROR_NO_POWER               = 403;
 
 	/**
-	 * @var integer 登录失败，密码错误
+	 * @var integer 用户未登录，禁止访问
 	 */
-	const ERROR_LOGIN_FAILED_PWD_ERR          = 200004;
+	const ERROR_NO_LOGIN               = 404;
 
 	/**
-	 * @var integer 登录失败，验证码错误
+	 * @var integer 系统运行异常
 	 */
-	const ERROR_LOGIN_FAILED_VERIFY_ERR       = 200005;
+	const ERROR_SYSTEM_RUN_ERR         = 500;
 
 	/**
-	 * @var integer 登录失败，用户名为空
+	 * @var integer 脚本运行失败
 	 */
-	const ERROR_LOGIN_FAILED_NAME_EMPTY       = 200006;
+	const ERROR_SCRIPT_RUN_ERR         = 501;
 
 	/**
-	 * @var integer 登录失败，密码为空
+	 * @var integer 未知错误
 	 */
-	const ERROR_LOGIN_FAILED_PWD_EMPTY        = 200007;
-
-	/**
-	 * @var integer 登录失败，验证码为空
-	 */
-	const ERROR_LOGIN_FAILED_VERIFY_EMPTY     = 200008;
+	const ERROR_UNKNOWN                = 2008;
 
 }

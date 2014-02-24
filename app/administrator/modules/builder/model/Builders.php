@@ -10,15 +10,14 @@
 
 namespace modules\builder\model;
 
-use tfc\ap\Ap;
-use tfc\ap\Registry;
-use koala\Model;
-use library\ErrorNo;
+use library\Model;
 use library\BuilderFactory;
+use library\ErrorNo;
+use modules\builder\data\BuildersData;
 
 /**
  * Builders class file
- * 业务处理层类
+ * Builders业务处理层类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Builders.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.model
@@ -39,55 +38,37 @@ class Builders extends Model
 	 * 查询数据
 	 * @param array $params
 	 * @param string $order
-	 * @param integer $pageNo
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '', $pageNo = 0)
+	public function search(array $params = array(), $order = '')
 	{
-		$trash = isset($params['trash']) ? trim($params['trash']) : '';
-		$builderName = isset($params['builder_name']) ? trim($params['builder_name']) : '';
-		$builderId = isset($params['builder_id']) ? (int) $params['builder_id'] : 0;
-		$tblName = isset($params['tbl_name']) ? trim($params['tbl_name']) : '';
-		$tblProfile = isset($params['tbl_profile']) ? trim($params['tbl_profile']) : '';
-		$tblEngine = isset($params['tbl_engine']) ? trim($params['tbl_engine']) : '';
-		$tblCharset = isset($params['tbl_charset']) ? trim($params['tbl_charset']) : '';
-		$appName = isset($params['app_name']) ? trim($params['app_name']) : '';
+		$rules = array(
+			'trash' => 'trim',
+			'builder_name' => 'trim',
+			'builder_id' => 'intval',
+			'tbl_name' => 'trim',
+			'tbl_profile' => 'trim',
+			'tbl_engine' => 'trim',
+			'tbl_charset' => 'trim',
+			'app_name' => 'trim'
+		);
 
-		$attributes = array();
-		if ($trash !== '') {
-			$attributes['trash'] = $trash;
-		}
-
-		if ($builderName !== '') {
-			$attributes['builder_name'] = $builderName;
-		}
-
-		if ($builderId > 0) {
-			$attributes['builder_id'] = $builderId;
-		}
-
-		if ($tblName !== '') {
-			$attributes['tbl_name'] = $tblName;
-		}
-
-		if ($tblProfile !== '') {
-			$attributes['tbl_profile'] = $tblProfile;
-		}
-
-		if ($tblEngine !== '') {
-			$attributes['tbl_engine'] = $tblEngine;
-		}
-
-		if ($tblCharset !== '') {
-			$attributes['tbl_charset'] = $tblCharset;
-		}
-
-		if ($appName !== '') {
-			$attributes['app_name'] = $appName;
-		}
-
-		$ret = $this->findIndexByAttributes($attributes, $order, $pageNo);
+		$attributes = $this->filterCleanEmpty($rules, $params);
+		$ret = $this->findAllByAttributes($attributes, $order);
 		return $ret;
+	}
+
+	/**
+	 * 通过builder_id获取builder_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getBuilderNameByBuilderId($value)
+	{
+		$value = (int) $value;
+		$ret = $this->getByPk('builder_name', $value);
+		$builderName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['builder_name'];
+		return $builderName;
 	}
 
 	/**
@@ -119,73 +100,40 @@ class Builders extends Model
 
 	/**
 	 * (non-PHPdoc)
-	 * @see koala.Model::getInsertRules()
+	 * @see library.Model::validate()
 	 */
-	public function getInsertRules()
+	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$elements = BuilderFactory::getElements('Builders');
-		$type = $elements::TYPE_FILTER;
-		$output = array(
-			'builder_name' => $elements->getBuilderName($type),
-			'tbl_name' => $elements->getTblName($type),
-			'tbl_profile' => $elements->getTblProfile($type),
-			'tbl_engine' => $elements->getTblEngine($type),
-			'tbl_charset' => $elements->getTblCharset($type),
-			'tbl_comment' => $elements->getTblComment($type),
-			'app_name' => $elements->getAppName($type),
-			'mod_name' => $elements->getModName($type),
-			'ctrl_name' => $elements->getCtrlName($type),
-			'cls_name' => $elements->getClsName($type),
-			'act_index_name' => $elements->getActIndexName($type),
-			'act_view_name' => $elements->getActViewName($type),
-			'act_create_name' => $elements->getActCreateName($type),
-			'act_modify_name' => $elements->getActModifyName($type),
-			'act_remove_name' => $elements->getActRemoveName($type),
-			'index_row_btns' => $elements->getIndexRowBtns($type),
-			'trash' => $elements->getTrash($type),
+		$rules = array(
+			'builder_name' => BuildersData::getBuilderNameRules(),
+			'tbl_name' => BuildersData::getTblNameRules(),
+			'tbl_profile' => BuildersData::getTblProfileRules(),
+			'tbl_engine' => BuildersData::getTblEngineRules(),
+			'tbl_charset' => BuildersData::getTblCharsetRules(),
+			'tbl_comment' => BuildersData::getTblCommentRules(),
+			'app_name' => BuildersData::getAppNameRules(),
+			'mod_name' => BuildersData::getModNameRules(),
+			'ctrl_name' => BuildersData::getCtrlNameRules(),
+			'cls_name' => BuildersData::getClsNameRules(),
+			'act_index_name' => BuildersData::getActIndexNameRules(),
+			'act_view_name' => BuildersData::getActViewNameRules(),
+			'act_create_name' => BuildersData::getActCreateNameRules(),
+			'act_modify_name' => BuildersData::getActModifyNameRules(),
+			'act_remove_name' => BuildersData::getActRemoveNameRules(),
+			'index_row_btns' => BuildersData::getIndexRowBtnsRules(),
+			'trash' => BuildersData::getTrashRules(),
 		);
 
-		return $output;
+		return $this->runfilterValidate($rules, $attributes, $required);
 	}
 
 	/**
 	 * (non-PHPdoc)
-	 * @see koala.Model::getUpdateRules()
+	 * @see library.Model::cleanBeforeValidator()
 	 */
-	public function getUpdateRules()
+	public function cleanBeforeValidator(array $attributes = array(), $opType = '')
 	{
-		$elements = BuilderFactory::getElements('Builders');
-		$type = $elements::TYPE_FILTER;
-		$output = array(
-			'builder_name' => $elements->getBuilderName($type),
-			'tbl_name' => $elements->getTblName($type),
-			'tbl_profile' => $elements->getTblProfile($type),
-			'tbl_engine' => $elements->getTblEngine($type),
-			'tbl_charset' => $elements->getTblCharset($type),
-			'tbl_comment' => $elements->getTblComment($type),
-			'app_name' => $elements->getAppName($type),
-			'mod_name' => $elements->getModName($type),
-			'ctrl_name' => $elements->getCtrlName($type),
-			'cls_name' => $elements->getClsName($type),
-			'act_index_name' => $elements->getActIndexName($type),
-			'act_view_name' => $elements->getActViewName($type),
-			'act_create_name' => $elements->getActCreateName($type),
-			'act_modify_name' => $elements->getActModifyName($type),
-			'act_remove_name' => $elements->getActRemoveName($type),
-			'index_row_btns' => $elements->getIndexRowBtns($type),
-			'trash' => $elements->getTrash($type),
-		);
-
-		return $output;
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see koala.Model::getCleanRulesBeforeValidator()
-	 */
-	public function getCleanRulesBeforeValidator()
-	{
-		$output = array(
+		$rules = array(
 			'builder_name' => 'trim',
 			'tbl_name' => 'trim',
 			'tbl_comment' => array($this, 'cleanXss'),
@@ -199,53 +147,28 @@ class Builders extends Model
 			'act_create_name' => 'trim',
 			'act_modify_name' => 'trim',
 			'act_remove_name' => 'trim',
+			'tbl_profile' => 'trim',
+			'tbl_engine' => 'trim',
+			'tbl_charset' => 'trim',
+			'trash' => 'trim',
+			'index_row_btns' => array($this, 'trims')
 		);
 
-		return $output;
+		$ret = $this->getFilter()->clean($rules, $attributes);
+		return $ret;
 	}
 
 	/**
 	 * (non-PHPdoc)
-	 * @see koala.Model::getCleanRulesAfterValidator()
+	 * @see library.Model::cleanAfterValidator()
 	 */
-	public function getCleanRulesAfterValidator()
+	public function cleanAfterValidator(array $attributes = array(), $opType = '')
 	{
-		$output = array(
-			'index_row_btns' => array($this, 'joinIndexRowBtns')
+		$rules = array(
+			'index_row_btns' => array($this, 'join')
 		);
 
-		return $output;
-	}
-
-	/**
-	 * 将列表每行操作按钮用英文逗号连接
-	 * @param array $value
-	 * @return string
-	 */
-	public function joinIndexRowBtns($value)
-	{
-		if (is_array($value)) {
-			$value = implode(',', $value);
-		}
-
-		return $value;
-	}
-
-	/**
-	 * 通过builder_id获取builder_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getBuilderNameByBuilderId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$ret = $this->getByPk('builder_name', $value);
-			$builderName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['builder_name'];
-			Registry::set($name, $builderName);
-		}
-
-		return Registry::get($name);
+		$ret = $this->getFilter()->clean($rules, $attributes);
+		return $ret;
 	}
 }

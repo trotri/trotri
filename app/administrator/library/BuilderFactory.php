@@ -28,7 +28,7 @@ class BuilderFactory
 	/**
 	 * 获取数据库操作层类
 	 * @param string $className
-	 * @return koala\Db
+	 * @return tdo\Db
 	 */
 	public static function getDb($className)
 	{
@@ -36,32 +36,12 @@ class BuilderFactory
 	}
 
 	/**
-	 * 获取字段信息配置类
-	 * @param string $className
-	 * @return ui\ElementCollections
-	 */
-	public static function getElements($className)
-	{
-		return Factory::getElements($className, self::MODULE_NAME);
-	}
-
-	/**
 	 * 获取业务处理层类
 	 * @param string $className
-	 * @return koala\Model
+	 * @return tdo\Model
 	 */
 	public static function getModel($className)
 	{
 		return Factory::getModel($className, self::MODULE_NAME);
-	}
-
-	/**
-	 * 获取页面小组件类
-	 * @param string $className
-	 * @return ui object
-	 */
-	public static function getUi($className)
-	{
-		return Factory::getUi($className, self::MODULE_NAME);
 	}
 }

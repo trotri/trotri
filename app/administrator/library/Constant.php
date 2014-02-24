@@ -20,8 +20,5 @@ namespace library;
  */
 class Constant
 {
-	/**
-	 * @var string 数据库配置名
-	 */
-	const DB_CLUSTER            = 'administrator';
+	
 }
