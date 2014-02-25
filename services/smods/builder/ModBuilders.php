@@ -87,6 +87,7 @@ class ModBuilders extends BaseModel
 	 */
 	public function modifyByPk($value, array $params)
 	{
+		unset($params['trash']);
 		$params['dt_modified'] = date('Y-m-d H:i:s');
 		return $this->autoUpdateByPk($value, $params);
 	}

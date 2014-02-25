@@ -86,15 +86,37 @@ abstract class BaseAction extends Action
 	}
 
 	/**
+	 * 获取URL管理类
+	 * @return tfc\mvc\UrlManager
+	 */
+	public function getUrlManager()
+	{
+		return Mvc::getView()->getUrlManager();
+	}
+
+	/**
 	 * 页面重定向到上一个页面
 	 * @param array $params
 	 * @param string $message
 	 * @param integer $delay
 	 * @return void
 	 */
-	public function httpReferer($params = array(), $message = '', $delay = 0)
+	public function httpReferer(array $params = array(), $message = '', $delay = 0)
 	{
-		$url = Mvc::getView()->getUrlManager()->applyParams($this->getHttpReferer(), $params);
+		$url = $this->getUrlManager()->applyParams($this->getHttpReferer(), $params);
+		$this->redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 页面重定向到最后一次访问的列表页面
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function httpReturn(array $params = array(), $message = '', $delay = 0)
+	{
+		$url = $this->getUrlManager()->applyParams($this->getHttpReturn(), $params);
 		$this->redirect($url, $message, $delay);
 	}
 
@@ -113,19 +135,6 @@ abstract class BaseAction extends Action
 	}
 
 	/**
-	 * 页面重定向到最后一次访问的列表页面
-	 * @param array $params
-	 * @param string $message
-	 * @param integer $delay
-	 * @return void
-	 */
-	public function httpReturn(array $params = array(), $message = '', $delay = 0)
-	{
-		$url = Mvc::getView()->getUrlManager()->applyParams($this->getHttpReturn(), $params);
-		$this->redirect($url, $message, $delay);
-	}
-
-	/**
 	 * 获取最后一次访问的列表页链接
 	 * @return string
 	 */
@@ -141,8 +150,21 @@ abstract class BaseAction extends Action
 	 */
 	public function setHttpReturn(array $params = array())
 	{
-		$return = Mvc::getView()->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
+		$return = $this->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
 		Ap::getRequest()->setParam('http_return', $return);
+	}
+
+	/**
+	 * 页面重定向到当前页面
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function refresh($params = array(), $message = '', $delay = 0)
+	{
+		$url = $this->getUrlManager()->applyParams($this->getUrlManager()->getRequestUri(), $params);
+		$this->redirect($url, $message, $delay);
 	}
 
 	/**
@@ -170,7 +192,7 @@ abstract class BaseAction extends Action
 	 */
 	public function forward($action = '', $controller = '', $module = '', array $params = array(), $message = '', $delay = 0)
 	{
-		$url = Mvc::getView()->getUrlManager()->getUrl($action, $controller, $module, $params);
+		$url = $this->getUrlManager()->getUrl($action, $controller, $module, $params);
 		$this->redirect($url, $message, $delay);
 	}
 

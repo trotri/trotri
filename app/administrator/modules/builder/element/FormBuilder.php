@@ -8,26 +8,24 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
-
-use library\action\ModifyAction;
+namespace modules\builder\element;
 
 /**
- * BuilderModify class file
- * 生成代码-编辑数据
+ * FormBuilder class file
+ * 生成代码-表单页数据配置类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderModify.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: FormBuilder.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.elements
  * @since 1.0
  */
-class BuilderModify extends ModifyAction
+class FormBuilder
 {
 	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * 获取所有的列表页元素
+	 * @return array
 	 */
-	public function run()
+	public function getElements()
 	{
-	
+		
 	}
 }

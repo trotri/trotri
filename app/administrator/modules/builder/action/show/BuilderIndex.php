@@ -10,27 +10,24 @@
 
 namespace modules\builder\action\show;
 
-use library\BaseAction;
+use library\action\ShowAction;
 
 /**
- * IndexController class file
- * 生成代码
+ * BuilderIndex class file
+ * 生成代码-查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: IndexController.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.controller
+ * @version $Id: BuilderIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.show
  * @since 1.0
  */
-class BuilderIndex extends BaseAction
+class BuilderIndex extends ShowAction
 {
-	public function actions()
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\interfaces.Action::run()
+	 */
+	public function run()
 	{
-		return array(
-			'index'        => 'modules\\builder\\action\\show\\categories\\ListAction',
-			'view'         => 'modules\\builder\\action\\show\\categories\\RemoveAction',
-			'create'       => 'modules\\builder\\action\\submit\\categories\\AddAction',
-			'modify'       => 'modules\\builder\\action\\submit\\categories\\EditAction',
-			'remove'       => 'modules\\builder\\action\\submit\\categories\\RemoveAction',
-			'singlemodify' => 'modules\\builder\\action\\submit\\categories\\RemoveAction',
-		);
+	
 	}
 }

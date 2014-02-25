@@ -8,29 +8,26 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\controller;
+namespace modules\builder\action\submit;
 
-use library\BaseController;
+use library\action\RemoveAction;
 
 /**
- * IndexController class file
- * 生成代码
+ * BuilderRemove class file
+ * 生成代码-删除数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: IndexController.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.controller
+ * @version $Id: BuilderRemove.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.submit
  * @since 1.0
  */
-class IndexController extends BaseController
+class BuilderRemove extends RemoveAction
 {
-	public function actions()
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\interfaces.Action::run()
+	 */
+	public function run()
 	{
-		return array(
-			'index'        => 'modules\\builder\\action\\show\\categories\\ListAction',
-			'view'         => 'modules\\builder\\action\\show\\categories\\RemoveAction',
-			'create'       => 'modules\\builder\\action\\submit\\categories\\AddAction',
-			'modify'       => 'modules\\builder\\action\\submit\\categories\\EditAction',
-			'remove'       => 'modules\\builder\\action\\submit\\categories\\RemoveAction',
-			'singlemodify' => 'modules\\builder\\action\\submit\\categories\\RemoveAction',
-		);
+	
 	}
 }

@@ -23,18 +23,13 @@ use library\BaseController;
 class ToolsController extends BaseController
 {
 	/**
-	 * @var string 页面首次渲染的布局名
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Controller::actions()
 	 */
-	public $layoutName = 'column1';
-
-	/**
-	 * 清理缓存
-	 * @return void
-	 */
-	public function cacheclearAction()
+	public function actions()
 	{
-		// -- 待开发 --
-		$this->render();
+		return array(
+			'cacheclear'        => 'modules\\system\\action\\submit\\ToolsCacheClear',
+		);
 	}
-
 }

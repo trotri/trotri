@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
+namespace modules\system\action\submit;
 
-use library\action\ModifyAction;
+use library\action\RemoveAction;
 
 /**
- * BuilderModify class file
- * 生成代码-编辑数据
+ * ToolsCacheClear class file
+ * 系统工具-清理缓存
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderModify.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: ToolsCacheClear.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.system.action.submit
  * @since 1.0
  */
-class BuilderModify extends ModifyAction
+class ToolsCacheClear extends RemoveAction
 {
 	/**
 	 * (non-PHPdoc)

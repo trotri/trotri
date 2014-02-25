@@ -10,17 +10,17 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\ModifyAction;
+use library\action\TrashAction;
 
 /**
- * BuilderModify class file
- * 生成代码-编辑数据
+ * BuilderTrash class file
+ * 生成代码-移至回收站和从回收站还原
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderModify.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: BuilderTrash.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class BuilderModify extends ModifyAction
+class BuilderTrash extends TrashAction
 {
 	/**
 	 * (non-PHPdoc)

@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
+namespace modules\builder\action\show;
 
-use library\action\ModifyAction;
+use library\action\ShowAction;
 
 /**
- * BuilderModify class file
- * 生成代码-编辑数据
+ * BuilderIndex class file
+ * 生成代码-查询回收站数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderModify.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: BuilderIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.show
  * @since 1.0
  */
-class BuilderModify extends ModifyAction
+class BuilderTrashIndex extends ShowAction
 {
 	/**
 	 * (non-PHPdoc)

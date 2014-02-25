@@ -10,19 +10,15 @@
 
 namespace library;
 
-use tfc\ap\Ap;
-use tfc\ap\Singleton;
-use slib\Service;
-
 /**
- * Factory class file
- * 对象工厂类
+ * BuilderFactory class file
+ * Builder模块对象工厂类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Factory.php 1 2013-03-29 16:48:06Z huan.song $
+ * @version $Id: BuilderFactory.php 1 2013-03-29 16:48:06Z huan.song $
  * @package library
  * @since 1.0
  */
-class Factory
+class BuilderFactory
 {
 	/**
 	 * 获取模型类的实例
@@ -31,9 +27,9 @@ class Factory
 	 * @param integer $tableNum
 	 * @return instance of slib\BaseModel
 	 */
-	public static function getModel($className, $moduleName, $tableNum = -1)
+	public static function getModel($className, $tableNum = -1)
 	{
-		return Service::getModel($className, $moduleName, Ap::getLanguageType(), $tableNum);
+		return Factory::getModel($className, $moduleName, $tableNum);
 	}
 
 	/**
@@ -42,9 +38,9 @@ class Factory
 	 * @param string $moduleName
 	 * @return instance of slib\BaseData
 	 */
-	public static function getData($className, $moduleName)
+	public static function getData($className)
 	{
-		return Service::getData($className, $moduleName, Ap::getLanguageType());
+		
 	}
 
 	/**
@@ -53,10 +49,9 @@ class Factory
 	 * @param string $moduleName
 	 * @return instance
 	 */
-	public static function getTableElement($className, $moduleName)
+	public static function getTableElement($className)
 	{
-		$className = 'modules\\' . $moduleName . '\\element\\Table' . ucfirst(strtolower($className));
-		return Singleton::getInstance($className);
+		
 	}
 
 	/**
@@ -65,9 +60,8 @@ class Factory
 	 * @param string $moduleName
 	 * @return instance
 	 */
-	public static function getFormElement($className, $moduleName)
+	public static function getFormElement($className)
 	{
-		$className = 'modules\\' . $moduleName . '\\element\\Form' . ucfirst(strtolower($className));
-		return Singleton::getInstance($className);
+		
 	}
 }
