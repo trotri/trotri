@@ -200,15 +200,15 @@ class SrvQuery extends BaseService
 			$errMsg, implode(',', $columnNames), $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 		), __METHOD__);
 
-		$params = (array) $params;
-		$params['order'] = $order;
-		$params['limit'] = $limit;
-		$params['offset'] = $offset;
+		$paginator = (array) $params;
+		$paginator['order'] = $order;
+		$paginator['limit'] = $limit;
+		$paginator['offset'] = $offset;
 		$ret = array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'data' => $data,
-			'params' => $params
+			'paginator' => $paginator
 		);
 
 		return $this->applyFoundRows($ret, $option);
@@ -247,15 +247,15 @@ class SrvQuery extends BaseService
 			$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 		), __METHOD__);
 
-		$params = (array) $params;
-		$params['order'] = $order;
-		$params['limit'] = $limit;
-		$params['offset'] = $offset;
+		$paginator = (array) $params;
+		$paginator['order'] = $order;
+		$paginator['limit'] = $limit;
+		$paginator['offset'] = $offset;
 		$ret = array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'data' => $data,
-			'params' => $params
+			'paginator' => $paginator
 		);
 
 		return $this->applyFoundRows($ret, $option);
@@ -479,7 +479,7 @@ class SrvQuery extends BaseService
 		}
 
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			$ret['total'] = $this->getFoundRows();
+			$ret['paginator']['total'] = $this->getFoundRows();
 		}
 
 		return $ret;

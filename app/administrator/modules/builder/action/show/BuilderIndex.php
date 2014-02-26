@@ -10,7 +10,7 @@
 
 namespace modules\builder\action\show;
 
-use library\action\ShowAction;
+use library\action\IndexAction;
 
 /**
  * BuilderIndex class file
@@ -20,7 +20,7 @@ use library\action\ShowAction;
  * @package modules.builder.action.show
  * @since 1.0
  */
-class BuilderIndex extends ShowAction
+class BuilderIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)

@@ -26,6 +26,19 @@ class Builders extends Model
 {
 	/**
 	 * (non-PHPdoc)
+	 * @see library.Model::getLastIndexUrl()
+	 */
+	public function getLastIndexUrl()
+	{
+		if (($url = parent::getLastIndexUrl()) !== '') {
+			return $url;
+		}
+
+		return $this->getUrl('index', Mvc::$controller, Mvc::$module, array('trash' => 'n'));
+	}
+
+	/**
+	 * (non-PHPdoc)
 	 * @see library.Model::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
@@ -50,6 +63,8 @@ class Builders extends Model
 	 */
 	public function getElements()
 	{
+		$data = $this->getData();
+
 		$ret = array(
 			'builder_id' => array(
 				'__tid__' => 'main',
@@ -63,7 +78,7 @@ class Builders extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_HINT'),
 				'required' => true,
-				'callback' => array($this, 'getBuilderNameUrl')
+				'callback' => array($this, 'getBuilderNameLink')
 			),
 			'tbl_name' => array(
 				'__tid__' => 'main',
@@ -77,16 +92,16 @@ class Builders extends Model
 				'type' => 'switch',
 				'label' => Text::_('MOD_BUILDER_BUILDERS_TBL_PROFILE_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_PROFILE_HINT'),
-				'options' => $options,
+				'options' => $data->getEnum('tbl_profile'),
 				'value' => self::TBL_PROFILE_N,
-				'callback' => array($this, 'getTblProfileLabel')
+				'callback' => array($this, 'getTblProfileTblColumn')
 			),
 			'tbl_engine' => array(
 				'__tid__' => 'main',
 				'type' => 'radio',
 				'label' => Text::_('MOD_BUILDER_BUILDERS_TBL_ENGINE_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_ENGINE_HINT'),
-				'options' => $options,
+				'options' => $data->getEnum('tbl_engine'),
 				'value' => self::TBL_ENGINE_INNODB,
 			),
 			'tbl_charset' => array(
@@ -94,7 +109,7 @@ class Builders extends Model
 				'type' => 'radio',
 				'label' => Text::_('MOD_BUILDER_BUILDERS_TBL_CHARSET_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_CHARSET_HINT'),
-				'options' => $options,
+				'options' => $data->getEnum('tbl_charset'),
 				'value' => self::TBL_CHARSET_UTF8,
 			),
 			'tbl_comment' => array(
@@ -177,7 +192,7 @@ class Builders extends Model
 				'type' => 'checkbox',
 				'label' => Text::_('MOD_BUILDER_BUILDERS_INDEX_ROW_BTNS_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_INDEX_ROW_BTNS_HINT'),
-				'options' => $options,
+				'options' => $data->getEnum('index_row_btns'),
 				'value' => self::INDEX_ROW_BTNS_PENCIL,
 			),
 			'description' => array(
@@ -205,7 +220,7 @@ class Builders extends Model
 				'type' => 'switch',
 				'label' => Text::_('MOD_BUILDER_BUILDERS_TRASH_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TRASH_HINT'),
-				'options' => $options,
+				'options' => $data->getEnum('trash'),
 				'value' => self::TRASH_N,
 			)
 		);
@@ -218,7 +233,7 @@ class Builders extends Model
 	 * @param array $data
 	 * @return string
 	 */
-	public function getBuilderNameUrl($data)
+	public function getBuilderNameLink($data)
 	{
 		$params = array('id' => $data['builder_id']);
 		$url = $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params);
@@ -231,12 +246,11 @@ class Builders extends Model
 	 * @param array $data
 	 * @return string
 	 */
-	public function getTblProfileLabel($data)
+	public function getTblProfileTblColumn($data)
 	{
 		if ($data['trash'] === 'y') {
-			$elements = BuilderFactory::getElements('Builders');
-			$tblProfiles = $elements->getTblProfile($elements::TYPE_OPTIONS);
-			return $tblProfiles[$data['tbl_profile']];
+			$enum = $this->getData()->getEnum('tbl_profile');
+			return $enum[$data['tbl_profile']];
 		}
 
 		$params = array(
@@ -244,8 +258,8 @@ class Builders extends Model
 			'column_name' => 'tbl_profile'
 		);
 
-		$url = Mvc::getView()->getUrlManager()->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
-		$ret = Components::getSwitch($data['builder_id'], 'tbl_profile', $data['tbl_profile'], $modifyUrl);
+		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$ret = Components::getSwitch($data['builder_id'], 'tbl_profile', $data['tbl_profile'], $url);
 		return $ret;
 	}
 }

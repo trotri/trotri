@@ -8,26 +8,24 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\show;
-
-use library\action\IndexAction;
+namespace views\bootstrap\components\form;
 
 /**
- * BuilderTrashIndex class file
- * 生成代码-查询回收站数据列表
+ * StringElement class file
+ * 按钮类表单元素，基于Bootstrap-v3前端开发框架
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderTrashIndex.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.show
+ * @version $Id: StringElement.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package views.bootstrap.components.form
  * @since 1.0
  */
-class BuilderTrashIndex extends IndexAction
+class StringElement extends InputElement
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * @see tfc\mvc\form.InputElement::getInput()
 	 */
-	public function run()
+	public function getInput()
 	{
-	
+		return $this->value;
 	}
 }

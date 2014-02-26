@@ -35,15 +35,33 @@ class Model
 	protected $_data = null;
 
 	/**
+	 * @var string 项目名
+	 */
+	protected $_moduleName = '';
+
+	/** 
+	 * @var string 模型类名
+	 */
+	protected $_className = '';
+
+	/**
 	 * @var array 寄存所有调用过的模型类实例
 	 */
 	protected static $_instances = array();
 
 	/**
+	 * 构造方法：初始化项目名和模型类名
+	 */
+	public function __construct()
+	{
+		list($tmp1, $this->_moduleName, $tmp2, $this->_className) = explode('\\', __CLASS__);
+	}
+
+	/**
 	 * 获取模型类的实例
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return instance of slib\BaseModel
+	 * @return instance of library\Model
 	 */
 	public static function getInstance($className, $moduleName)
 	{
@@ -71,6 +89,15 @@ class Model
 	public function getElements()
 	{
 		return array();
+	}
+
+	/**
+	 * 获取最后一次访问的列表页链接
+	 * @return string
+	 */
+	public function getLastIndexUrl()
+	{
+		return Ap::getRequest()->getTrim('last_index_url');
 	}
 
 	/**
@@ -119,6 +146,21 @@ class Model
 	}
 
 	/**
+	 * 获取模型类的实例
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return instance of library\Model
+	 */
+	public function getModel($className, $moduleName = '')
+	{
+		if (($moduleName = trim($moduleName)) === '') {
+			$moduleName = $this->_moduleName;
+		}
+
+		return Model::getInstance($className, $moduleName);
+	}
+
+	/**
 	 * 获取业务层模型类的实例
 	 * @param integer $tableNum
 	 * @return instance of slib\BaseModel
@@ -126,8 +168,7 @@ class Model
 	public function getService($tableNum = -1)
 	{
 		if ($this->_service === null) {
-			list($m, $moduleName, $n, $className) = explode('\\', __CLASS__);
-			$this->_service = Service::getModel($className, $moduleName, Ap::getLanguageType(), $tableNum);
+			$this->_service = Service::getModel($this->_className, $this->_moduleName, Ap::getLanguageType(), $tableNum);
 		}
 
 		return $this->_service;
@@ -140,8 +181,7 @@ class Model
 	public function getData()
 	{
 		if ($this->_data === null) {
-			list($m, $moduleName, $n, $className) = explode('\\', __CLASS__);
-			$this->_data = Service::getData($className, $moduleName, Ap::getLanguageType());
+			$this->_data = Service::getData($this->_className, $this->_moduleName, Ap::getLanguageType());
 		}
 
 		return $this->_data;

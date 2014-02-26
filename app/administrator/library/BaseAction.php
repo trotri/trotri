@@ -108,19 +108,6 @@ abstract class BaseAction extends Action
 	}
 
 	/**
-	 * 页面重定向到最后一次访问的列表页面
-	 * @param array $params
-	 * @param string $message
-	 * @param integer $delay
-	 * @return void
-	 */
-	public function httpReturn(array $params = array(), $message = '', $delay = 0)
-	{
-		$url = $this->getUrlManager()->applyParams($this->getHttpReturn(), $params);
-		$this->redirect($url, $message, $delay);
-	}
-
-	/**
 	 * 获取上一个页面链接
 	 * @return string
 	 */
@@ -138,9 +125,9 @@ abstract class BaseAction extends Action
 	 * 获取最后一次访问的列表页链接
 	 * @return string
 	 */
-	public function getHttpReturn()
+	public function getLastIndexUrl()
 	{
-		return Ap::getRequest()->getTrim('http_return');
+		return Ap::getRequest()->getTrim('last_index_url');
 	}
 
 	/**
@@ -148,10 +135,10 @@ abstract class BaseAction extends Action
 	 * @param array $params
 	 * @return void
 	 */
-	public function setHttpReturn(array $params = array())
+	public function setLastIndexUrl(array $params = array())
 	{
-		$return = $this->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
-		Ap::getRequest()->setParam('http_return', $return);
+		$url = $this->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
+		Ap::getRequest()->setParam('last_index_url', $url);
 	}
 
 	/**
