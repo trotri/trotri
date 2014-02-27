@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri Ui
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository

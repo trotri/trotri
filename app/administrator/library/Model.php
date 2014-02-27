@@ -83,10 +83,10 @@ class Model
 	}
 
 	/**
-	 * 获取所有的表单元素，需要子类重写此方法
+	 * 获取表单元素配置，需要子类重写此方法
 	 * @return array
 	 */
-	public function getElements()
+	public function getElementsRender()
 	{
 		return array();
 	}

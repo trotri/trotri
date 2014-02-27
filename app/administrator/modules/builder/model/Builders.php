@@ -59,9 +59,9 @@ class Builders extends Model
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library.Model::getElements()
+	 * @see library.Model::getElementsRender()
 	 */
-	public function getElements()
+	public function getElementsRender()
 	{
 		$data = $this->getData();
 
@@ -78,7 +78,7 @@ class Builders extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_HINT'),
 				'required' => true,
-				'callback' => array($this, 'getBuilderNameLink')
+				'tbl_callback' => array($this, 'getBuilderNameLink')
 			),
 			'tbl_name' => array(
 				'__tid__' => 'main',
@@ -94,7 +94,8 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_PROFILE_HINT'),
 				'options' => $data->getEnum('tbl_profile'),
 				'value' => self::TBL_PROFILE_N,
-				'callback' => array($this, 'getTblProfileTblColumn')
+				'tbl_callback' => array($this, 'getTblProfileTblColumn'),
+				'sea_type' => 'select'
 			),
 			'tbl_engine' => array(
 				'__tid__' => 'main',
@@ -103,6 +104,7 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_ENGINE_HINT'),
 				'options' => $data->getEnum('tbl_engine'),
 				'value' => self::TBL_ENGINE_INNODB,
+				'sea_type' => 'select'
 			),
 			'tbl_charset' => array(
 				'__tid__' => 'main',
@@ -111,6 +113,7 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_CHARSET_HINT'),
 				'options' => $data->getEnum('tbl_charset'),
 				'value' => self::TBL_CHARSET_UTF8,
+				'sea_type' => 'select'
 			),
 			'tbl_comment' => array(
 				'__tid__' => 'main',
@@ -222,7 +225,12 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TRASH_HINT'),
 				'options' => $data->getEnum('trash'),
 				'value' => self::TRASH_N,
-			)
+			),
+			'_button_save_' => array(),
+			'_button_save2close_' => array(),
+			'_button_save2new_' => array(),
+			'_button_cancel_' => array(),
+			'_operate_' => array(),
 		);
 
 		return $ret;
