@@ -78,7 +78,9 @@ class Builders extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_HINT'),
 				'required' => true,
-				'tbl_callback' => array($this, 'getBuilderNameLink')
+				'table' => array(
+					'callback' => array($this, 'getBuilderNameLink')
+				)
 			),
 			'tbl_name' => array(
 				'__tid__' => 'main',
@@ -94,8 +96,12 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_PROFILE_HINT'),
 				'options' => $data->getEnum('tbl_profile'),
 				'value' => self::TBL_PROFILE_N,
-				'tbl_callback' => array($this, 'getTblProfileTblColumn'),
-				'sea_type' => 'select'
+				'table' => array(
+					'callback' => array($this, 'getTblProfileTblColumn')
+				),
+				'search' => array(
+					'type' => 'select'
+				),
 			),
 			'tbl_engine' => array(
 				'__tid__' => 'main',
@@ -104,7 +110,9 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_ENGINE_HINT'),
 				'options' => $data->getEnum('tbl_engine'),
 				'value' => self::TBL_ENGINE_INNODB,
-				'sea_type' => 'select'
+				'search' => array(
+					'type' => 'select'
+				),
 			),
 			'tbl_charset' => array(
 				'__tid__' => 'main',
@@ -113,7 +121,9 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_CHARSET_HINT'),
 				'options' => $data->getEnum('tbl_charset'),
 				'value' => self::TBL_CHARSET_UTF8,
-				'sea_type' => 'select'
+				'search' => array(
+					'type' => 'select'
+				),
 			),
 			'tbl_comment' => array(
 				'__tid__' => 'main',

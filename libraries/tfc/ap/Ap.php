@@ -21,6 +21,11 @@ namespace tfc\ap;
 class Ap
 {
     /**
+     * @var string 当前的版本号
+     */
+    protected static $_version = '1.0.0';
+
+    /**
      * @var string 项目编码
      */
     protected static $_encoding = 'UTF-8';
@@ -46,12 +51,22 @@ class Ap
     protected static $_session = null;
 
     /**
-     * 框架的版本号
+     * 获取当前的版本号
      * @return string
      */
     public static function getVersion()
     {
-        return '1.0.0';
+        return self::$_version;
+    }
+
+    /**
+     * 设置当前的版本号
+     * @param string $version
+     * @return void
+     */
+    public static function setVersion($version)
+    {
+        self::$_version = (string) $version;
     }
 
     /**

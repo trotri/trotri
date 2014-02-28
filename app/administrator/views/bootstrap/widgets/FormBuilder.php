@@ -227,20 +227,12 @@ class FormBuilder extends form\FormBuilder
 				$elements[$columnName]['__tid__'] = self::DEFAULT_TID;
 			}
 
-			if (isset($element['tbl_attributes'])) {
-				unset($elements[$columnName]['tbl_attributes']);
+			if (isset($element['table'])) {
+				unset($elements[$columnName]['table']);
 			}
 
-			if (isset($element['tbl_callback'])) {
-				unset($elements[$columnName]['tbl_callback']);
-			}
-
-			if (isset($element['sea_type'])) {
-				unset($elements[$columnName]['sea_type']);
-			}
-
-			if (isset($element['sea_placeholder'])) {
-				unset($elements[$columnName]['sea_placeholder']);
+			if (isset($element['search'])) {
+				unset($elements[$columnName]['search']);
 			}
 		}
 

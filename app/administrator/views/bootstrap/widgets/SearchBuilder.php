@@ -72,23 +72,27 @@ class SearchBuilder extends form\FormBuilder
 			return $this;
 		}
 
-		$search = array();
+		$searchElements = array();
 		foreach ($elements as $columnName => $element) {
 			if (!isset($columns[$columnName])) {
 				continue;
 			}
 
-			$type        = isset($element['sea_type'])         ? $element['sea_type'] : (isset($element['type']) ? $element['type'] : '');
-			$__object__  = isset(self::$_typeObjectMap[$type]) ? self::$_typeObjectMap[$type] : '';
-			$placeholder = isset($element['sea_placeholder'])  ? $element['sea_placeholder'] : (isset($element['label']) ? $element['label'] : '');
-			$options     = isset($element['options'])          ? (array) $element['options'] : array();
+			$type = isset($element['search']['type']) ? $element['search']['type'] : (isset($element['type']) ? $element['type'] : '');
+			$object = isset($element['search']['__object__']) ? $element['search']['__object__'] : (isset(self::$_typeObjectMap[$type]) ? self::$_typeObjectMap[$type] : '');
+			if ($object === '' && isset($element['__object__'])) {
+				$object = $element['__object__'];
+			}
+
+			$placeholder = isset($element['search']['placeholder']) ? $element['search']['placeholder'] : (isset($element['label']) ? $element['label'] : '');
+			$options = isset($element['search']['options']) ? (array) $element['search']['options'] : (isset($element['options']) ? (array) $element['options'] : array());
 			if ($options !== array() && $placeholder !== '') {
 				$options = array('' => '--' . $placeholder . '--') + $options;
 			}
 
-			$search[$columnName] = array(
+			$searchElements[$columnName] = array(
 				'type' => $type,
-				'__object__' => $__object__,
+				'__object__' => $object,
 				'placeholder' => $placeholder,
 				'options' => $options
 			);

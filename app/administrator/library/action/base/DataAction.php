@@ -54,6 +54,7 @@ abstract class DataAction extends BaseAction
 	protected function _init()
 	{
 		parent::_init();
+		$this->_initVersion();
 		$this->_initDataType();
 		$this->_initEncoding();
 	}
@@ -118,6 +119,19 @@ abstract class DataAction extends BaseAction
 
 				$this->display($data);
 			}
+		}
+	}
+
+	/**
+	 * 初始化当前的版本
+	 * @return void
+	 */
+	protected function _initVersion()
+	{
+		// 从RGP中获取‘version’的值（version）
+		$version = Ap::getRequest()->getTrim('version');
+		if ($version !== '') {
+			Ap::setVersion($version);
 		}
 	}
 

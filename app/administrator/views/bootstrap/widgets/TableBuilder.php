@@ -155,8 +155,8 @@ class TableBuilder extends Widget
 			$this->_elements[$columnName] = array(
 				'name'       => isset($element['name']) ? $element['name'] : $columnName,
 				'label'      => isset($element['label']) ? $element['label'] : '',
-				'attributes' => isset($element['tbl_attributes']) ? (array) $element['tbl_attributes'] : array(),
-				'callback'   => isset($element['tbl_callback']) ? $element['tbl_callback'] : null,
+				'attributes' => isset($element['table']['attributes']) ? (array) $element['table']['attributes'] : array(),
+				'callback'   => isset($element['table']['callback']) ? $element['table']['callback'] : null,
 			);
 		}
 
