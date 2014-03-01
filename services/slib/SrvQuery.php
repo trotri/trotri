@@ -200,15 +200,16 @@ class SrvQuery extends BaseService
 			$errMsg, implode(',', $columnNames), $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 		), __METHOD__);
 
-		$paginator = (array) $params;
-		$paginator['order'] = $order;
-		$paginator['limit'] = $limit;
-		$paginator['offset'] = $offset;
 		$ret = array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'data' => $data,
-			'paginator' => $paginator
+			'paginator' => array(
+				'attributes' => $params,
+				'order' => $order,
+				'limit' => $limit,
+				'offset' => $offset
+			)
 		);
 
 		return $this->applyFoundRows($ret, $option);
@@ -247,15 +248,16 @@ class SrvQuery extends BaseService
 			$errMsg, $condition, (is_array($params) ? serialize($params) : $params), $order, $limit, $offset, $option
 		), __METHOD__);
 
-		$paginator = (array) $params;
-		$paginator['order'] = $order;
-		$paginator['limit'] = $limit;
-		$paginator['offset'] = $offset;
 		$ret = array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
 			'data' => $data,
-			'paginator' => $paginator
+			'paginator' => array(
+				'attributes' => $params,
+				'order' => $order,
+				'limit' => $limit,
+				'offset' => $offset
+			)
 		);
 
 		return $this->applyFoundRows($ret, $option);

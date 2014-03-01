@@ -56,36 +56,6 @@ abstract class BaseAction extends Action
 	}
 
 	/**
-	 * 获取分页参数：当前开始查询的行数
-	 * @return integer
-	 */
-	public function getOffset()
-	{
-		$offset = Ap::getRequest()->getInteger('offset');
-		if ($offset > 0) {
-			return $offset;
-		}
-
-		return 0;
-	}
-
-	/**
-	 * 获取分页参数：每页展示的行数
-	 * @return integer
-	 */
-	public function getLimit()
-	{
-		$limit = Ap::getRequest()->getInteger('limit');
-		if ($limit > 0) {
-			return $limit;
-		}
-
-		$limit = (int) Cfg::getApp('list_rows', 'paginator');
-		$limit = max($limit, 1);
-		return $limit;
-	}
-
-	/**
 	 * 获取URL管理类
 	 * @return tfc\mvc\UrlManager
 	 */
@@ -127,7 +97,7 @@ abstract class BaseAction extends Action
 	 */
 	public function getLastIndexUrl()
 	{
-		return Ap::getRequest()->getTrim('last_index_url');
+		return Util::getLastIndexUrl();
 	}
 
 	/**
@@ -137,8 +107,7 @@ abstract class BaseAction extends Action
 	 */
 	public function setLastIndexUrl(array $params = array())
 	{
-		$url = $this->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
-		Ap::getRequest()->setParam('last_index_url', $url);
+		return Util::setLastIndexUrl($params);
 	}
 
 	/**
