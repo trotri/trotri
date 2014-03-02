@@ -13,7 +13,6 @@ namespace library;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use tfc\mvc\Action;
-use tfc\saf\Cfg;
 
 /**
  * BaseAction abstract class file
@@ -73,41 +72,28 @@ abstract class BaseAction extends Action
 	 */
 	public function httpReferer(array $params = array(), $message = '', $delay = 0)
 	{
-		$url = $this->getUrlManager()->applyParams($this->getHttpReferer(), $params);
+		$url = $this->getUrlManager()->applyParams(PageHelper::getHttpReferer(), $params);
 		$this->redirect($url, $message, $delay);
 	}
 
 	/**
-	 * 获取上一个页面链接
-	 * @return string
-	 */
-	public function getHttpReferer()
-	{
-		$referer = Ap::getRequest()->getTrim('http_referer');
-		if ($referer !== '') {
-			return $referer;
-		}
-
-		return Ap::getRequest()->getServer('HTTP_REFERER');
-	}
-
-	/**
-	 * 获取最后一次访问的列表页链接
-	 * @return string
-	 */
-	public function getLastIndexUrl()
-	{
-		return Util::getLastIndexUrl();
-	}
-
-	/**
-	 * 设置最后一次访问的列表页链接
+	 * 通过Service查询后的分页信息，设置最后一次访问的列表页链接
+	 * <pre>
+	 * 参数格式：
+	 * $params = array(
+	 *     'attributes' => array(),
+	 *     'order' => '',
+	 *     'limit' => 0,
+	 *     'offset' => 0,
+	 *     'total' => 0
+	 * );
+	 * </pre>
 	 * @param array $params
 	 * @return void
 	 */
 	public function setLastIndexUrl(array $params = array())
 	{
-		return Util::setLastIndexUrl($params);
+		PageHelper::setLastIndexUrlBySrv($params);
 	}
 
 	/**
