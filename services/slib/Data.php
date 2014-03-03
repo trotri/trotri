@@ -36,7 +36,7 @@ class Data
 	 */
 	public static function getInstance($className, $moduleName, Language $language)
 	{
-		$namespaceName = $this->getNamespaceName($className, $moduleName);
+		$namespaceName = self::getNamespaceName($className, $moduleName);
 		$insName = $namespaceName . '::' . $language->getType();
 		if (!isset(self::$_instances[$insName])) {
 			self::$_instances[$insName] = self::createInstance($namespaceName, $language);

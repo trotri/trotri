@@ -40,6 +40,7 @@ class BuilderIndex extends IndexAction
 		$ret = $mod->search($params);
 		$this->setLastIndexUrl($ret['paginator']);
 
+		$this->assign('elements', $mod->getElementsRender());
 		$this->render($ret);
 	}
 }

@@ -96,8 +96,8 @@ class Builder implements ComponentsBuilder
 
 		$output = array(
 			'type'      => 'button',
-			'label'     => self::_('UI_BOOTSTRAP_CANCEL'),
-			'glyphicon' => self::GLYPHICON_REMOVE_SIGN,
+			'label'     => Text::_('CFG_SYSTEM_GLOBAL_CANCEL'),
+			'glyphicon' => Constant::GLYPHICON_REMOVE,
 			'class'     => 'btn btn-danger',
 			'onclick'   => 'return ' . Constant::JSFUNC_HREF . '(\'' . $url . '\');'
 		);

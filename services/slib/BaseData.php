@@ -29,7 +29,7 @@ abstract class BaseData
 	 * 构造方法：初始化语言国际化管理类
 	 * @param slib\Language $language
 	 */
-	protected function __construct(Language $language)
+	public function __construct(Language $language)
 	{
 		$this->_language = $language;
 	}

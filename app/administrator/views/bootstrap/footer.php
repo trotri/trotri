@@ -1,9 +1,9 @@
 <!-- Footer -->
 <hr>
 
-<?php $this->display('dialogs/trash_remove'); ?>
-<?php $this->display('dialogs/alert'); ?>
-<?php $this->display('dialogs/ajax_view'); ?>
+<?php $this->display('components/dialog/trash_remove'); ?>
+<?php $this->display('components/dialog/alert'); ?>
+<?php $this->display('components/dialog/ajax_view'); ?>
 
 <footer>
 <!-- p>&copy; Company 2013</p -->

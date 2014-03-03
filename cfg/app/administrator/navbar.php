@@ -11,51 +11,51 @@
 return array(
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX',
 			'm' => 'ucenter', 'c' => 'users', 'a' => 'index'
 		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX_LABEL',
-			'm' => 'ucenter', 'c' => 'users', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX',
+			'm' => 'ucenter', 'c' => 'users', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_CREATE',
+				'm' => 'ucenter', 'c' => 'users', 'a' => 'create'
+			)
 		),
 		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_CREATE_LABEL',
-			'm' => 'ucenter', 'c' => 'users', 'a' => 'create'
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_INDEX',
+			'm' => 'ucenter', 'c' => 'groups', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_CREATE',
+				'm' => 'ucenter', 'c' => 'groups', 'a' => 'create',
+			)
 		),
 		3 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_INDEX_LABEL',
-			'm' => 'ucenter', 'c' => 'groups', 'a' => 'index',
-		),
-		4 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_CREATE_LABEL',
-			'm' => 'ucenter', 'c' => 'groups', 'a' => 'create',
-		),
-		5 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_INDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_INDEX',
 			'm' => 'ucenter', 'c' => 'amcas', 'a' => 'index',
 		),
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
 			'm' => 'builder', 'c' => 'index', 'a' => 'index'
 		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX_LABEL',
-			'm' => 'builder', 'c' => 'index', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
+			'm' => 'builder', 'c' => 'index', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE',
+				'm' => 'builder', 'c' => 'index', 'a' => 'create',
+			)
 		),
 		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE_LABEL',
-			'm' => 'builder', 'c' => 'index', 'a' => 'create',
-		),
-		3 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX',
 			'm' => 'builder', 'c' => 'index', 'a' => 'trashindex'
 		)
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_ABOUT_LABEL',
+			'label' => 'CFG_SYSTEM_URLS_ABOUT',
 			'm' => 'system', 'c' => 'site', 'a' => 'about'
 		)
 	),

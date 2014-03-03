@@ -14,6 +14,7 @@ use tfc\mvc\Widget;
 use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
+use library\PageHelper;
 
 /**
  * NavBar class file
@@ -86,15 +87,37 @@ class NavBar extends Widget
 		$html = $this->getHtml();
 		$url = $this->getUrl($config);
 		$label = isset($config['label']) ? $config['label'] : '';
+		$content = Text::_($label);
+		if (isset($config['icon']) && is_array($config['icon']) && $config['icon'] !== array()) {
+			$content .= $this->getIcon($config['icon']);
+		}
 		if ($isDropdown) {
 			return $html->a(
-				Text::_($label) . ' ' . $html->tag('b', array('class' => 'caret'), ''),
+				$content . ' ' . $html->tag('b', array('class' => 'caret'), ''),
 				$url,
 				array('class' => 'dropdown-toggle', 'data-toggle' => 'dropdown')
 			);
 		}
 
-		return $html->a(Text::_($label), $url);
+		return $html->a($content, $url);
+	}
+
+	/**
+	 * 获取Icon标签
+	 * @param array $config
+	 * @return string
+	 */
+	public function getIcon(array $config)
+	{
+		$componentsBuilder = PageHelper::getComponentsBuilder();
+		$label = isset($config['label']) ? $config['label'] : '';
+		return $this->getHtml()->tag('span', array(
+			'class'               => 'glyphicon glyphicon-' . $componentsBuilder->getGlyphiconCreate() . ' pull-right',
+			'data-toggle'         => 'tooltip',
+			'data-placement'      => 'left',
+			'data-original-title' => Text::_($label),
+			'onclick' => 'return ' . $componentsBuilder->getJsFuncHref() . '(\'' . $this->getUrl($config) . '\')'
+		), '');
 	}
 
 	/**

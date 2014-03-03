@@ -4,6 +4,7 @@
 $this->widget(
 	'views\bootstrap\widgets\TableBuilder',
 	array(
+		'elements' => $this->elements,
 		'data' => $this->data,
 		'columns' => array(
 			'builder_name',
