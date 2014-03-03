@@ -15,6 +15,7 @@ use tfc\ap\ErrorException;
 use tfc\mvc\Mvc;
 use tfc\util\Paginator;
 use tfc\saf\Cfg;
+use views\ComponentsBuilder;
 
 /**
  * PageHelper class file
@@ -26,6 +27,39 @@ use tfc\saf\Cfg;
  */
 class PageHelper
 {
+	/**
+	 * @var views\ComponentsBuilder 创建页面小组件类，用于创建按钮、图标等
+	 */
+	protected static $_componentsBuilder;
+
+	/**
+	 * 获取创建页面小组件类，用于创建按钮、图标等
+	 * @return views\ComponentsBuilder
+	 */
+	public static function getComponentsBuilder()
+	{
+		if (self::$_componentsBuilder === null) {
+			$skinName = Mvc::getView()->skinName;
+			$componentsBuilder = 'views\\bootstrap\\components\\Builder';
+			if (!class_exists($componentsBuilder)) {
+				throw new ErrorException(sprintf(
+					'PageHelper is unable to find the requested components builder "%s".', $componentsBuilder
+				));
+			}
+
+			$instance = new $componentsBuilder();
+			if (!$instance instanceof ComponentsBuilder) {
+				throw new ErrorException(sprintf(
+					'PageHelper Class "%s" is not instanceof views\ComponentsBuilder.', $componentsBuilder
+				));
+			}
+
+			self::$_componentsBuilder = $instance;
+		}
+
+		return self::$_componentsBuilder;
+	}
+
 	/**
 	 * 获取上一个页面链接
 	 * @return string
@@ -58,6 +92,20 @@ class PageHelper
 	{
 		$url = Mvc::getView()->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
 		Ap::getRequest()->setParam('last_index_url', $url);
+	}
+
+	/**
+	 * 在URL后拼接“最后一次访问的列表页链接”
+	 * @param string $url
+	 * @return string
+	 */
+	public static function applyLastIndexUrl($url)
+	{
+		if (($lastIndexUrl = self::getLastIndexUrl()) !== '') {
+			$url = Mvc::getView()->getUrlManager()->applyParams($url, array('last_index_url' => $lastIndexUrl));
+		}
+
+		return $url;
 	}
 
 	/**

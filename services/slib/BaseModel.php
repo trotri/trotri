@@ -46,6 +46,11 @@ abstract class BaseModel extends BaseService
 	const OP_TYPE_DELETE = 'delete';
 
 	/**
+	 * @var string 查询选项：记录总行数
+	 */
+	const QU_OPT_CALC_FOUND_ROWS = SrvQuery::SQL_OPT_CALC_FOUND_ROWS;
+
+	/**
 	 * @var instance of slib\SrvFilter
 	 */
 	protected $_srvFilter = null;

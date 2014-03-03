@@ -10,6 +10,8 @@
 
 namespace library\action;
 
+use library\action\base\ShowAction;
+
 /**
  * IndexAction abstract class file
  * IndexAction基类，用于查询列表数据

@@ -12,7 +12,7 @@ namespace views;
 
 /**
  * ComponentsBuilder interface file
- * 创建页面小组件接口
+ * 创建页面小组件接口，用于创建按钮、图标等
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ComponentsBuilder.php 1 2013-05-18 14:58:59Z huan.song $
  * @package views
@@ -42,7 +42,7 @@ interface ComponentsBuilder
 	public function getButtonSaveNew(array $params = array());
 
 	/**
-	 * 获取表单的“取消”按钮信息
+	 * 获取表单的“取消”按钮信息，如果存在“最后一次访问的列表页链接”，则跳转到“最后一次访问的列表页”，否则跳转到缺省页面
 	 * @param array $params
 	 * @return array
 	 */
@@ -61,4 +61,106 @@ interface ComponentsBuilder
 	 * @return string
 	 */
 	public function getGlyphicon(array $params = array());
+
+	/**
+	 * 获取Glyphicons图标：列表
+	 * @return string
+	 */
+	public function getGlyphiconIndex();
+
+	/**
+	 * 获取Glyphicons图标：保存
+	 * @return string
+	 */
+	public function getGlyphiconSave();
+
+	/**
+	 * 获取Glyphicons图标：新增
+	 * @return string
+	 */
+	public function getGlyphiconCreate();
+
+	/**
+	 * 获取Glyphicons图标：编辑
+	 * @return string
+	 */
+	public function getGlyphiconModify();
+
+	/**
+	 * 获取Glyphicons图标：移至回收站
+	 * @return string
+	 */
+	public function getGlyphiconTrash();
+
+	/**
+	 * 获取Glyphicons图标：恢复
+	 * @return string
+	 */
+	public function getGlyphiconRestore();
+
+	/**
+	 * 获取Glyphicons图标：彻底删除
+	 * @return string
+	 */
+	public function getGlyphiconRemove();
+
+	/**
+	 * 获取Glyphicons图标：禁用
+	 * @return string
+	 */
+	public function getGlyphiconForbidden();
+
+	/**
+	 * 获取Glyphicons图标：解除禁用
+	 * @return string
+	 */
+	public function getGlyphiconUnforbidden();
+
+	/**
+	 * 获取Glyphicons图标：工具
+	 * @return string
+	 */
+	public function getGlyphiconTool();
+
+	/**
+	 * 获取JS函数名：链接
+	 * @return string
+	 */
+	public function getJsFuncHref();
+
+	/**
+	 * 获取JS函数名：提交表单
+	 * @return string
+	 */
+	public function getJsFuncFormSubmit();
+
+	/**
+	 * 获取JS函数名：删除对话框
+	 * @return string
+	 */
+	public function getJsFuncDialogRemove();
+
+	/**
+	 * 获取JS函数名：放入回收站对话框
+	 * @return string
+	 */
+	public function getJsFuncDialogTrash();
+
+	/**
+	 * 获取JS函数名：批量删除对话框
+	 * @return string
+	 */
+	public function getJsFuncDialogBatchRemove();
+
+	/**
+	 * 获取JS函数名：批量放入回收站对话框
+	 * @return string
+	 */
+	public function getJsFuncDialogBatchTrash();
+
+	/**
+	 * 获取JS函数名：Ajax方式展示数据对话框
+	 * @return string
+	 */
+	public function getJsFuncDialogAjaxView();
 }

@@ -64,19 +64,6 @@ abstract class BaseAction extends Action
 	}
 
 	/**
-	 * 页面重定向到上一个页面
-	 * @param array $params
-	 * @param string $message
-	 * @param integer $delay
-	 * @return void
-	 */
-	public function httpReferer(array $params = array(), $message = '', $delay = 0)
-	{
-		$url = $this->getUrlManager()->applyParams(PageHelper::getHttpReferer(), $params);
-		$this->redirect($url, $message, $delay);
-	}
-
-	/**
 	 * 通过Service查询后的分页信息，设置最后一次访问的列表页链接
 	 * <pre>
 	 * 参数格式：
@@ -94,6 +81,32 @@ abstract class BaseAction extends Action
 	public function setLastIndexUrl(array $params = array())
 	{
 		PageHelper::setLastIndexUrlBySrv($params);
+	}
+
+	/**
+	 * 页面重定向到最后一次访问的列表页
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function httpLastIndexUrl(array $params = array(), $message = '', $delay = 0)
+	{
+		$url = $this->getUrlManager()->applyParams(PageHelper::getLastIndexUrl(), $params);
+		$this->redirect($url, $message, $delay);
+	}
+
+	/**
+	 * 页面重定向到上一个页面
+	 * @param array $params
+	 * @param string $message
+	 * @param integer $delay
+	 * @return void
+	 */
+	public function httpReferer(array $params = array(), $message = '', $delay = 0)
+	{
+		$url = $this->getUrlManager()->applyParams(PageHelper::getHttpReferer(), $params);
+		$this->redirect($url, $message, $delay);
 	}
 
 	/**

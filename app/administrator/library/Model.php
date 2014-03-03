@@ -54,7 +54,7 @@ class Model
 	 */
 	public function __construct()
 	{
-		list($tmp1, $this->_moduleName, $tmp2, $this->_className) = explode('\\', __CLASS__);
+		list($tmp1, $this->_moduleName, $tmp2, $this->_className) = explode('\\', get_class($this));
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Model
 	 */
 	public function getLastIndexUrl()
 	{
-		return Ap::getRequest()->getTrim('last_index_url');
+		return PageHelper::getLastIndexUrl();
 	}
 
 	/**

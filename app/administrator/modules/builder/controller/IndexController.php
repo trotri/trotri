@@ -37,6 +37,7 @@ class IndexController extends BaseController
 			'remove'       => 'modules\\builder\\action\\submit\\BuilderRemove',
 			'singlemodify' => 'modules\\builder\\action\\submit\\BuilderSingleModify',
 			'trash'        => 'modules\\builder\\action\\submit\\BuilderTrash',
+			'restore'      => 'modules\\builder\\action\\submit\\BuilderTrash',
 		);
 	}
 }

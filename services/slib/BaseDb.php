@@ -29,7 +29,7 @@ abstract class BaseDb extends Db
 	 * @param string $tableName
 	 * @param integer $tableNum 用于分表数字，如果 >= 0 表示分表操作
 	 */
-	protected function __construct($tableName, $tableNum = -1)
+	public function __construct($tableName, $tableNum = -1)
 	{
 		if (($tableNum = (int) $tableNum) >= 0) {
 			$tableName .= '_' . $tableNum;

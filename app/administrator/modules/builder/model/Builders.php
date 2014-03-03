@@ -13,6 +13,7 @@ namespace modules\builder\model;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
+use library\PageHelper;
 
 /**
  * Builders class file
@@ -25,13 +26,25 @@ use library\Model;
 class Builders extends Model
 {
 	/**
+	 * 查询数据
+	 * @param array $params
+	 * @param string $order
+	 * @return array
+	 */
+	public function search(array $params = array(), $order = '')
+	{
+		$srv = $this->getService();
+		return $srv->search($params, $order, PageHelper::getListRows(), PageHelper::getFirstRow());
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
 	public function getLastIndexUrl()
 	{
-		if (($url = parent::getLastIndexUrl()) !== '') {
-			return $url;
+		if (($lastIndexUrl = parent::getLastIndexUrl()) !== '') {
+			return $lastIndexUrl;
 		}
 
 		return $this->getUrl('index', Mvc::$controller, Mvc::$module, array('trash' => 'n'));
@@ -236,11 +249,16 @@ class Builders extends Model
 				'options' => $data->getEnum('trash'),
 				'value' => self::TRASH_N,
 			),
-			'_button_save_' => array(),
-			'_button_save2close_' => array(),
-			'_button_save2new_' => array(),
-			'_button_cancel_' => array(),
-			'_operate_' => array(),
+			'_button_save_' => PageHelper::getComponentsBuilder()->getButtonSave(),
+			'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),
+			'_button_save2new_' => PageHelper::getComponentsBuilder()->getButtonSaveNew(),
+			'_button_cancel_' => PageHelper::getComponentsBuilder()->getButtonCancel(array('url' => $this->getLastIndexUrl())),
+			'_operate_' => array(
+				'label' => Text::_('CFG_SYSTEM_GLOBAL_OPERATE'),
+				'table' => array(
+					'callback' => array($this, 'getOperate')
+				)
+			)
 		);
 
 		return $ret;
@@ -277,7 +295,70 @@ class Builders extends Model
 		);
 
 		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
-		$ret = Components::getSwitch($data['builder_id'], 'tbl_profile', $data['tbl_profile'], $url);
+		$ret = PageHelper::getComponentsBuilder()->getSwitch(array(
+			'id' => $data['builder_id'],
+			'name' => 'tbl_profile',
+			'value' => $data['tbl_profile'],
+			'href' => $url
+		));
+
+		return $ret;
+	}
+
+	/**
+	 * 获取操作图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getOperate($data)
+	{
+		$params = array('id' => $data['builder_id']);
+		$componentsBuilder = PageHelper::getComponentsBuilder();
+
+		$modifyIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconModify(),
+			'url' => $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),
+		));
+
+		$trashIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconTrash(),
+			'url' => $this->getUrl('trash', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncDialogTrash(),
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_TRASH')
+		));
+
+		$removeIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconRemove(),
+			'url' => $this->getUrl('remove', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncDialogRemove(),
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE')
+		));
+
+		// 生成代码按钮
+		$gcIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconTool(),
+			'url' => $this->getUrl('gc', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_BUILDERS_GC_LABEL')
+		));
+
+		$params['value'] = 'n';
+		$restoreIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconRestore(),
+			'url' => $this->getUrl('trash', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_RESTORE')
+		));
+
+		if ($data['trash'] === 'n') {
+			$ret = $modifyIcon . $trashIcon . $gcIcon;
+		}
+		else {
+			$ret = $restoreIcon . $removeIcon;
+		}
+
 		return $ret;
 	}
 }

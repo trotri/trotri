@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library\action;
+namespace library\action\base;
 
 use tfc\ap\Ap;
 use tfc\ap\Registry;
@@ -74,6 +74,7 @@ abstract class ShowAction extends BaseAction
 		$viw->assign('action',     Mvc::$action);
 		$viw->assign('sidebar',    Mvc::$module . '/' . Mvc::$controller . '_sidebar');
 		$viw->assign('log_id',     Log::getId());
+		$viw->assign('language',   Ap::getLanguageType());
 
 		if (($wfBackTrace = Registry::get('warning_backtrace')) !== null) {
 			$viw->assign('warning_backtrace', $wfBackTrace);
@@ -93,7 +94,8 @@ abstract class ShowAction extends BaseAction
 		$basePath   = $req->getBasePath();
 		$scriptUrl  = $req->getScriptUrl();
 		$requestUri = $req->getRequestUri();
-		$staticUrl  = $baseUrl . '/static/' . APP_NAME . '/' . $viw->skinName;
+		$staticUrl  = $baseUrl . '/static/' . APP_NAME;
+		$skinUrl    = $staticUrl . '/' . $viw->skinName;
 
 		$viw->assign('root_url',    $baseUrl . '/..');
 		$viw->assign('base_path',   $basePath);
@@ -101,9 +103,9 @@ abstract class ShowAction extends BaseAction
 		$viw->assign('script_url',  $scriptUrl);
 		$viw->assign('request_uri', $requestUri);
 		$viw->assign('static_url',  $staticUrl);
-		$viw->assign('js_url',      $staticUrl . '/js');
-		$viw->assign('css_url',     $staticUrl . '/css');
-		$viw->assign('imgs_url',    $staticUrl . '/imgs');
+		$viw->assign('js_url',      $skinUrl . '/js');
+		$viw->assign('css_url',     $skinUrl . '/css');
+		$viw->assign('imgs_url',    $skinUrl . '/imgs');
 	}
 
 	/**
@@ -119,6 +121,17 @@ abstract class ShowAction extends BaseAction
 
 		$strings = Text::getStrings();
 		$viw->assign($strings);
+	}
+
+	/**
+     * 设置一对或多对模板变量
+     * @param mixed $key
+     * @param mixed $value
+     * @return tfc\mvc\interfaces\View
+     */
+	public function assign($key, $value = null)
+	{
+		return Mvc::getView()->assign($key, $value);
 	}
 
 	/**

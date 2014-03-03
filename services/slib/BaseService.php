@@ -32,10 +32,10 @@ abstract class BaseService
 
 	/**
 	 * 构造方法：初始化数据库操作类和语言国际化管理类
-	 * @param tdo\Db $db
+	 * @param slib\BaseDb $db
 	 * @param slib\Language $language
 	 */
-	public function __construct(Db $db, Language $language)
+	public function __construct(BaseDb $db, Language $language)
 	{
 		$this->_db = $db;
 		$this->_language = $language;

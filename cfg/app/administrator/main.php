@@ -20,6 +20,7 @@ return array (
 	'paginator' => array (
 		'page_var' => 'paged', // 从$_GET或$_POST中获取当前页的键名
 		'list_rows_var' => 'limit', // 从$_GET或$_POST中获取每页展示的行数的键名
+		'list_rows' => 15, // 每页展示的行数
 		'list_pages' => 4, // 每页展示的页码数
 	),
 	'navbar' => require_once 'navbar.php',

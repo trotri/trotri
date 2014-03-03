@@ -10,6 +10,8 @@
 
 namespace library\action;
 
+use library\action\base\SubmitAction;
+
 /**
  * CreateAction abstract class file
  * CreateAction基类，用于新增数据

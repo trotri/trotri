@@ -29,7 +29,12 @@ class Language extends util\Language
      */
     public static function getInstance($type)
     {
-    	$baseDir = DIR_SERVICES . DS . 'slangs';
-        return parent::getInstance($type, $baseDir);
+        $baseDir = DIR_SERVICES . DS . 'slangs';
+        $key = strtolower($baseDir . '::' . $type);
+    	if (!isset(self::$_instances[$key])) {
+    		self::$_instances[$key] = new self($type, $baseDir);
+    	}
+
+    	return self::$_instances[$key];
     }
 }

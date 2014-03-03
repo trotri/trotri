@@ -10,6 +10,8 @@
 
 namespace library\action;
 
+use library\action\base\SubmitAction;
+
 /**
  * ModifyAction abstract class file
  * ModifyAction基类，用于编辑数据

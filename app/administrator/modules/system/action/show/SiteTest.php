@@ -10,7 +10,7 @@
 
 namespace modules\system\action\show;
 
-use library\action\ShowAction;
+use library\BaseAction;
 
 /**
  * SiteTest class file
@@ -20,13 +20,8 @@ use library\action\ShowAction;
  * @package modules.system.action.show
  * @since 1.0
  */
-class SiteTest extends ShowAction
+class SiteTest extends BaseAction
 {
-	/**
-	 * @var string 页面首次渲染的布局名
-	 */
-	public $layoutName = 'column1';
-
 	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\interfaces.Action::run()

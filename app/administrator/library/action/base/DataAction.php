@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library\action;
+namespace library\action\base;
 
 use tfc\ap\Ap;
 use tfc\util\Encoder;

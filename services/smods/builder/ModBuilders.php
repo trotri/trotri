@@ -11,7 +11,6 @@
 namespace smods\builder;
 
 use slib\BaseModel;
-use slib\Db;
 use slib\Data;
 use slib\ErrorNo;
 

@@ -10,6 +10,8 @@
 
 namespace library\action;
 
+use library\action\base\ShowAction;
+
 /**
  * ViewAction abstract class file
  * ViewAction基类，用于查询数据详情

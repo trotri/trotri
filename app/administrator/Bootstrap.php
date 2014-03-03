@@ -68,6 +68,12 @@ class Bootstrap extends ap\Bootstrap
      */
     public function _initView()
     {
+    	$viw = Mvc::getView();
+    	$viw->viewDirectory = DIR_APP_VIEWS;
+    	$viw->skinName      = Cfg::getApp('skin_name', 'view');
+    	$viw->tplExtension  = Cfg::getApp('tpl_extension', 'view');
+    	$viw->charset       = Cfg::getApp('charset', 'view');
+    	$viw->version       = Cfg::getApp('version', 'view');
     }
 
     /**

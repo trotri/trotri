@@ -79,6 +79,11 @@ class Constant
 	const JSFUNC_HREF = 'Trotri.href';
 
 	/**
+	 * @var string JS函数：提交表单
+	 */
+	const JSFUNC_FORMSUBMIT = 'Core.formSubmit';
+
+	/**
 	 * @var string JS函数：删除对话框
 	 */
 	const JSFUNC_DIALOGREMOVE = 'Core.dialogRemove';

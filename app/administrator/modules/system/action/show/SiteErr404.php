@@ -10,7 +10,7 @@
 
 namespace modules\system\action\show;
 
-use library\action\ShowAction;
+use library\action\base\ShowAction;
 
 /**
  * SiteErr404 class file
