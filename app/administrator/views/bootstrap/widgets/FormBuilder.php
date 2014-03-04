@@ -76,8 +76,6 @@ class FormBuilder extends form\FormBuilder
 			unset($this->_tplVars['tabs']);
 		}
 
-		$this->initElements();
-
 		parent::_init();
 	}
 
@@ -246,7 +244,7 @@ class FormBuilder extends form\FormBuilder
 	public function createElement($className, array $config = array())
 	{
 		if (strpos($className, '\\') === false) {
-			$className = 'ui\\bootstrap\\form\\' . $className;
+			$className = 'views\\bootstrap\\components\\form\\' . $className;
 		}
 
 		return parent::createElement($className, $config);

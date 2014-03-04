@@ -10,7 +10,9 @@
 
 namespace modules\builder\action\submit;
 
+use tfc\ap\Ap;
 use library\action\CreateAction;
+use library\Model;
 
 /**
  * BuilderCreate class file
@@ -28,6 +30,13 @@ class BuilderCreate extends CreateAction
 	 */
 	public function run()
 	{
-	
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Model::getInstance('Builders', 'builder');
+
+		$this->assign('tabs', $mod->getViewTabsRender());
+		$this->assign('elements', $mod->getElementsRender());
+		$this->render($ret);
 	}
 }

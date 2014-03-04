@@ -10,7 +10,7 @@
 
 namespace views\bootstrap\components\form;
 
-use ui\bootstrap\Components;
+use tfc\saf\Text;
 
 /**
  * SwitchElement class file
@@ -53,8 +53,8 @@ class SwitchElement extends InputElement
 	 */
 	protected function _init()
 	{
-		$this->swOn = Components::_('UI_BOOTSTRAP_YES');
-		$this->swOff = Components::_('UI_BOOTSTRAP_NO');
+		$this->swOn = Text::_('CFG_SYSTEM_GLOBAL_YES');
+		$this->swOff = Text::_('CFG_SYSTEM_GLOBAL_NO');
 		parent::_init();
 	}
 
