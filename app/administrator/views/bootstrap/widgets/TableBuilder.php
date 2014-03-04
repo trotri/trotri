@@ -148,7 +148,7 @@ class TableBuilder extends Widget
 		}
 
 		foreach ($elements as $columnName => $element) {
-			if (!isset($columns[$columnName])) {
+			if (!in_array($columnName, $columns)) {
 				continue;
 			}
 

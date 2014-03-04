@@ -211,7 +211,7 @@ class FormBuilder extends form\FormBuilder
 		}
 
 		foreach ($elements as $columnName => $element) {
-			if (!isset($columns[$columnName])) {
+			if (!in_array($columnName, $columns)) {
 				unset($elements[$columnName]);
 				continue;
 			}

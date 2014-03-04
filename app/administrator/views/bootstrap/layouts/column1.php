@@ -6,7 +6,7 @@
 
   <body>
 
-<?php $this->widget('components\NavBar'); ?>
+<?php $this->widget('views\bootstrap\components\bar\NavBar'); ?>
 
 <div class="container">
 

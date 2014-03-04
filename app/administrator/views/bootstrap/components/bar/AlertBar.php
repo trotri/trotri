@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace components;
+namespace views\bootstrap\components\bar;
 
 use tfc\mvc\Widget;
 
@@ -17,7 +17,7 @@ use tfc\mvc\Widget;
  * 页面警告栏
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: AlertBar.php 1 2013-04-20 17:11:06Z huan.song $
- * @package components
+ * @package views.bootstrap.components.bar
  * @since 1.0
  */
 class AlertBar extends Widget

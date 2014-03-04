@@ -36,7 +36,7 @@ elseif ($this->controller === 'types') {
 	$config['types']['active'] = true;
 }
 
-$this->widget('components\SideBar', array('config' => $config));
+$this->widget('views\bootstrap\components\bar\SideBar', array('config' => $config));
 ?>
 </div><!-- /.col-xs-6 col-sm-2 -->
 <!-- /SideBar -->

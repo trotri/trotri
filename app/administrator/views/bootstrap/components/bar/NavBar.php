@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace components;
+namespace views\bootstrap\components\bar;
 
 use tfc\mvc\Widget;
 use tfc\mvc\Mvc;
@@ -21,7 +21,7 @@ use library\PageHelper;
  * 页面顶端导航
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: NavBar.php 1 2013-04-20 17:11:06Z huan.song $
- * @package components
+ * @package views.bootstrap.components.bar
  * @since 1.0
  */
 class NavBar extends Widget
@@ -161,5 +161,18 @@ class NavBar extends Widget
 		$params = isset($config['params']) ? (array) $config['params'] : array();
 
 		return $this->getUrlManager()->getUrl($act, $ctrl, $mod, $params);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Widget::getWidgetDirectory()
+	 */
+	public function getWidgetDirectory()
+	{
+		if ($this->_widgetDirectory === null) {
+			$this->_widgetDirectory = dirname(__FILE__) . DS . 'navbar';
+		}
+
+		return $this->_widgetDirectory;
 	}
 }

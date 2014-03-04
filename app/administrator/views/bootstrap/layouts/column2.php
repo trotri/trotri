@@ -6,9 +6,9 @@
 
   <body>
 
-<?php $this->widget('components\NavBar'); ?>
+<?php $this->widget('views\bootstrap\components\bar\NavBar'); ?>
 
-<?php $this->widget('components\AlertBar'); ?>
+<?php $this->widget('views\bootstrap\components\bar\AlertBar'); ?>
 
 <div class="container">
 
