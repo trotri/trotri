@@ -13,6 +13,7 @@ namespace views\bootstrap\components;
 use tfc\mvc\Mvc;
 use tfc\util\String;
 use tfc\saf\Text;
+use library;
 use library\PageHelper;
 use views\ComponentsBuilder;
 
@@ -39,7 +40,7 @@ class Builder implements ComponentsBuilder
 			'label'     => Text::_('CFG_SYSTEM_GLOBAL_SAVE'),
 			'glyphicon' => Constant::GLYPHICON_SAVE,
 			'class'     => 'btn btn-primary',
-			'onclick'   => 'return ' . Constant::JSFUNC_FORMSUBMIT . '(this, \'' . Constant::SUBMIT_TYPE_SAVE . '\', \'' . $lastIndexUrl . '\');'
+			'onclick'   => 'return ' . Constant::JSFUNC_FORMSUBMIT . '(this, \'' . library\Constant::SUBMIT_TYPE_SAVE . '\', \'' . $lastIndexUrl . '\');'
 		);
 
 		return $output;
@@ -58,7 +59,7 @@ class Builder implements ComponentsBuilder
 			'label'     => Text::_('CFG_SYSTEM_GLOBAL_SAVE2CLOSE'),
 			'glyphicon' => Constant::GLYPHICON_RESTORE,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return ' . Constant::JSFUNC_FORMSUBMIT . '(this, \'' . Constant::SUBMIT_TYPE_SAVE_CLOSE . '\', \'' . $lastIndexUrl . '\');'
+			'onclick'   => 'return ' . Constant::JSFUNC_FORMSUBMIT . '(this, \'' . library\Constant::SUBMIT_TYPE_SAVE_CLOSE . '\', \'' . $lastIndexUrl . '\');'
 		);
 
 		return $output;
@@ -77,7 +78,7 @@ class Builder implements ComponentsBuilder
 			'label'     => Text::_('CFG_SYSTEM_GLOBAL_SAVE2NEW'),
 			'glyphicon' => Constant::GLYPHICON_CREATE,
 			'class'     => 'btn btn-default',
-			'onclick'   => 'return ' . Constant::JSFUNC_FORMSUBMIT . '(this, \'' . Constant::SUBMIT_TYPE_SAVE_NEW . '\', \'' . $lastIndexUrl . '\');'
+			'onclick'   => 'return ' . Constant::JSFUNC_FORMSUBMIT . '(this, \'' . library\Constant::SUBMIT_TYPE_SAVE_NEW . '\', \'' . $lastIndexUrl . '\');'
 		);
 
 		return $output;

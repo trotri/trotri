@@ -20,5 +20,32 @@ namespace library;
  */
 class Constant
 {
-	
+	/**
+	 * @var string 表单提交后跳转方式：保存并跳转到编辑页
+	 */
+	const SUBMIT_TYPE_SAVE = 'save';
+
+	/**
+	 * @var string 表单提交后跳转方式：保存并跳转到列表页
+	 */
+	const SUBMIT_TYPE_SAVE_CLOSE = 'save_close';
+
+	/**
+	 * @var string 表单提交后跳转方式：保存并跳转到新增页
+	 */
+	const SUBMIT_TYPE_SAVE_NEW = 'save_new';
+
+	/**
+	 * @var string 表单提交后默认的跳转方式
+	 */
+	const SUBMIT_TYPE_DEFAULT = self::SUBMIT_TYPE_SAVE;
+
+	/**
+	 * @var array 寄存表单提交后跳转方式
+	 */
+	public static $submitTypes = array(
+		self::SUBMIT_TYPE_SAVE,
+		self::SUBMIT_TYPE_SAVE_CLOSE,
+		self::SUBMIT_TYPE_SAVE_NEW
+	);
 }

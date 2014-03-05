@@ -92,8 +92,8 @@ class TableBuilder extends Widget
 			$output .= $html->openTag('tr') . "\n";
 
 			if ($this->checkedToggle !== '') {
-				if (isset($data[$this->checkedToggle])) {
-					$output .= $html->tag('td', array(), $html->checkbox($this->checkedToggle . '[]', $data[$this->checkedToggle])) . "\n";
+				if (isset($row[$this->checkedToggle])) {
+					$output .= $html->tag('td', array(), $html->checkbox($this->checkedToggle . '[]', $row[$this->checkedToggle])) . "\n";
 				}
 				else {
 					throw new ErrorException(sprintf(
@@ -104,10 +104,10 @@ class TableBuilder extends Widget
 
 			foreach ($this->_elements as $columnName => $element) {
 				if ($element['callback'] !== null) {
-					$value = @call_user_func($element['callback'], &$data);
+					$value = @call_user_func($element['callback'], &$row);
 				}
-				elseif (isset($data[$columnName])) {
-					$value = $data[$columnName];
+				elseif (isset($row[$columnName])) {
+					$value = $row[$columnName];
 				}
 				else {
 					$value = '';

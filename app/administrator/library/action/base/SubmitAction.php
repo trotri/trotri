@@ -11,7 +11,7 @@
 namespace library\action\base;
 
 use tfc\ap\Ap;
-use ui\bootstrap\Components;
+use library\Constant;
 
 /**
  * SubmitAction abstract class file
@@ -30,11 +30,11 @@ abstract class SubmitAction extends ShowAction
 	public function getSubmitType()
 	{
 		$submitType = Ap::getRequest()->getTrim('submit_type');
-		if (in_array($submitType, Components::$submitTypes)) {
+		if (in_array($submitType, Constant::$submitTypes)) {
 			return $submitType;
 		}
 
-		return Components::SUBMIT_TYPE_DEFAULT;
+		return Constant::SUBMIT_TYPE_DEFAULT;
 	}
 
 	/**
@@ -43,7 +43,7 @@ abstract class SubmitAction extends ShowAction
 	 */
 	public function isSubmitTypeSave()
 	{
-		return $this->getSubmitType() === Components::SUBMIT_TYPE_SAVE;
+		return $this->getSubmitType() === Constant::SUBMIT_TYPE_SAVE;
 	}
 
 	/**
@@ -52,7 +52,7 @@ abstract class SubmitAction extends ShowAction
 	 */
 	public function isSubmitTypeSaveClose()
 	{
-		return $this->getSubmitType() === Components::SUBMIT_TYPE_SAVE_CLOSE;
+		return $this->getSubmitType() === Constant::SUBMIT_TYPE_SAVE_CLOSE;
 	}
 
 	/**
@@ -61,7 +61,7 @@ abstract class SubmitAction extends ShowAction
 	 */
 	public function isSubmitTypeSaveNew()
 	{
-		return $this->getSubmitType() === Components::SUBMIT_TYPE_SAVE_NEW;
+		return $this->getSubmitType() === Constant::SUBMIT_TYPE_SAVE_NEW;
 	}
 
 	/**

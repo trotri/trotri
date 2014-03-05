@@ -11,8 +11,10 @@
 namespace modules\builder\action\submit;
 
 use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use library\action\CreateAction;
 use library\Model;
+use library\ErrorNo;
 
 /**
  * BuilderCreate class file
@@ -34,6 +36,20 @@ class BuilderCreate extends CreateAction
 
 		$req = Ap::getRequest();
 		$mod = Model::getInstance('Builders', 'builder');
+		if ($this->isPost()) {
+			$ret = $mod->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($this->isSubmitTypeSave()) {
+					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					$this->forward('create', Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					$this->forward('index', Mvc::$controller, Mvc::$module, $ret);
+				}
+			}
+		}
 
 		$this->assign('tabs', $mod->getViewTabsRender());
 		$this->assign('elements', $mod->getElementsRender());

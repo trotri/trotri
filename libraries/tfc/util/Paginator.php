@@ -297,7 +297,7 @@ class Paginator
             throw new ErrorException(sprintf(
                 'Paginator list pages "%d" can not less or equal than 0.', $listPages
             ));
-         }
+        }
 
         $this->_listPages = $listPages;
         return $this;
@@ -314,7 +314,7 @@ class Paginator
              return $this->_url;
         }
 
-        return $this->_url . (int) $pageNo;
+        return $this->_url . '&' . $this->getPageVar() . '=' . (int) $pageNo;
     }
 
     /**
@@ -324,7 +324,7 @@ class Paginator
      */
     public function setUrl($url)
     {
-        $this->_url = trim((string) $url) . '&' . $this->getPageVar() . '=';
+        $this->_url = trim((string) $url);
         return $this;
     }
 

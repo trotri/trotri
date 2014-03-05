@@ -36,7 +36,7 @@ class BuilderIndex extends IndexAction
 		$mod = Model::getInstance('Builders', 'builder');
 
 		$params = $req->getQuery();
-		$params['trash'] = 'y';
+		$params['trash'] = 'n';
 		$ret = $mod->search($params);
 		$this->setLastIndexUrl($ret['paginator']);
 

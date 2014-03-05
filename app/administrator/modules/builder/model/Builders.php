@@ -38,6 +38,17 @@ class Builders extends Model
 	}
 
 	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @return array
+	 */
+	public function create(array $params = array())
+	{
+		$srv = $this->getService();
+		return $srv->create($params);
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
