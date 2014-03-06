@@ -10,7 +10,9 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\RemoveAction;
+use library\action\base\RemoveAction;
+use tfc\ap\Ap;
+use library\Model;
 
 /**
  * BuilderRemove class file
@@ -28,6 +30,13 @@ class BuilderRemove extends RemoveAction
 	 */
 	public function run()
 	{
-	
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Model::getInstance('Builders', 'builder');
+
+		$id = $req->getInteger('id');
+		$ret = $mod->deleteByPk($id);
+		$this->httpLastIndexUrl($ret);
 	}
 }

@@ -94,6 +94,17 @@ class Builders extends Model
 	}
 
 	/**
+	 * 通过主键，删除一条记录。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function deleteByPk($value)
+	{
+		$srv = $this->getService();
+		return $srv->deleteByPk($value);
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
