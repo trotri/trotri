@@ -7,6 +7,7 @@ $(document).ready(function() {
   });
   Core.checkedToggle();
   Core.changeSwitchValue();
+  Core.tblSingleModify();
 });
 
 /**
@@ -182,10 +183,10 @@ Core = {
    * 提交表单
    * @param object btn  按钮的对象
    * @param string type 按钮的类型
-   * @param string httpReturn
+   * @param string lastIndexUrl
    * @return void
    */
-  formSubmit: function(btn, type, httpReturn) {
+  formSubmit: function(btn, type, lastIndexUrl) {
     var o = $(btn).parents("form");
 
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
@@ -198,8 +199,8 @@ Core = {
     });
 
     action = o.attr("action") + "&do=post&submit_type=" + type;
-    if (httpReturn !== "") {
-    	action += "&http_return=" + httpReturn;
+    if (lastIndexUrl !== "") {
+    	action += "&last_index_url=" + lastIndexUrl;
     }
 
     o.attr("action", action);
@@ -207,15 +208,20 @@ Core = {
   },
 
   /**
-   * 编辑单个字段，用于列表页美化版“是|否”选择项表单元素
+   * 编辑单个字段，用于列表页美化版“是|否”选择项表单元素（表单元素需要“tbl_switch='yes'”标示）
    * @return void
    */
-  singleModify: function(o) {
-    var url = o.parent().parent().attr("href");
-    if (url != undefined && url.length > 0) {
-      url += "&value=" + o.val();
-      Trotri.href(url);
-    }
+  tblSingleModify: function() {
+    $(":checkbox").change(function() {
+      var o = $(this).parent().parent();
+      if (o.attr("tbl_switch") == "yes") {
+        var url = o.attr("href");
+        if (url != undefined && url.length > 0) {
+          url += "&value=" + $(this).val();
+          Trotri.href(url);
+        }
+      }
+    });
   },
 
   /**

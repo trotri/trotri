@@ -102,10 +102,21 @@ class PageHelper
 	public static function applyLastIndexUrl($url)
 	{
 		if (($lastIndexUrl = self::getLastIndexUrl()) !== '') {
-			$url = Mvc::getView()->getUrlManager()->applyParams($url, array('last_index_url' => $lastIndexUrl));
+			$url = self::applyParams($url, array('last_index_url' => $lastIndexUrl));
 		}
 
 		return $url;
+	}
+
+	/**
+	 * 在URL后拼接QueryString参数
+	 * @param string $url
+	 * @param array $params
+	 * @return string
+	 */
+	public static function applyParams($url, array $params = array())
+	{
+		return Mvc::getView()->getUrlManager()->applyParams($url, $params);
 	}
 
 	/**

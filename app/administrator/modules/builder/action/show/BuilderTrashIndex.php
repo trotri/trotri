@@ -10,6 +10,8 @@
 
 namespace modules\builder\action\show;
 
+use tfc\ap\Ap;
+use library\Model;
 use library\action\IndexAction;
 
 /**
@@ -28,6 +30,17 @@ class BuilderTrashIndex extends IndexAction
 	 */
 	public function run()
 	{
-	
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Model::getInstance('Builders', 'builder');
+
+		$params = $req->getQuery();
+		$params['trash'] = 'y';
+		$ret = $mod->search($params);
+		$this->setLastIndexUrl($ret['paginator']);
+
+		$this->assign('elements', $mod->getElementsRender());
+		$this->render($ret);
 	}
 }

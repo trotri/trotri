@@ -10,6 +10,8 @@
 
 namespace library\action;
 
+use library\action\base\RemoveAction;
+
 /**
  * TrashAction abstract class file
  * TrashAction基类，用于将数据放入回收站和从回收站还原数据
@@ -18,7 +20,7 @@ namespace library\action;
  * @package library.action
  * @since 1.0
  */
-abstract class TrashAction extends ModifyAction
+abstract class TrashAction extends RemoveAction
 {
 	
 }

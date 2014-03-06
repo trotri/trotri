@@ -75,6 +75,7 @@ class ModBuilders extends BaseModel
 			$params['index_row_btns'] = array();
 		}
 
+		unset($params['trash']);
 		return $this->autoInsert($params);
 	}
 
@@ -115,7 +116,6 @@ class ModBuilders extends BaseModel
 			'act_modify_name',
 			'act_remove_name',
 			'index_row_btns',
-			'trash',
 		));
 
 		return $this->filterRun($rules, $attributes, $required);

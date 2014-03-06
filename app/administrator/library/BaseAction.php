@@ -64,6 +64,17 @@ abstract class BaseAction extends Action
 	}
 
 	/**
+	 * 在URL后拼接QueryString参数
+	 * @param string $url
+	 * @param array $params
+	 * @return string
+	 */
+	public function applyParams($url, array $params = array())
+	{
+		return $this->getUrlManager()->applyParams($url, $params);
+	}
+
+	/**
 	 * 通过Service查询后的分页信息，设置最后一次访问的列表页链接
 	 * <pre>
 	 * 参数格式：

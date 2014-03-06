@@ -120,6 +120,7 @@ class Builder implements ComponentsBuilder
 		$href  = isset($params['href'])  ? $params['href']     : '';
 
 		$attributes = array(
+			'tbl_switch'     => 'yes',
 			'id'             => 'label_switch_' . $name . '_' . $id,
 			'name'           => 'label_switch',
 			'class'          => 'make-switch switch-small',

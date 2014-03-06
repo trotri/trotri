@@ -1,11 +1,10 @@
-<?php $this->display('builder/index_trashindex_btns'); ?>
+<?php $this->display('builder/index_index_btns'); ?>
 
 <?php
-$elements = $this->element_collections;
 $this->widget(
-	'ui\bootstrap\widgets\TableBuilder',
+	'views\bootstrap\widgets\TableBuilder',
 	array(
-		'elementCollections' => $elements,
+		'elements' => $this->elements,
 		'data' => $this->data,
 		'columns' => array(
 			'builder_name',
@@ -17,34 +16,19 @@ $this->widget(
 			'mod_name',
 			'ctrl_name',
 			'cls_name',
-			'builder_field_groups' => array(
-				'name' => 'builder_field_groups',
-				'label' => $this->CFG_SYSTEM_URLS_BUILDER_GROUPS_INDEX_LABEL,
-				'callback' => array($elements->uiComponents, 'getBuilderFieldGroupsLabel')
-			),
-			'builder_fields' => array(
-				'name' => 'builder_fields',
-				'label' => $this->CFG_SYSTEM_URLS_BUILDER_FIELDS_INDEX_LABEL,
-				'callback' => array($elements->uiComponents, 'getBuilderFieldsLabel')
-			),
 			'builder_id',
-			'operate' => array(
-				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($elements->uiComponents, 'getOperate')
-			),
+			'_operate_'
 		),
 		'checkedToggle' => 'builder_id',
 	)
 );
 ?>
 
-<?php $this->display('builder/index_trashindex_btns'); ?>
+<?php $this->display('builder/index_index_btns'); ?>
 
 <?php
 $this->widget(
-	'ui\bootstrap\widgets\PaginatorBuilder',
+	'views\bootstrap\widgets\PaginatorBuilder',
 	$this->paginator
 );
 ?>
-
-<?php echo $this->getHtml()->jsFile($this->base_url . '/static/administrator/js/builder.js'); ?>

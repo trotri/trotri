@@ -38,6 +38,17 @@ class Builders extends Model
 	}
 
 	/**
+	 * 通过主键，查询一条记录。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function findByPk($value)
+	{
+		$srv = $this->getService();
+		return $srv->findByPk($value);
+	}
+
+	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array
@@ -46,6 +57,40 @@ class Builders extends Model
 	{
 		$srv = $this->getService();
 		return $srv->create($params);
+	}
+
+	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($value, array $params)
+	{
+		$srv = $this->getService();
+		return $srv->modifyByPk($value, $params);
+	}
+
+	/**
+	 * 通过主键，将一条记录移至回收站。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function trashByPk($value)
+	{
+		$srv = $this->getService();
+		return $srv->trashByPk($value, 'trash', 'y');
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function restoreByPk($value)
+	{
+		$srv = $this->getService();
+		return $srv->restoreByPk($value, 'trash', 'n');
 	}
 
 	/**
@@ -282,7 +327,11 @@ class Builders extends Model
 	 */
 	public function getBuilderNameLink($data)
 	{
-		$params = array('id' => $data['builder_id']);
+		$params = array(
+			'id' => $data['builder_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
 		$url = $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params);
 		$ret = $this->a($data['builder_name'], $url);
 		return $ret;
@@ -355,7 +404,7 @@ class Builders extends Model
 			'title' => Text::_('MOD_BUILDER_BUILDERS_GC_LABEL')
 		));
 
-		$params['value'] = 'n';
+		$params['is_restore'] = '1';
 		$restoreIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconRestore(),
 			'url' => $this->getUrl('trash', Mvc::$controller, Mvc::$module, $params),
