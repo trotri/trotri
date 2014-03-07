@@ -35,7 +35,7 @@ class BuilderCreate extends CreateAction
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders', 'builder');
+		$mod = Model::getInstance('Builders');
 		if ($this->isPost()) {
 			$ret = $mod->create($req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {

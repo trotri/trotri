@@ -10,9 +10,7 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\TrashAction;
-use tfc\ap\Ap;
-use library\Model;
+use library\action\base\TrashAction;
 
 /**
  * BuilderTrash class file
@@ -30,15 +28,6 @@ class BuilderTrash extends TrashAction
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders', 'builder');
-
-		$id = $req->getInteger('id');
-		$isRestore = $req->getInteger('is_restore');
-
-		$ret = $isRestore ? $mod->restoreByPk($id) : $mod->trashByPk($id);
-		$this->httpLastIndexUrl($ret);
+		$this->execute('Builders');
 	}
 }

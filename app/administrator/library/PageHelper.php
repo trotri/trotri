@@ -92,6 +92,7 @@ class PageHelper
 	{
 		$url = Mvc::getView()->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $params);
 		Ap::getRequest()->setParam('last_index_url', $url);
+		Mvc::getView()->assign('last_index_url', $url);
 	}
 
 	/**

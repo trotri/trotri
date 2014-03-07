@@ -1,21 +1,23 @@
-<?php 
-$restoreUrl = $this->getUrlManager()->getUrl(
-	'batchsinglemodify', '', '',
+<form class="form-inline">
+<?php
+$this->widget(
+	'views\bootstrap\widgets\ButtonBuilder',
 	array(
-		'column_name' => 'trash',
-		'value' => 'n',
-		'http_return' => $this->http_return
+		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_RESTORE,
+		'jsfunc' => 'batchRestore',
+		'url' => $this->getUrlManager()->getUrl('trash', '', '', array('is_batch' => 1, 'is_restore' => 1, 'last_index_url' => $this->last_index_url)),
+		'glyphicon' => 'restore',
+	)
+);
+
+$this->widget(
+	'views\bootstrap\widgets\ButtonBuilder',
+	array(
+		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_REMOVE,
+		'jsfunc' => 'dialogBatchRemove',
+		'url' => $this->getUrlManager()->getUrl('remove', '', '', array('is_batch' => 1, 'last_index_url' => $this->last_index_url)),
+		'glyphicon' => 'remove',
 	)
 );
 ?>
-<form class="form-inline">
-  <button type="button" class="btn btn-primary" onclick="return Trotri.href('<?php echo $this->getUrlManager()->getUrl('create', '', ''); ?>');">
-    <span class="glyphicon glyphicon-plus-sign"></span>
-    <?php echo $this->CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE_LABEL; ?>
-  </button>
-  <button type="button" class="btn btn-default"
-          onclick="return Core.batchRestore('<?php echo $restoreUrl; ?>');">
-    <span class="glyphicon glyphicon-ok-sign"></span>
-    <?php echo $this->CFG_SYSTEM_GLOBAL_BATCH_RESTORE; ?>
-  </button>
 </form>

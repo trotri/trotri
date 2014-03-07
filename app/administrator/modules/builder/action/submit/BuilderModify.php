@@ -35,7 +35,7 @@ class BuilderModify extends ModifyAction
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders', 'builder');
+		$mod = Model::getInstance('Builders');
 		$lastIndexUrl = $mod->getLastIndexUrl();
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {

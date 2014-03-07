@@ -8,35 +8,40 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library\action\base;
+namespace library\action;
 
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use library\BaseAction;
 use library\Model;
 
 /**
- * RemoveAction abstract class file
- * RemoveAction基类，用于删除数据
+ * SingleModifyAction abstract class file
+ * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: RemoveAction.php 1 2013-04-05 01:08:06Z huan.song $
- * @package library.action.base
+ * @version $Id: SingleModifyAction.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package library.action
  * @since 1.0
  */
-abstract class RemoveAction extends BaseAction
+abstract class SingleModifyAction extends ModifyAction
 {
 	/**
-	 * 执行操作：删除数据和批量删除数据
+	 * 执行操作：编辑单个字段和批量编辑单个字段
 	 * @return void
 	 */
 	public function execute($className, $moduleName = '')
 	{
 		$ret = array();
-
+		$req = Ap::getRequest();
 		$mod = Model::getInstance($className, $moduleName);
-		$funcName = $this->getFuncName();
-		$ret = $mod->$funcName($this->getPk());
 
+		$columnName = $req->getTrim('column_name', '');
+		$value = $req->getParam('value', '');
+		if ($columnName === '') {
+			$this->err404();
+		}
+
+		$funcName = $this->getFuncName();
+		$ret = $mod->$funcName($this->getPk(), array($columnName => $value));
 		$this->httpLastIndexUrl($ret);
 	}
 
@@ -61,7 +66,7 @@ abstract class RemoveAction extends BaseAction
 	 */
 	public function getFuncName()
 	{
-		$funcName = $this->isBatch() ? 'batchDeleteByPk' : 'deleteByPk';
+		$funcName = $this->isBatch() ? 'batchModifyByPk' : 'modifyByPk';
 		return $funcName;
 	}
 

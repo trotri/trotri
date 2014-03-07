@@ -141,7 +141,7 @@ interface ComponentsBuilder
 	public function getJsFuncDialogRemove();
 
 	/**
-	 * 获取JS函数名：放入回收站对话框
+	 * 获取JS函数名：移至回收站对话框
 	 * @return string
 	 */
 	public function getJsFuncDialogTrash();
@@ -153,7 +153,7 @@ interface ComponentsBuilder
 	public function getJsFuncDialogBatchRemove();
 
 	/**
-	 * 获取JS函数名：批量放入回收站对话框
+	 * 获取JS函数名：批量移至回收站对话框
 	 * @return string
 	 */
 	public function getJsFuncDialogBatchTrash();
@@ -163,4 +163,10 @@ interface ComponentsBuilder
 	 * @return string
 	 */
 	public function getJsFuncDialogAjaxView();
+
+	/**
+	 * 获取JS函数名：批量从回收站还原数据
+	 * @return string
+	 */
+	public function getJsFuncBatchRestore();
 }

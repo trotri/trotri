@@ -312,4 +312,13 @@ class Builder implements ComponentsBuilder
 	{
 		return Constant::JSFUNC_DIALOGAJAXVIEW;
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see views.ComponentsBuilder::getJsFuncBatchRestore()
+	 */
+	public function getJsFuncBatchRestore()
+	{
+		return Constant::JSFUNC_BATCHRESTORE;
+	}
 }

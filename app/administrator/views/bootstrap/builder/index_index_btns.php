@@ -16,7 +16,7 @@ $this->widget(
 	array(
 		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_TRASH,
 		'jsfunc' => 'dialogBatchTrash',
-		'url' => $this->getUrlManager()->getUrl('batchtrash', '', '', array('last_index_url' => $this->last_index_url)),
+		'url' => $this->getUrlManager()->getUrl('trash', '', '', array('is_batch' => 1, 'last_index_url' => $this->last_index_url)),
 		'glyphicon' => 'trash',
 	)
 );

@@ -26,85 +26,6 @@ use library\PageHelper;
 class Builders extends Model
 {
 	/**
-	 * 查询数据
-	 * @param array $params
-	 * @param string $order
-	 * @return array
-	 */
-	public function search(array $params = array(), $order = '')
-	{
-		$srv = $this->getService();
-		return $srv->search($params, $order, PageHelper::getListRows(), PageHelper::getFirstRow());
-	}
-
-	/**
-	 * 通过主键，查询一条记录。不支持联合主键
-	 * @param integer $value
-	 * @return array
-	 */
-	public function findByPk($value)
-	{
-		$srv = $this->getService();
-		return $srv->findByPk($value);
-	}
-
-	/**
-	 * 新增一条记录
-	 * @param array $params
-	 * @return array
-	 */
-	public function create(array $params = array())
-	{
-		$srv = $this->getService();
-		return $srv->create($params);
-	}
-
-	/**
-	 * 通过主键，编辑一条记录
-	 * @param integer $value
-	 * @param array $params
-	 * @return array
-	 */
-	public function modifyByPk($value, array $params)
-	{
-		$srv = $this->getService();
-		return $srv->modifyByPk($value, $params);
-	}
-
-	/**
-	 * 通过主键，将一条记录移至回收站。不支持联合主键
-	 * @param integer $value
-	 * @return array
-	 */
-	public function trashByPk($value)
-	{
-		$srv = $this->getService();
-		return $srv->trashByPk($value, 'trash', 'y');
-	}
-
-	/**
-	 * 通过主键，从回收站还原一条记录。不支持联合主键
-	 * @param integer $value
-	 * @return array
-	 */
-	public function restoreByPk($value)
-	{
-		$srv = $this->getService();
-		return $srv->restoreByPk($value, 'trash', 'n');
-	}
-
-	/**
-	 * 通过主键，删除一条记录。不支持联合主键
-	 * @param integer $value
-	 * @return array
-	 */
-	public function deleteByPk($value)
-	{
-		$srv = $this->getService();
-		return $srv->deleteByPk($value);
-	}
-
-	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
@@ -343,7 +264,7 @@ class Builders extends Model
 			'last_index_url' => $this->getLastIndexUrl()
 		);
 
-		$url = $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params);
+		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
 		$ret = $this->a($data['builder_name'], $url);
 		return $ret;
 	}

@@ -16,17 +16,17 @@ use library\BaseAction;
 use library\Model;
 
 /**
- * RemoveAction abstract class file
- * RemoveAction基类，用于删除数据
+ * TrashAction abstract class file
+ * TrashAction基类，用于将数据移至回收站和从回收站还原数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: RemoveAction.php 1 2013-04-05 01:08:06Z huan.song $
+ * @version $Id: TrashAction.php 1 2013-04-05 01:08:06Z huan.song $
  * @package library.action.base
  * @since 1.0
  */
-abstract class RemoveAction extends BaseAction
+abstract class TrashAction extends BaseAction
 {
 	/**
-	 * 执行操作：删除数据和批量删除数据
+	 * 执行操作：移至回收站、从回收站还原数据、批量移至回收站、批量从回收站还原数据
 	 * @return void
 	 */
 	public function execute($className, $moduleName = '')
@@ -61,8 +61,22 @@ abstract class RemoveAction extends BaseAction
 	 */
 	public function getFuncName()
 	{
-		$funcName = $this->isBatch() ? 'batchDeleteByPk' : 'deleteByPk';
+		$funcName = $this->isRestore() ? 'restoreByPk' : 'trashByPk';
+		if ($this->isBatch()) {
+			$funcName = 'batch' . ucfirst($funcName);
+		}
+
 		return $funcName;
+	}
+
+	/**
+	 * 验证是否是还原数据
+	 * @return boolean
+	 */
+	public function isRestore()
+	{
+		$isRestore = Ap::getRequest()->getInteger('is_restore');
+		return ($isRestore === 1);
 	}
 
 	/**

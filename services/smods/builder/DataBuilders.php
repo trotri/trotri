@@ -63,7 +63,7 @@ class DataBuilders extends BaseData
 	const INDEX_ROW_BTNS_PENCIL = 'pencil';
 
 	/**
-	 * @var string 数据列表每行操作Btn：放入回收站
+	 * @var string 数据列表每行操作Btn：移至回收站
 	 */
 	const INDEX_ROW_BTNS_TRASH = 'trash';
 
@@ -343,7 +343,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“数据列表每行操作Btn，编辑：pencil、放入回收站：trash、彻底删除：remove”验证规则
+	 * 获取“数据列表每行操作Btn，编辑：pencil、移至回收站：trash、彻底删除：remove”验证规则
 	 * @return array
 	 */
 	public function getIndexRowBtnsRule()

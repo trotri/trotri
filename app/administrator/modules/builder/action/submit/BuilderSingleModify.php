@@ -10,9 +10,7 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\ModifyAction;
-use tfc\ap\Ap;
-use library\Model;
+use library\action\SingleModifyAction;
 
 /**
  * BuilderSingleModify class file
@@ -22,7 +20,7 @@ use library\Model;
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class BuilderSingleModify extends ModifyAction
+class BuilderSingleModify extends SingleModifyAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -30,15 +28,6 @@ class BuilderSingleModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders', 'builder');
-
-		$id = $req->getInteger('id');
-		$columnName = $req->getTrim('column_name', '');
-		$value = $req->getParam('value', '');
-		$ret = $mod->modifyByPk($id, array($columnName => $value));
-		$this->httpLastIndexUrl($ret);
+		$this->execute('Builders');
 	}
 }

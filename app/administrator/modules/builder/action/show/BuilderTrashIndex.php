@@ -33,7 +33,7 @@ class BuilderTrashIndex extends IndexAction
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders', 'builder');
+		$mod = Model::getInstance('Builders');
 
 		$params = $req->getQuery();
 		$params['trash'] = 'y';

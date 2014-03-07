@@ -89,7 +89,7 @@ class Constant
 	const JSFUNC_DIALOGREMOVE = 'Core.dialogRemove';
 
 	/**
-	 * @var string JS函数：放入回收站对话框
+	 * @var string JS函数：移至回收站对话框
 	 */
 	const JSFUNC_DIALOGTRASH = 'Core.dialogTrash';
 
@@ -99,7 +99,7 @@ class Constant
 	const JSFUNC_DIALOGBATCHREMOVE = 'Core.dialogBatchRemove';
 
 	/**
-	 * @var string JS函数：批量放入回收站对话框
+	 * @var string JS函数：批量移至回收站对话框
 	 */
 	const JSFUNC_DIALOGBATCHTRASH = 'Core.dialogBatchTrash';
 
@@ -107,4 +107,9 @@ class Constant
 	 * @var string JS函数：Ajax方式展示数据对话框
 	 */
 	const JSFUNC_DIALOGAJAXVIEW = 'Core.dialogAjaxView';
+
+	/**
+	 * @var string JS函数：批量从回收站还原数据
+	 */
+	const JSFUNC_BATCHRESTORE = 'Core.batchRestore';
 }

@@ -63,14 +63,120 @@ class Model
 	 * @param string $moduleName
 	 * @return instance of library\Model
 	 */
-	public static function getInstance($className, $moduleName)
+	public static function getInstance($className, $moduleName = '')
 	{
-		$className = 'modules\\' . strtolower($moduleName) . '\\model\\' . $className;
+		if (($moduleName = trim($moduleName)) === '') {
+			$moduleName = Mvc::$module;
+		}
+
+		$className = 'modules\\' . strtolower($moduleName) . '\\model\\' . strtolower($className);
 		if (!isset(self::$_instances[$className])) {
 			self::$_instances[$className] = new $className();
 		}
 
 		return self::$_instances[$className];
+	}
+
+	/**
+	 * 查询数据
+	 * @param array $params
+	 * @param string $order
+	 * @return array
+	 */
+	public function search(array $params = array(), $order = '')
+	{
+		return $this->getService()->search($params, $order, PageHelper::getListRows(), PageHelper::getFirstRow());
+	}
+
+	/**
+	 * 通过主键，查询一条记录。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function findByPk($value)
+	{
+		return $this->getService()->findByPk($value);
+	}
+
+	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @return array
+	 */
+	public function create(array $params = array())
+	{
+		return $this->getService()->create($params);
+	}
+
+	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($value, array $params)
+	{
+		return $this->getService()->modifyByPk($value, $params);
+	}
+
+	/**
+	 * 通过主键，将一条记录移至回收站。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function trashByPk($value)
+	{
+		return $this->getService()->trashByPk($value, 'trash', 'y');
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $values
+	 * @return array
+	 */
+	public function batchTrashByPk(array $values)
+	{
+		return $this->getService()->batchTrashByPk($values, 'trash', 'y');
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function restoreByPk($value)
+	{
+		return $this->getService()->restoreByPk($value, 'trash', 'n');
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $values
+	 * @return array
+	 */
+	public function batchRestoreByPk(array $values)
+	{
+		return $this->getService()->batchRestoreByPk($values, 'trash', 'n');
+	}
+
+	/**
+	 * 通过主键，删除一条记录。不支持联合主键
+	 * @param integer $value
+	 * @return array
+	 */
+	public function deleteByPk($value)
+	{
+		return $this->getService()->deleteByPk($value);
+	}
+
+	/**
+	 * 通过主键，删除多条记录。不支持联合主键
+	 * @param array $values
+	 * @return array
+	 */
+	public function batchDeleteByPk(array $values)
+	{
+		return $this->getService()->batchDeleteByPk($values);
 	}
 
 	/**

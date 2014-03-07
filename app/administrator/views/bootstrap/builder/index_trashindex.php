@@ -1,4 +1,4 @@
-<?php $this->display('builder/index_index_btns'); ?>
+<?php $this->display('builder/index_trashindex_btns'); ?>
 
 <?php
 $this->widget(
@@ -24,7 +24,7 @@ $this->widget(
 );
 ?>
 
-<?php $this->display('builder/index_index_btns'); ?>
+<?php $this->display('builder/index_trashindex_btns'); ?>
 
 <?php
 $this->widget(
