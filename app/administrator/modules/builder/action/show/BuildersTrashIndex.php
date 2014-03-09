@@ -8,19 +8,20 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
+namespace modules\builder\action\show;
 
-use library\action\base\TrashAction;
+use tfc\ap\Ap;
+use library\action\IndexAction;
 
 /**
- * BuilderTrash class file
- * 生成代码-移至回收站和从回收站还原
+ * BuildersTrashIndex class file
+ * 生成代码-查询回收站数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderTrash.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: BuildersTrashIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.show
  * @since 1.0
  */
-class BuilderTrash extends TrashAction
+class BuildersTrashIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +29,7 @@ class BuilderTrash extends TrashAction
 	 */
 	public function run()
 	{
+		Ap::getRequest()->setParam('trash', 'y');
 		$this->execute('Builders');
 	}
 }

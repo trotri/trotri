@@ -10,17 +10,17 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\base\RemoveAction;
+use library\action\CreateAction;
 
 /**
- * BuilderRemove class file
- * 生成代码-删除数据
+ * BuildersCreate class file
+ * 生成代码-新增数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderRemove.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: BuildersCreate.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class BuilderRemove extends RemoveAction
+class BuildersCreate extends CreateAction
 {
 	/**
 	 * (non-PHPdoc)

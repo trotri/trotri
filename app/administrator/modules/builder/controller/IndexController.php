@@ -29,15 +29,14 @@ class IndexController extends BaseController
 	public function actions()
 	{
 		return array(
-			'index'        => 'modules\\builder\\action\\show\\BuilderIndex',
-			'trashindex'   => 'modules\\builder\\action\\show\\BuilderTrashIndex',
-			'view'         => 'modules\\builder\\action\\show\\BuilderView',
-			'create'       => 'modules\\builder\\action\\submit\\BuilderCreate',
-			'modify'       => 'modules\\builder\\action\\submit\\BuilderModify',
-			'remove'       => 'modules\\builder\\action\\submit\\BuilderRemove',
-			'singlemodify' => 'modules\\builder\\action\\submit\\BuilderSingleModify',
-			'trash'        => 'modules\\builder\\action\\submit\\BuilderTrash',
-			'restore'      => 'modules\\builder\\action\\submit\\BuilderTrash',
+			'index'        => 'modules\\builder\\action\\show\\BuildersIndex',
+			'trashindex'   => 'modules\\builder\\action\\show\\BuildersTrashIndex',
+			'view'         => 'modules\\builder\\action\\show\\BuildersView',
+			'create'       => 'modules\\builder\\action\\submit\\BuildersCreate',
+			'modify'       => 'modules\\builder\\action\\submit\\BuildersModify',
+			'remove'       => 'modules\\builder\\action\\submit\\BuildersRemove',
+			'singlemodify' => 'modules\\builder\\action\\submit\\BuildersSingleModify',
+			'trash'        => 'modules\\builder\\action\\submit\\BuildersTrash',
 		);
 	}
 }

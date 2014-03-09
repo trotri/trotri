@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\show;
+namespace modules\builder\action\submit;
 
-use library\action\ViewAction;
+use library\action\base\TrashAction;
 
 /**
- * BuilderView class file
- * 生成代码-查询数据详情
+ * BuildersTrash class file
+ * 生成代码-移至回收站和从回收站还原
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderView.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.show
+ * @version $Id: BuildersTrash.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.submit
  * @since 1.0
  */
-class BuilderView extends ViewAction
+class BuildersTrash extends TrashAction
 {
 	/**
 	 * (non-PHPdoc)

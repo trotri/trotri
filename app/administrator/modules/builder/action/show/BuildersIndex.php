@@ -8,19 +8,20 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
+namespace modules\builder\action\show;
 
-use library\action\CreateAction;
+use tfc\ap\Ap;
+use library\action\IndexAction;
 
 /**
- * BuilderCreate class file
- * 生成代码-新增数据
+ * BuildersIndex class file
+ * 生成代码-查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderCreate.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: BuildersIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.show
  * @since 1.0
  */
-class BuilderCreate extends CreateAction
+class BuildersIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +29,7 @@ class BuilderCreate extends CreateAction
 	 */
 	public function run()
 	{
+		Ap::getRequest()->setParam('trash', 'n');
 		$this->execute('Builders');
 	}
 }

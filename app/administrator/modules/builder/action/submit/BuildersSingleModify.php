@@ -13,14 +13,14 @@ namespace modules\builder\action\submit;
 use library\action\SingleModifyAction;
 
 /**
- * BuilderSingleModify class file
+ * BuildersSingleModify class file
  * 生成代码-编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderSingleModify.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: BuildersSingleModify.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class BuilderSingleModify extends SingleModifyAction
+class BuildersSingleModify extends SingleModifyAction
 {
 	/**
 	 * (non-PHPdoc)

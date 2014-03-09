@@ -10,18 +10,17 @@
 
 namespace modules\builder\action\show;
 
-use tfc\ap\Ap;
-use library\action\IndexAction;
+use library\action\ViewAction;
 
 /**
- * BuilderIndex class file
- * 生成代码-查询数据列表
+ * BuildersView class file
+ * 生成代码-查询数据详情
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuilderIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: BuildersView.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.show
  * @since 1.0
  */
-class BuilderIndex extends IndexAction
+class BuildersView extends ViewAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,7 +28,6 @@ class BuilderIndex extends IndexAction
 	 */
 	public function run()
 	{
-		Ap::getRequest()->setParam('trash', 'n');
 		$this->execute('Builders');
 	}
 }
