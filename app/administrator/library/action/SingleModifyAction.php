@@ -26,6 +26,8 @@ abstract class SingleModifyAction extends ModifyAction
 {
 	/**
 	 * 执行操作：编辑单个字段和批量编辑单个字段
+	 * @param string $className
+	 * @param string $moduleName
 	 * @return void
 	 */
 	public function execute($className, $moduleName = '')

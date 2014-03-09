@@ -28,6 +28,6 @@ class BuilderView extends ViewAction
 	 */
 	public function run()
 	{
-	
+		$this->execute('Builders');
 	}
 }

@@ -27,6 +27,8 @@ abstract class TrashAction extends BaseAction
 {
 	/**
 	 * 执行操作：移至回收站、从回收站还原数据、批量移至回收站、批量从回收站还原数据
+	 * @param string $className
+	 * @param string $moduleName
 	 * @return void
 	 */
 	public function execute($className, $moduleName = '')

@@ -74,6 +74,11 @@ class Constant
 	const GLYPHICON_TOOL = 'wrench';
 
 	/**
+	 * @var string Glyphicons图标：返回上一步
+	 */
+	const GLYPHICON_HISTORYBACK = 'backward';
+
+	/**
 	 * @var string JS函数：链接
 	 */
 	const JSFUNC_HREF = 'Trotri.href';

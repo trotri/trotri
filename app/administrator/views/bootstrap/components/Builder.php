@@ -108,6 +108,28 @@ class Builder implements ComponentsBuilder
 
 	/**
 	 * (non-PHPdoc)
+	 * @see views.ComponentsBuilder::getButtonHistoryBack()
+	 */
+	public function getButtonHistoryBack(array $params = array())
+	{
+		$url = isset($params['url']) ? $params['url'] : '';
+		if ($url === '') {
+			$url = PageHelper::getLastIndexUrl();
+		}
+
+		$output = array(
+			'type'      => 'button',
+			'label'     => Text::_('CFG_SYSTEM_GLOBAL_HISTORY_BACK'),
+			'glyphicon' => Constant::GLYPHICON_HISTORYBACK,
+			'class'     => 'btn btn-default',
+			'onclick'   => 'return ' . Constant::JSFUNC_HREF . '(\'' . $url . '\');'
+		);
+
+		return $output;
+	}
+
+	/**
+	 * (non-PHPdoc)
 	 * @see views.ComponentsBuilder::getSwitch()
 	 */
 	public function getSwitch(array $params = array())
@@ -248,6 +270,15 @@ class Builder implements ComponentsBuilder
 	public function getGlyphiconTool()
 	{
 		return Constant::GLYPHICON_TOOL;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see views.ComponentsBuilder::getGlyphiconHistoryback()
+	 */
+	public function getGlyphiconHistoryback()
+	{
+		return Constant::GLYPHICON_HISTORYBACK;
 	}
 
 	/**

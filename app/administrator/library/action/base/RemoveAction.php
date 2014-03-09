@@ -27,6 +27,8 @@ abstract class RemoveAction extends BaseAction
 {
 	/**
 	 * 执行操作：删除数据和批量删除数据
+	 * @param string $className
+	 * @param string $moduleName
 	 * @return void
 	 */
 	public function execute($className, $moduleName = '')

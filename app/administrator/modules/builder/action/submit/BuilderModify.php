@@ -11,10 +11,6 @@
 namespace modules\builder\action\submit;
 
 use library\action\ModifyAction;
-use tfc\ap\Ap;
-use tfc\mvc\Mvc;
-use library\Model;
-use library\ErrorNo;
 
 /**
  * BuilderModify class file
@@ -32,37 +28,6 @@ class BuilderModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders');
-		$lastIndexUrl = $mod->getLastIndexUrl();
-		$id = $req->getInteger('id');
-		if ($this->isPost()) {
-			$ret = $mod->modifyByPk($id, $req->getPost());
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				if ($this->isSubmitTypeSave()) {
-					$ret['last_index_url'] = $lastIndexUrl;
-					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
-				}
-				elseif ($this->isSubmitTypeSaveNew()) {
-					$this->forward('create', Mvc::$controller, Mvc::$module, $ret);
-				}
-				elseif ($this->isSubmitTypeSaveClose()) {
-					$url = $this->applyParams($lastIndexUrl, $ret);
-					$this->redirect($url);
-				}
-			}
-
-			$ret['data'] = $req->getPost();
-		}
-		else {
-			$ret = $mod->findByPk($id);
-		}
-
-		$this->assign('id', $id);
-		$this->assign('tabs', $mod->getViewTabsRender());
-		$this->assign('elements', $mod->getElementsRender());
-		$this->render($ret);
+		$this->execute('Builders');
 	}
 }

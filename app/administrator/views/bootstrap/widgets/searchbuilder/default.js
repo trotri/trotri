@@ -3,7 +3,7 @@
  * 提交查询表单
  * @return void
  */
-$("#<?php echo $this->id; ?>").find(":button[name='button_search']").click(function() {
+$("#<?php echo $this->id; ?>").find(":button[name='_button_search_']").click(function() {
   var f = $("#<?php echo $this->id; ?>");
   var a = f.attr("action");
   var q = "";

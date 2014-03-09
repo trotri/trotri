@@ -51,8 +51,6 @@ class SearchBuilder extends form\FormBuilder
 			unset($this->_tplVars['action']);
 		}
 
-		$this->initElements();
-
 		parent::_init();
 	}
 
@@ -74,7 +72,7 @@ class SearchBuilder extends form\FormBuilder
 
 		$searchElements = array();
 		foreach ($elements as $columnName => $element) {
-			if (!isset($columns[$columnName])) {
+			if (!in_array($columnName, $columns)) {
 				continue;
 			}
 
@@ -99,7 +97,7 @@ class SearchBuilder extends form\FormBuilder
 		}
 
 		// 设置查询按钮
-		$search['_button_search_'] = array(
+		$searchElements['_button_search_'] = array(
 			'type' => 'button',
 			'__object__' => 'views\\bootstrap\\components\\form\\ButtonElement',
 			'label' => Text::_('CFG_SYSTEM_GLOBAL_SEARCH'),
@@ -107,7 +105,7 @@ class SearchBuilder extends form\FormBuilder
 			'class' => 'btn btn-primary btn-block'
 		);
 
-		parent::setElements($search);
+		parent::setElements($searchElements);
 	}
 
 	/**
@@ -159,7 +157,7 @@ class SearchBuilder extends form\FormBuilder
 	public function getWidgetDirectory()
 	{
 		if ($this->_widgetDirectory === null) {
-			$this->_widgetDirectory = dirname(__FILE__) . DS . 'formbuilder';
+			$this->_widgetDirectory = dirname(__FILE__) . DS . 'searchbuilder';
 		}
 
 		return $this->_widgetDirectory;

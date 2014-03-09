@@ -49,6 +49,13 @@ interface ComponentsBuilder
 	public function getButtonCancel(array $params = array());
 
 	/**
+	 * 获取表单的“返回”按钮信息，如果存在“最后一次访问的列表页链接”，则跳转到“最后一次访问的列表页”，否则跳转到缺省页面
+	 * @param array $params
+	 * @return array
+	 */
+	public function getButtonHistoryBack(array $params = array());
+
+	/**
 	 * 获取美化版“是|否”选择项表单元素
 	 * @param array $params
 	 * @return string
@@ -121,6 +128,12 @@ interface ComponentsBuilder
 	 * @return string
 	 */
 	public function getGlyphiconTool();
+
+	/**
+	 * 获取Glyphicons图标：返回上一步
+	 * @return string
+	 */
+	public function getGlyphiconHistoryback();
 
 	/**
 	 * 获取JS函数名：链接

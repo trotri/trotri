@@ -1,13 +1,4 @@
 $(document).ready(function() {
-  $(":checkbox[name='valid_mail']").change(function() {
-    Core.singleModify($(this));
-  });
-  $(":checkbox[name='valid_phone']").change(function() {
-    Core.singleModify($(this));
-  });
-  $(":checkbox[name='forbidden']").change(function() {
-    Core.singleModify($(this));
-  });
   Ucenter.initChecked();
   Ucenter.checkedToggle();
 });

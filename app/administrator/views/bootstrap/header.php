@@ -19,13 +19,13 @@ var g_url = "<?php echo $this->script_url; ?>"; var g_uri = "<?php echo $this->r
 var g_mod = "<?php echo $this->module; ?>"; var g_ctrl = "<?php echo $this->controller; ?>"; var g_act = "<?php echo $this->action; ?>";
 </script>
 
-<?php echo $this->getHtml()->jsFile($this->static_url . '/js/jquery-2.0.3.min.js'); ?>
+<?php echo $this->getHtml()->jsFile($this->static_url . '/js/jquery-2.0.3.min.js?v=' . $this->version); ?>
 
-<?php echo $this->getHtml()->jsFile($this->js_url . '/template.js'); ?>
+<?php echo $this->getHtml()->jsFile($this->js_url . '/template.js?v=' . $this->version); ?>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
-  <?php echo $this->getHtml()->jsFile($this->js_url . '/assets/html5shiv.js'); ?>
-  <?php echo $this->getHtml()->jsFile($this->js_url . '/assets/respond.min.js'); ?>
+  <?php echo $this->getHtml()->jsFile($this->js_url . '/assets/html5shiv.js?v=' . $this->version); ?>
+  <?php echo $this->getHtml()->jsFile($this->js_url . '/assets/respond.min.js?v=' . $this->version); ?>
 <![endif]-->
 <!-- /Header -->

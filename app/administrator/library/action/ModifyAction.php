@@ -10,7 +10,11 @@
 
 namespace library\action;
 
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use library\action\base\SubmitAction;
+use library\Model;
+use library\ErrorNo;
 
 /**
  * ModifyAction abstract class file
@@ -22,5 +26,45 @@ use library\action\base\SubmitAction;
  */
 abstract class ModifyAction extends SubmitAction
 {
-	
+	/**
+	 * 执行操作：编辑数据
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Model::getInstance($className, $moduleName);
+		$id = $req->getInteger('id');
+		if ($this->isPost()) {
+			$ret = $mod->modifyByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$lastIndexUrl = $mod->getLastIndexUrl();
+				if ($this->isSubmitTypeSave()) {
+					$ret['last_index_url'] = $lastIndexUrl;
+					$this->forward($mod::ACT_MODIFY, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					$this->forward($mod::ACT_CREATE, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					$url = $this->applyParams($lastIndexUrl, $ret);
+					$this->redirect($url);
+				}
+			}
+
+			$ret['data'] = $req->getPost();
+		}
+		else {
+			$ret = $mod->findByPk($id);
+		}
+
+		$this->assign('id', $id);
+		$this->assign('tabs', $mod->getViewTabsRender());
+		$this->assign('elements', $mod->getElementsRender());
+		$this->render($ret);
+	}
 }

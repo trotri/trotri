@@ -10,7 +10,9 @@
 
 namespace library\action;
 
+use tfc\ap\Ap;
 use library\action\base\ShowAction;
+use library\Model;
 
 /**
  * IndexAction abstract class file
@@ -22,5 +24,34 @@ use library\action\base\ShowAction;
  */
 abstract class IndexAction extends ShowAction
 {
+	/**
+	 * 执行操作：查询列表
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$ret = array();
 
+		$mod = Model::getInstance($className, $moduleName);
+
+		$params = $this->getSearchParams();
+		$ret = $mod->search($params);
+
+		$this->setLastIndexUrl($ret['paginator']);		
+		$this->assign('elements', $mod->getElementsRender());
+		$this->render($ret);
+	}
+
+	/**
+	 * 获取查询参数
+	 * @return array
+	 */
+	public function getSearchParams()
+	{
+		$req = Ap::getRequest();
+		$ret = array_merge($req->getQuery(), $req->getParams());
+		return $ret;
+	}
 }

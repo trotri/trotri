@@ -11,7 +11,6 @@
 namespace modules\builder\action\show;
 
 use tfc\ap\Ap;
-use library\Model;
 use library\action\IndexAction;
 
 /**
@@ -30,17 +29,7 @@ class BuilderIndex extends IndexAction
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$mod = Model::getInstance('Builders');
-
-		$params = $req->getQuery();
-		$params['trash'] = 'n';
-		$ret = $mod->search($params);
-		$this->setLastIndexUrl($ret['paginator']);
-
-		$this->assign('elements', $mod->getElementsRender());
-		$this->render($ret);
+		Ap::getRequest()->setParam('trash', 'n');
+		$this->execute('Builders');
 	}
 }

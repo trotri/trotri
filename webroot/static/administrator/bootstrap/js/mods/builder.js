@@ -1,12 +1,4 @@
 $(document).ready(function() {
-  $(":checkbox[name='tbl_profile']").change(function() {
-    Core.singleModify($(this));
-  });
-
-  $(":checkbox[name='column_auto_increment']").change(function() {
-    Core.singleModify($(this));
-  });
-
   $("select[name='validator_name']").change(function() {
     var validatorName = $(this).val();
     var optionCategory = validators[validatorName]['option_category'];

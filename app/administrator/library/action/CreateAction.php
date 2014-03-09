@@ -10,7 +10,11 @@
 
 namespace library\action;
 
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use library\action\base\SubmitAction;
+use library\Model;
+use library\ErrorNo;
 
 /**
  * CreateAction abstract class file
@@ -22,5 +26,35 @@ use library\action\base\SubmitAction;
  */
 abstract class CreateAction extends SubmitAction
 {
-	
+	/**
+	 * 执行操作：新增数据
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Model::getInstance($className, $moduleName);
+		if ($this->isPost()) {
+			$ret = $mod->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($this->isSubmitTypeSave()) {
+					$this->forward($mod::ACT_MODIFY, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveNew()) {
+					$this->forward($mod::ACT_CREATE, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					$this->forward($mod::ACT_INDEX, Mvc::$controller, Mvc::$module, $ret);
+				}
+			}
+		}
+
+		$this->assign('tabs', $mod->getViewTabsRender());
+		$this->assign('elements', $mod->getElementsRender());
+		$this->render($ret);
+	}
 }

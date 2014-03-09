@@ -26,6 +26,21 @@ use library\PageHelper;
 class Builders extends Model
 {
 	/**
+	 * @var string 查询列表数据Action名
+	 */
+	const ACT_INDEX = 'index';
+
+	/**
+	 * @var string 新增数据Action名
+	 */
+	const ACT_CREATE = 'create';
+
+	/**
+	 * @var string 编辑数据Action名
+	 */
+	const ACT_MODIFY = 'modify';
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
@@ -241,6 +256,7 @@ class Builders extends Model
 			'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),
 			'_button_save2new_' => PageHelper::getComponentsBuilder()->getButtonSaveNew(),
 			'_button_cancel_' => PageHelper::getComponentsBuilder()->getButtonCancel(array('url' => $this->getLastIndexUrl())),
+			'_button_history_back_' => PageHelper::getComponentsBuilder()->getButtonHistoryBack(array('url' => $this->getLastIndexUrl())),
 			'_operate_' => array(
 				'label' => Text::_('CFG_SYSTEM_GLOBAL_OPERATE'),
 				'table' => array(

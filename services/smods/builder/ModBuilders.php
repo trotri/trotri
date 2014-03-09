@@ -51,6 +51,21 @@ class ModBuilders extends BaseModel
 	}
 
 	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::findByPk()
+	 */
+	public function findByPk($value)
+	{
+		$ret = parent::findByPk($value);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$ret['data']['index_row_btns'] = explode(',', $ret['data']['index_row_btns']);
+		return $ret;
+	}
+
+	/**
 	 * 通过builder_id获取builder_name值
 	 * @param integer $value
 	 * @return string

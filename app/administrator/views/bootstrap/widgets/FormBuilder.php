@@ -53,7 +53,7 @@ class FormBuilder extends form\FormBuilder
 		'radio'    => 'IRadioElement',
 		'switch'   => 'SwitchElement',
 		'textarea' => 'TextareaElement',
-		'select'   => 'InputElement',
+		'select'   => 'SelectElement',
 		'string'   => 'StringElement'
 	);
 

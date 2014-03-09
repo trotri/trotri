@@ -10,7 +10,9 @@
 
 namespace library\action;
 
+use tfc\ap\Ap;
 use library\action\base\ShowAction;
+use library\Model;
 
 /**
  * ViewAction abstract class file
@@ -22,5 +24,31 @@ use library\action\base\ShowAction;
  */
 abstract class ViewAction extends ShowAction
 {
+	/**
+	 * 执行操作：查询数据详情
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$ret = array();
+		$req = Ap::getRequest();
+		$mod = Model::getInstance($className, $moduleName);
 
+		$ret = $mod->findByPk($this->getPk());
+
+		$this->assign('tabs', $mod->getViewTabsRender());
+		$this->assign('elements', $mod->getElementsRender());
+		$this->render($ret);
+	}
+
+	/**
+	 * 获取ID值
+	 * @return integer
+	 */
+	public function getPk()
+	{
+		return Ap::getRequest()->getInteger('id');
+	}
 }

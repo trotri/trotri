@@ -38,5 +38,27 @@ elseif ($this->controller === 'types') {
 
 $this->widget('views\bootstrap\components\bar\SideBar', array('config' => $config));
 ?>
+
+<?php
+if ($this->controller === 'index') {
+	$this->widget('views\bootstrap\widgets\SearchBuilder', 
+		array(
+			'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'index', 'builder'),
+			'elements' => $this->elements,
+			'columns' => array(
+				'builder_name',
+				'builder_id',
+				'tbl_name',
+				'tbl_profile',
+				'tbl_engine',
+				'tbl_charset',
+				'app_name'
+			)
+		)
+	);
+}
+?>
 </div><!-- /.col-xs-6 col-sm-2 -->
 <!-- /SideBar -->
+
+<?php echo $this->getHtml()->jsFile($this->js_url . '/mods/builder.js?v=' . $this->version); ?>
