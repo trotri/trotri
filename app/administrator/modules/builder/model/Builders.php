@@ -80,7 +80,8 @@ class Builders extends Model
 	public function getElementsRender()
 	{
 		$data = $this->getData();
-
+		\tfc\saf\debug_dump($data);
+		\tfc\saf\debug_dump($data->getEnum('tbl_charset'));
 		$ret = array(
 			'builder_id' => array(
 				'__tid__' => 'main',
