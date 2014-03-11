@@ -10,6 +10,8 @@
 
 namespace slib;
 
+use tfc\util\Language;
+
 /**
  * BaseData abstract class file
  * 业务层：数据管理基类，寄存常量、选项、验证规则

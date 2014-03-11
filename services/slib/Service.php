@@ -11,6 +11,7 @@
 namespace slib;
 
 use tfc\ap\ErrorException;
+use tfc\util\Language;
 
 /**
  * Service class file
@@ -77,7 +78,8 @@ class Service
 			));
 		}
 
-		$language = Language::getInstance($languageType);
+		$baseDir = DIR_SERVICES . DS . 'slangs';
+		$language = Language::getInstance($languageType, $baseDir);
 		return $language;
 	}
 }

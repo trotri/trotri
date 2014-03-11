@@ -10,6 +10,8 @@
 
 namespace slib;
 
+use tfc\util\Language;
+
 /**
  * BaseService abstract class file
  * 业务层基类

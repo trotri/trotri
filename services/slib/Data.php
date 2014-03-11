@@ -11,6 +11,7 @@
 namespace slib;
 
 use tfc\ap\ErrorException;
+use tfc\util\Language;
 
 /**
  * Data class file

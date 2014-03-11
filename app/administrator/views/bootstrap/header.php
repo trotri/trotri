@@ -1,5 +1,6 @@
 <!-- Header -->
 <?php echo $this->getHtml()->contentType(); ?>
+<?php echo $this->getHtml()->meta('IE=edge', 'X-UA-Compatible', ''); ?>
 <?php echo $this->getHtml()->meta('width=device-width, initial-scale=1.0', '', 'viewport'); ?>
 <?php echo $this->getHtml()->meta('', '', 'description'); ?>
 <?php echo $this->getHtml()->meta('', '', 'author'); ?>

@@ -233,12 +233,12 @@ Core = {
    * @return string
    */
   getUrl: function(mod, ctrl, act, params) {
-    url = g_url + "?r=" + mod + "/" + ctrl + "/" + act;
+    var url = g_url + "?r=" + mod + "/" + ctrl + "/" + act;
     if (typeof(params) == "object") {
       for (var key in params) {
         url += "&" + key + "=" + params[key];
       }
     }
     return url;
-  },
+  }
 }

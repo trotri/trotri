@@ -122,11 +122,12 @@ class Language
      */
     public function load($fileName)
     {
+        $fileName = $this->getLangFile($fileName);
         if ($this->fileLoaded($fileName)) {
             return $this;
         }
 
-        $strings = $this->parse($fileName);
+        $strings = $this->parseIni($fileName);
         $this->_strings = array_merge($this->_strings, $strings);
         return $this;
     }
@@ -138,7 +139,7 @@ class Language
      */
     public function parse($fileName)
     {
-        $fileName = $this->getLangDir() . DIRECTORY_SEPARATOR . $fileName;
+        $fileName = $this->getLangFile($fileName);
         return $this->parseIni($fileName);
     }
 
@@ -200,6 +201,17 @@ class Language
     public function getStrings()
     {
         return $this->_strings;
+    }
+
+    /**
+     * 获取当前语种的语言包文件
+     * @param string $fileName
+     * @return string
+     */
+    public function getLangFile($fileName)
+    {
+        $ret = $this->getLangDir() . DIRECTORY_SEPARATOR . $fileName;
+        return $ret;
     }
 
     /**
