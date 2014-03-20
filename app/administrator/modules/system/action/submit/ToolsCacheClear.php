@@ -10,7 +10,7 @@
 
 namespace modules\system\action\submit;
 
-use library\action\RemoveAction;
+use library\action\base\RemoveAction;
 
 /**
  * ToolsCacheClear class file
