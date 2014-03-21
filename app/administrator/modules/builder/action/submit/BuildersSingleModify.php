@@ -14,7 +14,7 @@ use library\action\SingleModifyAction;
 
 /**
  * BuildersSingleModify class file
- * 生成代码-编辑单个字段
+ * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BuildersSingleModify.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit

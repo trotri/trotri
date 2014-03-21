@@ -10,6 +10,7 @@
 
 namespace smods\builder;
 
+use tfc\util\Language;
 use slib\BaseModel;
 use slib\Data;
 use slib\ErrorNo;
@@ -24,6 +25,17 @@ use slib\ErrorNo;
  */
 class ModBuilders extends BaseModel
 {
+	/**
+	 * 构造方法：初始化数据库操作类和语言国际化管理类
+	 * @param slib\Language $language
+	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
+	 */
+	public function __construct(Language $language, $tableNum = -1)
+	{
+		$db = new DbBuilders($tableNum);
+		parent::__construct($db, $language);
+	}
+
 	/**
 	 * 查询数据
 	 * @param array $params
@@ -109,7 +121,7 @@ class ModBuilders extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library.Model::validate()
+	 * @see slib.BaseModel::validate()
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{

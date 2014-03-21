@@ -14,7 +14,7 @@ use library\action\base\TrashAction;
 
 /**
  * BuildersTrash class file
- * 生成代码-移至回收站和从回收站还原
+ * 移至回收站和从回收站还原
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BuildersTrash.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit

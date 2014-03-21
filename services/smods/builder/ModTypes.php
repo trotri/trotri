@@ -10,7 +10,10 @@
 
 namespace smods\builder;
 
+use tfc\util\Language;
 use slib\BaseModel;
+use slib\Data;
+use slib\ErrorNo;
 
 /**
  * ModTypes class file
@@ -22,4 +25,94 @@ use slib\BaseModel;
  */
 class ModTypes extends BaseModel
 {
+	/**
+	 * 构造方法：初始化数据库操作类和语言国际化管理类
+	 * @param slib\Language $language
+	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
+	 */
+	public function __construct(Language $language, $tableNum = -1)
+	{
+		$db = new DbTypes($tableNum);
+		parent::__construct($db, $language);
+	}
+
+	/**
+	 * 查询数据
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function search(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	{
+		$ret = $this->findAllByAttributes(array(), $order, $limit, $offset);
+		return $ret;
+	}
+
+	/**
+	 * 获取所有的Types值
+	 * @return array
+	 */
+	public function getTypes()
+	{
+		$ret = $this->findPairsByAttributes(array('type_id', 'type_name'), array(), 'sort');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return array();
+		}
+
+		return $ret['data'];
+	}
+
+	/**
+	 * 通过type_id获取type_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($value)
+	{
+		$value = (int) $value;
+		$ret = $this->getByPk('type_name', $value);
+		$typeName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['type_name'];
+		return $typeName;
+	}
+
+	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @return array
+	 */
+	public function create(array $params = array())
+	{
+		return $this->autoInsert($params);
+	}
+
+	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($value, array $params)
+	{
+		return $this->autoUpdateByPk($value, $params);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::validate()
+	 */
+	public function validate(array $attributes = array(), $required = false, $opType = '')
+	{
+		$data = Data::getInstance('types', 'builder', $this->getLanguage());
+		$rules = $data->getRules(array(
+			'type_name',
+			'form_type',
+			'field_type',
+			'category',
+			'sort'
+		));
+
+		return $this->filterRun($rules, $attributes, $required);
+	}
 }

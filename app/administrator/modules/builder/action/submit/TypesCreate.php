@@ -10,17 +10,17 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\base\RemoveAction;
+use library\action\CreateAction;
 
 /**
- * BuildersRemove class file
- * 删除数据
+ * TypesCreate class file
+ * 新增数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuildersRemove.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: TypesCreate.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class BuildersRemove extends RemoveAction
+class TypesCreate extends CreateAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +28,6 @@ class BuildersRemove extends RemoveAction
 	 */
 	public function run()
 	{
-		$this->execute('Builders');
+		$this->execute('Types');
 	}
 }

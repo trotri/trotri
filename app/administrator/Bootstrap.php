@@ -10,6 +10,7 @@
 
 use tfc\ap;
 use tfc\mvc\Mvc;
+use tfc\util\String;
 use tfc\saf\Cfg;
 
 /**
@@ -22,6 +23,47 @@ use tfc\saf\Cfg;
  */
 class Bootstrap extends ap\Bootstrap
 {
+	/**
+	 * 初始化$_REQUEST、$_GET、$_POST、$_COOKIE值
+	 * 1.在指定的预定义字符前添加反斜杠
+	 * 2.XSSClean
+	 * @return void
+	 */
+	public function _initRGPC()
+	{
+		if (!MAGIC_QUOTES_GPC) {
+			$_GET    = String::addslashes($_GET);
+			$_POST   = String::addslashes($_POST);
+			$_COOKIE = String::addslashes($_COOKIE);
+		}
+
+		$rawKeys = array('last_index_url', 'http_referer');
+
+		foreach ($_GET as $key => $value) {
+			if (in_array($key, $rawKeys)) {
+				continue;
+			}
+
+			$_GET[$key] = String::specialchars_decode($value);
+		}
+
+		foreach ($_POST as $key => $value) {
+			if (in_array($key, $rawKeys)) {
+				continue;
+			}
+
+			$_POST[$key] = String::specialchars_decode($value);
+		}
+
+		foreach ($_COOKIE as $key => $value) {
+			if (in_array($key, $rawKeys)) {
+				continue;
+			}
+
+			$_COOKIE[$key] = String::specialchars_decode($value);
+		}
+	}
+
 	/**
 	 * 初始化默认的module、controller和action名
 	 * @return void

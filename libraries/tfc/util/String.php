@@ -75,7 +75,7 @@ class String
 
         if (is_array($param)) {
             foreach ($param as $key => $value) {
-                $param[$key] = self::specialchars_encode($value);
+                $param[$key] = self::specialchars_decode($value);
             }
         }
         else {

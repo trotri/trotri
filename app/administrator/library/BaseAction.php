@@ -168,6 +168,6 @@ abstract class BaseAction extends Action
 	 */
 	public function err404()
 	{
-		$this->forward('err404', 'index', 'system');
+		$this->forward('err404', 'site', 'system');
 	}
 }

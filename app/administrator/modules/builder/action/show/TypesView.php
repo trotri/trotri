@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
+namespace modules\builder\action\show;
 
-use library\action\base\RemoveAction;
+use library\action\ViewAction;
 
 /**
- * BuildersRemove class file
- * 删除数据
+ * TypesView class file
+ * 查询数据详情
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BuildersRemove.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: TypesView.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.show
  * @since 1.0
  */
-class BuildersRemove extends RemoveAction
+class TypesView extends ViewAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +28,6 @@ class BuildersRemove extends RemoveAction
 	 */
 	public function run()
 	{
-		$this->execute('Builders');
+		$this->execute('Types');
 	}
 }

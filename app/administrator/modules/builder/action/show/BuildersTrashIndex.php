@@ -15,7 +15,7 @@ use library\action\IndexAction;
 
 /**
  * BuildersTrashIndex class file
- * 生成代码-查询回收站数据列表
+ * 查询回收站数据列表
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BuildersTrashIndex.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.show

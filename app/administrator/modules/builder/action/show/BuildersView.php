@@ -14,7 +14,7 @@ use library\action\ViewAction;
 
 /**
  * BuildersView class file
- * 生成代码-查询数据详情
+ * 查询数据详情
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BuildersView.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.show

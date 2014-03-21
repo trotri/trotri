@@ -14,7 +14,7 @@ use library\action\ModifyAction;
 
 /**
  * BuildersModify class file
- * 生成代码-编辑数据
+ * 编辑数据
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BuildersModify.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit

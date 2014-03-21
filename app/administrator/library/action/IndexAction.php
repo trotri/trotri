@@ -13,6 +13,7 @@ namespace library\action;
 use tfc\ap\Ap;
 use library\action\base\ShowAction;
 use library\Model;
+use library\ErrorNo;
 
 /**
  * IndexAction abstract class file
@@ -38,6 +39,9 @@ abstract class IndexAction extends ShowAction
 
 		$params = $this->getSearchParams();
 		$ret = $mod->search($params);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			$this->err404();
+		}
 
 		$this->setLastIndexUrl($ret['paginator']);		
 		$this->assign('elements', $mod->getElementsRender());

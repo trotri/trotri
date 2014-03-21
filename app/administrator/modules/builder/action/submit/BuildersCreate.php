@@ -14,7 +14,7 @@ use library\action\CreateAction;
 
 /**
  * BuildersCreate class file
- * 生成代码-新增数据
+ * 新增数据
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BuildersCreate.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
