@@ -10,18 +10,17 @@
 
 namespace modules\builder\action\show;
 
-use tfc\ap\Ap;
-use library\action\IndexAction;
+use library\action\ViewAction;
 
 /**
- * TypesIndex class file
- * 查询数据列表
+ * GroupsView class file
+ * 查询数据详情
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TypesIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: GroupsView.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.show
  * @since 1.0
  */
-class TypesIndex extends IndexAction
+class GroupsView extends ViewAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,7 +28,6 @@ class TypesIndex extends IndexAction
 	 */
 	public function run()
 	{
-		Ap::getRequest()->setParam('order', 'sort');
-		$this->execute('Types');
+		$this->execute('Groups');
 	}
 }

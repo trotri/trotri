@@ -10,6 +10,7 @@
 
 namespace modules\builder\model;
 
+use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
@@ -129,20 +130,20 @@ class Types extends Model
 	}
 
 	/**
-	 * 获取列表页“类型名，单行文本、多行文本、密码、开关选项卡、提交按钮等”的A标签
-	 * @param array $data
+	 * 通过type_id获取type_name值
+	 * @param integer $value
 	 * @return string
 	 */
-	public function getTypeNameLink($data)
+	public function getTypeNameByTypeId($value)
 	{
-		$params = array(
-			'id' => $data['type_id'],
-			'last_index_url' => $this->getLastIndexUrl()
-		);
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$typeName = $this->getService()->getTypeNameByTypeId($value);
+			Registry::set($name, $typeName);
+		}
 
-		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
-		$ret = $this->a($data['type_name'], $url);
-		return $ret;
+		return Registry::get($name);
 	}
 
 	/**
@@ -170,6 +171,23 @@ class Types extends Model
 		));
 
 		$ret = $modifyIcon . $removeIcon;
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“类型名，单行文本、多行文本、密码、开关选项卡、提交按钮等”的A标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getTypeNameLink($data)
+	{
+		$params = array(
+			'id' => $data['type_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
+		$ret = $this->a($data['type_name'], $url);
 		return $ret;
 	}
 }

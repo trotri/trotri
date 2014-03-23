@@ -171,7 +171,7 @@ class Paginator
         $pages['prev'] = ($pages['curr'] > 1) ? $pages['curr'] - 1 : 1;
         $pages['next'] = ($pages['curr'] < $pages['end']) ? $pages['curr'] + 1 : $pages['end'];
 
-        $pages['first'] = ceil($pages['curr'] - $pages['list'] / 2);
+        $pages['first'] = (int) ceil($pages['curr'] - $pages['list'] / 2);
         if ($pages['first'] < 1) {
             $pages['first'] = 1;
         }
@@ -195,7 +195,7 @@ class Paginator
      */
     public function getTotalPages()
     {
-        return ceil($this->getTotalRows() / $this->getListRows());
+        return (int) ceil($this->getTotalRows() / $this->getListRows());
     }
 
     /**

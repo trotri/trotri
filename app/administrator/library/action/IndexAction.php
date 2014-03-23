@@ -38,7 +38,13 @@ abstract class IndexAction extends ShowAction
 		$mod = Model::getInstance($className, $moduleName);
 
 		$params = $this->getSearchParams();
-		$ret = $mod->search($params);
+		if (($order = $this->getOrder()) !== '') {
+			$ret = $mod->search($params, $order);
+		}
+		else {
+			$ret = $mod->search($params);
+		}
+
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			$this->err404();
 		}
@@ -57,5 +63,14 @@ abstract class IndexAction extends ShowAction
 		$req = Ap::getRequest();
 		$ret = array_merge($req->getQuery(), $req->getParams());
 		return $ret;
+	}
+
+	/**
+	 * 获取排序参数
+	 * @return array
+	 */
+	public function getOrder()
+	{
+		return Ap::getRequest()->getTrim('order', '');
 	}
 }

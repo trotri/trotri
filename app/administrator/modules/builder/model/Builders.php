@@ -10,6 +10,7 @@
 
 namespace modules\builder\model;
 
+use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
@@ -261,6 +262,20 @@ class Builders extends Model
 				'table' => array(
 					'callback' => array($this, 'getOperate')
 				)
+			),
+			'builder_field_groups' => array(
+				'name' => 'builder_field_groups',
+				'label' => Text::_('MOD_BUILDER_URLS_GROUPS_INDEX'),
+				'table' => array(
+					'callback' => array($this, 'getBuilderFieldGroupsTblColumn')
+				),
+			),
+			'builder_fields' => array(
+				'name' => 'builder_fields',
+				'label' => Text::_('MOD_BUILDER_URLS_FIELDS_INDEX'),
+				'table' => array(
+					'callback' => array($this, 'getBuilderFieldsTblColumn')
+				),
 			)
 		);
 
@@ -268,48 +283,20 @@ class Builders extends Model
 	}
 
 	/**
-	 * 获取列表页“生成代码名”的A标签
-	 * @param array $data
+	 * 通过builder_id获取builder_name值
+	 * @param integer $value
 	 * @return string
 	 */
-	public function getBuilderNameLink($data)
+	public function getBuilderNameByBuilderId($value)
 	{
-		$params = array(
-			'id' => $data['builder_id'],
-			'last_index_url' => $this->getLastIndexUrl()
-		);
-
-		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
-		$ret = $this->a($data['builder_name'], $url);
-		return $ret;
-	}
-
-	/**
-	 * 获取列表页“是否生成扩展表”的选项
-	 * @param array $data
-	 * @return string
-	 */
-	public function getTblProfileTblColumn($data)
-	{
-		if ($data['trash'] === 'y') {
-			$enum = $this->getData()->getEnum('tbl_profile');
-			return $enum[$data['tbl_profile']];
+		$value = (int) $value;
+		$name = __METHOD__ . '_' . $value;
+		if (!Registry::has($name)) {
+			$builderName = $this->getService()->getBuilderNameByBuilderId($value);
+			Registry::set($name, $builderName);
 		}
 
-		$params = array(
-			'id' => $data['builder_id'],
-			'column_name' => 'tbl_profile'
-		);
-
-		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
-		$ret = PageHelper::getComponentsBuilder()->getSwitch(array(
-			'id' => $data['builder_id'],
-			'name' => 'tbl_profile',
-			'value' => $data['tbl_profile'],
-			'href' => $url
-		));
-
-		return $ret;
+		return Registry::get($name);
 	}
 
 	/**
@@ -366,6 +353,107 @@ class Builders extends Model
 			$ret = $restoreIcon . $removeIcon;
 		}
 
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“生成代码名”的A标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getBuilderNameLink($data)
+	{
+		$params = array(
+			'id' => $data['builder_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
+		$ret = $this->a($data['builder_name'], $url);
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“是否生成扩展表”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getTblProfileTblColumn($data)
+	{
+		if ($data['trash'] === 'y') {
+			$enum = $this->getData()->getEnum('tbl_profile');
+			return $enum[$data['tbl_profile']];
+		}
+
+		$params = array(
+			'id' => $data['builder_id'],
+			'column_name' => 'tbl_profile'
+		);
+
+		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$ret = PageHelper::getComponentsBuilder()->getSwitch(array(
+			'id' => $data['builder_id'],
+			'name' => 'tbl_profile',
+			'value' => $data['tbl_profile'],
+			'href' => $url
+		));
+
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“字段组”图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getBuilderFieldGroupsTblColumn($data)
+	{
+		$params = array('builder_id' => $data['builder_id']);
+		$componentsBuilder = PageHelper::getComponentsBuilder();
+
+		$indexIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconIndex(),
+			'url' => $this->getUrl('index', 'groups', Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_URLS_GROUPS_INDEX'),
+		));
+
+		$createIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconCreate(),
+			'url' => $this->getUrl('create', 'groups', Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_URLS_GROUPS_CREATE'),
+		));
+
+		$ret = $indexIcon . $createIcon;
+		return $ret;
+	}
+
+	/**
+	 * 获取列表页“表单字段”图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getBuilderFieldsTblColumn($data)
+	{
+		$params = array('builder_id' => $data['builder_id']);
+		$componentsBuilder = PageHelper::getComponentsBuilder();
+
+		$indexIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconIndex(),
+			'url' => $this->getUrl('index', 'fields', Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_URLS_FIELDS_INDEX'),
+		));
+
+		$createIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconCreate(),
+			'url' => $this->getUrl('create', 'fields', Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_URLS_FIELDS_CREATE'),
+		));
+
+		$ret = $indexIcon . $createIcon;
 		return $ret;
 	}
 }

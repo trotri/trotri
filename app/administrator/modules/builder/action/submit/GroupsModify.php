@@ -8,20 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\show;
+namespace modules\builder\action\submit;
 
-use tfc\ap\Ap;
-use library\action\IndexAction;
+use library\action\ModifyAction;
 
 /**
- * TypesIndex class file
- * 查询数据列表
+ * GroupsModify class file
+ * 编辑数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TypesIndex.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.show
+ * @version $Id: GroupsModify.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.submit
  * @since 1.0
  */
-class TypesIndex extends IndexAction
+class GroupsModify extends ModifyAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,7 +28,6 @@ class TypesIndex extends IndexAction
 	 */
 	public function run()
 	{
-		Ap::getRequest()->setParam('order', 'sort');
-		$this->execute('Types');
+		$this->execute('Groups');
 	}
 }

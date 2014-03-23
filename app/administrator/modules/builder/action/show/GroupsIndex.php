@@ -14,14 +14,14 @@ use tfc\ap\Ap;
 use library\action\IndexAction;
 
 /**
- * TypesIndex class file
+ * GroupsIndex class file
  * 查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TypesIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: GroupsIndex.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.show
  * @since 1.0
  */
-class TypesIndex extends IndexAction
+class GroupsIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -30,6 +30,7 @@ class TypesIndex extends IndexAction
 	public function run()
 	{
 		Ap::getRequest()->setParam('order', 'sort');
-		$this->execute('Types');
+		$this->assign('builder_id', Ap::getRequest()->getInteger('builder_id'));
+		$this->execute('Groups');
 	}
 }

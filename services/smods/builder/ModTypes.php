@@ -44,7 +44,7 @@ class ModTypes extends BaseModel
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function search(array $params = array(), $order = 'sort', $limit = 0, $offset = 0)
 	{
 		$ret = $this->findAllByAttributes(array(), $order, $limit, $offset);
 		return $ret;
