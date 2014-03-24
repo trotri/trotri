@@ -32,7 +32,7 @@ class Model
 	 * 获取模型类的实例
 	 * @param string $className
 	 * @param string $moduleName
-	 * @param slib\Language $language
+	 * @param tfc\util\Language $language
 	 * @param integer $tableNum
 	 * @return instance of slib\BaseModel
 	 */
@@ -50,7 +50,7 @@ class Model
 	/**
 	 * 创建模型类的实例
 	 * @param string $namespaceName
-	 * @param slib\Language $language
+	 * @param tfc\util\Language $language
 	 * @param integer $tableNum
 	 * @return instance of slib\BaseModel
 	 * @throws ErrorException 如果模型类不存在，抛出异常

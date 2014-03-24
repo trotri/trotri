@@ -51,6 +51,10 @@ return array(
 		2 => array(
 			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX',
 			'm' => 'builder', 'c' => 'index', 'a' => 'trashindex'
+		),
+		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_SCHEMA_INDEX',
+			'm' => 'builder', 'c' => 'schema', 'a' => 'index'
 		)
 	),
 	array(

@@ -20,6 +20,8 @@ namespace library;
  */
 class Constant
 {
+	
+
 	/**
 	 * @var string 表单提交后跳转方式：保存并跳转到编辑页
 	 */

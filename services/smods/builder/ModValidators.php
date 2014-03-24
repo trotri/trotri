@@ -120,4 +120,21 @@ class ModValidators extends BaseModel
 
 		return $this->filterRun($rules, $attributes, $required);
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPreValidator()
+	 */
+	protected function _cleanPreValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+			'validator_name' => 'trim',
+			'field_id' => 'intval',
+			'message' => 'trim',
+			'sort' => 'intval',
+		);
+
+		$ret = $this->_clean($rules, $attributes);
+		return $ret;
+	}
 }
