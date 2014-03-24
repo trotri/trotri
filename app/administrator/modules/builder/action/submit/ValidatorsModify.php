@@ -14,14 +14,14 @@ use library\action\ModifyAction;
 use library\Model;
 
 /**
- * GroupsModify class file
+ * ValidatorsModify class file
  * 编辑数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsModify.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: ValidatorsModify.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class GroupsModify extends ModifyAction
+class ValidatorsModify extends ModifyAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,13 +29,20 @@ class GroupsModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$mod = Model::getInstance('Groups');
-		$builderId = $mod->getBuilderId();
+		$mod = Model::getInstance('Validators');
+		$fieldId = $mod->getFieldId();
+		if ($fieldId <= 0) {
+			$this->err404();
+		}
+
+		$mod = Model::getInstance('Fields');
+		$builderId = $mod->getBuilderIdByFieldId($fieldId);
 		if ($builderId <= 0) {
 			$this->err404();
 		}
 
+		$this->assign('field_id', $fieldId);
 		$this->assign('builder_id', $builderId);
-		$this->execute('Groups');
+		$this->execute('Validators');
 	}
 }

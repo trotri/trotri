@@ -43,7 +43,6 @@ class String
             '&quot;' => '"',
             '&lt;' => '<',
             '&gt;' => '>',
-            '&nbsp;' => ' ',
         );
 
         if (is_array($param)) {
@@ -70,7 +69,6 @@ class String
             '"' => '&quot;',
             '<' => '&lt;',
             '>' => '&gt;',
-            ' ' => '&nbsp;',
         );
 
         if (is_array($param)) {

@@ -12,16 +12,17 @@ namespace modules\builder\action\show;
 
 use tfc\ap\Ap;
 use library\action\IndexAction;
+use library\Model;
 
 /**
- * GroupsIndex class file
+ * ValidatorsIndex class file
  * 查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: ValidatorsIndex.php 1 2014-01-18 14:19:29Z huan.song $ 
  * @package modules.builder.action.show
  * @since 1.0
  */
-class GroupsIndex extends IndexAction
+class ValidatorsIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,14 +30,21 @@ class GroupsIndex extends IndexAction
 	 */
 	public function run()
 	{
-		$builderId = Ap::getRequest()->getInteger('builder_id');
+		$fieldId = Ap::getRequest()->getInteger('field_id');
+		if ($fieldId <= 0) {
+			$this->err404();
+		}
+
+		$mod = Model::getInstance('Fields');
+		$builderId = $mod->getBuilderIdByFieldId($fieldId);
 		if ($builderId <= 0) {
 			$this->err404();
 		}
 
+		$this->assign('field_id', $fieldId);
 		$this->assign('builder_id', $builderId);
 
 		Ap::getRequest()->setParam('order', 'sort');
-		$this->execute('Groups');
+		$this->execute('Validators');
 	}
 }

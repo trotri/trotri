@@ -18,7 +18,7 @@ use library\PageHelper;
 
 /**
  * Types class file
- * 表单字段类型-模型类
+ * 表单字段类型
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Types.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.model

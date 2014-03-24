@@ -11,6 +11,7 @@
 namespace modules\builder\action\submit;
 
 use library\action\base\RemoveAction;
+use library\Model;
 
 /**
  * GroupsRemove class file

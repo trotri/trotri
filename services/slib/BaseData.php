@@ -29,7 +29,7 @@ abstract class BaseData
 
 	/**
 	 * 构造方法：初始化语言国际化管理类
-	 * @param slib\Language $language
+	 * @param tfc\util\Language $language
 	 */
 	public function __construct(Language $language)
 	{
@@ -102,7 +102,7 @@ abstract class BaseData
 
 	/**
 	 * 获取语言国际化管理类
-	 * @return instance of slib\Language
+	 * @return instance of tfc\util\Language
 	 */
 	public function getLanguage()
 	{

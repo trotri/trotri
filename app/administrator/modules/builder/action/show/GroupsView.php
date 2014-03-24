@@ -11,6 +11,7 @@
 namespace modules\builder\action\show;
 
 use library\action\ViewAction;
+use library\Model;
 
 /**
  * GroupsView class file
@@ -28,6 +29,13 @@ class GroupsView extends ViewAction
 	 */
 	public function run()
 	{
+		$mod = Model::getInstance('Groups');
+		$builderId = $mod->getBuilderId();
+		if ($builderId <= 0) {
+			$this->err404();
+		}
+
+		$this->assign('builder_id', $builderId);
 		$this->execute('Groups');
 	}
 }

@@ -10,6 +10,7 @@
 
 namespace smods\builder;
 
+use tfc\util\Language;
 use slib\BaseModel;
 use slib\Data;
 use slib\ErrorNo;
@@ -26,7 +27,7 @@ class ModFields extends BaseModel
 {
 	/**
 	 * 构造方法：初始化数据库操作类和语言国际化管理类
-	 * @param slib\Language $language
+	 * @param tfc\util\Language $language
 	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
 	 */
 	public function __construct(Language $language, $tableNum = -1)
@@ -144,5 +145,29 @@ class ModFields extends BaseModel
 		));
 
 		return $this->filterRun($rules, $attributes, $required);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPreValidator()
+	 */
+	protected function _cleanPreValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+			'field_name' => 'trim',
+			'column_length' => 'trim',
+			'column_comment' => 'trim',
+			'builder_id' => 'intval',
+			'type_id' => 'intval',
+			'sort' => 'intval',
+			'html_label' => 'trim',
+			'index_sort' => 'intval',
+			'form_create_sort' => 'intval',
+			'form_modify_sort' => 'intval',
+			'form_search_sort' => 'intval',
+		);
+
+		$ret = $this->_clean($rules, $attributes);
+		return $ret;
 	}
 }

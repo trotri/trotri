@@ -20,7 +20,7 @@ use library\ErrorNo;
 
 /**
  * Fields class file
- * 表单字段-模型类
+ * 表单字段
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Fields.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.model
@@ -93,6 +93,7 @@ class Fields extends Model
 	 */
 	public function getElementsRender()
 	{
+		$builderId = $this->getBuilderId();
 		$data = $this->getData();
 		$ret = array(
 			'field_id' => array(
@@ -146,14 +147,14 @@ class Fields extends Model
 			'builder_id' => array(
 				'__tid__' => 'main',
 				'type' => 'hidden',
-				'value' => $this->getBuilderId(),
+				'value' => $builderId,
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_GROUPS_BUILDER_ID_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_GROUPS_BUILDER_ID_HINT'),
 			),
 			'builder_name' => array(
 				'type' => 'string',
 				'label' => Text::_('MOD_BUILDER_BUILDERS_BUILDER_NAME_LABEL'),
-				'value' => Model::getInstance('Builders')->getBuilderNameByBuilderId($this->getBuilderId()),
+				'value' => Model::getInstance('Builders')->getBuilderNameByBuilderId($builderId),
 				'table' => array(
 					'callback' => array($this, 'getBuilderNameTblColumn')
 				)
@@ -161,7 +162,7 @@ class Fields extends Model
 			'group_id' => array(
 				'__tid__' => 'main',
 				'type' => 'select',
-				'options' => array(),
+				'options' => Model::getInstance('Groups')->getGroupsByBuilderId($builderId, true),
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_GROUP_ID_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_GROUP_ID_HINT'),
 				'table' => array(
@@ -278,6 +279,24 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_SEARCH_SORT_HINT'),
 				'required' => true,
 			),
+			'_button_save_' => PageHelper::getComponentsBuilder()->getButtonSave(),
+			'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),
+			'_button_save2new_' => PageHelper::getComponentsBuilder()->getButtonSaveNew(),
+			'_button_cancel_' => PageHelper::getComponentsBuilder()->getButtonCancel(array('url' => $this->getLastIndexUrl())),
+			'_button_history_back_' => PageHelper::getComponentsBuilder()->getButtonHistoryBack(array('url' => $this->getLastIndexUrl())),
+			'_operate_' => array(
+				'label' => Text::_('CFG_SYSTEM_GLOBAL_OPERATE'),
+				'table' => array(
+					'callback' => array($this, 'getOperate')
+				)
+			),
+			'builder_field_validators' => array(
+				'name' => 'builder_field_validators',
+				'label' => Text::_('MOD_BUILDER_URLS_VALIDATORS_INDEX'),
+				'table' => array(
+					'callback' => array($this, 'getBuilderFieldValidatorsTblColumn')
+				),
+			)
 		);
 
 		return $ret;
@@ -291,7 +310,7 @@ class Fields extends Model
 	{
 		$ret = parent::create($params);
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			$ret['builder_id'] = $this->getBuilderIdByGroupId($ret['id']);
+			$ret['builder_id'] = $this->getBuilderIdByFieldId($ret['id']);
 		}
 
 		return $ret;
@@ -404,7 +423,7 @@ class Fields extends Model
 	public function getColumnAutoIncrementTblColumn($data)
 	{
 		$params = array(
-			'id' => $data['builder_id'],
+			'id' => $data['field_id'],
 			'column_name' => 'column_auto_increment'
 		);
 
@@ -447,5 +466,33 @@ class Fields extends Model
 	public function getTypeNameTblColumn($data)
 	{
 		return Model::getInstance('Types')->getTypeNameByTypeId($data['type_id']);
+	}
+
+	/**
+	 * 获取列表页“表单字段验证”图标按钮
+	 * @param array $data
+	 * @return string
+	 */
+	public function getBuilderFieldValidatorsTblColumn($data)
+	{
+		$params = array('field_id' => $data['field_id']);
+		$componentsBuilder = PageHelper::getComponentsBuilder();
+
+		$indexIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconIndex(),
+			'url' => $this->getUrl('index', 'validators', Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_URLS_VALIDATORS_INDEX'),
+		));
+
+		$createIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconCreate(),
+			'url' => $this->getUrl('create', 'validators', Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_BUILDER_URLS_VALIDATORS_CREATE'),
+		));
+
+		$ret = $indexIcon . $createIcon;
+		return $ret;
 	}
 }

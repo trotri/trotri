@@ -11,6 +11,7 @@
 namespace modules\builder\action\submit;
 
 use library\action\CreateAction;
+use library\Model;
 
 /**
  * GroupsCreate class file
@@ -28,6 +29,13 @@ class GroupsCreate extends CreateAction
 	 */
 	public function run()
 	{
+		$mod = Model::getInstance('Groups');
+		$builderId = $mod->getBuilderId();
+		if ($builderId <= 0) {
+			$this->err404();
+		}
+
+		$this->assign('builder_id', $builderId);
 		$this->execute('Groups');
 	}
 }

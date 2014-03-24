@@ -10,18 +10,18 @@
 
 namespace modules\builder\action\submit;
 
-use library\action\ModifyAction;
+use library\action\CreateAction;
 use library\Model;
 
 /**
- * GroupsModify class file
- * 编辑数据
+ * FieldsCreate class file
+ * 新增数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsModify.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: FieldsCreate.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.action.submit
  * @since 1.0
  */
-class GroupsModify extends ModifyAction
+class FieldsCreate extends CreateAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,13 +29,13 @@ class GroupsModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$mod = Model::getInstance('Groups');
+		$mod = Model::getInstance('Fields');
 		$builderId = $mod->getBuilderId();
 		if ($builderId <= 0) {
 			$this->err404();
 		}
 
 		$this->assign('builder_id', $builderId);
-		$this->execute('Groups');
+		$this->execute('Fields');
 	}
 }

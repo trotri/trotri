@@ -28,7 +28,7 @@ class ModGroups extends BaseModel
 {
 	/**
 	 * 构造方法：初始化数据库操作类和语言国际化管理类
-	 * @param slib\Language $language
+	 * @param tfc\util\Language $language
 	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
 	 */
 	public function __construct(Language $language, $tableNum = -1)
@@ -146,5 +146,22 @@ class ModGroups extends BaseModel
 		));
 
 		return $this->filterRun($rules, $attributes, $required);
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPreValidator()
+	 */
+	protected function _cleanPreValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+			'group_name' => 'trim',
+			'prompt' => 'trim',
+			'builder_id' => 'intval',
+			'sort' => 'intval',
+		);
+
+		$ret = $this->_clean($rules, $attributes);
+		return $ret;
 	}
 }

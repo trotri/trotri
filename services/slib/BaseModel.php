@@ -694,7 +694,7 @@ abstract class BaseModel extends BaseService
 	 */
 	public function cleanXss($value)
 	{
-		return String::escapeXss(trim($value));
+		return String::escapeXss($value);
 	}
 
 	/**

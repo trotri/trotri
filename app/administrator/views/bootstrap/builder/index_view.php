@@ -6,6 +6,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'values' => $this->data,
 		'elements' => $this->elements,
 		'columns' => array(
+			'builder_id',
 			'builder_name',
 			'tbl_name',
 			'tbl_profile',

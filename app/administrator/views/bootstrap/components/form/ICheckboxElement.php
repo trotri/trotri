@@ -12,7 +12,7 @@ namespace views\bootstrap\components\form;
 
 /**
  * ICheckboxElement class file
- * 美化版Checkbox表单元素，，基于Bootstrap-v3前端开发框架的iCheck插件
+ * 美化版Checkbox表单元素，基于Bootstrap-v3前端开发框架的iCheck插件
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ICheckboxElement.php 1 2013-05-18 14:58:59Z huan.song $
  * @package views.bootstrap.components.form

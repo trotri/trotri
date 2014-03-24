@@ -18,7 +18,7 @@ use library\PageHelper;
 
 /**
  * Builders class file
- * 生成代码-模型类
+ * 生成代码
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Builders.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.model

@@ -27,7 +27,7 @@ class ModBuilders extends BaseModel
 {
 	/**
 	 * 构造方法：初始化数据库操作类和语言国际化管理类
-	 * @param slib\Language $language
+	 * @param tfc\util\Language $language
 	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
 	 */
 	public function __construct(Language $language, $tableNum = -1)
@@ -157,12 +157,11 @@ class ModBuilders extends BaseModel
 		$rules = array(
 			'builder_name' => 'trim',
 			'tbl_name' => 'trim',
-			'tbl_comment' => array($this, 'cleanXss'),
+			'tbl_comment' => 'trim',
 			'app_name' => 'trim',
 			'mod_name' => 'trim',
 			'ctrl_name' => 'trim',
 			'cls_name' => 'trim',
-			'description' => array($this, 'cleanXss'),
 			'act_index_name' => 'trim',
 			'act_view_name' => 'trim',
 			'act_create_name' => 'trim',

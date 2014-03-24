@@ -1,1 +1,1 @@
-<?php $this->display('builder/index_sidebar'); ?>
+<?php $this->display('builder/fields_sidebar'); ?>

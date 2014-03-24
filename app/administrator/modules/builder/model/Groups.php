@@ -20,7 +20,7 @@ use library\ErrorNo;
 
 /**
  * Groups class file
- * 表单字段组-模型类
+ * 表单字段组
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Groups.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.model

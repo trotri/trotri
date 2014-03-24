@@ -8,20 +8,20 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\submit;
+namespace modules\builder\action\show;
 
-use library\action\ModifyAction;
-use library\Model;
+use tfc\ap\Ap;
+use library\action\IndexAction;
 
 /**
- * GroupsModify class file
- * 编辑数据
+ * FieldsIndex class file
+ * 查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsModify.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.builder.action.submit
+ * @version $Id: FieldsIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.builder.action.show
  * @since 1.0
  */
-class GroupsModify extends ModifyAction
+class FieldsIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,13 +29,14 @@ class GroupsModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$mod = Model::getInstance('Groups');
-		$builderId = $mod->getBuilderId();
+		$builderId = Ap::getRequest()->getInteger('builder_id');
 		if ($builderId <= 0) {
 			$this->err404();
 		}
 
 		$this->assign('builder_id', $builderId);
-		$this->execute('Groups');
+
+		Ap::getRequest()->setParam('order', 'sort');
+		$this->execute('Fields');
 	}
 }
