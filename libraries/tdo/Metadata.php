@@ -212,6 +212,10 @@ class Metadata
             $comments[$key] = trim(substr($line, $pos + 9), ' \'');
         }
 
+        if (($pos = stripos($sql, ' COMMENT=\'')) !== false) {
+            $comments['__table__'] = trim(substr($sql, $pos + 10), ' \'');
+        }
+
         return $comments;
     }
 

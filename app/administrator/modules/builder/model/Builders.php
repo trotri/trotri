@@ -15,6 +15,7 @@ use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
 use library\PageHelper;
+use library\ErrorNo;
 
 /**
  * Builders class file
@@ -280,6 +281,20 @@ class Builders extends Model
 		);
 
 		return $ret;
+	}
+
+	/**
+	 * 获取所有的表名
+	 * @return array
+	 */
+	public function getTblNames()
+	{
+		$ret = $this->getService()->getTblNames();
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return array();
+		}
+
+		return $ret['data'];
 	}
 
 	/**

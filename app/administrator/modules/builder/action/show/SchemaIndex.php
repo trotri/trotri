@@ -11,8 +11,6 @@
 namespace modules\builder\action\show;
 
 use library\action\IndexAction;
-use library\Model;
-use library\ErrorNo;
 
 /**
  * SchemaIndex class file
@@ -30,18 +28,6 @@ class SchemaIndex extends IndexAction
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$mod = Model::getInstance('Schema');
-		$tableNames = $mod->getTableNames();
-
-		\tfc\saf\debug_dump($tableNames);
-
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->err404();
-		}
-
-		$this->assign('elements', $mod->getElementsRender());
-		$this->render($ret);
+		$this->execute('Schema');
 	}
 }

@@ -30,6 +30,7 @@ class SchemaController extends BaseController
 	{
 		return array(
 			'index'        => 'modules\\builder\\action\\show\\SchemaIndex',
+			'gb'           => 'modules\\builder\\action\\submit\\SchemaGb',
 		);
 	}
 }

@@ -63,6 +63,26 @@ class ModBuilders extends BaseModel
 	}
 
 	/**
+	 * 获取所有的表名
+	 * @return array
+	 */
+	public function getTblNames()
+	{
+		$ret = $this->findColumnsByAttributes(array('tbl_name'), array(), '', 0, 0, '');
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$data = array();
+		foreach ($ret['data'] as $rows) {
+			$data[] = $rows['tbl_name'];
+		}
+
+		$ret['data'] = $data;
+		return $ret;
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see slib.BaseModel::findByPk()
 	 */
