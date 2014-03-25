@@ -110,17 +110,18 @@ class Schema extends Model
 			exit;
 		}
 
-		echo '<font color="blue">', 'Begin Generate, Table Name: ', $tblName, '</font><br/>';
+		echo '<font color="blue">Generate Begin, Table Name "', $tblName, '"</font><br/>';
 		$tableSchema = $this->_metadata->getTableSchema($tblName);
 		$comments = $this->_metadata->getComments($tableSchema->name);
+		$tblPrefix = $this->getDbProxy()->getTblprefix();
+		$tblPreLen = strlen($tblPrefix);
 
-		sleep(2);
 		echo '<font color="blue">Import to tr_builders Begin ...</font><br/>';
 		$modBuilders = Model::getInstance('Builders');
 		$dataBuilders = $modBuilders->getData();
 		$params = array(
 			'builder_name' => isset($comments['__table__']) ? $comments['__table__'] : $tableSchema->name,
-			'tbl_name' => $tableSchema->name,
+			'tbl_name' => substr($tableSchema->name, $tblPreLen),
 			'tbl_profile' => $dataBuilders::TBL_PROFILE_N,
 			'tbl_engine' => $dataBuilders::TBL_ENGINE_INNODB,
 			'tbl_charset' => $dataBuilders::TBL_CHARSET_UTF8,
@@ -150,14 +151,12 @@ class Schema extends Model
 			exit;
 		}
 
-		sleep(2);
 		echo '<font color="blue">Import to tr_builder_fields Begin ...</font><br/>';
 		$modFields = Model::getInstance('Fields');
 		$dataFields = $modFields->getData();
 		$builderId = $ret['id'];
 		$sort = 0;
 
-		echo '<pre>';
 		foreach ($tableSchema->columns as $columnSchema) {
 			$sort++;
 			if ($columnSchema->type === 'integer') {
@@ -177,25 +176,36 @@ class Schema extends Model
 				'column_unsigned' => (stripos($columnSchema->dbType, 'unsigned') !== false) ? $dataFields::COLUMN_UNSIGNED_Y : $dataFields::COLUMN_UNSIGNED_N,
 				'column_comment' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : '',
 				'builder_id' => $builderId,
-				'group_id' => 0,
+				'group_id' => 1,
 				'type_id' => 1,
 				'sort' => $sort,
 				'html_label' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : $columnSchema->name,
 				'form_prompt' => '',
-				'form_required' => $dataFields::FORM_REQUIRED_N,
-				'form_modifiable' => $dataFields::FORM_MODIFIABLE_Y,
+				'form_required' => $dataFields::FORM_REQUIRED_Y,
+				'form_modifiable' => $dataFields::FORM_MODIFIABLE_N,
 				'index_show' => $dataFields::INDEX_SHOW_Y,
-				'index_sort' => $sort,
-				'form_create_show' => $dataFields::FORM_CREATE_SHOW_Y,
+				'index_sort' => $columnSchema->isPrimaryKey ? 100 : $sort,
+				'form_create_show' => $columnSchema->isPrimaryKey ? $dataFields::FORM_CREATE_SHOW_N : $dataFields::FORM_CREATE_SHOW_Y,
 				'form_create_sort' => $sort,
-				'form_modify_show' => $dataFields::FORM_MODIFY_SHOW_Y,
+				'form_modify_show' => $columnSchema->isPrimaryKey ? $dataFields::FORM_CREATE_SHOW_N : $dataFields::FORM_MODIFY_SHOW_Y,
 				'form_modify_sort' => $sort,
 				'form_search_show' => $dataFields::FORM_SEARCH_SHOW_Y,
 				'form_search_sort' => $sort,
 			);
 
-			print_r($params);
+			$ret = $modFields->create($params);
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				echo '<font color="blue">Import to tr_builder_fields "', $columnSchema->name, '" Successfully ...</font><br/>';
+			}
+			else {
+				echo '<font color="red">Import to tr_builders "', $columnSchema->name, '" Failed!</font><br/>';
+				exit;
+			}
 		}
+
+		echo '<font color="blue">Import to tr_builder_fields Successfully ...</font><br/>';
+		echo '<font color="blue">Generate End, Table Name "', $tblName, '"</font><br/>';
+		exit;
 	}
 
 	/**

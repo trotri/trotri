@@ -8,7 +8,7 @@ $this->widget(
 		'data' => $this->data,
 		'columns' => array(
 			'field_name',
-			'builder_id',
+			'builder_name',
 			'group_id',
 			'type_id',
 			'sort',

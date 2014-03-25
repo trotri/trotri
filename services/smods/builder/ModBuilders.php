@@ -68,7 +68,7 @@ class ModBuilders extends BaseModel
 	 */
 	public function getTblNames()
 	{
-		$ret = $this->findColumnsByAttributes(array('tbl_name'), array(), '', 0, 0, '');
+		$ret = $this->findColumnsByAttributes(array('tbl_name'), array('trash' => 'n'), '', 0, 0, '');
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			return $ret;
 		}

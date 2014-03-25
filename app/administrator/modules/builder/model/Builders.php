@@ -238,6 +238,20 @@ class Builders extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_DT_CREATED_HINT'),
 				'disabled' => true,
 			),
+			'author_name' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_BUILDER_BUILDERS_AUTHOR_NAME_LABEL'),
+				'hint' => Text::_('MOD_BUILDER_BUILDERS_AUTHOR_NAME_HINT'),
+				'required' => true,
+			),
+			'author_mail' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_BUILDER_BUILDERS_AUTHOR_MAIL_LABEL'),
+				'hint' => Text::_('MOD_BUILDER_BUILDERS_AUTHOR_MAIL_HINT'),
+				'required' => true,
+			),
 			'dt_modified' => array(
 				'__tid__' => 'system',
 				'type' => 'text',
