@@ -199,6 +199,13 @@ class Fields extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_PROMPT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_PROMPT_HINT'),
 			),
+			'form_prompt_examples' => array(
+				'__tid__' => 'view',
+				'type' => 'select',
+				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_PROMPT_EXAMPLES_LABEL'),
+				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_PROMPT_EXAMPLES_HINT'),
+				'options' => $data->getEnum('form_prompt_examples'),
+			),
 			'form_required' => array(
 				'__tid__' => 'view',
 				'type' => 'switch',

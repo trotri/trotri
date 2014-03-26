@@ -118,7 +118,7 @@ class Validators extends Model
 			'field_name' => array(
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FIELD_NAME_LABEL'),
-				'value' => Model::getInstance('Fields')->getFieldNameByFieldId($this->getFieldId()),
+				'value' => Model::getInstance('Fields')->getHtmlLabelByFieldId($this->getFieldId()),
 				'readonly' => true,
 				'table' => array(
 					'callback' => array($this, 'getFieldNameTblColumn')

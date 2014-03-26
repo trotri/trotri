@@ -1,9 +1,16 @@
 $(document).ready(function() {
-  if (g_ctrl == "validators") {
+  if (g_ctrl == "validators" && (g_act == "create" || g_act == "modify")) {
     $("select[name='validator_name']").change(function() {
       Builder.loadMessageByValidatorName();
     });
     Builder.loadMessageByValidatorName();
+  }
+  if (g_ctrl == "fields" && (g_act == "create" || g_act == "modify")) {
+    $("select[name='form_prompt_examples']").change(function() {
+      var htmlLabel = $(":text[name='html_label']").val();
+      var formPromptExamples = $(this).find("option:selected").text();
+      $(":text[name='form_prompt']").val(formPromptExamples.replace("{field}", htmlLabel));
+    });
   }
 });
 

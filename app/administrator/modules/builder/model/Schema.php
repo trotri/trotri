@@ -98,7 +98,7 @@ class Schema extends Model
 	/**
 	 * 通过表Metadata生成Builders数据
 	 * @param string $tblName
-	 * @return array
+	 * @return void
 	 */
 	public function gb($tblName)
 	{
@@ -128,8 +128,8 @@ class Schema extends Model
 			'tbl_comment' => isset($comments['__table__']) ? $comments['__table__'] : '',
 			'app_name' => 'undefined',
 			'mod_name' => 'undefined',
-			'ctrl_name' => substr(strstr($tableSchema->name, '_'), 1),
-			'cls_name' => substr(strstr($tableSchema->name, '_'), 1),
+			'ctrl_name' => substr($tableSchema->name, strrpos($tableSchema->name, '_') + 1),
+			'cls_name' => substr($tableSchema->name, strrpos($tableSchema->name, '_') + 1),
 			'act_index_name' => 'index',
 			'act_view_name' => 'view',
 			'act_create_name' => 'create',
@@ -165,8 +165,34 @@ class Schema extends Model
 			elseif (stripos($columnSchema->dbType, 'enum') !== false) {
 				$columnLength = str_replace(array('\'', ','), array('', '|'), substr(substr($columnSchema->dbType, 5), 0, -1));
 			}
+			elseif (stripos($columnSchema->dbType, 'char') !== false) {
+				$columnLength = $columnSchema->size;
+			}
 			else {
 				$columnLength = '';
+			}
+
+			if ($columnSchema->isPrimaryKey) {
+				$formRequired = $dataFields::FORM_REQUIRED_N;
+			}
+			elseif (stripos($columnSchema->dbType, 'enum') !== false) {
+				$formRequired = $dataFields::FORM_REQUIRED_N;
+			}
+			else {
+				$formRequired = $dataFields::FORM_REQUIRED_Y;
+			}
+
+			if ($columnLength === 'y|n') {
+				$typeId = 3;
+			}
+			elseif (stripos($columnSchema->dbType, 'enum') !== false) {
+				$typeId = 4;
+			}
+			elseif ($columnSchema->isPrimaryKey) {
+				$typeId = 7;
+			}
+			else {
+				$typeId = 1;
 			}
 
 			$params = array(
@@ -177,14 +203,14 @@ class Schema extends Model
 				'column_comment' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : '',
 				'builder_id' => $builderId,
 				'group_id' => 1,
-				'type_id' => 1,
+				'type_id' => $typeId,
 				'sort' => $sort,
 				'html_label' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : $columnSchema->name,
 				'form_prompt' => '',
-				'form_required' => $dataFields::FORM_REQUIRED_Y,
+				'form_required' => $formRequired,
 				'form_modifiable' => $dataFields::FORM_MODIFIABLE_N,
 				'index_show' => $dataFields::INDEX_SHOW_Y,
-				'index_sort' => $columnSchema->isPrimaryKey ? 100 : $sort,
+				'index_sort' => $columnSchema->isPrimaryKey ? 1000 : $sort,
 				'form_create_show' => $columnSchema->isPrimaryKey ? $dataFields::FORM_CREATE_SHOW_N : $dataFields::FORM_CREATE_SHOW_Y,
 				'form_create_sort' => $sort,
 				'form_modify_show' => $columnSchema->isPrimaryKey ? $dataFields::FORM_CREATE_SHOW_N : $dataFields::FORM_MODIFY_SHOW_Y,

@@ -485,4 +485,14 @@ class Builders extends Model
 		$ret = $indexIcon . $createIcon;
 		return $ret;
 	}
+
+	/**
+	 * 通过Builders数据生成代码
+	 * @param integer $builderId
+	 * @return void
+	 */
+	public function gc($builderId)
+	{
+		
+	}
 }

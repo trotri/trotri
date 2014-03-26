@@ -120,71 +120,71 @@ class DataValidators extends BaseData
 		return array(
 			'AlphaNum' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_ALPHANUM_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_ALPHANUM'),
 			),
 			'Alpha' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_ALPHA_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_ALPHA'),
 			),
 			'EqualTo' => array(
 				'option_category' => 'string',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_EQUALTO_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_EQUALTO'),
 			),
 			'Equal' => array(
 				'option_category' => 'string',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_EQUAL_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_EQUAL'),
 			),
 			'Float' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_FLOAT_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_FLOAT'),
 			),
 			'InArray' => array(
 				'option_category' => 'array',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_INARRAY_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_INARRAY'),
 			),
 			'Integer' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_INTEGER_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_INTEGER'),
 			),
 			'Ip' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_IP_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_IP'),
 			),
 			'Mail' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_MAIL_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_MAIL'),
 			),
 			'MaxLength' => array(
 				'option_category' => 'integer',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_MAXLENGTH_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_MAXLENGTH'),
 			),
 			'Max' => array(
 				'option_category' => 'integer',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_MAX_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_MAX'),
 			),
 			'MinLength' => array(
 				'option_category' => 'integer',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_MINLENGTH_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_MINLENGTH'),
 			),
 			'Min' => array(
 				'option_category' => 'integer',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_MIN_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_MIN'),
 			),
 			'NotEmpty' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_NOTEMPTY_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_NOTEMPTY'),
 			),
 			'Numeric' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_NUMERIC_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_NUMERIC'),
 			),
 			'Require' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_REQUIRE_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_REQUIRE'),
 			),
 			'Url' => array(
 				'option_category' => 'boolean',
-				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_URL_LABEL'),
+				'message' => $this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_ENUM_MESSAGE_URL'),
 			)
 		);
 	}

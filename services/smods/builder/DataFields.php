@@ -217,6 +217,23 @@ class DataFields extends BaseData
 	}
 
 	/**
+	 * 获取“表单提示示例”所有选项
+	 * @return array
+	 */
+	public function getFormPromptExamplesEnum()
+	{
+		return array(
+			'example0' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE0'),
+			'example1' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE1'),
+			'example2' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE2'),
+			'example3' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE3'),
+			'example4' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE4'),
+			'example5' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE5'),
+			'example6' => $this->_('MOD_BUILDER_BUILDER_FIELDS_ENUM_FORM_PROMPT_EXAMPLE6'),
+		);
+	}
+
+	/**
 	 * 获取“字段名”验证规则
 	 * @return array
 	 */
