@@ -171,6 +171,16 @@ class Log
     }
 
     /**
+     * 打印进度说明
+     * @param string $traceMsg
+     * @return void
+     */
+    public static function echoTrace($traceMsg)
+    {
+    	echo '<strong style="color: blue">', $traceMsg, '</strong><br/>';
+    }
+
+    /**
      * 打印错误并退出
      * @param integer $line
      * @param string $errMsg
@@ -178,8 +188,7 @@ class Log
      */
     public static function errExit($line, $errMsg)
     {
-        echo '<font color="red">Line: ', $line, '. Msg: ', $errMsg, '</font>';
+        echo '<strong style="color: red">Line: ', $line, '. Msg: ', $errMsg, '</strong>';
         exit;
     }
-
 }

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50141
 File Encoding         : 65001
 
-Date: 2014-03-26 19:15:07
+Date: 2014-03-27 18:40:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -55,7 +55,7 @@ CREATE TABLE `tr_builder_field_validators` (
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
 
 -- ----------------------------
 -- Records of tr_builder_field_validators
@@ -98,6 +98,8 @@ INSERT INTO `tr_builder_field_validators` VALUES ('35', 'MinLength', '45', '2', 
 INSERT INTO `tr_builder_field_validators` VALUES ('36', 'MaxLength', '45', '12', 'integer', '删除数据行动名长度不能大于%option%个字符.', '3', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('37', 'InArray', '46', '', 'array', '必须选择列表每行操作按钮，值只能是%s.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('38', 'InArray', '52', '', 'array', '必须选择移至回收站，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('39', 'Mail', '49', '', 'boolean', '邮箱格式不正确.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('40', 'NotEmpty', '48', '', 'boolean', '必须填写作者姓名，代码注释用.', '1', 'all');
 
 -- ----------------------------
 -- Table structure for `tr_builder_fields`
@@ -136,7 +138,7 @@ CREATE TABLE `tr_builder_fields` (
   KEY `form_create_sort` (`form_create_sort`),
   KEY `form_modify_sort` (`form_modify_sort`),
   KEY `form_search_sort` (`form_search_sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
 -- ----------------------------
 -- Records of tr_builder_fields
@@ -193,6 +195,14 @@ INSERT INTO `tr_builder_fields` VALUES ('49', 'author_mail', '100', 'n', 'n', '�
 INSERT INTO `tr_builder_fields` VALUES ('50', 'dt_created', '', 'n', 'n', '创建时间', '3', '3', '1', '21', '创建时间', '', 'n', 'y', 'y', '21', 'y', '21', 'y', '21', 'y', '21');
 INSERT INTO `tr_builder_fields` VALUES ('51', 'dt_modified', '', 'n', 'n', '上次编辑时间', '3', '3', '1', '22', '上次编辑时间', '', 'n', 'y', 'y', '22', 'y', '22', 'y', '22', 'y', '22');
 INSERT INTO `tr_builder_fields` VALUES ('52', 'trash', 'y|n', 'n', 'n', '是否删除', '3', '1', '3', '23', '移至回收站', '', 'n', 'n', 'y', '23', 'n', '23', 'n', '23', 'n', '23');
+INSERT INTO `tr_builder_fields` VALUES ('53', 'validator_id', '10', 'y', 'y', '主键ID', '4', '1', '7', '1', '主键ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('54', 'validator_name', '100', 'n', 'n', '验证类名', '4', '1', '1', '2', '验证类名', '', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('55', 'field_id', '10', 'n', 'y', '表单字段ID', '4', '1', '1', '3', '表单字段ID', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('56', 'options', '100', 'n', 'n', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '4', '1', '1', '4', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('57', 'option_category', '0', 'n', 'n', '验证时对比值类型', '4', '1', '4', '5', '验证时对比值类型', '', 'n', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('58', 'message', '100', 'n', 'n', '出错提示消息', '4', '1', '1', '6', '出错提示消息', '', 'y', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('59', 'sort', '5', 'n', 'y', '排序', '4', '1', '1', '7', '排序', '', 'y', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('60', 'when', 'all|create|modify', 'n', 'n', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '4', '1', '4', '8', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
 
 -- ----------------------------
 -- Table structure for `tr_builder_types`
@@ -262,13 +272,14 @@ CREATE TABLE `tr_builders` (
   KEY `tbl_charset` (`tbl_charset`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
 -- ----------------------------
 -- Records of tr_builders
 -- ----------------------------
 INSERT INTO `tr_builders` VALUES ('2', '表单字段类型表', 'builder_types', 'n', 'InnoDB', 'utf8', '表单字段类型表', 'undefined', 'undefined', 'types', 'types', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '', '', '2014-03-26 13:26:14', '0000-00-00 00:00:00', 'n');
 INSERT INTO `tr_builders` VALUES ('3', '生成代码', 'builders', 'n', 'InnoDB', 'utf8', '生成代码表', 'administrator', 'builder', 'index', 'builders', 'index', 'view', 'create', 'modify', 'remove', 'pencil,trash', '', '宋欢', 'trotri@yeah.net', '2014-03-26 13:26:31', '2014-03-26 13:29:00', 'n');
+INSERT INTO `tr_builders` VALUES ('4', '表单字段验证表', 'builder_field_validators', 'n', 'InnoDB', 'utf8', '表单字段验证表', 'undefined', 'undefined', 'validators', 'validators', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '', '', '2014-03-27 17:41:20', '0000-00-00 00:00:00', 'n');
 
 -- ----------------------------
 -- Table structure for `tr_post_categories`

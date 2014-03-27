@@ -14,6 +14,7 @@ use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
 use tfc\saf\DbProxy;
 use tfc\saf\Text;
+use tfc\saf\Log;
 use tdo\Metadata;
 use slib\Constant;
 use library\PageHelper;
@@ -102,21 +103,18 @@ class Schema extends Model
 	 */
 	public function gb($tblName)
 	{
-		header('Content-Type: text/html; charset=utf-8');
-
 		$tableNames = $this->_metadata->getTableNames($tblName);
 		if (!in_array($tblName, $tableNames)) {
-			echo '<font color="red">Table Name Not Exists!</font><br/>';
-			exit;
+			Log::errExit(__LINE__, 'Table Name Not Exists!');
 		}
 
-		echo '<font color="blue">Generate Begin, Table Name "', $tblName, '"</font><br/>';
+		Log::echoTrace('Generate Begin, Table Name "' . $tblName . '"');
 		$tableSchema = $this->_metadata->getTableSchema($tblName);
 		$comments = $this->_metadata->getComments($tableSchema->name);
 		$tblPrefix = $this->getDbProxy()->getTblprefix();
 		$tblPreLen = strlen($tblPrefix);
 
-		echo '<font color="blue">Import to tr_builders Begin ...</font><br/>';
+		Log::echoTrace('Import to tr_builders Begin ...');
 		$modBuilders = Model::getInstance('Builders');
 		$dataBuilders = $modBuilders->getData();
 		$params = array(
@@ -144,14 +142,13 @@ class Schema extends Model
 
 		$ret = $modBuilders->create($params);
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			echo '<font color="blue">Import to tr_builders Successfully ...</font><br/>';
+			Log::echoTrace('Import to tr_builders Successfully ...');
 		}
 		else {
-			echo '<font color="red">Import to tr_builders Failed!</font><br/>';
-			exit;
+			Log::errExit(__LINE__, 'Import to tr_builders Failed!');
 		}
 
-		echo '<font color="blue">Import to tr_builder_fields Begin ...</font><br/>';
+		Log::echoTrace('Import to tr_builder_fields Begin ...');
 		$modFields = Model::getInstance('Fields');
 		$dataFields = $modFields->getData();
 		$builderId = $ret['id'];
@@ -221,16 +218,15 @@ class Schema extends Model
 
 			$ret = $modFields->create($params);
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				echo '<font color="blue">Import to tr_builder_fields "', $columnSchema->name, '" Successfully ...</font><br/>';
+				Log::echoTrace('Import to tr_builder_fields "' . $columnSchema->name . '" Successfully ...');
 			}
 			else {
-				echo '<font color="red">Import to tr_builders "', $columnSchema->name, '" Failed!</font><br/>';
-				exit;
+				Log::errExit(__LINE__, 'Import to tr_builders "' . $columnSchema->name . '" Failed!');
 			}
 		}
 
-		echo '<font color="blue">Import to tr_builder_fields Successfully ...</font><br/>';
-		echo '<font color="blue">Generate End, Table Name "', $tblName, '"</font><br/>';
+		Log::echoTrace('Import to tr_builder_fields Successfully ...');
+		Log::echoTrace('Generate End, Table Name "' . $tblName . '"');
 		exit;
 	}
 

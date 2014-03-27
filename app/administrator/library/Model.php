@@ -81,11 +81,21 @@ class Model
 	 * 查询数据
 	 * @param array $params
 	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '')
+	public function search(array $params = array(), $order = '', $limit = null, $offset = null)
 	{
-		return $this->getService()->search($params, $order, PageHelper::getListRows(), PageHelper::getFirstRow());
+		if ($limit === null) {
+			$limit = PageHelper::getListRows();
+		}
+
+		if ($offset === null) {
+			$offset = PageHelper::getFirstRow();
+		}
+
+		return $this->getService()->search($params, $order, $limit, $offset);
 	}
 
 	/**

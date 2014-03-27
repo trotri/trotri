@@ -10,7 +10,9 @@
 
 namespace modules\builder\action\submit;
 
+use tfc\ap\Ap;
 use library\action\base\SubmitAction;
+use library\Model;
 
 /**
  * BuildersGc class file
@@ -28,6 +30,8 @@ class BuildersGc extends SubmitAction
 	 */
 	public function run()
 	{
-		
+		$id = Ap::getRequest()->getInteger('id');
+		$mod = Model::getInstance('Builders');
+		$mod->gc($id);
 	}
 }

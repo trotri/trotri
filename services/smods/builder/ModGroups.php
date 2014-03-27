@@ -49,7 +49,7 @@ class ModGroups extends BaseModel
 	{
 		$builderId = isset($params['builder_id']) ? (int) $params['builder_id'] : 0;
 		$params = array();
-		if ($builderId > 0) {
+		if ($builderId >= 0) {
 			$params['builder_id'] = $builderId;
 		}
 

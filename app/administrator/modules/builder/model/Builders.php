@@ -493,6 +493,7 @@ class Builders extends Model
 	 */
 	public function gc($builderId)
 	{
-		
+		$codeGenerator = new CodeGenerator($builderId);
+		$codeGenerator->run();
 	}
 }
