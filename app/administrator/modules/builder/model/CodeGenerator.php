@@ -65,6 +65,9 @@ class CodeGenerator extends Model
 			Log::errExit(__LINE__, 'builder_id must be a integer.');
 		}
 
+		// 初始化工作开始
+		Log::echoTrace('Initialization Begin ...');
+
 		// 初始化生成代码数据
 		Log::echoTrace('Query from tr_builders Begin ...');
 		$ret = Model::getInstance('Builders')->findByPk($builderId);
@@ -155,10 +158,8 @@ class CodeGenerator extends Model
 		$this->initDirs();
 		Log::echoTrace('Create Directories Successfully ...');
 
-		// 开始生成代码
-		Log::echoTrace('Generate Begin, Table Name "' . $this->_builders['tbl_name'] . '"');
-		$this->run();
-		Log::echoTrace('Generate End, Table Name "' . $this->_builders['tbl_name'] . '"');
+		// 初始化工作结束
+		Log::echoTrace('Initialization End');
 	}
 
 	/**
@@ -167,57 +168,189 @@ class CodeGenerator extends Model
 	 */
 	public function run()
 	{
-		Log::echoTrace('Generate Services languages Begin');
-		$this->gcSlangs();
-		Log::echoTrace('Generate Services languages End');
+		Log::echoTrace('Generate Begin, Table Name "' . $this->_builders['tbl_name'] . '"');
+		$this->gcSLangs();
+		$this->gcSDb();
+		$this->gcSData();
+		Log::echoTrace('Generate End, Table Name "' . $this->_builders['tbl_name'] . '"');
+	}
 
+	/**
+	 * 创建Services层Data类
+	 * @return void
+	 */
+	public function gcSData()
+	{
+		Log::echoTrace('Generate Services Data Begin ...');
+		$modName = $this->_builders['mod_name'];
+		$clsName = 'Data' . $this->_builders['uc_cls_name'];
+		$tblName = $this->_builders['tbl_name'];
+
+		$filePath = $this->_dirs['smod'] . DS . $clsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+
+		fwrite($stream, "namespace smods\\{$modName};\n\n");
+		fwrite($stream, "use slib\\BaseData;\n\n");
+		$this->writeClassComment($stream, $clsName, '业务层：数据管理类，寄存常量、选项、验证规则', "smods.{$modName}");
+
+		fwrite($stream, "class {$clsName} extends BaseData\n");
+		fwrite($stream, "{\n");
+		foreach ($this->_fields as $rows) {
+			if (isset($rows['enums'])) {
+				foreach ($rows['enums'] as $enums) {
+					fwrite($stream, "\t/**\n");
+					fwrite($stream, "\t * @var string {$rows['html_label']}：{$enums['value']}\n");
+					fwrite($stream, "\t */\n");
+					fwrite($stream, "\tconst {$enums['const_key']} = '{$enums['value']}';\n\n");
+				}
+			}
+		}
+
+		foreach ($this->_fields as $rows) {
+			if (isset($rows['enums'])) {
+				fwrite($stream, "\t/**\n");
+				fwrite($stream, "\t * 获取“{$rows['html_label']}”所有选项\n");
+				fwrite($stream, "\t * @return array\n");
+				fwrite($stream, "\t */\n");
+				fwrite($stream, "\tpublic function get{$rows['func_name']}Enum()\n");
+				fwrite($stream, "\t{\n");
+				fwrite($stream, "\t\treturn array(\n");
+				foreach ($rows['enums'] as $enums) {
+					fwrite($stream, "\t\t\tself::{$enums['const_key']} => \$this->_('{$enums['lang_key']}'),\n");
+				}
+
+				fwrite($stream, "\t\t);\n");
+				fwrite($stream, "\t}\n\n");
+			}
+		}
+
+		foreach ($this->_fields as $rows) {
+			if (isset($rows['validators']) && $rows['validators'] !== array()) {
+				fwrite($stream, "\t/**\n");
+				fwrite($stream, "\t * 获取“{$rows['html_label']}”验证规则\n");
+				fwrite($stream, "\t * @return array\n");
+				fwrite($stream, "\t */\n");
+				fwrite($stream, "\tpublic function get{$rows['func_name']}Rule()\n");
+				fwrite($stream, "\t{\n");
+				if (isset($rows['enums'])) {
+					fwrite($stream, "\t\t\$enum = \$this->get{$rows['func_name']}Enum();\n");
+				}
+
+				fwrite($stream, "\t\treturn array(\n");
+				foreach ($rows['validators'] as $validators) {
+					$validatorName = $validators['validator_name'];
+					if (isset($rows['enums']) && $validatorName === 'InArray') {
+						$options = "array_keys(\$enum)";
+						$message = "sprintf(\$this->_('{$validators['lang_key']}'), implode(', ', \$enum))";
+						fwrite($stream, "\t\t\t'{$validatorName}' => array(\n\t\t\t\t$options, \n\t\t\t\t{$message}\n\t\t\t),\n");
+					}
+					else {
+						$options = $validators['options'];
+						switch ($validators['option_category']) {
+							case 'integer' :
+								$options = (int) $options;
+								break;
+							case 'boolean' :
+								$options = 'true';
+								break;
+							case 'array' :
+								$options = 'array()';
+								break;
+							case 'string' :
+							default :
+								$options = "'" . (string) $options . "'";
+								break;
+						}
+						fwrite($stream, "\t\t\t'{$validatorName}' => array({$options}, \$this->_('{$validators['lang_key']}')),\n");
+					}
+				}
+
+				fwrite($stream, "\t\t);\n");
+				fwrite($stream, "\t}\n\n");
+			}
+		}
+
+		\tfc\saf\debug_dump($this->_fields);
 		
+		fclose($stream);
+		Log::echoTrace('Generate Services Data End');
+	}
+
+	/**
+	 * 创建Services层DB类
+	 * @return void
+	 */
+	public function gcSDb()
+	{
+		Log::echoTrace('Generate Services Db Begin ...');
+		$modName = $this->_builders['mod_name'];
+		$clsName = 'Db' . $this->_builders['uc_cls_name'];
+		$tblName = $this->_builders['tbl_name'];
+
+		$filePath = $this->_dirs['smod'] . DS . $clsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+
+		fwrite($stream, "namespace smods\\{$modName};\n\n");
+		fwrite($stream, "use slib\\BaseDb;\n\n");
+		$this->writeClassComment($stream, $clsName, '业务层：数据库操作类', "smods.{$modName}");
+
+		fwrite($stream, "class {$clsName} extends BaseDb\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 构造方法：初始化表名\n");
+		fwrite($stream, "\t * @param integer \$tableNum\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function __construct(\$tableNum = -1)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\tparent::__construct('{$tblName}', \$tableNum);\n");
+		fwrite($stream, "\t}\n\n");
+		fwrite($stream, "}\n");
+
+		fclose($stream);
+		Log::echoTrace('Generate Services Db End');
 	}
 
 	/**
 	 * 创建Services层语言包
 	 * @return void
 	 */
-	public function gcSlangs()
+	public function gcSLangs()
 	{
-		$appName = $this->_builders['app_name'];
+		Log::echoTrace('Generate Services Languages Begin ...');
+
 		$modName = $this->_builders['mod_name'];
 		$tblName = $this->_builders['tbl_name'];
 		$builderName = $this->_builders['builder_name'];
 
 		$fileName = 'zh-CN.mod_' . $modName . '.ini';
 		$filePath = $this->_dirs['slang'] . DS . $fileName;
-		$stream = $this->fopen($filePath);
 
-		$this->writeLangComment($stream, $fileName, $appName);
+		$stream = $this->fopen($filePath);
+		$this->writeLangComment($stream, $fileName, 'services');
 
 		fwrite($stream, "; {$tblName} {$builderName}\n");
-
-		\tfc\saf\debug_dump($this->_fields);
-		
-		/*
 		foreach ($this->_fields as $rows) {
-			if (isset($rows['lang_enums'])) {
-				foreach ($rows['lang_enums'] as $langEnums) {
-					fwrite($stream, "{$ev}=\"\"\n");
-				}
-			}
-
-			fwrite($stream, "{$fv['lang_label']}=\"{$fv['html_label']}\"\n");
-			fwrite($stream, "{$fv['lang_hint']}=\"{$fv['form_prompt']}\"\n");
-			foreach ($fv['validators'] as $vv) {
-				fwrite($stream, "{$vv['lang_key']}=\"{$vv['message']}\"\n");
-			}
-
-			if (isset($fv['lang_enums'])) {
-				foreach ($fv['lang_enums'] as $ev) {
-					fwrite($stream, "{$ev}=\"\"\n");
+			if (isset($rows['enums'])) {
+				foreach ($rows['enums'] as $enums) {
+					if ($enums['lang_key'] !== 'CFG_SYSTEM_GLOBAL_YES' && $enums['lang_key'] !== 'CFG_SYSTEM_GLOBAL_NO') {
+						fwrite($stream, "{$enums['lang_key']}=\"{$enums['value']}\"\n");
+					}
 				}
 			}
 		}
-		*/
+
+		foreach ($this->_fields as $rows) {
+			if (isset($rows['validators'])) {
+				foreach ($rows['validators'] as $validators) {
+					fwrite($stream, "{$validators['lang_key']}=\"{$validators['message']}\"\n");
+				}
+			}
+		}
 
 		fclose($stream);
+		Log::echoTrace('Generate Services Languages End');
 	}
 
 	/**
@@ -244,14 +377,14 @@ class CodeGenerator extends Model
 	 */
 	public function writeLangComment($stream, $fileName, $package)
 	{
-		fwrite($stream, "; \$Id: {$fileName} 1 2013-05-18 14:58:59Z Create By Code Generator \$\n");
+		fwrite($stream, "; \$Id: {$fileName} 1 " . date('Y-m-d H:i:s') . "Z Create By Code Generator \$\n");
 		fwrite($stream, ";\n");
 		fwrite($stream, "; @package     {$package}\n");
 		fwrite($stream, "; @description [Description] [Name of language]([Country code])\n");
 		fwrite($stream, "; @version     1.0\n");
 		fwrite($stream, "; @date        " . date('Y-m-d') . "\n");
 		fwrite($stream, "; @author      {$this->_builders['author_name']} <{$this->_builders['author_mail']}>\n");
-		fwrite($stream, "; @copyright   Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.\n");
+		fwrite($stream, "; @copyright   Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.\n");
 		fwrite($stream, "; @license     http://www.apache.org/licenses/LICENSE-2.0\n");
 		fwrite($stream, "; @note        Client Site\n");
 		fwrite($stream, "; @note        All ini files need to be saved as UTF-8 - No BOM\n\n");
@@ -461,25 +594,28 @@ class CodeGenerator extends Model
 
 		$fieldType = $this->_types[$typeId]['field_type'];
 		if ($fieldType === 'ENUM') {
-			$langEnums = array();
 			$enums = array();
 			foreach (explode('|', $ret['column_length']) as $value) {
-				$upValue = strtoupper($value);
-				$key = $ret['up_field_name'] . '_' . $upValue;
-				$enums[$key] = $value;
-				if ($value === 'y') {
-					$langEnums[$key] = 'CFG_SYSTEM_GLOBAL_YES';
+				$constKey = $ret['up_field_name'] . '_' . strtoupper($value);
+				switch ($value) {
+					case 'y' :
+						$langKey = 'CFG_SYSTEM_GLOBAL_YES';
+						break;
+					case 'n' :
+						$langKey = 'CFG_SYSTEM_GLOBAL_NO';
+						break;
+					default :
+						$langKey = $this->_builders['lang_prev'] . '_ENUM_' . $constKey;
 				}
-				elseif ($value === 'n') {
-					$langEnums[$key] = 'CFG_SYSTEM_GLOBAL_NO';
-				}
-				else {
-					$langEnums[$key] = $this->_builders['lang_prev'] . '_ENUM_' . $key;
-				}
+
+				$enums[] = array(
+					'const_key' => $constKey,
+					'lang_key' => $langKey,
+					'value' => $value
+				);
 			}
 
 			$ret['enums'] = $enums;
-			$ret['lang_enums'] = $langEnums;
 		}
 
 		return $ret;
@@ -541,5 +677,21 @@ class CodeGenerator extends Model
 			$source = DIR_DATA_RUNTIME . DS . 'index.html';
 			$this->_fileManager->copy($source, $dest);
 		}
+	}
+
+	/**
+	 * 打开文件
+	 * @param string $filePath
+	 * @return resource
+	 */
+	public function fopen($filePath)
+	{
+		if (!($stream = @fopen($filePath, 'w', false))) {
+			Log::errExit(__LINE__, sprintf(
+				'File "%s" cannot be opened with mode "w"', $filePath
+			));
+		}
+
+		return $stream;
 	}
 }
