@@ -10,6 +10,8 @@
 
 namespace slib;
 
+use tfc\ap\Registry;
+use tfc\util\Language;
 use tfc\util\String;
 use tfc\saf\Log;
 
@@ -62,6 +64,28 @@ abstract class BaseModel extends BaseService
 	 * @var instance of slib\SrvQuery
 	 */
 	protected $_srvQuery = null;
+
+	/**
+	 * @var string 项目名
+	 */
+	protected $_moduleName = '';
+
+	/**
+	 * @var string 模型类名
+	 */
+	protected $_className = '';
+
+	/**
+	 * 构造方法：初始化数据库操作类和语言国际化管理类
+	 * @param slib\BaseDb $db
+	 * @param tfc\util\Language $language
+	 */
+	public function __construct(BaseDb $db, Language $language)
+	{
+		list($tmp1, $this->_moduleName, $this->_className) = explode('\\', get_class($this));
+		$this->_className = substr($this->_className, 3);
+		parent::__construct($db, $language);
+	}
 
 	/**
 	 * 运行验证处理类
@@ -395,6 +419,43 @@ abstract class BaseModel extends BaseService
 	public function findByPk($value)
 	{
 		return $this->getSrvQuery()->findByPk($value);
+	}
+
+	/**
+	 * 通过主键，从持久化记录中获取某个列的值。不支持联合主键
+	 * 多用于View层数据展示
+	 * @param string $columnName
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getColById($columnName, $value)
+	{
+		$columnName = strtolower(trim($columnName));
+		$data = $this->getRowById($value);
+		return isset($data[$columnName]) ? $data[$columnName] : '';
+	}
+
+	/**
+	 * 通过ID类主键，查询一条记录，并持久化该记录。不支持联合主键。
+	 * 多用于View层数据展示
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getRowById($value)
+	{
+		$value = (int) $value;
+		$name = get_class($this) . '_get_row_by_id_' . $value;
+		if (!Registry::has($name)) {
+			$ret = $this->getSrvQuery()->findByPk($value);
+			$data = array();
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$data = $ret['data'];
+			}
+
+			Registry::set($name, $data);
+		}
+
+		return Registry::get($name);
 	}
 
 	/**

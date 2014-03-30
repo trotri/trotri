@@ -24,9 +24,10 @@ INSERT INTO `tr_builder_types` VALUES (3, '开关选项卡', 'switch', 'ENUM', '
 INSERT INTO `tr_builder_types` VALUES (4, '单选', 'radio', 'ENUM', 'option', 4);
 INSERT INTO `tr_builder_types` VALUES (5, '多选', 'checkbox', 'VARCHAR', 'option', 5);
 INSERT INTO `tr_builder_types` VALUES (6, '单选下拉框', 'select', 'INT', 'option', 6);
-INSERT INTO `tr_builder_types` VALUES (7, '隐藏文本框', 'hidden', 'VARCHAR', 'text', 7);
-INSERT INTO `tr_builder_types` VALUES (8, '多行文本', 'textarea', 'TEXT', 'text', 8);
-INSERT INTO `tr_builder_types` VALUES (9, '上传文件', 'file', 'VARCHAR', 'text', 9);
+INSERT INTO `tr_builder_types` VALUES (7, '隐藏文本框(VARCHAR)', 'hidden', 'VARCHAR', 'text', 7);
+INSERT INTO `tr_builder_types` VALUES (8, '隐藏文本框(INT)', 'hidden', 'INT', 'text', 8);
+INSERT INTO `tr_builder_types` VALUES (9, '多行文本', 'textarea', 'TEXT', 'text', 9);
+INSERT INTO `tr_builder_types` VALUES (10, '上传文件', 'file', 'VARCHAR', 'text', 10);
 
 DROP TABLE IF EXISTS `tr_builders`;
 CREATE TABLE `tr_builders` (

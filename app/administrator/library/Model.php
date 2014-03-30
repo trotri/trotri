@@ -109,6 +109,18 @@ class Model
 	}
 
 	/**
+	 * 通过主键，从持久化记录中获取某个列的值。不支持联合主键
+	 * 多用于View层数据展示
+	 * @param string $columnName
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getColById($columnName, $value)
+	{
+		return $this->getService()->getColById($columnName, $value);
+	}
+
+	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array

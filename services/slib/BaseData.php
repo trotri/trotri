@@ -28,11 +28,23 @@ abstract class BaseData
 	protected $_language = null;
 
 	/**
+	 * @var string 项目名
+	 */
+	protected $_moduleName = '';
+
+	/**
+	 * @var string 模型类名
+	 */
+	protected $_className = '';
+
+	/**
 	 * 构造方法：初始化语言国际化管理类
 	 * @param tfc\util\Language $language
 	 */
 	public function __construct(Language $language)
 	{
+		list($tmp1, $this->_moduleName, $this->_className) = explode('\\', get_class($this));
+		$this->_className = substr($this->_className, 4);
 		$this->_language = $language;
 	}
 

@@ -186,7 +186,7 @@ class Schema extends Model
 				$typeId = 4;
 			}
 			elseif ($columnSchema->isPrimaryKey) {
-				$typeId = 7;
+				$typeId = 8;
 			}
 			else {
 				$typeId = 1;

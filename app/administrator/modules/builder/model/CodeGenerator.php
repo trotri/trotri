@@ -52,6 +52,11 @@ class CodeGenerator extends Model
 	protected $_fields = array();
 
 	/**
+	 * @var boolean 是否包含放入回收站字段，以trash字段为准
+	 */
+	protected $_hasTrash = false;
+
+	/**
 	 * @var array 寄存所有的目录
 	 */
 	protected $_dirs = array();
@@ -149,6 +154,11 @@ class CodeGenerator extends Model
 			}
 
 			$rows['validators'] = $this->formatValidators($ret['data'], $rows['field_name']);
+
+			if ($rows['field_name'] === 'trash') {
+				$this->_hasTrash = true;
+				break;
+			}
 		}
 		Log::echoTrace('Query from tr_builder_field_validators Successfully ...');
 
@@ -172,7 +182,299 @@ class CodeGenerator extends Model
 		$this->gcSLangs();
 		$this->gcSDb();
 		$this->gcSData();
+		$this->gcSModel();
+		$this->gcLangs();
+		$this->gcCtrl();
 		Log::echoTrace('Generate End, Table Name "' . $this->_builders['tbl_name'] . '"');
+	}
+
+	/**
+	 * 创建Ctrl层类
+	 * @return void
+	 */
+	public function gcCtrl()
+	{
+		Log::echoTrace('Generate App Ctrl Begin ...');
+
+		$modName = $this->_builders['mod_name'];
+		$clsName = $this->_builders['uc_cls_name'];
+		$ctrlName = $this->_builders['uc_ctrl_name'] . 'Controller';
+		$builderName = $this->_builders['builder_name'];
+		$this->_builders['act_single_modify'] = 'singlemodify';
+		$this->_builders['act_trashindex_name'] = $this->_hasTrash ? 'trash' . $this->_builders['act_index_name'] : '';
+		$this->_builders['act_trash_name'] = $this->_hasTrash ? 'trash' : '';
+
+		$filePath = $this->_dirs['ctrl'] . DS . $ctrlName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+
+		fwrite($stream, "namespace modules\\{$modName}\\controller;\n\n");
+		fwrite($stream, "use library\\BaseController;\n\n");
+		$this->writeClassComment($stream, $ctrlName, $builderName, "modules.{$modName}.controller");
+
+		fwrite($stream, "class {$ctrlName} extends BaseController\n");
+		fwrite($stream, "{\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc.Controller::actions()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function actions()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\treturn array(\n");
+
+		$acts = array(
+			'Index' => array(
+				'name' => $this->_builders['act_index_name'],
+				'type' => 'show',
+			),
+			'TrashIndex' => array(
+				'name' => $this->_builders['act_trashindex_name'],
+				'type' => 'show',
+			),
+			'View' => array(
+				'name' => $this->_builders['act_view_name'],
+				'type' => 'show',
+			),
+			'Create' => array(
+				'name' => $this->_builders['act_create_name'],
+				'type' => 'submit',
+			),
+			'Modify' => array(
+				'name' => $this->_builders['act_modify_name'],
+				'type' => 'submit',
+			),
+			'Remove' => array(
+				'name' => $this->_builders['act_remove_name'],
+				'type' => 'submit',
+			),
+			'SingleModify' => array(
+				'name' => $this->_builders['act_single_modify'],
+				'type' => 'submit',
+			),
+			'Trash' => array(
+				'name' => $this->_builders['act_trash_name'],
+				'type' => 'submit',
+			),
+		);
+
+		$maxLen = 0;
+		foreach ($acts as $rows) {
+			if (($len = strlen('\'' . $rows['name'] . '\'')) > $maxLen) {
+				$maxLen = $len;
+			}
+		}
+
+		foreach ($acts as $sysActName => $rows) {
+			if ($rows['name'] === '') {
+				continue;
+			}
+
+			$actName = str_pad('\'' . $rows['name'] . '\'', $maxLen);
+			fwrite($stream, "\t\t\t{$actName} => 'modules\\\\{$modName}\\\\action\\\\{$rows['type']}\\\\{$clsName}{$sysActName}',\n");
+		}
+
+		fwrite($stream, "\t\t);\n");
+		fwrite($stream, "\t}\n");
+
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Ctrl End');
+	}
+
+	/**
+	 * 创建app层语言包
+	 * @return void
+	 */
+	public function gcLangs()
+	{
+		Log::echoTrace('Generate App Languages Begin ...');
+
+		$appName = $this->_builders['app_name'];
+		$modName = $this->_builders['mod_name'];
+		$tblName = $this->_builders['tbl_name'];
+		$builderName = $this->_builders['builder_name'];
+		$upCtrlName = strtoupper($this->_builders['ctrl_name']);
+		$upModName = strtoupper($modName);
+
+		$fileName = 'zh-CN.mod_' . $modName . '.ini';
+		$filePath = $this->_dirs['lang'] . DS . $fileName;
+
+		$stream = $this->fopen($filePath);
+		$this->writeLangComment($stream, $fileName, $appName);
+
+		fwrite($stream, "; {$tblName} {$builderName}\n");
+		fwrite($stream, "MOD_{$upModName}_URLS_{$upCtrlName}_INDEX=\"{$builderName}管理\"\n");
+		fwrite($stream, "MOD_{$upModName}_URLS_{$upCtrlName}_CREATE=\"新增{$builderName}\"\n");
+		foreach ($this->_groups as $rows) {
+			if ($rows['group_name'] != 'main') {
+				fwrite($stream, "{$rows['lang_key']}=\"{$rows['prompt']}\"\n");
+			}
+		}
+
+		foreach ($this->_fields as $rows) {
+			fwrite($stream, "{$rows['lang_label']}=\"{$rows['html_label']}\"\n");
+			fwrite($stream, "{$rows['lang_hint']}=\"{$rows['form_prompt']}\"\n");
+		}
+
+		fclose($stream);
+		Log::echoTrace('Generate App Languages End');
+	}
+
+	/**
+	 * 创建Services层Model类
+	 * @return void
+	 */
+	public function gcSModel()
+	{
+		Log::echoTrace('Generate Services Model Begin ...');
+		$modName = $this->_builders['mod_name'];
+		$clsName = 'Mod' . $this->_builders['uc_cls_name'];
+
+		$filePath = $this->_dirs['smod'] . DS . $clsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+
+		fwrite($stream, "namespace smods\\{$modName};\n\n");
+		fwrite($stream, "use tfc\\util\\Language;\n");
+		fwrite($stream, "use slib\\BaseModel;\n");
+		fwrite($stream, "use slib\\Data;\n");
+		fwrite($stream, "use slib\\ErrorNo;\n\n");
+		$this->writeClassComment($stream, $clsName, '业务层：模型类', "smods.{$modName}");
+
+		fwrite($stream, "class {$clsName} extends BaseModel\n");
+		fwrite($stream, "{\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 构造方法：初始化数据库操作类和语言国际化管理类\n");
+		fwrite($stream, "\t * @param tfc\\util\\Language \$language\n");
+		fwrite($stream, "\t * @param integer \$tableNum 分表数字，如果 >= 0 表示分表操作\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function __construct(Language \$language, \$tableNum = -1)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$db = new Db{$this->_builders['uc_cls_name']}(\$tableNum);\n");
+		fwrite($stream, "\t\tparent::__construct(\$db, \$language);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 查询数据\n");
+		fwrite($stream, "\t * @param array \$params\n");
+		fwrite($stream, "\t * @param string \$order\n");
+		fwrite($stream, "\t * @param integer \$limit\n");
+		fwrite($stream, "\t * @param integer \$offset\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function search(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$rules = array(\n");
+		foreach ($this->_fields as $rows) {
+			if ($rows['form_search_show']) {
+				if ($rows['field_type'] === 'INT') {
+					fwrite($stream, "\t\t\t'{$rows['field_name']}' => 'intval',\n");
+				}
+				else {
+					fwrite($stream, "\t\t\t'{$rows['field_name']}' => 'trim',\n");
+				}
+			}
+		}
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\t\$this->_filterCleanEmpty(\$params, \$rules);\n\n");
+		fwrite($stream, "\t\treturn \$this->findAllByAttributes(\$params, \$order, \$limit, \$offset);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 新增一条记录\n");
+		fwrite($stream, "\t * @param array \$params\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function create(array \$params = array())\n");
+		fwrite($stream, "\t{\n");
+		if ($this->_hasTrash) {
+			fwrite($stream, "\t\tif (isset(\$params['trash'])) { unset(\$params['trash']); }\n");
+		}
+		fwrite($stream, "\t\treturn \$this->autoInsert(\$params);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 通过主键，编辑一条记录\n");
+		fwrite($stream, "\t * @param integer \$value\n");
+		fwrite($stream, "\t * @param array \$params\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function modifyByPk(\$value, array \$params)\n");
+		fwrite($stream, "\t{\n");
+		if ($this->_hasTrash) {
+			fwrite($stream, "\t\tif (isset(\$params['trash'])) { unset(\$params['trash']); }\n");
+		}
+		fwrite($stream, "\t\treturn \$this->autoUpdateByPk(\$value, \$params);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see slib.BaseModel::validate()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function validate(array \$attributes = array(), \$required = false, \$opType = '')\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$data = Data::getInstance(\$this->_className, \$this->_moduleName, \$this->getLanguage());\n");
+		fwrite($stream, "\t\t\$rules = \$data->getRules(array(\n");
+		foreach ($this->_fields as $rows) {
+			if ($rows['column_auto_increment']) {
+				continue;
+			}
+
+			if (isset($rows['validators']) && $rows['validators'] !== array()) {
+				fwrite($stream, "\t\t\t'{$rows['field_name']}',\n");
+			}
+		}
+		fwrite($stream, "\t\t));\n\n");
+		fwrite($stream, "\t\treturn \$this->filterRun(\$rules, \$attributes, \$required);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see slib.BaseModel::_cleanPreValidator()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tprotected function _cleanPreValidator(array \$attributes = array(), \$opType = '')\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$rules = array(\n");
+		foreach ($this->_fields as $rows) {
+			if ($rows['column_auto_increment']) {
+				continue;
+			}
+
+			if ($rows['field_type'] === 'INT') {
+				fwrite($stream, "\t\t\t'{$rows['field_name']}' => 'intval',\n");
+			}
+			elseif ($rows['form_type'] === 'checkbox') {
+				fwrite($stream, "\t\t\t'{$rows['field_name']}' => array(\$this, 'trims'),\n");
+			}
+			else {
+				fwrite($stream, "\t\t\t'{$rows['field_name']}' => 'trim',\n");
+			}
+		}
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\treturn \$this->_clean(\$rules, \$attributes);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see slib.BaseModel::_cleanPostValidator()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tprotected function _cleanPostValidator(array \$attributes = array(), \$opType = '')\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$rules = array(\n");
+		foreach ($this->_fields as $rows) {
+			if ($rows['form_type'] === 'checkbox') {
+				fwrite($stream, "\t\t\t'{$rows['field_name']}' => array(\$this, 'join'),\n");
+			}
+		}
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\treturn \$this->_clean(\$rules, \$attributes);\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate Services Model End');
 	}
 
 	/**
@@ -184,7 +486,6 @@ class CodeGenerator extends Model
 		Log::echoTrace('Generate Services Data Begin ...');
 		$modName = $this->_builders['mod_name'];
 		$clsName = 'Data' . $this->_builders['uc_cls_name'];
-		$tblName = $this->_builders['tbl_name'];
 
 		$filePath = $this->_dirs['smod'] . DS . $clsName . '.php';
 		$stream = $this->fopen($filePath);
@@ -270,9 +571,8 @@ class CodeGenerator extends Model
 				fwrite($stream, "\t}\n\n");
 			}
 		}
+		fwrite($stream, "}\n");
 
-		\tfc\saf\debug_dump($this->_fields);
-		
 		fclose($stream);
 		Log::echoTrace('Generate Services Data End');
 	}
@@ -384,7 +684,7 @@ class CodeGenerator extends Model
 		fwrite($stream, "; @version     1.0\n");
 		fwrite($stream, "; @date        " . date('Y-m-d') . "\n");
 		fwrite($stream, "; @author      {$this->_builders['author_name']} <{$this->_builders['author_mail']}>\n");
-		fwrite($stream, "; @copyright   Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.\n");
+		fwrite($stream, "; @copyright   Copyright &copy; 2011-" . date('Y') . " http://www.trotri.com/ All rights reserved.\n");
 		fwrite($stream, "; @license     http://www.apache.org/licenses/LICENSE-2.0\n");
 		fwrite($stream, "; @note        Client Site\n");
 		fwrite($stream, "; @note        All ini files need to be saved as UTF-8 - No BOM\n\n");
@@ -403,7 +703,7 @@ class CodeGenerator extends Model
 		fwrite($stream, " *\n");
 		fwrite($stream, " * @author    Huan Song <trotri@yeah.net>\n");
 		fwrite($stream, " * @link      http://github.com/trotri/trotri for the canonical source repository\n");
-		fwrite($stream, " * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.\n");
+		fwrite($stream, " * @copyright Copyright &copy; 2011-" . date('Y') . " http://www.trotri.com/ All rights reserved.\n");
 		fwrite($stream, " * @license   http://www.apache.org/licenses/LICENSE-2.0\n");
 		fwrite($stream, " */\n\n");
 	}
@@ -591,9 +891,9 @@ class CodeGenerator extends Model
 		}
 		$ret['form_type'] = $this->_types[$typeId]['form_type'];
 		$ret['type_category'] = $this->_types[$typeId]['category'];
+		$ret['field_type'] = $this->_types[$typeId]['field_type'];
 
-		$fieldType = $this->_types[$typeId]['field_type'];
-		if ($fieldType === 'ENUM') {
+		if ($ret['field_type'] === 'ENUM') {
 			$enums = array();
 			foreach (explode('|', $ret['column_length']) as $value) {
 				$constKey = $ret['up_field_name'] . '_' . strtoupper($value);

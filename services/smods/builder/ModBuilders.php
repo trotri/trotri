@@ -145,7 +145,7 @@ class ModBuilders extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$data = Data::getInstance('builders', 'builder', $this->getLanguage());
+		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$rules = $data->getRules(array(
 			'builder_name',
 			'tbl_name',
