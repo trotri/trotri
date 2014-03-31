@@ -66,7 +66,6 @@ class Fields extends Model
 		if ($builderId <= 0) {
 			$id = Ap::getRequest()->getInteger('id');
 			$builderId = $this->getBuilderIdByFieldId($id);
-			$builderId = $this->getColById('builder_id', $id);
 		}
 
 		return $builderId;

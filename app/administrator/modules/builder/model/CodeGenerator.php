@@ -788,9 +788,10 @@ class CodeGenerator extends Model
 		$this->writeCopyrightComment($stream);
 
 		fwrite($stream, "namespace modules\\{$modName}\\model;\n\n");
-		if ($this->_builders['fk_column']) {
-			fwrite($stream, "use tfc\\ap\\Ap;\n");
-		}
+		$fkColumnName = isset($this->_builders['fk_column']) ? $this->_builders['fk_column'] : '';
+		$fkColumnFunc = $this->column2Name($fkColumnName);
+		$fkColumnVar = strtolower(substr($fkColumnFunc, 0, 1)) . substr($fkColumnFunc, 1);
+		if ($fkColumnName) { fwrite($stream, "use tfc\\ap\\Ap;\n"); }
 		fwrite($stream, "use tfc\\mvc\\Mvc;\n");
 		fwrite($stream, "use tfc\\saf\\Text;\n");
 		fwrite($stream, "use library\\Model;\n");
@@ -825,8 +826,6 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t\t\treturn \$lastIndexUrl;\n");
 		fwrite($stream, "\t\t}\n\n");
 
-		$fkColumnName = isset($this->_builders['fk_column']) ? $this->_builders['fk_column'] : '';
-		$fkColumnFunc = $this->column2Name($fkColumnName);
 		if ($this->_hasTrash) {
 			if ($fkColumnName) {
 				fwrite($stream, "\t\t\$params = array('trash' => 'n', '{$fkColumnName}' => \$this->get{$fkColumnFunc}());\n");
@@ -847,7 +846,6 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t}\n\n");
 
 		if ($fkColumnName) {
-			$fkColumnVar = strtolower(substr($fkColumnFunc, 0, 1)) . substr($fkColumnFunc, 1);
 			fwrite($stream, "\t/**\n");
 			fwrite($stream, "\t * 获取{$fkColumnName}值\n");
 			fwrite($stream, "\t * @return integer\n");
@@ -926,6 +924,21 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t\t);\n\n");
 		fwrite($stream, "\t\treturn \$output;\n");
 		fwrite($stream, "\t}\n\n");
+
+		if ($fkColumnName) {
+			fwrite($stream, "\t/**\n");
+			fwrite($stream, "\t * (non-PHPdoc)\n");
+			fwrite($stream, "\t * @see library.Model::create()\n");
+			fwrite($stream, "\t */\n");
+			fwrite($stream, "\tpublic function create(array \$params = array())\n");
+			fwrite($stream, "\t{\n");
+			fwrite($stream, "\t\t\$ret = parent::create(\$params);\n");
+			fwrite($stream, "\t\tif (\$ret['err_no'] === ErrorNo::SUCCESS_NUM) {\n");
+			fwrite($stream, "\t\t\t\$ret['{$fkColumnName}'] = \$this->getColById('$fkColumnName', \$ret['id']);\n");
+			fwrite($stream, "\t\t}\n\n");
+			fwrite($stream, "\t\treturn \$ret;\n");
+			fwrite($stream, "\t}\n\n");
+		}
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * 获取操作图标按钮\n");
