@@ -42,6 +42,7 @@ CREATE TABLE `tr_builders` (
   `mod_name` varchar(100) NOT NULL DEFAULT '' COMMENT '模块名',
   `ctrl_name` varchar(100) NOT NULL DEFAULT '' COMMENT '控制器名，默认和省略前缀的表名相同',
   `cls_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类名',
+  `fk_column` varchar(100) NOT NULL DEFAULT '' COMMENT '外联其他表的字段名',
   `act_index_name` varchar(100) NOT NULL DEFAULT 'index' COMMENT '行动名-数据列表',
   `act_view_name` varchar(100) NOT NULL DEFAULT 'view' COMMENT '行动名-数据详情',
   `act_create_name` varchar(100) NOT NULL DEFAULT 'create' COMMENT '行动名-新增数据',

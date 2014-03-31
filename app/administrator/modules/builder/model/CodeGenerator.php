@@ -52,14 +52,24 @@ class CodeGenerator extends Model
 	protected $_fields = array();
 
 	/**
-	 * @var boolean 是否包含放入回收站字段，以trash字段为准
+	 * @var array 寄存所有的目录
+	 */
+	protected $_dirs = array();
+
+	/**
+	 * @var boolean 是否包含“放入回收站”字段，以trash字段为准
 	 */
 	protected $_hasTrash = false;
 
 	/**
-	 * @var array 寄存所有的目录
+	 * @var boolean 是否包含“排序”字段，以sort字段为准
 	 */
-	protected $_dirs = array();
+	protected $_hasSort = false;
+
+	/**
+	 * @var string 主键字段名
+	 */
+	protected $_pkColumn = '';
 
 	/**
 	 * 构造方法：初始化MySQL表结构分析类
@@ -80,7 +90,7 @@ class CodeGenerator extends Model
 			Log::errExit(__LINE__, 'Query from tr_builders Failed!');
 		}
 		$this->_builders = $this->formatBuilders($ret['data']);
-		Log::echoTrace('Query from tr_builders Successfully ...');
+		Log::echoTrace('Query from tr_builders Successfully');
 
 		// 初始化表单字段类型
 		Log::echoTrace('Query from tr_builder_types Begin ...');
@@ -94,7 +104,7 @@ class CodeGenerator extends Model
 			Log::errExit(__LINE__, 'Query from tr_builder_types Failed!');
 		}
 		$this->_types = $this->formatTypes($ret['data']);
-		Log::echoTrace('Query from tr_builder_types Successfully ...');
+		Log::echoTrace('Query from tr_builder_types Successfully');
 
 		// 表单字段组数据
 		Log::echoTrace('Query from tr_builder_field_groups Begin ...');
@@ -120,7 +130,7 @@ class CodeGenerator extends Model
 		}
 		$groups = array_merge($default, $ret['data']);
 		$this->_groups = $this->formatGroups($groups);
-		Log::echoTrace('Query from tr_builder_field_groups Successfully ...');
+		Log::echoTrace('Query from tr_builder_field_groups Successfully');
 
 		// 初始化表单字段数据
 		Log::echoTrace('Query from tr_builder_fields Begin ...');
@@ -137,7 +147,7 @@ class CodeGenerator extends Model
 		foreach ($ret['data'] as $rows) {
 			$this->_fields[] = $this->formatFields($rows);
 		}
-		Log::echoTrace('Query from tr_builder_fields Successfully ...');
+		Log::echoTrace('Query from tr_builder_fields Successfully');
 
 		// 初始化表单字段验证
 		Log::echoTrace('Query from tr_builder_field_validators Begin ...');
@@ -157,16 +167,29 @@ class CodeGenerator extends Model
 
 			if ($rows['field_name'] === 'trash') {
 				$this->_hasTrash = true;
-				break;
+			}
+
+			if ($rows['field_name'] === 'sort') {
+				$this->_hasSort = true;
+			}
+
+			// 将自增类型当主键
+			if ($rows['column_auto_increment']) {
+				$this->_pkColumn = $rows['field_name'];
 			}
 		}
-		Log::echoTrace('Query from tr_builder_field_validators Successfully ...');
+
+		Log::echoTrace('Query from tr_builder_field_validators Successfully');
+
+		$this->_builders['act_single_modify'] = 'singlemodify';
+		$this->_builders['act_trashindex_name'] = $this->_hasTrash ? 'trash' . $this->_builders['act_index_name'] : '';
+		$this->_builders['act_trash_name'] = $this->_hasTrash ? 'trash' : '';
 
 		// 初始化目录地址
 		Log::echoTrace('Create Directories Begin ...');
 		$this->_fileManager = new FileManager();
 		$this->initDirs();
-		Log::echoTrace('Create Directories Successfully ...');
+		Log::echoTrace('Create Directories Successfully');
 
 		// 初始化工作结束
 		Log::echoTrace('Initialization End');
@@ -184,8 +207,477 @@ class CodeGenerator extends Model
 		$this->gcSData();
 		$this->gcSModel();
 		$this->gcLangs();
+		$this->gcModel();
 		$this->gcCtrl();
+		$this->gcActs();
+		$this->gcViews();
 		Log::echoTrace('Generate End, Table Name "' . $this->_builders['tbl_name'] . '"');
+	}
+
+	/**
+	 * 创建View层文件
+	 * @return void
+	 */
+	public function gcViews()
+	{
+		Log::echoTrace('Generate App Views Begin ...');
+
+		$tmpListIndexShows = array();
+		$tmpFormCreateShows = array();
+		$tmpFormModifyShows = array();
+		foreach ($this->_fields as $rows) {
+			if ($rows['index_show']) {
+				$tmpListIndexShows[$rows['index_sort']][] = $rows['field_name'];
+			}
+
+			if ($rows['form_create_show']) {
+				$tmpFormCreateShows[$rows['form_create_sort']][] = $rows['field_name'];
+			}
+
+			if ($rows['form_modify_show']) {
+				$tmpFormModifyShows[$rows['form_modify_sort']][] = $rows['field_name'];
+			}
+		}
+
+		ksort($tmpListIndexShows);
+		ksort($tmpFormCreateShows);
+		ksort($tmpFormModifyShows);
+
+		$listIndexShows = array();
+		$formCreateShows = array();
+		$formModifyShows = array();
+		foreach ($tmpListIndexShows as $columnNames) {
+			foreach ($columnNames as $columnName) {
+				$listIndexShows[] = $columnName;
+			}
+		}
+
+		foreach ($tmpFormCreateShows as $columnNames) {
+			foreach ($columnNames as $columnName) {
+				$formCreateShows[] = $columnName;
+			}
+		}
+
+		foreach ($tmpFormModifyShows as $columnNames) {
+			foreach ($columnNames as $columnName) {
+				$formModifyShows[] = $columnName;
+			}
+		}
+
+		$modName = $this->_builders['mod_name'];
+		$ctrlName = $this->_builders['ctrl_name'];
+
+		// 创建 Index View
+		$tmpFileName = $ctrlName . '_' . $this->_builders['act_index_name'];
+		$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+		$stream = $this->fopen($filePath);
+
+		fwrite($stream, "<?php \$this->display('{$modName}/{$tmpFileName}_btns'); ?>\n\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'views\\bootstrap\\widgets\\TableBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'elements' => \$this->elements,\n");
+		fwrite($stream, "\t\t'data' => \$this->data,\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($listIndexShows as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'_operate_',\n");
+		fwrite($stream, "\t\t),\n");
+		fwrite($stream, "\t\t'checkedToggle' => '" . $this->_pkColumn . "',\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>\n\n");
+		fwrite($stream, "<?php \$this->display('{$modName}/{$tmpFileName}_btns'); ?>\n\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'views\\bootstrap\\widgets\\PaginatorBuilder',\n");
+		fwrite($stream, "\t\$this->paginator\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Index View Btns
+		$tmpFileName = $ctrlName . '_' . $this->_builders['act_index_name'] . '_btns';
+		$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+		$stream = $this->fopen($filePath);
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		if ($this->_hasTrash) {
+			// 创建 TrashIndex View
+			$tmpFileName = $ctrlName . '_' . $this->_builders['act_trashindex_name'];
+			$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+			$stream = $this->fopen($filePath);
+
+			fwrite($stream, "<?php \$this->display('{$modName}/{$tmpFileName}_btns'); ?>\n\n");
+			fwrite($stream, "<?php\n");
+			fwrite($stream, "\$this->widget(\n");
+			fwrite($stream, "\t'views\\bootstrap\\widgets\\TableBuilder',\n");
+			fwrite($stream, "\tarray(\n");
+			fwrite($stream, "\t\t'elements' => \$this->elements,\n");
+			fwrite($stream, "\t\t'data' => \$this->data,\n");
+			fwrite($stream, "\t\t'columns' => array(\n");
+			foreach ($listIndexShows as $columnName) {
+				fwrite($stream, "\t\t\t'{$columnName}',\n");
+			}
+			fwrite($stream, "\t\t\t'_operate_',\n");
+			fwrite($stream, "\t\t),\n");
+			fwrite($stream, "\t\t'checkedToggle' => '" . $this->_pkColumn . "',\n");
+			fwrite($stream, "\t)\n");
+			fwrite($stream, ");\n");
+			fwrite($stream, "?>\n\n");
+			fwrite($stream, "<?php \$this->display('{$modName}/{$tmpFileName}_btns'); ?>\n\n");
+			fwrite($stream, "<?php\n");
+			fwrite($stream, "\$this->widget(\n");
+			fwrite($stream, "\t'views\\bootstrap\\widgets\\PaginatorBuilder',\n");
+			fwrite($stream, "\t\$this->paginator\n");
+			fwrite($stream, ");\n");
+			fwrite($stream, "?>");
+
+			fclose($stream);
+			Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+			// 创建 TrashIndex View Btns
+			$tmpFileName = $ctrlName . '_' . $this->_builders['act_trashindex_name'] . '_btns';
+			$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+			$stream = $this->fopen($filePath);
+
+			fclose($stream);
+			Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+		}
+
+		// 创建 View View
+		$tmpFileName = $ctrlName . '_' . $this->_builders['act_view_name'];
+		$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+		$stream = $this->fopen($filePath);
+
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\widgets\\ViewBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'view',\n");
+		fwrite($stream, "\t\t'tabs' => \$this->tabs,\n");
+		fwrite($stream, "\t\t'values' => \$this->data,\n");
+		fwrite($stream, "\t\t'elements' => \$this->elements,\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($listIndexShows as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'_button_history_back_',\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Create View
+		$tmpFileName = $ctrlName . '_' . $this->_builders['act_create_name'];
+		$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+		$stream = $this->fopen($filePath);
+
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\widgets\\FormBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'create',\n");
+		fwrite($stream, "\t\t'action' => \$this->getUrlManager()->getUrl(\$this->action),\n");
+		fwrite($stream, "\t\t'tabs' => \$this->tabs,\n");
+		fwrite($stream, "\t\t'errors' => \$this->errors,\n");
+		fwrite($stream, "\t\t'elements' => \$this->elements,\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($formCreateShows as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'_button_save_',\n");
+		fwrite($stream, "\t\t\t'_button_save2close_',\n");
+		fwrite($stream, "\t\t\t'_button_save2new_',\n");
+		fwrite($stream, "\t\t\t'_button_cancel_',\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Modify View
+		$tmpFileName = $ctrlName . '_' . $this->_builders['act_modify_name'];
+		$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+		$stream = $this->fopen($filePath);
+
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\widgets\\FormBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'modify',\n");
+		fwrite($stream, "\t\t'action' => \$this->getUrlManager()->getUrl(\$this->action, '', '', array('id' => \$this->id)),\n");
+		fwrite($stream, "\t\t'tabs' => \$this->tabs,\n");
+		fwrite($stream, "\t\t'values' => \$this->data,\n");
+		fwrite($stream, "\t\t'errors' => \$this->errors,\n");
+		fwrite($stream, "\t\t'elements' => \$this->elements,\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($formModifyShows as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'_button_save_',\n");
+		fwrite($stream, "\t\t\t'_button_save2close_',\n");
+		fwrite($stream, "\t\t\t'_button_save2new_',\n");
+		fwrite($stream, "\t\t\t'_button_cancel_',\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		Log::echoTrace('Generate App Views End');
+	}
+
+	/**
+	 * 创建Actions层类
+	 * @return void
+	 */
+	public function gcActs()
+	{
+		Log::echoTrace('Generate App Acts Begin ...');
+
+		$modName = $this->_builders['mod_name'];
+		$clsName = $this->_builders['uc_cls_name'];
+		$fkColumnName = isset($this->_builders['fk_column']) ? $this->_builders['fk_column'] : '';
+		$fkColumnFunc = $this->column2Name($fkColumnName);
+		$fkColumnVar = strtolower(substr($fkColumnFunc, 0, 1)) . substr($fkColumnFunc, 1);
+
+		// 创建 Index Action
+		$tmpClsName = $clsName . 'Index';
+		$filePath = $this->_dirs['act']['show'] . DS . $tmpClsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+		fwrite($stream, "namespace modules\\{$modName}\\action\\show;\n\n");
+		if ($this->_hasTrash || $fkColumnName) {
+			fwrite($stream, "use tfc\\ap\\Ap;\n");
+		}
+		fwrite($stream, "use library\\action\\IndexAction;\n\n");
+		$this->writeClassComment($stream, $tmpClsName, '查询数据列表', "modules.{$modName}.action.show");
+		fwrite($stream, "class {$tmpClsName} extends IndexAction\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function run()\n");
+		fwrite($stream, "\t{\n");
+		if ($fkColumnName) {
+			fwrite($stream, "\t\t\${$fkColumnVar} = Ap::getRequest()->getInteger('{$fkColumnName}');\n");
+			fwrite($stream, "\t\tif (\${$fkColumnVar} <= 0) {\n");
+			fwrite($stream, "\t\t\t\$this->err404();\n");
+			fwrite($stream, "\t\t}\n\n");
+			fwrite($stream, "\t\t\$this->assign('{$fkColumnName}', \${$fkColumnVar});\n\n");
+		}
+		if ($this->_hasTrash) { fwrite($stream, "\t\tAp::getRequest()->setParam('trash', 'n');\n"); }
+		if ($this->_hasSort) { fwrite($stream, "\t\tAp::getRequest()->setParam('sort', 'n');\n"); }
+		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+
+		if ($this->_hasTrash) {
+			// 创建 TrashIndex Action
+			$tmpClsName = $clsName . 'TrashIndex';
+			$filePath = $this->_dirs['act']['show'] . DS . $tmpClsName . '.php';
+			$stream = $this->fopen($filePath);
+			$this->writeCopyrightComment($stream);
+			fwrite($stream, "namespace modules\\{$modName}\\action\\show;\n\n");
+			fwrite($stream, "use tfc\\ap\\Ap;\n");
+			fwrite($stream, "use library\\action\\IndexAction;\n\n");
+			$this->writeClassComment($stream, $tmpClsName, '查询回收站数据列表', "modules.{$modName}.action.show");
+			fwrite($stream, "class {$tmpClsName} extends IndexAction\n");
+			fwrite($stream, "{\n");
+			fwrite($stream, "\t/**\n");
+			fwrite($stream, "\t * (non-PHPdoc)\n");
+			fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+			fwrite($stream, "\t */\n");
+			fwrite($stream, "\tpublic function run()\n");
+			fwrite($stream, "\t{\n");
+			if ($fkColumnName) {
+				fwrite($stream, "\t\t\${$fkColumnVar} = Ap::getRequest()->getInteger('{$fkColumnName}');\n");
+				fwrite($stream, "\t\tif (\${$fkColumnVar} <= 0) {\n");
+				fwrite($stream, "\t\t\t\$this->err404();\n");
+				fwrite($stream, "\t\t}\n\n");
+				fwrite($stream, "\t\t\$this->assign('{$fkColumnName}', \${$fkColumnVar});\n\n");
+			}
+			fwrite($stream, "\t\tAp::getRequest()->setParam('trash', 'y');\n");
+			if ($this->_hasSort) { fwrite($stream, "\t\tAp::getRequest()->setParam('order', 'sort');\n"); }
+			fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+			fwrite($stream, "\t}\n");
+			fwrite($stream, "}\n");
+			fclose($stream);
+			Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+		}
+
+		// 创建 View Action
+		$tmpClsName = $clsName . 'View';
+		$filePath = $this->_dirs['act']['show'] . DS . $tmpClsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+		fwrite($stream, "namespace modules\\{$modName}\\action\\show;\n\n");
+		fwrite($stream, "use library\\action\\ViewAction;\n");
+		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n\n"); }
+		$this->writeClassComment($stream, $tmpClsName, '查询数据详情', "modules.{$modName}.action.show");
+		fwrite($stream, "class {$tmpClsName} extends ViewAction\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function run()\n");
+		fwrite($stream, "\t{\n");
+		if ($fkColumnName) {
+			fwrite($stream, "\t\t\$mod = Model::getInstance('{$clsName}');\n");
+			fwrite($stream, "\t\t\${$fkColumnVar} = \$mod->get{$fkColumnFunc}();\n");
+			fwrite($stream, "\t\tif (\${$fkColumnVar} <= 0) {\n");
+			fwrite($stream, "\t\t\t\$this->err404();\n");
+			fwrite($stream, "\t\t}\n\n");
+			fwrite($stream, "\t\t\$this->assign('{$fkColumnName}', \${$fkColumnVar});\n");
+		}
+		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+
+		// 创建 Create Action
+		$tmpClsName = $clsName . 'Create';
+		$filePath = $this->_dirs['act']['submit'] . DS . $tmpClsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+		fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
+		fwrite($stream, "use library\\action\\CreateAction;\n");
+		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n\n"); }
+		$this->writeClassComment($stream, $tmpClsName, '新增数据', "modules.{$modName}.action.submit");
+		fwrite($stream, "class {$tmpClsName} extends CreateAction\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function run()\n");
+		fwrite($stream, "\t{\n");
+		if ($fkColumnName) {
+			fwrite($stream, "\t\t\$mod = Model::getInstance('{$clsName}');\n");
+			fwrite($stream, "\t\t\${$fkColumnVar} = \$mod->get{$fkColumnFunc}();\n");
+			fwrite($stream, "\t\tif (\${$fkColumnVar} <= 0) {\n");
+			fwrite($stream, "\t\t\t\$this->err404();\n");
+			fwrite($stream, "\t\t}\n\n");
+			fwrite($stream, "\t\t\$this->assign('{$fkColumnName}', \${$fkColumnVar});\n");
+		}
+		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+
+		// 创建 Modify Action
+		$tmpClsName = $clsName . 'Modify';
+		$filePath = $this->_dirs['act']['submit'] . DS . $tmpClsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+		fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
+		fwrite($stream, "use library\\action\\ModifyAction;\n");
+		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n\n"); }
+		$this->writeClassComment($stream, $tmpClsName, '编辑数据', "modules.{$modName}.action.submit");
+		fwrite($stream, "class {$tmpClsName} extends ModifyAction\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function run()\n");
+		fwrite($stream, "\t{\n");
+		if ($fkColumnName) {
+			fwrite($stream, "\t\t\$mod = Model::getInstance('{$clsName}');\n");
+			fwrite($stream, "\t\t\${$fkColumnVar} = \$mod->get{$fkColumnFunc}();\n");
+			fwrite($stream, "\t\tif (\${$fkColumnVar} <= 0) {\n");
+			fwrite($stream, "\t\t\t\$this->err404();\n");
+			fwrite($stream, "\t\t}\n\n");
+			fwrite($stream, "\t\t\$this->assign('{$fkColumnName}', \${$fkColumnVar});\n");
+		}
+		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+
+		// 创建 Remove Action
+		$tmpClsName = $clsName . 'Remove';
+		$filePath = $this->_dirs['act']['submit'] . DS . $tmpClsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+		fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
+		fwrite($stream, "use library\\action\\base\\RemoveAction;\n\n");
+		$this->writeClassComment($stream, $tmpClsName, '删除数据', "modules.{$modName}.action.submit");
+		fwrite($stream, "class {$tmpClsName} extends RemoveAction\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function run()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+
+		// 创建 SingleModify Action
+		$tmpClsName = $clsName . 'SingleModify';
+		$filePath = $this->_dirs['act']['submit'] . DS . $tmpClsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+		fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
+		fwrite($stream, "use library\\action\\SingleModifyAction;\n\n");
+		$this->writeClassComment($stream, $tmpClsName, '编辑单个字段', "modules.{$modName}.action.submit");
+		fwrite($stream, "class {$tmpClsName} extends SingleModifyAction\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function run()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+
+		if ($this->_hasTrash) {
+			// 创建 Trash Action
+			$tmpClsName = $clsName . 'Trash';
+			$filePath = $this->_dirs['act']['submit'] . DS . $tmpClsName . '.php';
+			$stream = $this->fopen($filePath);
+			$this->writeCopyrightComment($stream);
+			fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
+			fwrite($stream, "use library\\action\\base\\TrashAction;\n\n");
+			$this->writeClassComment($stream, $tmpClsName, '移至回收站和从回收站还原', "modules.{$modName}.action.submit");
+			fwrite($stream, "class {$tmpClsName} extends TrashAction\n");
+			fwrite($stream, "{\n");
+			fwrite($stream, "\t/**\n");
+			fwrite($stream, "\t * (non-PHPdoc)\n");
+			fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+			fwrite($stream, "\t */\n");
+			fwrite($stream, "\tpublic function run()\n");
+			fwrite($stream, "\t{\n");
+			fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
+			fwrite($stream, "\t}\n");
+			fwrite($stream, "}\n");
+			fclose($stream);
+			Log::echoTrace('Generate App Act ' .$tmpClsName . ' Successfully');
+		}
+
+		Log::echoTrace('Generate App Acts End');
 	}
 
 	/**
@@ -200,9 +692,6 @@ class CodeGenerator extends Model
 		$clsName = $this->_builders['uc_cls_name'];
 		$ctrlName = $this->_builders['uc_ctrl_name'] . 'Controller';
 		$builderName = $this->_builders['builder_name'];
-		$this->_builders['act_single_modify'] = 'singlemodify';
-		$this->_builders['act_trashindex_name'] = $this->_hasTrash ? 'trash' . $this->_builders['act_index_name'] : '';
-		$this->_builders['act_trash_name'] = $this->_hasTrash ? 'trash' : '';
 
 		$filePath = $this->_dirs['ctrl'] . DS . $ctrlName . '.php';
 		$stream = $this->fopen($filePath);
@@ -280,6 +769,220 @@ class CodeGenerator extends Model
 		fwrite($stream, "}\n");
 		fclose($stream);
 		Log::echoTrace('Generate App Ctrl End');
+	}
+
+	/**
+	 * 创建Model层类
+	 * @return void
+	 */
+	public function gcModel()
+	{
+		Log::echoTrace('Generate App Model Begin ...');
+
+		$modName = $this->_builders['mod_name'];
+		$clsName = $this->_builders['uc_cls_name'];
+		$builderName = $this->_builders['builder_name'];
+
+		$filePath = $this->_dirs['mod'] . DS . $clsName . '.php';
+		$stream = $this->fopen($filePath);
+		$this->writeCopyrightComment($stream);
+
+		fwrite($stream, "namespace modules\\{$modName}\\model;\n\n");
+		if ($this->_builders['fk_column']) {
+			fwrite($stream, "use tfc\\ap\\Ap;\n");
+		}
+		fwrite($stream, "use tfc\\mvc\\Mvc;\n");
+		fwrite($stream, "use tfc\\saf\\Text;\n");
+		fwrite($stream, "use library\\Model;\n");
+		fwrite($stream, "use library\\ErrorNo;\n");
+		fwrite($stream, "use library\\PageHelper;\n\n");
+		$this->writeClassComment($stream, $clsName, $builderName, "modules.{$modName}.model");
+
+		fwrite($stream, "class Builders extends Model\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var string 查询列表数据Action名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tconst ACT_INDEX = '{$this->_builders['act_index_name']}';\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var string 新增数据Action名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tconst ACT_CREATE = '{$this->_builders['act_create_name']}';\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var string 编辑数据Action名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tconst ACT_MODIFY = '{$this->_builders['act_modify_name']}';\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see library.Model::getLastIndexUrl()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getLastIndexUrl()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\tif ((\$lastIndexUrl = parent::getLastIndexUrl()) !== '') {\n");
+		fwrite($stream, "\t\t\treturn \$lastIndexUrl;\n");
+		fwrite($stream, "\t\t}\n\n");
+
+		$fkColumnName = isset($this->_builders['fk_column']) ? $this->_builders['fk_column'] : '';
+		$fkColumnFunc = $this->column2Name($fkColumnName);
+		if ($this->_hasTrash) {
+			if ($fkColumnName) {
+				fwrite($stream, "\t\t\$params = array('trash' => 'n', '{$fkColumnName}' => \$this->get{$fkColumnFunc}());\n");
+			}
+			else {
+				fwrite($stream, "\t\t\$params = array('trash' => 'n');\n");
+			}
+		}
+		else {
+			if ($fkColumnName) {
+				fwrite($stream, "\t\t\$params = array('{$fkColumnName}' => \$this->get{$fkColumnFunc}());\n");
+			}
+			else {
+				fwrite($stream, "\t\t\$params = array();\n");
+			}
+		}
+		fwrite($stream, "\t\treturn \$this->getUrl('index', Mvc::\$controller, Mvc::\$module, \$params);\n");
+		fwrite($stream, "\t}\n\n");
+
+		if ($fkColumnName) {
+			$fkColumnVar = strtolower(substr($fkColumnFunc, 0, 1)) . substr($fkColumnFunc, 1);
+			fwrite($stream, "\t/**\n");
+			fwrite($stream, "\t * 获取{$fkColumnName}值\n");
+			fwrite($stream, "\t * @return integer\n");
+			fwrite($stream, "\t */\n");
+			fwrite($stream, "\tpublic function get{$fkColumnFunc}()\n");
+			fwrite($stream, "\t{\n");
+			fwrite($stream, "\t\t\${$fkColumnVar} = Ap::getRequest()->getInteger('{$fkColumnName}');\n");
+			fwrite($stream, "\t\tif (\${$fkColumnVar} <= 0) {\n");
+			fwrite($stream, "\t\t\t\$id = Ap::getRequest()->getInteger('id');\n");
+			fwrite($stream, "\t\t\t\${$fkColumnVar} = \$this->getColById('{$fkColumnName}', \$id);\n");
+			fwrite($stream, "\t\t}\n\n");
+			fwrite($stream, "\t\treturn \${$fkColumnVar};\n");
+			fwrite($stream, "\t}\n\n");
+		}
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see library.Model::getViewTabsRender()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getViewTabsRender()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$output = array(\n");
+		foreach ($this->_groups as $rows) {
+			if ($rows['group_name'] != 'main') {
+				fwrite($stream, "\t\t\t'{$rows['group_name']}' => array(\n");
+				fwrite($stream, "\t\t\t\t'tid' => '{$rows['group_name']}',\n");
+				fwrite($stream, "\t\t\t\t'prompt' => Text::_('{$rows['lang_key']}')\n");
+				fwrite($stream, "\t\t\t),\n");
+			}
+		}
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\treturn \$output;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see library.Model::getElementsRender()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getElementsRender()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$data = \$this->getData();\n");
+		fwrite($stream, "\t\t\$output = array(\n");
+		foreach ($this->_fields as $rows) {
+			fwrite($stream, "\t\t\t'{$rows['field_name']}' => array(\n");
+			fwrite($stream, "\t\t\t\t'__tid__' => '{$rows['__tid__']}',\n");
+			fwrite($stream, "\t\t\t\t'type' => '{$rows['form_type']}',\n");
+			fwrite($stream, "\t\t\t\t'label' => Text::_('{$rows['lang_label']}'),\n");
+			fwrite($stream, "\t\t\t\t'hint' => Text::_('{$rows['lang_hint']}'),\n");
+			if ($rows['form_required']) {
+				fwrite($stream, "\t\t\t\t'required' => true,\n");
+			}
+			if ($rows['form_modifiable']) {
+				fwrite($stream, "\t\t\t\t'disabled' => true,\n");
+			}
+			if (isset($rows['enums'])) {
+				$enum = array_shift($rows['enums']);
+				fwrite($stream, "\t\t\t\t'options' => \$data->getEnum('{$rows['field_name']}'),\n");
+				fwrite($stream, "\t\t\t\t'value' => \$data::{$enum['const_key']},\n");
+			}
+			fwrite($stream, "\t\t\t\t'search' => array(\n");
+			fwrite($stream, "\t\t\t\t\t'type' => '" . (isset($rows['enums']) ? 'select' : 'text') . "',\n");
+			fwrite($stream, "\t\t\t\t),\n");
+			fwrite($stream, "\t\t\t),\n");
+		}
+		fwrite($stream, "\t\t\t'_button_save_' => PageHelper::getComponentsBuilder()->getButtonSave(),\n");
+		fwrite($stream, "\t\t\t'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),\n");
+		fwrite($stream, "\t\t\t'_button_save2new_' => PageHelper::getComponentsBuilder()->getButtonSaveNew(),\n");
+		fwrite($stream, "\t\t\t'_button_cancel_' => PageHelper::getComponentsBuilder()->getButtonCancel(array('url' => \$this->getLastIndexUrl())),\n");
+		fwrite($stream, "\t\t\t'_button_history_back_' => PageHelper::getComponentsBuilder()->getButtonHistoryBack(array('url' => \$this->getLastIndexUrl())),\n");
+		fwrite($stream, "\t\t\t'_operate_' => array(\n");
+		fwrite($stream, "\t\t\t\t'label' => Text::_('CFG_SYSTEM_GLOBAL_OPERATE'),\n");
+		fwrite($stream, "\t\t\t\t'table' => array(\n");
+		fwrite($stream, "\t\t\t\t\t'callback' => array(\$this, 'getOperate')\n");
+		fwrite($stream, "\t\t\t\t)\n");
+		fwrite($stream, "\t\t\t),\n");
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\treturn \$output;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 获取操作图标按钮\n");
+		fwrite($stream, "\t * @param array \$data\n");
+		fwrite($stream, "\t * @return string\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getOperate(\$data)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$params = array('id' => \$data['" . $this->_pkColumn . "']);\n");
+		fwrite($stream, "\t\t\$componentsBuilder = PageHelper::getComponentsBuilder();\n\n");
+		$output = '\'\'';
+		if (in_array('pencil', $this->_builders['index_row_btns'])) {
+			fwrite($stream, "\t\t\$modifyIcon = \$componentsBuilder->getGlyphicon(array(\n");
+			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconModify(),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_modify_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncHref(),\n");
+			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),\n");
+			fwrite($stream, "\t\t));\n\n");
+			$output .= ' . $modifyIcon';
+		}
+
+		if (in_array('remove', $this->_builders['index_row_btns'])) {
+			fwrite($stream, "\t\t\$removeIcon = \$componentsBuilder->getGlyphicon(array(\n");
+			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconRemove(),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_remove_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncDialogRemove(),\n");
+			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),\n");
+			fwrite($stream, "\t\t));\n\n");
+			$output .= ' . $removeIcon';
+		}
+
+		if (in_array('trash', $this->_builders['index_row_btns'])) {
+			fwrite($stream, "\t\t\$trashIcon = \$componentsBuilder->getGlyphicon(array(\n");
+			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconTrash(),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_trash_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncDialogTrash(),\n");
+			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_TRASH'),\n");
+			fwrite($stream, "\t\t));\n\n");
+			$output .= ' . $trashIcon';
+
+			fwrite($stream, "\t\t\$params['is_restore'] = '1';\n");
+			fwrite($stream, "\t\t\$restoreIcon = \$componentsBuilder->getGlyphicon(array(\n");
+			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconRestore(),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_trash_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncHref(),\n");
+			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_RESTORE'),\n");
+			fwrite($stream, "\t\t));\n\n");
+			$output .= ' . $restoreIcon';
+		}
+
+		fwrite($stream, "\t\t\$output = {$output};\n");
+		fwrite($stream, "\t\treturn \$output;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "}\n");
+		fclose($stream);
+		Log::echoTrace('Generate App Model End');
 	}
 
 	/**
@@ -747,13 +1450,14 @@ class CodeGenerator extends Model
 			'slang' => $slangZhDir,
 			'smod' => $smodDir,
 			'lang' => $langZhDir,
+			'mod' => $modelDir,
+			'ctrl' => $ctrlDir,
 			'act' => array(
 				'data' => $actDataDir,
 				'show' => $actShowDir,
 				'submit' => $actSubmitDir
 			),
-			'ctrl' => $ctrlDir,
-			'mod' => $modelDir
+			'view' => $viewDir,
 		);
 	}
 
@@ -777,6 +1481,7 @@ class CodeGenerator extends Model
 		$ret['mod_name'] = strtolower(trim($data['mod_name']));
 		$ret['ctrl_name'] = strtolower(trim($data['ctrl_name']));
 		$ret['cls_name'] = strtolower(trim($data['cls_name']));
+		$ret['fk_column'] = strtolower(trim($data['fk_column']));
 		$ret['act_index_name'] = strtolower(trim($data['act_index_name']));
 		$ret['act_view_name'] = strtolower(trim($data['act_view_name']));
 		$ret['act_create_name'] = strtolower(trim($data['act_create_name']));

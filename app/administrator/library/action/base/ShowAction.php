@@ -135,7 +135,7 @@ abstract class ShowAction extends BaseAction
 	}
 
 	/**
-	 * 获取默认的模版名
+	 * 获取默认的模板名
 	 * @return string
 	 */
 	public function getDefaultTplName()
