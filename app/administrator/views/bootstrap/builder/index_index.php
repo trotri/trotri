@@ -19,7 +19,7 @@ $this->widget(
 			'builder_id',
 			'builder_field_groups',
 			'builder_fields',
-			'_operate_'
+			'_operate_',
 		),
 		'checkedToggle' => 'builder_id',
 	)

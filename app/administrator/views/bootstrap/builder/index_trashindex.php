@@ -17,7 +17,7 @@ $this->widget(
 			'ctrl_name',
 			'cls_name',
 			'builder_id',
-			'_operate_'
+			'_operate_',
 		),
 		'checkedToggle' => 'builder_id',
 	)

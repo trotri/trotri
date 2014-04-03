@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -19,7 +19,7 @@ use slib\ErrorNo;
  * ModBuilders class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModBuilders.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: ModBuilders.php 1 2014-04-03 16:16:03Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
@@ -47,19 +47,20 @@ class ModBuilders extends BaseModel
 	public function search(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
 		$rules = array(
-			'trash' => 'trim',
-			'builder_name' => 'trim',
 			'builder_id' => 'intval',
+			'builder_name' => 'trim',
 			'tbl_name' => 'trim',
 			'tbl_profile' => 'trim',
 			'tbl_engine' => 'trim',
 			'tbl_charset' => 'trim',
-			'app_name' => 'trim'
+			'app_name' => 'trim',
+			'trash' => 'trim',
+			'author_name' => 'trim',
+			'author_mail' => 'trim',
 		);
 
 		$this->_filterCleanEmpty($params, $rules);
-		$ret = $this->findAllByAttributes($params, $order, $limit, $offset);
-		return $ret;
+		return $this->findAllByAttributes($params, $order, $limit, $offset);
 	}
 
 	/**
@@ -98,19 +99,6 @@ class ModBuilders extends BaseModel
 	}
 
 	/**
-	 * 通过builder_id获取builder_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getBuilderNameByBuilderId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('builder_name', $value);
-		$builderName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['builder_name'];
-		return $builderName;
-	}
-
-	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array
@@ -122,7 +110,7 @@ class ModBuilders extends BaseModel
 			$params['index_row_btns'] = array();
 		}
 
-		unset($params['trash']);
+		if (isset($params['trash'])) { unset($params['trash']); }
 		return $this->autoInsert($params);
 	}
 
@@ -134,8 +122,9 @@ class ModBuilders extends BaseModel
 	 */
 	public function modifyByPk($value, array $params)
 	{
-		unset($params['trash']);
 		$params['dt_modified'] = date('Y-m-d H:i:s');
+
+		if (isset($params['trash'])) { unset($params['trash']); }
 		return $this->autoUpdateByPk($value, $params);
 	}
 
@@ -157,13 +146,20 @@ class ModBuilders extends BaseModel
 			'mod_name',
 			'ctrl_name',
 			'cls_name',
+			'fk_column',
 			'act_index_name',
 			'act_view_name',
 			'act_create_name',
 			'act_modify_name',
 			'act_remove_name',
 			'index_row_btns',
+			'author_name',
+			'author_mail',
 		));
+
+		if (!isset($attributes['fk_column']) || $attributes['fk_column'] === '') {
+			unset($rules['fk_column']);
+		}
 
 		return $this->filterRun($rules, $attributes, $required);
 	}
@@ -177,25 +173,28 @@ class ModBuilders extends BaseModel
 		$rules = array(
 			'builder_name' => 'trim',
 			'tbl_name' => 'trim',
+			'tbl_profile' => 'trim',
+			'tbl_engine' => 'trim',
+			'tbl_charset' => 'trim',
 			'tbl_comment' => 'trim',
 			'app_name' => 'trim',
 			'mod_name' => 'trim',
 			'ctrl_name' => 'trim',
 			'cls_name' => 'trim',
+			'fk_column' => 'trim',
 			'act_index_name' => 'trim',
 			'act_view_name' => 'trim',
 			'act_create_name' => 'trim',
 			'act_modify_name' => 'trim',
 			'act_remove_name' => 'trim',
-			'tbl_profile' => 'trim',
-			'tbl_engine' => 'trim',
-			'tbl_charset' => 'trim',
-			'trash' => 'trim',
-			'index_row_btns' => array($this, 'trims')
+			'index_row_btns' => array($this, 'trims'),
+			'author_name' => 'trim',
+			'author_mail' => 'trim',
+			'dt_created' => 'trim',
+			'dt_modified' => 'trim',
 		);
 
-		$ret = $this->_clean($rules, $attributes);
-		return $ret;
+		return $this->_clean($rules, $attributes);
 	}
 
 	/**
@@ -208,7 +207,7 @@ class ModBuilders extends BaseModel
 			'index_row_btns' => array($this, 'join')
 		);
 
-		$ret = $this->_clean($rules, $attributes);
-		return $ret;
+		return $this->_clean($rules, $attributes);
 	}
+
 }

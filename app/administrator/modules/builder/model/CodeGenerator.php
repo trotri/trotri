@@ -307,6 +307,24 @@ class CodeGenerator extends Model
 		fclose($stream);
 		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
 
+		// 创建 Sidebar View
+		$tmpFileName = $ctrlName . '_sidebar';
+		$filePath = $this->_dirs['view'] . DS . $tmpFileName . '.php';
+		$stream = $this->fopen($filePath);
+		fwrite($stream, "<!-- SideBar -->\n");
+		fwrite($stream, "<div class=\"col-xs-6 col-sm-2 sidebar-offcanvas\" id=\"sidebar\">\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$config = array(\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\components\\bar\\SideBar', array('config' => \$config));\n");
+		fwrite($stream, "?>\n");
+		fwrite($stream, "</div><!-- /.col-xs-6 col-sm-2 -->\n");
+		fwrite($stream, "<!-- /SideBar -->\n\n");
+		fwrite($stream, "<?php echo \$this->getHtml()->jsFile(\$this->js_url . '/mods/{$modName}.js?v=' . \$this->version); ?>\n");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
 		if ($this->_hasTrash) {
 			// 创建 TrashIndex View
 			$tmpFileName = $ctrlName . '_' . $this->_builders['act_trashindex_name'];
@@ -807,6 +825,11 @@ class CodeGenerator extends Model
 		fwrite($stream, "\tconst ACT_INDEX = '{$this->_builders['act_index_name']}';\n\n");
 
 		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var string 数据详情Action名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tconst ACT_VIEW = '{$this->_builders['act_view_name']}';\n\n");
+
+		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * @var string 新增数据Action名\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tconst ACT_CREATE = '{$this->_builders['act_create_name']}';\n\n");
@@ -815,6 +838,16 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t * @var string 编辑数据Action名\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tconst ACT_MODIFY = '{$this->_builders['act_modify_name']}';\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var string 删除数据Action名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tconst ACT_REMOVE = '{$this->_builders['act_remove_name']}';\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var string 移至回收站Action名\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tconst ACT_TRASH = 'trash';\n\n");
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
@@ -842,7 +875,7 @@ class CodeGenerator extends Model
 				fwrite($stream, "\t\t\$params = array();\n");
 			}
 		}
-		fwrite($stream, "\t\treturn \$this->getUrl('index', Mvc::\$controller, Mvc::\$module, \$params);\n");
+		fwrite($stream, "\t\treturn \$this->getUrl(self::ACT_INDEX, Mvc::\$controller, Mvc::\$module, \$params);\n");
 		fwrite($stream, "\t}\n\n");
 
 		if ($fkColumnName) {
@@ -953,7 +986,7 @@ class CodeGenerator extends Model
 		if (in_array('pencil', $this->_builders['index_row_btns'])) {
 			fwrite($stream, "\t\t\$modifyIcon = \$componentsBuilder->getGlyphicon(array(\n");
 			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconModify(),\n");
-			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_modify_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl(self::ACT_MODIFY, Mvc::\$controller, Mvc::\$module, \$params),\n");
 			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncHref(),\n");
 			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),\n");
 			fwrite($stream, "\t\t));\n\n");
@@ -963,7 +996,7 @@ class CodeGenerator extends Model
 		if (in_array('remove', $this->_builders['index_row_btns'])) {
 			fwrite($stream, "\t\t\$removeIcon = \$componentsBuilder->getGlyphicon(array(\n");
 			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconRemove(),\n");
-			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_remove_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl(self::ACT_REMOVE, Mvc::\$controller, Mvc::\$module, \$params),\n");
 			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncDialogRemove(),\n");
 			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),\n");
 			fwrite($stream, "\t\t));\n\n");
@@ -973,7 +1006,7 @@ class CodeGenerator extends Model
 		if (in_array('trash', $this->_builders['index_row_btns'])) {
 			fwrite($stream, "\t\t\$trashIcon = \$componentsBuilder->getGlyphicon(array(\n");
 			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconTrash(),\n");
-			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_trash_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl(self::ACT_TRASH, Mvc::\$controller, Mvc::\$module, \$params),\n");
 			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncDialogTrash(),\n");
 			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_TRASH'),\n");
 			fwrite($stream, "\t\t));\n\n");
@@ -982,7 +1015,7 @@ class CodeGenerator extends Model
 			fwrite($stream, "\t\t\$params['is_restore'] = '1';\n");
 			fwrite($stream, "\t\t\$restoreIcon = \$componentsBuilder->getGlyphicon(array(\n");
 			fwrite($stream, "\t\t\t'type' => \$componentsBuilder->getGlyphiconRestore(),\n");
-			fwrite($stream, "\t\t\t'url' => \$this->getUrl('{$this->_builders['act_trash_name']}', Mvc::\$controller, Mvc::\$module, \$params),\n");
+			fwrite($stream, "\t\t\t'url' => \$this->getUrl(self::ACT_TRASH, Mvc::\$controller, Mvc::\$module, \$params),\n");
 			fwrite($stream, "\t\t\t'jsfunc' => \$componentsBuilder->getJsFuncHref(),\n");
 			fwrite($stream, "\t\t\t'title' => Text::_('CFG_SYSTEM_GLOBAL_RESTORE'),\n");
 			fwrite($stream, "\t\t));\n\n");

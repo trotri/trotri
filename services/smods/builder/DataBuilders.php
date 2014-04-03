@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -16,19 +16,19 @@ use slib\BaseData;
  * DataBuilders class file
  * 业务层：数据管理类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataBuilders.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: DataBuilders.php 1 2014-04-03 16:16:03Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
 class DataBuilders extends BaseData
 {
 	/**
-	 * @var string 是否生成扩展表：是
+	 * @var string 是否生成扩展表：y
 	 */
 	const TBL_PROFILE_Y = 'y';
 
 	/**
-	 * @var string 是否生成扩展表：否
+	 * @var string 是否生成扩展表：n
 	 */
 	const TBL_PROFILE_N = 'n';
 
@@ -58,29 +58,29 @@ class DataBuilders extends BaseData
 	const TBL_CHARSET_GB2312 = 'gb2312';
 
 	/**
-	 * @var string 数据列表每行操作Btn：编辑
-	 */
-	const INDEX_ROW_BTNS_PENCIL = 'pencil';
-
-	/**
-	 * @var string 数据列表每行操作Btn：移至回收站
-	 */
-	const INDEX_ROW_BTNS_TRASH = 'trash';
-
-	/**
-	 * @var string 数据列表每行操作Btn：彻底删除
-	 */
-	const INDEX_ROW_BTNS_REMOVE = 'remove';
-
-	/**
-	 * @var string 是否删除：是
+	 * @var string 移至回收站：y
 	 */
 	const TRASH_Y = 'y';
 
 	/**
-	 * @var string 是否删除：否
+	 * @var string 移至回收站：n
 	 */
 	const TRASH_N = 'n';
+
+	/**
+	 * @var string 数据列表每行操作Btn：pencil
+	 */
+	const INDEX_ROW_BTNS_PENCIL = 'pencil';
+
+	/**
+	 * @var string 数据列表每行操作Btn：trash
+	 */
+	const INDEX_ROW_BTNS_TRASH = 'trash';
+
+	/**
+	 * @var string 数据列表每行操作Btn：remove
+	 */
+	const INDEX_ROW_BTNS_REMOVE = 'remove';
 
 	/**
 	 * 获取“是否生成扩展表”所有选项
@@ -120,6 +120,18 @@ class DataBuilders extends BaseData
 	}
 
 	/**
+	 * 获取“移至回收站”所有选项
+	 * @return array
+	 */
+	public function getTrashEnum()
+	{
+		return array(
+			self::TRASH_Y => $this->_('CFG_SYSTEM_GLOBAL_YES'),
+			self::TRASH_N => $this->_('CFG_SYSTEM_GLOBAL_NO'),
+		);
+	}
+
+	/**
 	 * 获取“数据列表每行操作Btn”所有选项
 	 * @return array
 	 */
@@ -129,18 +141,6 @@ class DataBuilders extends BaseData
 			self::INDEX_ROW_BTNS_PENCIL => $this->_('MOD_BUILDER_BUILDERS_ENUM_INDEX_ROW_BTNS_PENCIL'),
 			self::INDEX_ROW_BTNS_TRASH => $this->_('MOD_BUILDER_BUILDERS_ENUM_INDEX_ROW_BTNS_TRASH'),
 			self::INDEX_ROW_BTNS_REMOVE => $this->_('MOD_BUILDER_BUILDERS_ENUM_INDEX_ROW_BTNS_REMOVE'),
-		);
-	}
-
-	/**
-	 * 获取“是否删除”所有选项
-	 * @return array
-	 */
-	public function getTrashEnum()
-	{
-		return array(
-			self::TRASH_Y => $this->_('CFG_SYSTEM_GLOBAL_YES'),
-			self::TRASH_N => $this->_('CFG_SYSTEM_GLOBAL_NO'),
 		);
 	}
 
@@ -178,7 +178,7 @@ class DataBuilders extends BaseData
 		$enum = $this->getTblProfileEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDERS_TBL_PROFILE_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -193,7 +193,7 @@ class DataBuilders extends BaseData
 		$enum = $this->getTblEngineEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDERS_TBL_ENGINE_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -208,7 +208,7 @@ class DataBuilders extends BaseData
 		$enum = $this->getTblCharsetEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDERS_TBL_CHARSET_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -252,7 +252,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“控制器名，默认和省略前缀的表名相同”验证规则
+	 * 获取“控制器名”验证规则
 	 * @return array
 	 */
 	public function getCtrlNameRule()
@@ -265,7 +265,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“类名，默认和省略前缀的表名相同”验证规则
+	 * 获取“类名”验证规则
 	 * @return array
 	 */
 	public function getClsNameRule()
@@ -278,7 +278,20 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“行动名-数据列表”验证规则
+	 * 获取“外联其他表的字段名”验证规则
+	 * @return array
+	 */
+	public function getFkColumnRule()
+	{
+		return array(
+			'AlphaNum' => array(true, $this->_('MOD_BUILDER_BUILDERS_FK_COLUMN_ALPHANUM')),
+			'MinLength' => array(2, $this->_('MOD_BUILDER_BUILDERS_FK_COLUMN_MINLENGTH')),
+			'MaxLength' => array(50, $this->_('MOD_BUILDER_BUILDERS_FK_COLUMN_MAXLENGTH')),
+		);
+	}
+
+	/**
+	 * 获取“数据列表行动名”验证规则
 	 * @return array
 	 */
 	public function getActIndexNameRule()
@@ -291,7 +304,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“行动名-数据详情”验证规则
+	 * 获取“数据详情行动名”验证规则
 	 * @return array
 	 */
 	public function getActViewNameRule()
@@ -304,7 +317,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“行动名-新增数据”验证规则
+	 * 获取“新增数据行动名”验证规则
 	 * @return array
 	 */
 	public function getActCreateNameRule()
@@ -317,7 +330,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“行动名-编辑数据”验证规则
+	 * 获取“编辑数据行动名”验证规则
 	 * @return array
 	 */
 	public function getActModifyNameRule()
@@ -330,7 +343,7 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“行动名-删除数据”验证规则
+	 * 获取“删除数据行动名”验证规则
 	 * @return array
 	 */
 	public function getActRemoveNameRule()
@@ -343,7 +356,44 @@ class DataBuilders extends BaseData
 	}
 
 	/**
-	 * 获取“数据列表每行操作Btn，编辑：pencil、移至回收站：trash、彻底删除：remove”验证规则
+	 * 获取“作者姓名，代码注释用”验证规则
+	 * @return array
+	 */
+	public function getAuthorNameRule()
+	{
+		return array(
+			'NotEmpty' => array(true, $this->_('MOD_BUILDER_BUILDERS_AUTHOR_NAME_NOTEMPTY')),
+		);
+	}
+
+	/**
+	 * 获取“作者邮箱”验证规则
+	 * @return array
+	 */
+	public function getAuthorMailRule()
+	{
+		return array(
+			'Mail' => array(true, $this->_('MOD_BUILDER_BUILDERS_AUTHOR_MAIL_MAIL')),
+		);
+	}
+
+	/**
+	 * 获取“移至回收站”验证规则
+	 * @return array
+	 */
+	public function getTrashRule()
+	{
+		$enum = $this->getTrashEnum();
+		return array(
+			'InArray' => array(
+				array_keys($enum), 
+				sprintf($this->_('MOD_BUILDER_BUILDERS_TRASH_INARRAY'), implode(', ', $enum))
+			),
+		);
+	}
+
+	/**
+	 * 获取“列表每行操作按钮”验证规则
 	 * @return array
 	 */
 	public function getIndexRowBtnsRule()
@@ -357,18 +407,4 @@ class DataBuilders extends BaseData
 		);
 	}
 
-	/**
-	 * 获取“是否删除”验证规则
-	 * @return array
-	 */
-	public function getTrashRule()
-	{
-		$enum = $this->getTrashEnum();
-		return array(
-			'InArray' => array(
-				array_keys($enum),
-				sprintf($this->_('MOD_BUILDER_BUILDERS_TRASH_INARRAY'), implode(', ', $enum))
-			),
-		);
-	}
 }
