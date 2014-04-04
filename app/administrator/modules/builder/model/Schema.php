@@ -137,7 +137,9 @@ class Schema extends Model
 				$dataBuilders::INDEX_ROW_BTNS_PENCIL,
 				$dataBuilders::INDEX_ROW_BTNS_REMOVE,
 			),
-			'description' => ''
+			'description' => '',
+			'author_name' => 'undefined',
+			'author_mail' => 'undefined@undefined.com'
 		);
 
 		$ret = $modBuilders->create($params);
@@ -180,13 +182,16 @@ class Schema extends Model
 			}
 
 			if ($columnLength === 'y|n') {
-				$typeId = 3;
-			}
-			elseif (stripos($columnSchema->dbType, 'enum') !== false) {
 				$typeId = 4;
 			}
+			elseif (stripos($columnSchema->dbType, 'enum') !== false) {
+				$typeId = 5;
+			}
 			elseif ($columnSchema->isPrimaryKey) {
-				$typeId = 8;
+				$typeId = 9;
+			}
+			elseif ($columnSchema->type === 'integer') {
+				$typeId = 2;
 			}
 			else {
 				$typeId = 1;

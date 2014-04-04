@@ -9,15 +9,15 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 		'elements' => $this->elements,
 		'columns' => array(
 			'group_name',
-			'prompt',
 			'builder_name',
+			'prompt',
 			'sort',
 			'description',
 			'builder_id',
 			'_button_save_',
 			'_button_save2close_',
 			'_button_save2new_',
-			'_button_cancel_'
+			'_button_cancel_',
 		)
 	)
 );

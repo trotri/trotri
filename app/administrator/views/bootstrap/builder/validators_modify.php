@@ -9,6 +9,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 		'elements' => $this->elements,
 		'columns' => array(
 			'validator_name',
+			'field_name',
 			'options',
 			'option_category',
 			'message',

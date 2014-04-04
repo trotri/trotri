@@ -3,7 +3,9 @@ $(document).ready(function() {
     $("select[name='validator_name']").change(function() {
       Builder.loadMessageByValidatorName();
     });
-    Builder.loadMessageByValidatorName();
+    if (g_act == "create") {
+      Builder.loadMessageByValidatorName();
+    }
   }
   if (g_ctrl == "fields" && (g_act == "create" || g_act == "modify")) {
     $("select[name='form_prompt_examples']").change(function() {

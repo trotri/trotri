@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\show;
+namespace modules\builder\action\submit;
 
-use library\action\ViewAction;
+use library\action\SingleModifyAction;
 
 /**
- * TypesView class file
- * 查询数据详情
+ * GroupsSingleModify class file
+ * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TypesView.php 1 2014-04-04 13:49:20Z Code Generator $
- * @package modules.builder.action.show
+ * @version $Id: GroupsSingleModify.php 1 2014-04-04 14:53:06Z Code Generator $
+ * @package modules.builder.action.submit
  * @since 1.0
  */
-class TypesView extends ViewAction
+class GroupsSingleModify extends SingleModifyAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +28,6 @@ class TypesView extends ViewAction
 	 */
 	public function run()
 	{
-		$this->execute('Types');
+		$this->execute('Groups');
 	}
 }

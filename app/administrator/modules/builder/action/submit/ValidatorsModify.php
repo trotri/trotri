@@ -29,20 +29,25 @@ class ValidatorsModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$mod = Model::getInstance('Validators');
-		$fieldId = $mod->getFieldId();
+		$modValidators = Model::getInstance('Validators');
+		$fieldId = $modValidators->getFieldId();
 		if ($fieldId <= 0) {
 			$this->err404();
 		}
 
-		$mod = Model::getInstance('Fields');
-		$builderId = $mod->getBuilderIdByFieldId($fieldId);
+		$modFields = Model::getInstance('Fields');
+		$builderId = $modFields->getBuilderIdByFieldId($fieldId);
 		if ($builderId <= 0) {
 			$this->err404();
 		}
 
+		$messageEnum = $modValidators->getMessageEnum();
+		$optionCategoryEnum = $modValidators->getOptionCategoryEnum();
+
 		$this->assign('field_id', $fieldId);
 		$this->assign('builder_id', $builderId);
+		$this->assign('message_enum', json_encode($messageEnum));
+		$this->assign('option_category_enum', json_encode($optionCategoryEnum));
 		$this->execute('Validators');
 	}
 }

@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -14,13 +14,12 @@ use tfc\util\Language;
 use slib\BaseModel;
 use slib\Data;
 use slib\ErrorNo;
-use slib\Service;
 
 /**
  * ModGroups class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModGroups.php 1 2014-01-19 13:18:49Z huan.song $
+ * @version $Id: ModGroups.php 1 2014-04-04 14:53:06Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
@@ -45,7 +44,7 @@ class ModGroups extends BaseModel
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function search(array $params = array(), $order = 'sort', $limit = 0, $offset = 0)
 	{
 		$builderId = isset($params['builder_id']) ? (int) $params['builder_id'] : 0;
 		$params = array();
@@ -53,8 +52,7 @@ class ModGroups extends BaseModel
 			$params['builder_id'] = $builderId;
 		}
 
-		$ret = $this->findAllByAttributes($params, $order, $limit, $offset);
-		return $ret;
+		return $this->findAllByAttributes($params, $order, $limit, $offset);
 	}
 
 	/**
@@ -85,32 +83,6 @@ class ModGroups extends BaseModel
 	}
 
 	/**
-	 * 通过group_id获取group_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getGroupNameByGroupId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('group_name', $value);
-		$groupName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['group_name'];
-		return $groupName;
-	}
-
-	/**
-	 * 通过group_id获取builder_id值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getBuilderIdByGroupId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('builder_id', $value);
-		$builderId = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['builder_id'];
-		return $builderId;
-	}
-
-	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array
@@ -137,7 +109,7 @@ class ModGroups extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$data = Data::getInstance('groups', 'builder', $this->getLanguage());
+		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$rules = $data->getRules(array(
 			'group_name',
 			'prompt',
@@ -158,10 +130,22 @@ class ModGroups extends BaseModel
 			'group_name' => 'trim',
 			'prompt' => 'trim',
 			'builder_id' => 'intval',
-			'sort' => 'intval',
+			// 'sort' => 'intval',
 		);
 
-		$ret = $this->_clean($rules, $attributes);
-		return $ret;
+		return $this->_clean($rules, $attributes);
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPostValidator()
+	 */
+	protected function _cleanPostValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+		);
+
+		return $this->_clean($rules, $attributes);
+	}
+
 }

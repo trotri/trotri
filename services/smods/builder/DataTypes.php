@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -16,24 +16,24 @@ use slib\BaseData;
  * DataTypes class file
  * 业务层：数据管理类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataTypes.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: DataTypes.php 1 2014-04-04 13:49:20Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
 class DataTypes extends BaseData
 {
 	/**
-	 * @var string 所属分类：文本类
+	 * @var string 所属分类：text
 	 */
 	const CATEGORY_TEXT = 'text';
 
 	/**
-	 * @var string 所属分类：选项类
+	 * @var string 所属分类：option
 	 */
 	const CATEGORY_OPTION = 'option';
 
 	/**
-	 * @var string 所属分类：按钮类
+	 * @var string 所属分类：button
 	 */
 	const CATEGORY_BUTTON = 'button';
 
@@ -46,12 +46,12 @@ class DataTypes extends BaseData
 		return array(
 			self::CATEGORY_TEXT => $this->_('MOD_BUILDER_BUILDER_TYPES_ENUM_CATEGORY_TEXT'),
 			self::CATEGORY_OPTION => $this->_('MOD_BUILDER_BUILDER_TYPES_ENUM_CATEGORY_OPTION'),
-			self::CATEGORY_BUTTON => $this->_('MOD_BUILDER_BUILDER_TYPES_ENUM_CATEGORY_BUTTON')
+			self::CATEGORY_BUTTON => $this->_('MOD_BUILDER_BUILDER_TYPES_ENUM_CATEGORY_BUTTON'),
 		);
 	}
 
 	/**
-	 * 获取“类型名，单行文本、多行文本、密码、开关选项卡、提交按钮等”验证规则
+	 * 获取“类型名”验证规则
 	 * @return array
 	 */
 	public function getTypeNameRule()
@@ -63,7 +63,7 @@ class DataTypes extends BaseData
 	}
 
 	/**
-	 * 获取“表单类型名，HTML：text、password、button、radio等；用户自定义：ckeditor、datetime等”验证规则
+	 * 获取“表单类型名”验证规则
 	 * @return array
 	 */
 	public function getFormTypeRule()
@@ -76,7 +76,7 @@ class DataTypes extends BaseData
 	}
 
 	/**
-	 * 获取“表字段类型，INT、VARCHAR、CHAR、TEXT等”验证规则
+	 * 获取“表字段类型”验证规则
 	 * @return array
 	 */
 	public function getFieldTypeRule()
@@ -89,7 +89,7 @@ class DataTypes extends BaseData
 	}
 
 	/**
-	 * 获取“所属分类，text：文本类、option：选项类、button：按钮类”验证规则
+	 * 获取“所属分类”验证规则
 	 * @return array
 	 */
 	public function getCategoryRule()
@@ -97,7 +97,7 @@ class DataTypes extends BaseData
 		$enum = $this->getCategoryEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_TYPES_CATEGORY_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -113,4 +113,5 @@ class DataTypes extends BaseData
 			'Numeric' => array(true, $this->_('MOD_BUILDER_BUILDER_TYPES_SORT_NUMERIC')),
 		);
 	}
+
 }

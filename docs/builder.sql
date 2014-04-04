@@ -18,16 +18,17 @@ CREATE TABLE `tr_builder_types` (
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表单字段类型表';
 
-INSERT INTO `tr_builder_types` VALUES (1, '单行文本', 'text', 'VARCHAR', 'text', 1);
-INSERT INTO `tr_builder_types` VALUES (2, '密码', 'password', 'CHAR', 'text', 2);
-INSERT INTO `tr_builder_types` VALUES (3, '开关选项卡', 'switch', 'ENUM', 'option', 3);
-INSERT INTO `tr_builder_types` VALUES (4, '单选', 'radio', 'ENUM', 'option', 4);
-INSERT INTO `tr_builder_types` VALUES (5, '多选', 'checkbox', 'VARCHAR', 'option', 5);
-INSERT INTO `tr_builder_types` VALUES (6, '单选下拉框', 'select', 'INT', 'option', 6);
-INSERT INTO `tr_builder_types` VALUES (7, '隐藏文本框(VARCHAR)', 'hidden', 'VARCHAR', 'text', 7);
-INSERT INTO `tr_builder_types` VALUES (8, '隐藏文本框(INT)', 'hidden', 'INT', 'text', 8);
-INSERT INTO `tr_builder_types` VALUES (9, '多行文本', 'textarea', 'TEXT', 'text', 9);
-INSERT INTO `tr_builder_types` VALUES (10, '上传文件', 'file', 'VARCHAR', 'text', 10);
+INSERT INTO `tr_builder_types` VALUES (1, '单行文本(VARCHAR)', 'text', 'VARCHAR', 'text', 1);
+INSERT INTO `tr_builder_types` VALUES (2, '单行文本(INT)', 'text', 'INT', 'text', 2);
+INSERT INTO `tr_builder_types` VALUES (3, '密码', 'password', 'CHAR', 'text', 3);
+INSERT INTO `tr_builder_types` VALUES (4, '开关选项卡', 'switch', 'ENUM', 'option', 4);
+INSERT INTO `tr_builder_types` VALUES (5, '单选', 'radio', 'ENUM', 'option', 5);
+INSERT INTO `tr_builder_types` VALUES (6, '多选', 'checkbox', 'VARCHAR', 'option', 6);
+INSERT INTO `tr_builder_types` VALUES (7, '单选下拉框', 'select', 'INT', 'option', 7);
+INSERT INTO `tr_builder_types` VALUES (8, '隐藏文本框(VARCHAR)', 'hidden', 'VARCHAR', 'text', 8);
+INSERT INTO `tr_builder_types` VALUES (9, '隐藏文本框(INT)', 'hidden', 'INT', 'text', 9);
+INSERT INTO `tr_builder_types` VALUES (10, '多行文本', 'textarea', 'TEXT', 'text', 10);
+INSERT INTO `tr_builder_types` VALUES (11, '上传文件', 'file', 'VARCHAR', 'text', 11);
 
 DROP TABLE IF EXISTS `tr_builders`;
 CREATE TABLE `tr_builders` (

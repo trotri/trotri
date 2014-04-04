@@ -381,8 +381,8 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t\t'values' => \$this->data,\n");
 		fwrite($stream, "\t\t'elements' => \$this->elements,\n");
 		fwrite($stream, "\t\t'columns' => array(\n");
-		foreach ($listIndexShows as $columnName) {
-			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		foreach ($this->_fields as $rows) {
+			fwrite($stream, "\t\t\t'{$rows['field_name']}',\n");
 		}
 		fwrite($stream, "\t\t\t'_button_history_back_',\n");
 		fwrite($stream, "\t\t)\n");
@@ -472,7 +472,7 @@ class CodeGenerator extends Model
 		$stream = $this->fopen($filePath);
 		$this->writeCopyrightComment($stream);
 		fwrite($stream, "namespace modules\\{$modName}\\action\\show;\n\n");
-		if ($this->_hasTrash || $fkColumnName) {
+		if ($this->_hasTrash || $this->_hasSort || $fkColumnName) {
 			fwrite($stream, "use tfc\\ap\\Ap;\n");
 		}
 		fwrite($stream, "use library\\action\\IndexAction;\n\n");
@@ -493,7 +493,7 @@ class CodeGenerator extends Model
 			fwrite($stream, "\t\t\$this->assign('{$fkColumnName}', \${$fkColumnVar});\n\n");
 		}
 		if ($this->_hasTrash) { fwrite($stream, "\t\tAp::getRequest()->setParam('trash', 'n');\n"); }
-		if ($this->_hasSort) { fwrite($stream, "\t\tAp::getRequest()->setParam('sort', 'n');\n"); }
+		if ($this->_hasSort) { fwrite($stream, "\t\tAp::getRequest()->setParam('order', 'sort');\n"); }
 		fwrite($stream, "\t\t\$this->execute('{$clsName}');\n");
 		fwrite($stream, "\t}\n");
 		fwrite($stream, "}\n");
@@ -541,7 +541,8 @@ class CodeGenerator extends Model
 		$this->writeCopyrightComment($stream);
 		fwrite($stream, "namespace modules\\{$modName}\\action\\show;\n\n");
 		fwrite($stream, "use library\\action\\ViewAction;\n");
-		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n\n"); }
+		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n"); }
+		fwrite($stream, "\n");
 		$this->writeClassComment($stream, $tmpClsName, '查询数据详情', "modules.{$modName}.action.show");
 		fwrite($stream, "class {$tmpClsName} extends ViewAction\n");
 		fwrite($stream, "{\n");
@@ -572,7 +573,8 @@ class CodeGenerator extends Model
 		$this->writeCopyrightComment($stream);
 		fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
 		fwrite($stream, "use library\\action\\CreateAction;\n");
-		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n\n"); }
+		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n"); }
+		fwrite($stream, "\n");
 		$this->writeClassComment($stream, $tmpClsName, '新增数据', "modules.{$modName}.action.submit");
 		fwrite($stream, "class {$tmpClsName} extends CreateAction\n");
 		fwrite($stream, "{\n");
@@ -603,7 +605,8 @@ class CodeGenerator extends Model
 		$this->writeCopyrightComment($stream);
 		fwrite($stream, "namespace modules\\{$modName}\\action\\submit;\n\n");
 		fwrite($stream, "use library\\action\\ModifyAction;\n");
-		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n\n"); }
+		if ($fkColumnName) { fwrite($stream, "use library\\Model;\n"); }
+		fwrite($stream, "\n");
 		$this->writeClassComment($stream, $tmpClsName, '编辑数据', "modules.{$modName}.action.submit");
 		fwrite($stream, "class {$tmpClsName} extends ModifyAction\n");
 		fwrite($stream, "{\n");
@@ -817,7 +820,7 @@ class CodeGenerator extends Model
 		fwrite($stream, "use library\\PageHelper;\n\n");
 		$this->writeClassComment($stream, $clsName, $builderName, "modules.{$modName}.model");
 
-		fwrite($stream, "class Builders extends Model\n");
+		fwrite($stream, "class {$clsName} extends Model\n");
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * @var string 查询列表数据Action名\n");
@@ -922,16 +925,23 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t\t\$data = \$this->getData();\n");
 		fwrite($stream, "\t\t\$output = array(\n");
 		foreach ($this->_fields as $rows) {
+			$type = ($fkColumnName === $rows['field_name']) ? 'hidden' : $rows['form_type'];
+
 			fwrite($stream, "\t\t\t'{$rows['field_name']}' => array(\n");
 			fwrite($stream, "\t\t\t\t'__tid__' => '{$rows['__tid__']}',\n");
-			fwrite($stream, "\t\t\t\t'type' => '{$rows['form_type']}',\n");
+			fwrite($stream, "\t\t\t\t'type' => '{$type}',\n");
 			fwrite($stream, "\t\t\t\t'label' => Text::_('{$rows['lang_label']}'),\n");
 			fwrite($stream, "\t\t\t\t'hint' => Text::_('{$rows['lang_hint']}'),\n");
-			if ($rows['form_required']) {
-				fwrite($stream, "\t\t\t\t'required' => true,\n");
+			if ($fkColumnName === $rows['field_name']) {
+				fwrite($stream, "\t\t\t\t'value' => \$this->get{$fkColumnFunc}(),\n");
 			}
-			if ($rows['form_modifiable']) {
-				fwrite($stream, "\t\t\t\t'disabled' => true,\n");
+			else {
+				if ($rows['form_required']) {
+					fwrite($stream, "\t\t\t\t'required' => true,\n");
+				}
+				if ($rows['form_modifiable']) {
+					fwrite($stream, "\t\t\t\t'disabled' => true,\n");
+				}
 			}
 			if (isset($rows['enums'])) {
 				$enum = array_shift($rows['enums']);
@@ -980,7 +990,14 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function getOperate(\$data)\n");
 		fwrite($stream, "\t{\n");
-		fwrite($stream, "\t\t\$params = array('id' => \$data['" . $this->_pkColumn . "']);\n");
+		if ($fkColumnName) {
+			fwrite($stream, "\t\t\$params = array(\n");
+			fwrite($stream, "\t\t\t'id' => \$data['" . $this->_pkColumn . "'],\n");
+			fwrite($stream, "\t\t\t'{$fkColumnName}' => \$data['" . $fkColumnName . "']\n\t\t);\n");
+		}
+		else {
+			fwrite($stream, "\t\t\$params = array('id' => \$data['" . $this->_pkColumn . "']);\n");
+		}
 		fwrite($stream, "\t\t\$componentsBuilder = PageHelper::getComponentsBuilder();\n\n");
 		$output = '\'\'';
 		if (in_array('pencil', $this->_builders['index_row_btns'])) {
@@ -1105,6 +1122,7 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t\tparent::__construct(\$db, \$language);\n");
 		fwrite($stream, "\t}\n\n");
 
+		$order = $this->_hasSort ? 'sort' : '';
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * 查询数据\n");
 		fwrite($stream, "\t * @param array \$params\n");
@@ -1113,7 +1131,7 @@ class CodeGenerator extends Model
 		fwrite($stream, "\t * @param integer \$offset\n");
 		fwrite($stream, "\t * @return array\n");
 		fwrite($stream, "\t */\n");
-		fwrite($stream, "\tpublic function search(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0)\n");
+		fwrite($stream, "\tpublic function search(array \$params = array(), \$order = '{$order}', \$limit = 0, \$offset = 0)\n");
 		fwrite($stream, "\t{\n");
 		fwrite($stream, "\t\t\$rules = array(\n");
 		foreach ($this->_fields as $rows) {

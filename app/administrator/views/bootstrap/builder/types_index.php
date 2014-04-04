@@ -13,8 +13,8 @@ $this->widget(
 			'category',
 			'sort',
 			'type_id',
-			'_operate_'
-		)
+			'_operate_',
+		),
 	)
 );
 ?>

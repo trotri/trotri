@@ -15,7 +15,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 			'_button_save_',
 			'_button_save2close_',
 			'_button_save2new_',
-			'_button_cancel_'
+			'_button_cancel_',
 		)
 	)
 );

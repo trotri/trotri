@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -19,7 +19,7 @@ use slib\ErrorNo;
  * ModTypes class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModTypes.php 1 2014-01-07 18:07:20Z huan.song $
+ * @version $Id: ModTypes.php 1 2014-04-04 13:49:20Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
@@ -46,8 +46,7 @@ class ModTypes extends BaseModel
 	 */
 	public function search(array $params = array(), $order = 'sort', $limit = 0, $offset = 0)
 	{
-		$ret = $this->findAllByAttributes(array(), $order, $limit, $offset);
-		return $ret;
+		return $this->findAllByAttributes(array(), $order, $limit, $offset);
 	}
 
 	/**
@@ -62,19 +61,6 @@ class ModTypes extends BaseModel
 		}
 
 		return $ret['data'];
-	}
-
-	/**
-	 * 通过type_id获取type_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getTypeNameByTypeId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('type_name', $value);
-		$typeName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['type_name'];
-		return $typeName;
 	}
 
 	/**
@@ -104,13 +90,13 @@ class ModTypes extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$data = Data::getInstance('types', 'builder', $this->getLanguage());
+		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$rules = $data->getRules(array(
 			'type_name',
 			'form_type',
 			'field_type',
 			'category',
-			'sort'
+			'sort',
 		));
 
 		return $this->filterRun($rules, $attributes, $required);
@@ -130,7 +116,19 @@ class ModTypes extends BaseModel
 			'sort' => 'intval',
 		);
 
-		$ret = $this->_clean($rules, $attributes);
-		return $ret;
+		return $this->_clean($rules, $attributes);
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPostValidator()
+	 */
+	protected function _cleanPostValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+		);
+
+		return $this->_clean($rules, $attributes);
+	}
+
 }

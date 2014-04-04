@@ -4,23 +4,23 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
 namespace modules\builder\model;
 
-use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
+use library\ErrorNo;
 use library\PageHelper;
 
 /**
  * Types class file
  * 表单字段类型
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Types.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: Types.php 1 2014-04-04 13:49:20Z Code Generator $
  * @package modules.builder.model
  * @since 1.0
  */
@@ -30,6 +30,11 @@ class Types extends Model
 	 * @var string 查询列表数据Action名
 	 */
 	const ACT_INDEX = 'index';
+
+	/**
+	 * @var string 数据详情Action名
+	 */
+	const ACT_VIEW = 'view';
 
 	/**
 	 * @var string 新增数据Action名
@@ -42,6 +47,16 @@ class Types extends Model
 	const ACT_MODIFY = 'modify';
 
 	/**
+	 * @var string 删除数据Action名
+	 */
+	const ACT_REMOVE = 'remove';
+
+	/**
+	 * @var string 移至回收站Action名
+	 */
+	const ACT_TRASH = 'trash';
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
@@ -51,7 +66,8 @@ class Types extends Model
 			return $lastIndexUrl;
 		}
 
-		return $this->getUrl('index', Mvc::$controller, Mvc::$module);
+		$params = array();
+		return $this->getUrl(self::ACT_INDEX, Mvc::$controller, Mvc::$module, $params);
 	}
 
 	/**
@@ -71,47 +87,71 @@ class Types extends Model
 	 * @see library.Model::getElementsRender()
 	 */
 	public function getElementsRender()
-	{	
+	{
 		$data = $this->getData();
-		$ret = array(
+		$output = array(
 			'type_id' => array(
-				'type' => 'text',
+				'__tid__' => 'main',
+				'type' => 'hidden',
 				'label' => Text::_('MOD_BUILDER_BUILDER_TYPES_TYPE_ID_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_TYPES_TYPE_ID_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'type_name' => array(
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_TYPES_TYPE_NAME_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_TYPES_TYPE_NAME_HINT'),
 				'required' => true,
 				'table' => array(
 					'callback' => array($this, 'getTypeNameLink')
-				)
+				),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'form_type' => array(
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_TYPES_FORM_TYPE_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_TYPES_FORM_TYPE_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'field_type' => array(
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_TYPES_FIELD_TYPE_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_TYPES_FIELD_TYPE_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'category' => array(
+				'__tid__' => 'main',
 				'type' => 'radio',
 				'label' => Text::_('MOD_BUILDER_BUILDER_TYPES_CATEGORY_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_TYPES_CATEGORY_HINT'),
 				'options' => $data->getEnum('category'),
 				'value' => $data::CATEGORY_TEXT,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'sort' => array(
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_TYPES_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_TYPES_SORT_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'_button_save_' => PageHelper::getComponentsBuilder()->getButtonSave(),
 			'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),
@@ -123,27 +163,10 @@ class Types extends Model
 				'table' => array(
 					'callback' => array($this, 'getOperate')
 				)
-			)
+			),
 		);
 
-		return $ret;
-	}
-
-	/**
-	 * 通过type_id获取type_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getTypeNameByTypeId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$typeName = $this->getService()->getTypeNameByTypeId($value);
-			Registry::set($name, $typeName);
-		}
-
-		return Registry::get($name);
+		return $output;
 	}
 
 	/**
@@ -158,20 +181,20 @@ class Types extends Model
 
 		$modifyIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconModify(),
-			'url' => $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_MODIFY, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncHref(),
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),
 		));
 
 		$removeIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconRemove(),
-			'url' => $this->getUrl('remove', Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_REMOVE, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncDialogRemove(),
-			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE')
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),
 		));
 
-		$ret = $modifyIcon . $removeIcon;
-		return $ret;
+		$output = '' . $modifyIcon . $removeIcon;
+		return $output;
 	}
 
 	/**
@@ -186,8 +209,19 @@ class Types extends Model
 			'last_index_url' => $this->getLastIndexUrl()
 		);
 
-		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
+		$url = $this->getUrl(self::ACT_VIEW, Mvc::$controller, Mvc::$module, $params);
 		$ret = $this->a($data['type_name'], $url);
 		return $ret;
 	}
+
+	/**
+	 * 通过type_id获取type_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($value)
+	{
+		return $this->getColById('type_name', $value);
+	}
+
 }

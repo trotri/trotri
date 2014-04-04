@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -16,7 +16,7 @@ use slib\BaseData;
  * DataGroups class file
  * 业务层：数据管理类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataGroups.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: DataGroups.php 1 2014-04-04 14:53:06Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
@@ -68,4 +68,5 @@ class DataGroups extends BaseData
 			'Numeric' => array(true, $this->_('MOD_BUILDER_BUILDER_FIELD_GROUPS_SORT_NUMERIC')),
 		);
 	}
+
 }

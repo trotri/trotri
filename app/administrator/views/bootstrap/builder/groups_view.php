@@ -12,7 +12,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 			'builder_name',
 			'sort',
 			'description',
-			'_button_history_back_'
+			'_button_history_back_',
 		)
 	)
 );

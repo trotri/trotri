@@ -13,8 +13,8 @@ $this->widget(
 			'sort',
 			'description',
 			'group_id',
-			'_operate_'
-		)
+			'_operate_',
+		),
 	)
 );
 ?>
