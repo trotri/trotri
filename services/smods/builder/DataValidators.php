@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -16,44 +16,44 @@ use slib\BaseData;
  * DataValidators class file
  * 业务层：数据管理类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataValidators.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: DataValidators.php 1 2014-04-05 22:11:11Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
 class DataValidators extends BaseData
 {
 	/**
-	 * @var string 验证时对比值类型：布尔类型
+	 * @var string 验证时对比值类型：boolean
 	 */
 	const OPTION_CATEGORY_BOOLEAN = 'boolean';
 
 	/**
-	 * @var string 验证时对比值类型：整型
+	 * @var string 验证时对比值类型：integer
 	 */
 	const OPTION_CATEGORY_INTEGER = 'integer';
 
 	/**
-	 * @var string 验证时对比值类型：字符型
+	 * @var string 验证时对比值类型：string
 	 */
 	const OPTION_CATEGORY_STRING = 'string';
 
 	/**
-	 * @var string 验证时对比值类型：数组序列化
+	 * @var string 验证时对比值类型：array
 	 */
 	const OPTION_CATEGORY_ARRAY = 'array';
 
 	/**
-	 * @var string 验证环境：任意时候验证
+	 * @var string 验证环境：all
 	 */
 	const WHEN_ALL = 'all';
 
 	/**
-	 * @var string 验证环境：只在新增数据时验证
+	 * @var string 验证环境：create
 	 */
 	const WHEN_CREATE = 'create';
 
 	/**
-	 * @var string 验证环境：只在编辑数据时验证
+	 * @var string 验证环境：modify
 	 */
 	const WHEN_MODIFY = 'modify';
 
@@ -72,7 +72,7 @@ class DataValidators extends BaseData
 	}
 
 	/**
-	 * 获取“验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证”所有选项
+	 * 获取“验证环境”所有选项
 	 * @return array
 	 */
 	public function getWhenEnum()
@@ -110,7 +110,7 @@ class DataValidators extends BaseData
 			'Url' => 'Url',
 		);
 	}
-	
+
 	/**
 	 * 获取“出错提示消息”所有选项
 	 * @return array
@@ -224,7 +224,7 @@ class DataValidators extends BaseData
 		$enum = $this->getOptionCategoryEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_OPTION_CATEGORY_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -242,7 +242,7 @@ class DataValidators extends BaseData
 	}
 
 	/**
-	 * 获取“验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证”验证规则
+	 * 获取“验证环境”验证规则
 	 * @return array
 	 */
 	public function getWhenRule()
@@ -250,9 +250,10 @@ class DataValidators extends BaseData
 		$enum = $this->getWhenEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_WHEN_INARRAY'), implode(', ', $enum))
 			),
 		);
 	}
+
 }

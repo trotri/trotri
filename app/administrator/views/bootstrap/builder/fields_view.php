@@ -28,7 +28,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 			'form_modify_sort',
 			'form_search_show',
 			'form_search_sort',
-			'_button_history_back_'
+			'_button_history_back_',
 		)
 	)
 );

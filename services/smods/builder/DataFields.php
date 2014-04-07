@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -18,89 +18,89 @@ use slib\Model;
  * DataFields class file
  * 业务层：数据管理类，寄存常量、选项、验证规则
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataFields.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: DataFields.php 1 2014-04-05 00:37:20Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
 class DataFields extends BaseData
 {
 	/**
-	 * @var string 是否自动递增：是
+	 * @var string 是否自动递增：y
 	 */
 	const COLUMN_AUTO_INCREMENT_Y = 'y';
 
 	/**
-	 * @var string 是否自动递增：否
+	 * @var string 是否自动递增：n
 	 */
 	const COLUMN_AUTO_INCREMENT_N = 'n';
 
 	/**
-	 * @var string 是否无符号：是
+	 * @var string 是否无符号：y
 	 */
 	const COLUMN_UNSIGNED_Y = 'y';
 
 	/**
-	 * @var string 是否无符号：否
+	 * @var string 是否无符号：n
 	 */
 	const COLUMN_UNSIGNED_N = 'n';
 
 	/**
-	 * @var string 表单是否必填：是
+	 * @var string 表单是否必填：y
 	 */
 	const FORM_REQUIRED_Y = 'y';
 
 	/**
-	 * @var string 表单是否必填：否
+	 * @var string 表单是否必填：n
 	 */
 	const FORM_REQUIRED_N = 'n';
 
 	/**
-	 * @var string 编辑表单中允许输入：是
+	 * @var string 编辑表单中不允许输入：y
 	 */
 	const FORM_MODIFIABLE_Y = 'y';
 
 	/**
-	 * @var string 编辑表单中允许输入：否
+	 * @var string 编辑表单中不允许输入：n
 	 */
 	const FORM_MODIFIABLE_N = 'n';
 
 	/**
-	 * @var string 是否在列表中展示：是
+	 * @var string 是否在列表中展示：y
 	 */
 	const INDEX_SHOW_Y = 'y';
 
 	/**
-	 * @var string 是否在列表中展示：否
+	 * @var string 是否在列表中展示：n
 	 */
 	const INDEX_SHOW_N = 'n';
 
 	/**
-	 * @var string 是否在新增表单中展示：是
+	 * @var string 是否在新增表单中展示：y
 	 */
 	const FORM_CREATE_SHOW_Y = 'y';
 
 	/**
-	 * @var string 是否在新增表单中展示：否
+	 * @var string 是否在新增表单中展示：n
 	 */
 	const FORM_CREATE_SHOW_N = 'n';
 
 	/**
-	 * @var string 是否在编辑表单中展示：是
+	 * @var string 是否在编辑表单中展示：y
 	 */
 	const FORM_MODIFY_SHOW_Y = 'y';
 
 	/**
-	 * @var string 是否在编辑表单中展示：否
+	 * @var string 是否在编辑表单中展示：n
 	 */
 	const FORM_MODIFY_SHOW_N = 'n';
 
 	/**
-	 * @var string 是否在查询表单中展示：是
+	 * @var string 是否在查询表单中展示：y
 	 */
 	const FORM_SEARCH_SHOW_Y = 'y';
 
 	/**
-	 * @var string 是否在查询表单中展示：否
+	 * @var string 是否在查询表单中展示：n
 	 */
 	const FORM_SEARCH_SHOW_N = 'n';
 
@@ -141,7 +141,7 @@ class DataFields extends BaseData
 	}
 
 	/**
-	 * 获取“编辑表单中允许输入”所有选项
+	 * 获取“编辑表单中不允许输入”所有选项
 	 * @return array
 	 */
 	public function getFormModifiableEnum()
@@ -255,7 +255,7 @@ class DataFields extends BaseData
 		$enum = $this->getColumnAutoIncrementEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_AUTO_INCREMENT_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -270,7 +270,7 @@ class DataFields extends BaseData
 		$enum = $this->getColumnUnsignedEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_UNSIGNED_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -299,7 +299,7 @@ class DataFields extends BaseData
 	}
 
 	/**
-	 * 获取“字段类型ID”验证规则
+	 * 获取“所属字段类型”验证规则
 	 * @return array
 	 */
 	public function getTypeIdRule()
@@ -325,7 +325,7 @@ class DataFields extends BaseData
 	}
 
 	/**
-	 * 获取“HTML：Table和Form显示名”验证规则
+	 * 获取“Table和Form显示名”验证规则
 	 * @return array
 	 */
 	public function getHtmlLabelRule()
@@ -344,14 +344,14 @@ class DataFields extends BaseData
 		$enum = $this->getFormRequiredEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_FORM_REQUIRED_INARRAY'), implode(', ', $enum))
 			),
 		);
 	}
 
 	/**
-	 * 获取“编辑表单中允许输入”验证规则
+	 * 获取“编辑表单中不允许输入”验证规则
 	 * @return array
 	 */
 	public function getFormModifiableRule()
@@ -359,7 +359,7 @@ class DataFields extends BaseData
 		$enum = $this->getFormModifiableEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_FORM_MODIFIABLE_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -374,7 +374,7 @@ class DataFields extends BaseData
 		$enum = $this->getIndexShowEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_INDEX_SHOW_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -400,7 +400,7 @@ class DataFields extends BaseData
 		$enum = $this->getFormCreateShowEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_FORM_CREATE_SHOW_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -426,7 +426,7 @@ class DataFields extends BaseData
 		$enum = $this->getFormModifyShowEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_FORM_MODIFY_SHOW_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -452,7 +452,7 @@ class DataFields extends BaseData
 		$enum = $this->getFormSearchShowEnum();
 		return array(
 			'InArray' => array(
-				array_keys($enum),
+				array_keys($enum), 
 				sprintf($this->_('MOD_BUILDER_BUILDER_FIELDS_FORM_SEARCH_SHOW_INARRAY'), implode(', ', $enum))
 			),
 		);
@@ -468,4 +468,5 @@ class DataFields extends BaseData
 			'Numeric' => array(true, $this->_('MOD_BUILDER_BUILDER_FIELDS_FORM_SEARCH_SORT_NUMERIC')),
 		);
 	}
+
 }

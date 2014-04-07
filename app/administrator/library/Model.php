@@ -121,6 +121,17 @@ class Model
 	}
 
 	/**
+	 * 通过ID类主键，查询一条记录，并持久化该记录。不支持联合主键。
+	 * 多用于View层数据展示
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getRowById($value)
+	{
+		return $this->getService()->getRowById($value);
+	}
+
+	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @return array

@@ -6,6 +6,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'values' => $this->data,
 		'elements' => $this->elements,
 		'columns' => array(
+			'validator_id',
 			'validator_name',
 			'field_name',
 			'options',
@@ -13,7 +14,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 			'message',
 			'sort',
 			'when',
-			'_button_history_back_'
+			'_button_history_back_',
 		)
 	)
 );

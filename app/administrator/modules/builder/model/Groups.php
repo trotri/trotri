@@ -249,8 +249,8 @@ class Groups extends Model
 		);
 
 		$url = $this->getUrl(self::ACT_VIEW, Mvc::$controller, Mvc::$module, $params);
-		$ret = $this->a($data['group_name'], $url);
-		return $ret;
+		$output = $this->a($data['group_name'], $url);
+		return $output;
 	}
 
 	/**

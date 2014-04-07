@@ -4,25 +4,24 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
 namespace modules\builder\model;
 
 use tfc\ap\Ap;
-use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
-use library\PageHelper;
 use library\ErrorNo;
+use library\PageHelper;
 
 /**
  * Fields class file
  * 表单字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Fields.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: Fields.php 1 2014-04-05 00:37:20Z Code Generator $
  * @package modules.builder.model
  * @since 1.0
  */
@@ -32,6 +31,11 @@ class Fields extends Model
 	 * @var string 查询列表数据Action名
 	 */
 	const ACT_INDEX = 'index';
+
+	/**
+	 * @var string 数据详情Action名
+	 */
+	const ACT_VIEW = 'view';
 
 	/**
 	 * @var string 新增数据Action名
@@ -44,6 +48,16 @@ class Fields extends Model
 	const ACT_MODIFY = 'modify';
 
 	/**
+	 * @var string 删除数据Action名
+	 */
+	const ACT_REMOVE = 'remove';
+
+	/**
+	 * @var string 移至回收站Action名
+	 */
+	const ACT_TRASH = 'trash';
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
@@ -53,7 +67,8 @@ class Fields extends Model
 			return $lastIndexUrl;
 		}
 
-		return $this->getUrl('index', Mvc::$controller, Mvc::$module, array('builder_id' => $this->getBuilderId()));
+		$params = array('builder_id' => $this->getBuilderId());
+		return $this->getUrl(self::ACT_INDEX, Mvc::$controller, Mvc::$module, $params);
 	}
 
 	/**
@@ -65,7 +80,7 @@ class Fields extends Model
 		$builderId = Ap::getRequest()->getInteger('builder_id');
 		if ($builderId <= 0) {
 			$id = Ap::getRequest()->getInteger('id');
-			$builderId = $this->getBuilderIdByFieldId($id);
+			$builderId = $this->getColById('builder_id', $id);
 		}
 
 		return $builderId;
@@ -93,14 +108,17 @@ class Fields extends Model
 	 */
 	public function getElementsRender()
 	{
-		$builderId = $this->getBuilderId();
 		$data = $this->getData();
-		$ret = array(
+		$builderId = $this->getBuilderId();
+		$output = array(
 			'field_id' => array(
 				'__tid__' => 'main',
-				'type' => 'text',
+				'type' => 'hidden',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FIELD_ID_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FIELD_ID_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'field_name' => array(
 				'__tid__' => 'main',
@@ -110,13 +128,19 @@ class Fields extends Model
 				'required' => true,
 				'table' => array(
 					'callback' => array($this, 'getFieldNameLink')
-				)
+				),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'column_length' => array(
 				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_LENGTH_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_LENGTH_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'column_auto_increment' => array(
 				'__tid__' => 'main',
@@ -127,7 +151,10 @@ class Fields extends Model
 				'value' => $data::COLUMN_AUTO_INCREMENT_N,
 				'table' => array(
 					'callback' => array($this, 'getColumnAutoIncrementTblColumn')
-				)
+				),
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'column_unsigned' => array(
 				'__tid__' => 'main',
@@ -136,6 +163,9 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_UNSIGNED_HINT'),
 				'options' => $data->getEnum('column_unsigned'),
 				'value' => $data::COLUMN_UNSIGNED_N,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'column_comment' => array(
 				'__tid__' => 'main',
@@ -143,13 +173,19 @@ class Fields extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_COMMENT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_COLUMN_COMMENT_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'builder_id' => array(
 				'__tid__' => 'main',
 				'type' => 'hidden',
+				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_BUILDER_ID_LABEL'),
+				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_BUILDER_ID_HINT'),
 				'value' => $builderId,
-				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_GROUPS_BUILDER_ID_LABEL'),
-				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_GROUPS_BUILDER_ID_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'builder_name' => array(
 				'type' => 'string',
@@ -167,7 +203,10 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_GROUP_ID_HINT'),
 				'table' => array(
 					'callback' => array($this, 'getGroupNameTblColumn')
-				)
+				),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'type_id' => array(
 				'__tid__' => 'main',
@@ -177,7 +216,10 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_TYPE_ID_HINT'),
 				'table' => array(
 					'callback' => array($this, 'getTypeNameTblColumn')
-				)
+				),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'sort' => array(
 				'__tid__' => 'main',
@@ -185,6 +227,9 @@ class Fields extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_SORT_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'html_label' => array(
 				'__tid__' => 'view',
@@ -192,12 +237,18 @@ class Fields extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_HTML_LABEL_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_HTML_LABEL_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'form_prompt' => array(
 				'__tid__' => 'view',
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_PROMPT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_PROMPT_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'form_prompt_examples' => array(
 				'__tid__' => 'view',
@@ -213,6 +264,9 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_REQUIRED_HINT'),
 				'options' => $data->getEnum('form_required'),
 				'value' => $data::FORM_REQUIRED_Y,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'form_modifiable' => array(
 				'__tid__' => 'view',
@@ -221,6 +275,9 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_MODIFIABLE_HINT'),
 				'options' => $data->getEnum('form_modifiable'),
 				'value' => $data::FORM_MODIFIABLE_N,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'index_show' => array(
 				'__tid__' => 'view',
@@ -229,14 +286,20 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_INDEX_SHOW_HINT'),
 				'options' => $data->getEnum('index_show'),
 				'value' => $data::INDEX_SHOW_N,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'index_sort' => array(
 				'__tid__' => 'view',
 				'type' => 'text',
-				'value' => 0,
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_INDEX_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_INDEX_SORT_HINT'),
+				'value' => 0,
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'form_create_show' => array(
 				'__tid__' => 'view',
@@ -245,14 +308,20 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_CREATE_SHOW_HINT'),
 				'options' => $data->getEnum('form_create_show'),
 				'value' => $data::FORM_CREATE_SHOW_N,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'form_create_sort' => array(
 				'__tid__' => 'view',
 				'type' => 'text',
-				'value' => 0,
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_CREATE_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_CREATE_SORT_HINT'),
+				'value' => 0,
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'form_modify_show' => array(
 				'__tid__' => 'view',
@@ -261,14 +330,20 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_MODIFY_SHOW_HINT'),
 				'options' => $data->getEnum('form_modify_show'),
 				'value' => $data::FORM_MODIFY_SHOW_N,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'form_modify_sort' => array(
 				'__tid__' => 'view',
 				'type' => 'text',
-				'value' => 0,
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_MODIFY_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_MODIFY_SORT_HINT'),
+				'value' => 0,
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'form_search_show' => array(
 				'__tid__' => 'view',
@@ -277,14 +352,20 @@ class Fields extends Model
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_SEARCH_SHOW_HINT'),
 				'options' => $data->getEnum('form_search_show'),
 				'value' => $data::FORM_SEARCH_SHOW_N,
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'form_search_sort' => array(
 				'__tid__' => 'view',
 				'type' => 'text',
-				'value' => 0,
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_SEARCH_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FORM_SEARCH_SORT_HINT'),
+				'value' => 0,
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'_button_save_' => PageHelper::getComponentsBuilder()->getButtonSave(),
 			'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),
@@ -306,7 +387,7 @@ class Fields extends Model
 			)
 		);
 
-		return $ret;
+		return $output;
 	}
 
 	/**
@@ -317,61 +398,10 @@ class Fields extends Model
 	{
 		$ret = parent::create($params);
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			$ret['builder_id'] = $this->getBuilderIdByFieldId($ret['id']);
+			$ret['builder_id'] = $this->getColById('builder_id', $ret['id']);
 		}
 
 		return $ret;
-	}
-
-	/**
-	 * 通过field_id获取field_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getFieldNameByFieldId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$fieldName = $this->getService()->getFieldNameByFieldId($value);
-			Registry::set($name, $fieldName);
-		}
-
-		return Registry::get($name);
-	}
-
-	/**
-	 * 通过field_id获取html_label值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getHtmlLabelByFieldId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$htmlLabel = $this->getService()->getHtmlLabelByFieldId($value);
-			Registry::set($name, $htmlLabel);
-		}
-
-		return Registry::get($name);
-	}
-
-	/**
-	 * 通过field_id获取builder_id值
-	 * @param integer $value
-	 * @return integer
-	 */
-	public function getBuilderIdByFieldId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$builderId = $this->getService()->getBuilderIdByFieldId($value);
-			Registry::set($name, $builderId);
-		}
-
-		return Registry::get($name);
 	}
 
 	/**
@@ -389,20 +419,20 @@ class Fields extends Model
 
 		$modifyIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconModify(),
-			'url' => $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_MODIFY, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncHref(),
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),
 		));
 
 		$removeIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconRemove(),
-			'url' => $this->getUrl('remove', Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_REMOVE, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncDialogRemove(),
-			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE')
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),
 		));
 
-		$ret = $modifyIcon . $removeIcon;
-		return $ret;
+		$output = $modifyIcon . $removeIcon;
+		return $output;
 	}
 
 	/**
@@ -417,9 +447,9 @@ class Fields extends Model
 			'last_index_url' => $this->getLastIndexUrl()
 		);
 
-		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
-		$ret = $this->a($data['field_name'], $url);
-		return $ret;
+		$url = $this->getUrl(self::ACT_VIEW, Mvc::$controller, Mvc::$module, $params);
+		$output = $this->a($data['field_name'], $url);
+		return $output;
 	}
 
 	/**
@@ -435,14 +465,14 @@ class Fields extends Model
 		);
 
 		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
-		$ret = PageHelper::getComponentsBuilder()->getSwitch(array(
+		$output = PageHelper::getComponentsBuilder()->getSwitch(array(
 			'id' => $data['field_id'],
 			'name' => 'column_auto_increment',
 			'value' => $data['column_auto_increment'],
 			'href' => $url
 		));
 
-		return $ret;
+		return $output;
 	}
 
 	/**
@@ -499,7 +529,38 @@ class Fields extends Model
 			'title' => Text::_('MOD_BUILDER_URLS_VALIDATORS_CREATE'),
 		));
 
-		$ret = $indexIcon . $createIcon;
-		return $ret;
+		$output = $indexIcon . $createIcon;
+		return $output;
 	}
+
+	/**
+	 * 通过field_id获取field_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getFieldNameByFieldId($value)
+	{
+		return $this->getColById('field_name', $value);
+	}
+
+	/**
+	 * 通过field_id获取html_label值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getHtmlLabelByFieldId($value)
+	{
+		return $this->getColById('html_label', $value);
+	}
+
+	/**
+	 * 通过field_id获取builder_id值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getBuilderIdByFieldId($value)
+	{
+		return $this->getColById('builder_id', $value);
+	}
+
 }

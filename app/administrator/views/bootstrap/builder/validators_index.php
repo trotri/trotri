@@ -14,8 +14,10 @@ $this->widget(
 			'message',
 			'sort',
 			'when',
+			'validator_id',
 			'_operate_',
-		)
+		),
+		// 'checkedToggle' => 'validator_id',
 	)
 );
 ?>

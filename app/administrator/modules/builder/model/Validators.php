@@ -4,25 +4,24 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
 namespace modules\builder\model;
 
 use tfc\ap\Ap;
-use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use library\Model;
-use library\PageHelper;
 use library\ErrorNo;
+use library\PageHelper;
 
 /**
  * Validators class file
- * 表单字段类型
+ * 表单字段验证
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Validators.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: Validators.php 1 2014-04-05 22:11:11Z Code Generator $
  * @package modules.builder.model
  * @since 1.0
  */
@@ -32,6 +31,11 @@ class Validators extends Model
 	 * @var string 查询列表数据Action名
 	 */
 	const ACT_INDEX = 'index';
+
+	/**
+	 * @var string 数据详情Action名
+	 */
+	const ACT_VIEW = 'view';
 
 	/**
 	 * @var string 新增数据Action名
@@ -44,6 +48,16 @@ class Validators extends Model
 	const ACT_MODIFY = 'modify';
 
 	/**
+	 * @var string 删除数据Action名
+	 */
+	const ACT_REMOVE = 'remove';
+
+	/**
+	 * @var string 移至回收站Action名
+	 */
+	const ACT_TRASH = 'trash';
+
+	/**
 	 * (non-PHPdoc)
 	 * @see library.Model::getLastIndexUrl()
 	 */
@@ -53,7 +67,8 @@ class Validators extends Model
 			return $lastIndexUrl;
 		}
 
-		return $this->getUrl('index', Mvc::$controller, Mvc::$module, array('field_id' => $this->getFieldId()));
+		$params = array('field_id' => $this->getFieldId());
+		return $this->getUrl(self::ACT_INDEX, Mvc::$controller, Mvc::$module, $params);
 	}
 
 	/**
@@ -65,7 +80,7 @@ class Validators extends Model
 		$fieldId = Ap::getRequest()->getInteger('field_id');
 		if ($fieldId <= 0) {
 			$id = Ap::getRequest()->getInteger('id');
-			$fieldId = $this->getFieldIdByValidatorId($id);
+			$fieldId = $this->getColById('field_id', $id);
 		}
 
 		return $fieldId;
@@ -89,36 +104,46 @@ class Validators extends Model
 	 */
 	public function getElementsRender()
 	{
+		$fieldId = $this->getFieldId();
 		$data = $this->getData();
-		$ret = array(
+		$output = array(
 			'validator_id' => array(
 				'__tid__' => 'main',
-				'type' => 'text',
+				'type' => 'hidden',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_VALIDATOR_ID_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_VALIDATOR_ID_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'validator_name' => array(
 				'__tid__' => 'main',
 				'type' => 'select',
-				'options' => $data->getEnum('validator_name'),
-				'value' => 'Integer',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_VALIDATOR_NAME_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_VALIDATOR_NAME_HINT'),
+				'options' => $data->getEnum('validator_name'),
+				'value' => 'Integer',
 				'table' => array(
 					'callback' => array($this, 'getValidatorNameLink')
-				)
+				),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'field_id' => array(
 				'__tid__' => 'main',
 				'type' => 'hidden',
-				'value' => $this->getFieldId(),
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_FIELD_ID_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_FIELD_ID_HINT'),
+				'value' => $fieldId,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'field_name' => array(
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELDS_FIELD_NAME_LABEL'),
-				'value' => Model::getInstance('Fields')->getHtmlLabelByFieldId($this->getFieldId()),
+				'value' => Model::getInstance('Fields')->getHtmlLabelByFieldId($fieldId),
 				'readonly' => true,
 				'table' => array(
 					'callback' => array($this, 'getFieldNameTblColumn')
@@ -129,6 +154,9 @@ class Validators extends Model
 				'type' => 'text',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_OPTIONS_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_OPTIONS_HINT'),
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'option_category' => array(
 				'__tid__' => 'main',
@@ -139,14 +167,20 @@ class Validators extends Model
 				'value' => $data::OPTION_CATEGORY_INTEGER,
 				'table' => array(
 					'callback' => array($this, 'getOptionCategoryTblColumn')
-				)
+				),
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'message' => array(
 				'__tid__' => 'main',
 				'type' => 'text',
-				'value' => '',
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_MESSAGE_HINT'),
+				'value' => '',
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'sort' => array(
 				'__tid__' => 'main',
@@ -154,6 +188,9 @@ class Validators extends Model
 				'label' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_SORT_LABEL'),
 				'hint' => Text::_('MOD_BUILDER_BUILDER_FIELD_VALIDATORS_SORT_HINT'),
 				'required' => true,
+				'search' => array(
+					'type' => 'text',
+				),
 			),
 			'when' => array(
 				'__tid__' => 'main',
@@ -164,7 +201,10 @@ class Validators extends Model
 				'value' => $data::WHEN_ALL,
 				'table' => array(
 					'callback' => array($this, 'getWhenTblColumn')
-				)
+				),
+				'search' => array(
+					'type' => 'select',
+				),
 			),
 			'_button_save_' => PageHelper::getComponentsBuilder()->getButtonSave(),
 			'_button_save2close_' => PageHelper::getComponentsBuilder()->getButtonSaveClose(),
@@ -179,7 +219,7 @@ class Validators extends Model
 			),
 		);
 
-		return $ret;
+		return $output;
 	}
 
 	/**
@@ -190,44 +230,10 @@ class Validators extends Model
 	{
 		$ret = parent::create($params);
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			$ret['field_id'] = $this->getFieldIdByValidatorId($ret['id']);
+			$ret['field_id'] = $this->getColById('field_id', $ret['id']);
 		}
 
 		return $ret;
-	}
-
-	/**
-	 * 通过validator_id获取field_id值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getFieldIdByValidatorId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$fieldId = $this->getService()->getFieldIdByValidatorId($value);
-			Registry::set($name, $fieldId);
-		}
-
-		return Registry::get($name);
-	}
-
-	/**
-	 * 通过validator_id获取validator_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getValidatorNameByValidatorId($value)
-	{
-		$value = (int) $value;
-		$name = __METHOD__ . '_' . $value;
-		if (!Registry::has($name)) {
-			$validatorName = $this->getService()->getValidatorNameByValidatorId($value);
-			Registry::set($name, $validatorName);
-		}
-
-		return Registry::get($name);
 	}
 
 	/**
@@ -245,20 +251,20 @@ class Validators extends Model
 
 		$modifyIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconModify(),
-			'url' => $this->getUrl('modify', Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_MODIFY, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncHref(),
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),
 		));
 
 		$removeIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconRemove(),
-			'url' => $this->getUrl('remove', Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_REMOVE, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncDialogRemove(),
-			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE')
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),
 		));
 
-		$ret = $modifyIcon . $removeIcon;
-		return $ret;
+		$output = $modifyIcon . $removeIcon;
+		return $output;
 	}
 
 	/**
@@ -273,9 +279,9 @@ class Validators extends Model
 			'last_index_url' => $this->getLastIndexUrl()
 		);
 
-		$url = $this->getUrl('view', Mvc::$controller, Mvc::$module, $params);
-		$ret = $this->a($data['validator_name'], $url);
-		return $ret;
+		$url = $this->getUrl(self::ACT_VIEW, Mvc::$controller, Mvc::$module, $params);
+		$output = $this->a($data['validator_name'], $url);
+		return $output;
 	}
 
 	/**
@@ -329,4 +335,25 @@ class Validators extends Model
 		$enum = $this->getData()->getEnum('option_category');
 		return $enum;
 	}
+
+	/**
+	 * 通过validator_id获取validator_name值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getValidatorNameByValidatorId($value)
+	{
+		return $this->getColById('validator_name', $value);
+	}
+
+	/**
+	 * 通过validator_id获取field_id值
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getFieldIdByValidatorId($value)
+	{
+		return $this->getColById('field_id', $value);
+	}
+
 }

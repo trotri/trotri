@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -19,7 +19,7 @@ use slib\ErrorNo;
  * ModFields class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModFields.php 1 2014-01-19 17:52:00Z huan.song $
+ * @version $Id: ModFields.php 1 2014-04-05 00:37:20Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
@@ -44,7 +44,7 @@ class ModFields extends BaseModel
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function search(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function search(array $params = array(), $order = 'sort', $limit = 0, $offset = 0)
 	{
 		$builderId = isset($params['builder_id']) ? (int) $params['builder_id'] : 0;
 		$params = array();
@@ -52,47 +52,7 @@ class ModFields extends BaseModel
 			$params['builder_id'] = $builderId;
 		}
 
-		$ret = $this->findAllByAttributes($params, $order, $limit, $offset);
-		return $ret;
-	}
-
-	/**
-	 * 通过field_id获取field_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getFieldNameByFieldId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('field_name', $value);
-		$fieldName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['field_name'];
-		return $fieldName;
-	}
-
-	/**
-	 * 通过field_id获取html_label值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getHtmlLabelByFieldId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('html_label', $value);
-		$htmlLabel = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['html_label'];
-		return $htmlLabel;
-	}
-
-	/**
-	 * 通过field_id获取builder_id值
-	 * @param integer $value
-	 * @return integer
-	 */
-	public function getBuilderIdByFieldId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('builder_id', $value);
-		$builderId = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['builder_id'];
-		return $builderId;
+		return $this->findAllByAttributes($params, $order, $limit, $offset);
 	}
 
 	/**
@@ -122,7 +82,7 @@ class ModFields extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$data = Data::getInstance('fields', 'builder', $this->getLanguage());
+		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$rules = $data->getRules(array(
 			'field_name',
 			'column_auto_increment',
@@ -156,18 +116,40 @@ class ModFields extends BaseModel
 		$rules = array(
 			'field_name' => 'trim',
 			'column_length' => 'trim',
+			'column_auto_increment' => 'trim',
+			'column_unsigned' => 'trim',
 			'column_comment' => 'trim',
 			'builder_id' => 'intval',
+			'group_id' => 'intval',
 			'type_id' => 'intval',
-			'sort' => 'intval',
+			// 'sort' => 'intval',
 			'html_label' => 'trim',
+			'form_prompt' => 'trim',
+			'form_required' => 'trim',
+			'form_modifiable' => 'trim',
+			'index_show' => 'trim',
 			'index_sort' => 'intval',
+			'form_create_show' => 'trim',
 			'form_create_sort' => 'intval',
+			'form_modify_show' => 'trim',
 			'form_modify_sort' => 'intval',
+			'form_search_show' => 'trim',
 			'form_search_sort' => 'intval',
 		);
 
-		$ret = $this->_clean($rules, $attributes);
-		return $ret;
+		return $this->_clean($rules, $attributes);
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPostValidator()
+	 */
+	protected function _cleanPostValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+		);
+
+		return $this->_clean($rules, $attributes);
+	}
+
 }

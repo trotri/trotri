@@ -4,7 +4,7 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -19,7 +19,7 @@ use slib\ErrorNo;
  * ModValidators class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModValidators.php 1 2014-01-20 15:58:15Z huan.song $
+ * @version $Id: ModValidators.php 1 2014-04-05 22:11:11Z Code Generator $
  * @package smods.builder
  * @since 1.0
  */
@@ -52,34 +52,7 @@ class ModValidators extends BaseModel
 			$params['field_id'] = $fieldId;
 		}
 
-		$ret = $this->findAllByAttributes($params, $order, $limit, $offset);
-		return $ret;
-	}
-
-	/**
-	 * 通过validator_id获取field_id值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getFieldIdByValidatorId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('field_id', $value);
-		$fieldId = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? 0 : $ret['field_id'];
-		return $fieldId;
-	}
-
-	/**
-	 * 通过validator_id获取validator_name值
-	 * @param integer $value
-	 * @return string
-	 */
-	public function getValidatorNameByValidatorId($value)
-	{
-		$value = (int) $value;
-		$ret = $this->getByPk('validator_name', $value);
-		$validatorName = ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) ? '' : $ret['validator_name'];
-		return $validatorName;
+		return $this->findAllByAttributes($params, $order, $limit, $offset);
 	}
 
 	/**
@@ -109,13 +82,13 @@ class ModValidators extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
-		$data = Data::getInstance('validators', 'builder', $this->getLanguage());
-		$rules = $data->getRules(array(	
+		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
+		$rules = $data->getRules(array(
 			'validator_name',
 			'field_id',
 			'option_category',
 			'sort',
-			'when'
+			'when',
 		));
 
 		return $this->filterRun($rules, $attributes, $required);
@@ -130,11 +103,26 @@ class ModValidators extends BaseModel
 		$rules = array(
 			'validator_name' => 'trim',
 			'field_id' => 'intval',
+			'options' => 'trim',
+			'option_category' => 'trim',
 			'message' => 'trim',
 			'sort' => 'intval',
+			'when' => 'trim',
 		);
 
-		$ret = $this->_clean($rules, $attributes);
-		return $ret;
+		return $this->_clean($rules, $attributes);
 	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see slib.BaseModel::_cleanPostValidator()
+	 */
+	protected function _cleanPostValidator(array $attributes = array(), $opType = '')
+	{
+		$rules = array(
+		);
+
+		return $this->_clean($rules, $attributes);
+	}
+
 }

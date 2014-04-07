@@ -17,7 +17,8 @@ $this->widget(
 			'field_id',
 			'builder_field_validators',
 			'_operate_',
-		)
+		),
+		// 'checkedToggle' => 'field_id',
 	)
 );
 ?>
