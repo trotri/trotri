@@ -7,7 +7,6 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'elements' => $this->elements,
 		'columns' => array(
 			'amca_id',
-			'amca_pid',
 			'amca_name',
 			'amca_pname',
 			'prompt',

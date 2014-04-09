@@ -35,6 +35,7 @@ class AmcasController extends BaseController
 			'modify'       => 'modules\\ucenter\\action\\submit\\AmcasModify',
 			'remove'       => 'modules\\ucenter\\action\\submit\\AmcasRemove',
 			'singlemodify' => 'modules\\ucenter\\action\\submit\\AmcasSingleModify',
+			'synch'        => 'modules\\ucenter\\action\\submit\\AmcasSynch',
 		);
 	}
 }

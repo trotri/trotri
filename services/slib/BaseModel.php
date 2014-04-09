@@ -654,6 +654,46 @@ abstract class BaseModel extends BaseService
 	}
 
 	/**
+	 * 验证是否是“查询记录”操作类型
+	 * @param string $opType
+	 * @return boolean
+	 */
+	public function isOpTypeSelect($opType)
+	{
+		return $opType === self::OP_TYPE_SELECT;
+	}
+
+	/**
+	 * 验证是否是“新增记录”操作类型
+	 * @param string $opType
+	 * @return boolean
+	 */
+	public function isOpTypeInsert($opType)
+	{
+		return $opType === self::OP_TYPE_INSERT;
+	}
+
+	/**
+	 * 验证是否是“编辑记录”操作类型
+	 * @param string $opType
+	 * @return boolean
+	 */
+	public function isOpTypeUpdate($opType)
+	{
+		return $opType === self::OP_TYPE_UPDATE;
+	}
+
+	/**
+	 * 验证是否是“删除记录”操作类型
+	 * @param string $opType
+	 * @return boolean
+	 */
+	public function isOpTypeDelete($opType)
+	{
+		return $opType === self::OP_TYPE_DELETE;
+	}
+
+	/**
 	 * 基于配置清理表单提交的数据
 	 * @param array $rules
 	 * @param array $attributes

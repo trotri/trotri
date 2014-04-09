@@ -22,22 +22,22 @@ use tfc\validator\Validator;
  */
 class PhoneValidator extends Validator
 {
-    /**
-     * @var string 正则：验证手机号
-     */
-    const REGEX_PHONE = '/^1\d{10}$/';
+	/**
+	 * @var string 正则：验证手机号
+	 */
+	const REGEX_PHONE = '/^1\d{10}$/';
 
-    /**
-     * @var string 默认出错后的提醒消息
-     */
-    protected $_message = '"%value%" does not appear to be a valid phone.';
+	/**
+	 * @var string 默认出错后的提醒消息
+	 */
+	protected $_message = '"%value%" does not appear to be a valid phone.';
 
-    /**
-     * (non-PHPdoc)
-     * @see tfc\validator.Validator::isValid()
-     */
-    public function isValid()
-    {
-        return (preg_match(self::REGEX_PHONE, $this->getValue()) == $this->getOption());
-    }
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\validator.Validator::isValid()
+	 */
+	public function isValid()
+	{
+		return (preg_match(self::REGEX_PHONE, $this->getValue()) == $this->getOption());
+	}
 }

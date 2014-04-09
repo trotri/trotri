@@ -13,6 +13,7 @@ namespace smods\ucenter;
 use tfc\ap\Registry;
 use slib\BaseData;
 use slib\Model;
+use smods\ucenter\ModAmcas;
 
 /**
  * DataAmcas class file
@@ -75,7 +76,7 @@ class DataAmcas extends BaseData
 	}
 
 	/**
-	 * 获取“事件名”验证规则
+	 * 获取“事件父ID”验证规则
 	 * @return array
 	 */
 	public function getAmcaPidRule()
@@ -95,12 +96,11 @@ class DataAmcas extends BaseData
 	 */
 	public function getAmcaNameRule()
 	{
-		$mod = Model::getInstance('Amcas', 'ucenter', $this->getLanguage());
 		return array(
 			'Alpha' => array(true, $this->_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_ALPHA')),
 			'MinLength' => array(2, $this->_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
 			'MaxLength' => array(16, $this->_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
-			'smods\\ucenter\\validator\\UserAmcasAmcaNameUniqueValidator' => array(true, $this->_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_UNIQUE'))
+			'smods\\ucenter\\validator\\UserAmcasAmcaNameUnique' => array(true, $this->_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_UNIQUE'))
 		);
 	}
 

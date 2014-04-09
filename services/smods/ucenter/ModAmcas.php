@@ -10,10 +10,12 @@
 
 namespace smods\ucenter;
 
+use tfc\ap\Registry;
 use tfc\util\Language;
 use slib\BaseModel;
 use slib\Data;
 use slib\ErrorNo;
+use smods\ucenter\validator\UserAmcasAmcaNameUnique;
 
 /**
  * ModAmcas class file
@@ -180,6 +182,13 @@ class ModAmcas extends BaseModel
 	{
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$params['category'] = $data::CATEGORY_MOD;
+
+		Registry::set(UserAmcasAmcaNameUnique::USERAMCAS_AMCANAME_UNIQUE, array(
+			'op_type'  => self::OP_TYPE_INSERT,
+			'object'   => $this,
+			'amca_pid' => isset($params['amca_pid']) ? $params['amca_pid'] : -1
+		));
+
 		return $this->autoInsert($params);
 	}
 
@@ -192,6 +201,14 @@ class ModAmcas extends BaseModel
 	public function modifyByPk($value, array $params)
 	{
 		if (isset($params['category'])) { unset($params['category']); }
+
+		Registry::set(UserAmcasAmcaNameUnique::USERAMCAS_AMCANAME_UNIQUE, array(
+			'op_type'  => self::OP_TYPE_UPDATE,
+			'object'   => $this,
+			'amca_id'  => $value,
+			'amca_pid' => isset($params['amca_pid']) ? $params['amca_pid'] : -1
+		));
+
 		return $this->autoUpdateByPk($value, $params);
 	}
 

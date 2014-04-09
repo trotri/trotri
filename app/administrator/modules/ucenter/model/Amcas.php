@@ -12,7 +12,9 @@ namespace modules\ucenter\model;
 
 use tfc\ap\Ap;
 use tfc\ap\Registry;
+use tfc\ap\Singleton;
 use tfc\mvc\Mvc;
+use tfc\saf\Log;
 use tfc\saf\Text;
 use library\Model;
 use library\ErrorNo;
@@ -68,7 +70,7 @@ class Amcas extends Model
 			return $lastIndexUrl;
 		}
 
-		$params = array();
+		$params = array('amca_pid' => $this->getAmcaPid());
 		return $this->getUrl(self::ACT_INDEX, Mvc::$controller, Mvc::$module, $params);
 	}
 
@@ -130,6 +132,9 @@ class Amcas extends Model
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_NAME_HINT'),
 				'required' => true,
+				'table' => array(
+					'callback' => array($this, 'getAmcaNameLink')
+				),
 				'search' => array(
 					'type' => 'text',
 				),
@@ -152,6 +157,9 @@ class Amcas extends Model
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PNAME_HINT'),
 				'value' => $this->getAmcaNameByAmcaId($amcaPid),
 				'disabled' => true,
+				'table' => array(
+					'callback' => array($this, 'getAmcaPnameTblColumn')
+				),
 				'search' => array(
 					'type' => 'text',
 				),
@@ -184,6 +192,9 @@ class Amcas extends Model
 				'options' => $data->getEnum('category'),
 				'value' => $data::CATEGORY_MOD,
 				'disabled' => true,
+				'table' => array(
+					'callback' => array($this, 'getCategoryTblColumn')
+				),
 				'search' => array(
 					'type' => 'select',
 				),
@@ -228,8 +239,53 @@ class Amcas extends Model
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),
 		));
 
-		$output = '' . $modifyIcon . $removeIcon;
+		$synchIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconTool(),
+			'url' => $this->getUrl('synch', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('MOD_UCENTER_URLS_AMCAS_CTRLSYNCH'),
+		));
+
+		$output = $modifyIcon . $removeIcon . $synchIcon;
 		return $output;
+	}
+
+	/**
+	 * 获取列表页“事件名”的A标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getAmcaNameLink($data)
+	{
+		$params = array(
+			'id' => $data['amca_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl(self::ACT_VIEW, Mvc::$controller, Mvc::$module, $params);
+		$output = $this->a($data['amca_name'], $url);
+		return $output;
+	}
+
+	/**
+	 * 获取列表页“父事件名”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getAmcaPnameTblColumn($data)
+	{
+		return $this->getAmcaNameByAmcaId($data['amca_pid']);
+	}
+
+	/**
+	 * 获取列表页“类型”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getCategoryTblColumn($data)
+	{
+		$enum = $this->getData()->getEnum('category');
+		return isset($enum[$data['category']]) ? $enum[$data['category']] : $data['category'];
 	}
 
 	/**
@@ -285,6 +341,155 @@ class Amcas extends Model
 	public function isAppById($value)
 	{
 		return $this->getService()->isAppById($value);
+	}
+
+	/**
+	 * 验证是否是模块类型
+	 * @param integer $value
+	 * @return boolean
+	 */
+	public function isModById($value)
+	{
+		return $this->getService()->isModById($value);
+	}
+
+	/**
+	 * 通过分析控制器文件，获取指定模块的控制器信息，并入库
+	 * @param integer $amcaId
+	 * @return void
+	 */
+	public function synch($amcaId)
+	{
+		$data = $this->getData();
+
+		Log::echoTrace('Synch Begin ...');
+
+		// 从数据库中读取模块数据
+		Log::echoTrace('Query mod from tr_user_amcas Begin ...');
+		$ret = $this->findByPk($amcaId);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			Log::errExit(__LINE__, 'Query mod from tr_user_amcas Failed!');
+		}
+		$mod = $ret['data'];
+		if ($mod['category'] !== $data::CATEGORY_MOD) {
+			Log::errExit(__LINE__, 'Amcas must be "mod" category!');
+		}
+		Log::echoTrace('Query mod from tr_user_amcas Successfully');
+
+		// 从数据库中读取应用数据
+		Log::echoTrace('Query app from tr_user_amcas Begin ...');
+		$ret = $this->findByPk($mod['amca_pid']);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			Log::errExit(__LINE__, 'Query app from tr_user_amcas Failed!');
+		}
+		$app = $ret['data'];
+		Log::echoTrace('Query app from tr_user_amcas Successfully');
+
+		$appName = $app['amca_name'];
+		$modName = $mod['amca_name'];
+		$modId = $mod['amca_id'];
+
+		// 从数据库中读取控制器数据
+		Log::echoTrace('Query ctrls from tr_user_amcas Begin ...');
+		$ret = $this->getService()->findAllByPid($modId);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			Log::errExit(__LINE__, 'Query ctrls from tr_user_amcas Failed!');
+		}
+		$dbCtrls = array();
+		foreach ($ret['data'] as $rows) {
+			$dbCtrls[$rows['amca_name']] = $rows;
+		}
+		Log::echoTrace('Query ctrls from tr_user_amcas Successfully');
+
+		// 从文件中读取控制器数据
+		Log::echoTrace('Query ctrls from files Begin ...');
+		$fileManager = Singleton::getInstance('tfc\util\FileManager');
+		$directory = DIR_ROOT . DS . 'app' . DS . $appName . DS . 'modules' . DS . $modName . DS . 'controller';
+		if (!$fileManager->isDir($directory)) {
+			Log::errExit(__LINE__, sprintf(
+				'Ctrl Path "%s" is not a valid directory.', $directory
+			));
+		}
+
+		$ctrls = array();
+		$sort = 0;
+
+		$filePaths = $fileManager->scanDir($directory);
+		foreach ($filePaths as $filePath) {
+			$ctrlName = basename($filePath, '.php');
+			if ($ctrlName === 'index.html') {
+				continue;
+			}
+
+			$clsName = 'modules\\' . $modName . '\\controller\\' . $ctrlName;
+			require_once $filePath;
+			$reflector = new \ReflectionClass($clsName);
+
+			$amcaName = strtolower(substr($ctrlName,0, -10));
+			$prompt = preg_replace('/.+class\s+file\s+\*\s+(\S+)\s+\*\s+\@author.+/is', '\\1', $reflector->getDocComment());
+			$ctrls[$amcaName] = array(
+				'amca_pid' => $modId,
+				'amca_name' => $amcaName,
+				'prompt' => $prompt,
+				'sort' => $sort++,
+				'category' => $data::CATEGORY_CTRL
+			);
+		}
+
+		Log::echoTrace('Query ctrls from files Successfully');
+
+		Log::echoTrace('Analyser db and files Begin ...');
+		$amcas = array('insert' => array(), 'update' => array(), 'delete' => array());
+		foreach ($ctrls as $amcaName => $rows) {
+			if (isset($dbCtrls[$amcaName])) {
+				if ($dbCtrls[$amcaName]['prompt'] != $rows['prompt']
+					|| $dbCtrls[$amcaName]['sort'] != $rows['sort']) {
+					$amcas['update'][$dbCtrls[$amcaName]['amca_id']] = $rows;
+				}
+			}
+			else {
+				$amcas['insert'][] = $rows;
+			}
+		}
+
+		foreach ($dbCtrls as $amcaName => $rows) {
+			if (!isset($ctrls[$amcaName])) {
+				$amcas['delete'][] = $rows['amca_id'];
+			}
+		}
+		Log::echoTrace('Analyser db and files Successfully');
+
+		Log::echoTrace('Import to db Begin ...');
+		foreach ($amcas['insert'] as $attributes) {
+			$ret = $this->getService()->insert($attributes);
+			if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+				Log::errExit(__LINE__, sprintf('Insert to tr_user_amcas "%s" Failed!', $attributes['amca_name']));
+			}
+
+			Log::echoTrace(sprintf('Insert into tr_user_amcas "%s" Successfully', $attributes['amca_name']));
+		}
+
+		foreach ($amcas['update'] as $amcaId => $attributes) {
+			$ret = $this->getService()->updateByPk($amcaId, $attributes);
+			if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+				Log::errExit(__LINE__, sprintf('Update tr_user_amcas "%s" Failed!', $attributes['amca_name']));
+			}
+
+			Log::echoTrace(sprintf('Update tr_user_amcas "%s" Successfully', $attributes['amca_name']));
+		}
+
+		foreach ($amcas['delete'] as $amcaId) {
+			$ret = $this->getService()->deleteByPk($amcaId);
+			if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+				Log::errExit(__LINE__, sprintf('Delete from tr_user_amcas "%d" Failed!', $amcaId));
+			}
+
+			Log::echoTrace(sprintf('Delete from "%d" Successfully', $amcaId));
+		}
+
+		Log::echoTrace('Import to db Successfully');
+
+		Log::echoTrace('Synch Successfully');
 	}
 
 }
