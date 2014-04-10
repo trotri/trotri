@@ -13,17 +13,16 @@ namespace modules\ucenter\action\show;
 use tfc\ap\Ap;
 use library\action\IndexAction;
 use library\Model;
-use library\ErrorNo;
 
 /**
- * AmcasIndex class file
+ * GroupsIndex class file
  * 查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: AmcasIndex.php 1 2014-04-06 14:43:07Z Code Generator $
+ * @version $Id: GroupsIndex.php 1 2014-04-10 17:43:20Z Code Generator $
  * @package modules.ucenter.action.show
  * @since 1.0
  */
-class AmcasIndex extends IndexAction
+class GroupsIndex extends IndexAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -31,27 +30,10 @@ class AmcasIndex extends IndexAction
 	 */
 	public function run()
 	{
-		$req = Ap::getRequest();
-		$mod = Model::getInstance('Amcas');
+		$mod = Model::getInstance('Groups');
 
-		$apps = $mod->getAppEnum();
-		$appId = $mod->getAmcaPid();
+		$ret = $mod->findLists();
 
-		if (!isset($apps[$appId])) {
-			$this->err404();
-		}
-
-		$prompt = $apps[$appId];
-		unset($apps[$appId]);
-		$apps = array($appId => $prompt) + $apps;
-
-		$ret = $mod->findModCtrls($appId);
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			$this->err404();
-		}
-
-		$this->assign('app_id', $appId);
-		$this->assign('apps', $apps);
 		$this->assign('elements', $mod->getElementsRender());
 		$this->render($ret);
 	}

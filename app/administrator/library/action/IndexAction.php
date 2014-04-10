@@ -49,7 +49,7 @@ abstract class IndexAction extends ShowAction
 			$this->err404();
 		}
 
-		$this->setLastIndexUrl($ret['paginator']);		
+		$this->setLastIndexUrl($ret['paginator']);
 		$this->assign('elements', $mod->getElementsRender());
 		$this->render($ret);
 	}

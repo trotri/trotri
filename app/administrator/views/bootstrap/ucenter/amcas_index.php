@@ -10,6 +10,7 @@ $this->widget(
 			'amca_name',
 			'prompt',
 			'sort',
+			'category',
 			'amca_id',
 			'_operate_',
 		),

@@ -10,18 +10,17 @@
 
 namespace modules\ucenter\action\submit;
 
-use library\action\CreateAction;
-use library\Model;
+use library\action\SingleModifyAction;
 
 /**
- * AmcasCreate class file
- * 新增数据
+ * GroupsSingleModify class file
+ * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: AmcasCreate.php 1 2014-04-06 14:43:08Z Code Generator $
+ * @version $Id: GroupsSingleModify.php 1 2014-04-10 17:43:20Z Code Generator $
  * @package modules.ucenter.action.submit
  * @since 1.0
  */
-class AmcasCreate extends CreateAction
+class GroupsSingleModify extends SingleModifyAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,6 +28,6 @@ class AmcasCreate extends CreateAction
 	 */
 	public function run()
 	{
-		$this->execute('Amcas');
+		$this->execute('Groups');
 	}
 }

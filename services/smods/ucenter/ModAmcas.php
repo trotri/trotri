@@ -120,7 +120,17 @@ class ModAmcas extends BaseModel
 	}
 
 	/**
-	 * 获取类型
+	 * 通过ID，获取事件名
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getAmcaNameById($value)
+	{
+		return $this->getColById('amca_name', $value);
+	}
+
+	/**
+	 * 通过ID，获取类型
 	 * @param integer $value
 	 * @return string
 	 */
@@ -134,10 +144,10 @@ class ModAmcas extends BaseModel
 	 * @param integer $value
 	 * @return boolean
 	 */
-	public function isAppById($value)
+	public function isApp($value)
 	{
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
-		return ($this->getCategoryById($value) === $data::CATEGORY_APP);
+		return ($value === $data::CATEGORY_APP);
 	}
 
 	/**
@@ -145,10 +155,10 @@ class ModAmcas extends BaseModel
 	 * @param integer $value
 	 * @return boolean
 	 */
-	public function isModById($value)
+	public function isMod($value)
 	{
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
-		return ($this->getCategoryById($value) === $data::CATEGORY_MOD);
+		return ($value === $data::CATEGORY_MOD);
 	}
 
 	/**
@@ -156,10 +166,10 @@ class ModAmcas extends BaseModel
 	 * @param integer $value
 	 * @return boolean
 	 */
-	public function isCtrlById($value)
+	public function isCtrl($value)
 	{
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
-		return ($this->getCategoryById($value) === $data::CATEGORY_CTRL);
+		return ($value === $data::CATEGORY_CTRL);
 	}
 
 	/**
@@ -167,47 +177,48 @@ class ModAmcas extends BaseModel
 	 * @param integer $value
 	 * @return boolean
 	 */
-	public function isActById($value)
+	public function isAct($value)
 	{
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
-		return ($this->getCategoryById($value) === $data::CATEGORY_ACT);
+		return ($value === $data::CATEGORY_ACT);
 	}
 
 	/**
-	 * 新增一条记录
+	 * 新增一条记录，只能新增模块类型
 	 * @param array $params
 	 * @return array
 	 */
 	public function create(array $params = array())
 	{
-		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
-		$params['category'] = $data::CATEGORY_MOD;
+		UserAmcasAmcaNameUnique::$object = $this;
+		UserAmcasAmcaNameUnique::$opType = self::OP_TYPE_INSERT;
+		UserAmcasAmcaNameUnique::$pid = isset($params['amca_pid']) ? $params['amca_pid'] : -1;
 
-		Registry::set(UserAmcasAmcaNameUnique::USERAMCAS_AMCANAME_UNIQUE, array(
-			'op_type'  => self::OP_TYPE_INSERT,
-			'object'   => $this,
-			'amca_pid' => isset($params['amca_pid']) ? $params['amca_pid'] : -1
-		));
+		if (!isset($params['category'])) {
+			$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
+			$params['category'] = $data::CATEGORY_MOD;
+		}
 
 		return $this->autoInsert($params);
 	}
 
 	/**
-	 * 通过主键，编辑一条记录
+	 * 通过主键，编辑一条记录，只能编辑模块类型
 	 * @param integer $value
 	 * @param array $params
 	 * @return array
 	 */
 	public function modifyByPk($value, array $params)
 	{
-		if (isset($params['category'])) { unset($params['category']); }
+		UserAmcasAmcaNameUnique::$object = $this;
+		UserAmcasAmcaNameUnique::$opType = self::OP_TYPE_UPDATE;
+		UserAmcasAmcaNameUnique::$id = $value;
+		UserAmcasAmcaNameUnique::$pid = isset($params['amca_pid']) ? $params['amca_pid'] : -1;
 
-		Registry::set(UserAmcasAmcaNameUnique::USERAMCAS_AMCANAME_UNIQUE, array(
-			'op_type'  => self::OP_TYPE_UPDATE,
-			'object'   => $this,
-			'amca_id'  => $value,
-			'amca_pid' => isset($params['amca_pid']) ? $params['amca_pid'] : -1
-		));
+		if (!isset($params['category'])) {
+			$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
+			$params['category'] = $data::CATEGORY_MOD;
+		}
 
 		return $this->autoUpdateByPk($value, $params);
 	}

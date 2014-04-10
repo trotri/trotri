@@ -11,6 +11,7 @@
 namespace library;
 
 use tfc\ap\Ap;
+use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use slib\Service;
 
@@ -109,15 +110,17 @@ class Model
 	}
 
 	/**
-	 * 通过主键，从持久化记录中获取某个列的值。不支持联合主键
+	 * 通过ID类主键，查询一条记录某个列的值，从持久化该个列的值。不支持联合主键
 	 * 多用于View层数据展示
 	 * @param string $columnName
 	 * @param integer $value
-	 * @return array
+	 * @return mixed
 	 */
 	public function getColById($columnName, $value)
 	{
-		return $this->getService()->getColById($columnName, $value);
+		$columnName = strtolower(trim($columnName));
+		$data = $this->getRowById($value);
+		return isset($data[$columnName]) ? $data[$columnName] : null;
 	}
 
 	/**
@@ -128,7 +131,14 @@ class Model
 	 */
 	public function getRowById($value)
 	{
-		return $this->getService()->getRowById($value);
+		$value = (int) $value;
+		$name = get_class($this) . '_get_row_by_id_' . $value;
+		if (!Registry::has($name)) {
+			$data = $this->getService()->getRowById($value);
+			Registry::set($name, $data);
+		}
+
+		return Registry::get($name);
 	}
 
 	/**

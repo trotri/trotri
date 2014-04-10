@@ -29,13 +29,6 @@ class AmcasModify extends ModifyAction
 	 */
 	public function run()
 	{
-		$mod = Model::getInstance('Amcas');
-
-		$appId = $mod->getAmcaPid();
-		if (!$mod->isAppById($appId)) {
-			$this->err404();
-		}
-
 		$this->execute('Amcas');
 	}
 }

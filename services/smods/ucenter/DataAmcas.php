@@ -51,14 +51,13 @@ class DataAmcas extends BaseData
 	 */
 	public function getAppEnum()
 	{
-		$name = __METHOD__;
-		if (!Registry::has($name)) {
+		static $enum = null;
+		if ($enum === null) {
 			$mod = Model::getInstance('Amcas', 'ucenter', $this->getLanguage());
-			$apps = $mod->getAppPrompts();
-			Registry::set($name, $apps);
+			$enum = $mod->getAppPrompts();
 		}
 
-		return Registry::get($name);
+		return $enum;
 	}
 
 	/**
@@ -133,12 +132,8 @@ class DataAmcas extends BaseData
 	 */
 	public function getCategoryRule()
 	{
-		$enum = $this->getCategoryEnum();
 		return array(
-			'InArray' => array(
-				array_keys($enum), 
-				sprintf($this->_('MOD_UCENTER_USER_AMCAS_CATEGORY_INARRAY'), implode(', ', $enum))
-			),
+			'Equal' => array(self::CATEGORY_MOD, $this->_('MOD_UCENTER_USER_AMCAS_CATEGORY_EQUAL')),
 		);
 	}
 

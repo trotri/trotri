@@ -8,20 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\ucenter\action\submit;
+namespace modules\ucenter\action\show;
 
-use library\action\CreateAction;
-use library\Model;
+use library\action\ViewAction;
 
 /**
- * AmcasCreate class file
- * 新增数据
+ * GroupsView class file
+ * 查询数据详情
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: AmcasCreate.php 1 2014-04-06 14:43:08Z Code Generator $
- * @package modules.ucenter.action.submit
+ * @version $Id: GroupsView.php 1 2014-04-10 17:43:20Z Code Generator $
+ * @package modules.ucenter.action.show
  * @since 1.0
  */
-class AmcasCreate extends CreateAction
+class GroupsView extends ViewAction
 {
 	/**
 	 * (non-PHPdoc)
@@ -29,6 +28,6 @@ class AmcasCreate extends CreateAction
 	 */
 	public function run()
 	{
-		$this->execute('Amcas');
+		$this->execute('Groups');
 	}
 }

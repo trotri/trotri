@@ -422,8 +422,7 @@ abstract class BaseModel extends BaseService
 	}
 
 	/**
-	 * 通过主键，从持久化记录中获取某个列的值。不支持联合主键
-	 * 多用于View层数据展示
+	 * 过ID类主键，查询一条记录某个列的值。不支持联合主键
 	 * @param string $columnName
 	 * @param integer $value
 	 * @return array
@@ -436,26 +435,20 @@ abstract class BaseModel extends BaseService
 	}
 
 	/**
-	 * 通过ID类主键，查询一条记录，并持久化该记录。不支持联合主键。
-	 * 多用于View层数据展示
+	 * 通过ID类主键，查询一条记录，如果记录为空，返回空数组。不支持联合主键。
 	 * @param integer $value
 	 * @return array
 	 */
 	public function getRowById($value)
 	{
-		$value = (int) $value;
-		$name = get_class($this) . '_get_row_by_id_' . $value;
-		if (!Registry::has($name)) {
-			$ret = $this->getSrvQuery()->findByPk($value);
-			$data = array();
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				$data = $ret['data'];
-			}
+		$data = array();
 
-			Registry::set($name, $data);
+		$ret = $this->getSrvQuery()->findByPk($value);
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			$data = $ret['data'];
 		}
 
-		return Registry::get($name);
+		return $data;
 	}
 
 	/**

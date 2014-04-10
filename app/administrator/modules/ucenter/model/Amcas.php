@@ -155,7 +155,7 @@ class Amcas extends Model
 				'type' => 'text',
 				'label' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PNAME_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_AMCAS_AMCA_PNAME_HINT'),
-				'value' => $this->getAmcaNameByAmcaId($amcaPid),
+				'value' => $this->getAmcaNameById($amcaPid),
 				'disabled' => true,
 				'table' => array(
 					'callback' => array($this, 'getAmcaPnameTblColumn')
@@ -222,7 +222,15 @@ class Amcas extends Model
 	 */
 	public function getOperate($data)
 	{
-		$params = array('id' => $data['amca_id']);
+		if (!$this->isMod($data['category'])) {
+			return '';
+		}
+
+		$params = array(
+			'id' => $data['amca_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
 		$componentsBuilder = PageHelper::getComponentsBuilder();
 
 		$modifyIcon = $componentsBuilder->getGlyphicon(array(
@@ -274,7 +282,7 @@ class Amcas extends Model
 	 */
 	public function getAmcaPnameTblColumn($data)
 	{
-		return $this->getAmcaNameByAmcaId($data['amca_pid']);
+		return $this->getAmcaNameById($data['amca_pid']);
 	}
 
 	/**
@@ -284,23 +292,8 @@ class Amcas extends Model
 	 */
 	public function getCategoryTblColumn($data)
 	{
-		$enum = $this->getData()->getEnum('category');
+		$enum = $this->getCategoryEnum();
 		return isset($enum[$data['category']]) ? $enum[$data['category']] : $data['category'];
-	}
-
-	/**
-	 * 获取所有的应用提示
-	 * @return array
-	 */
-	public function getAppPrompts()
-	{
-		$name = __METHOD__;
-		if (!Registry::has($name)) {
-			$data = $this->getService()->getAppPrompts();
-			Registry::set($name, $data);
-		}
-
-		return Registry::get($name);
 	}
 
 	/**
@@ -328,29 +321,47 @@ class Amcas extends Model
 	 * @param integer $value
 	 * @return string
 	 */
-	public function getAmcaNameByAmcaId($value)
+	public function getAmcaNameById($value)
 	{
 		return $this->getColById('amca_name', $value);
 	}
 
 	/**
-	 * 验证是否是应用类型
-	 * @param integer $value
-	 * @return boolean
+	 * 获取“类型”所有选项
+	 * @return array
 	 */
-	public function isAppById($value)
+	public function getCategoryEnum()
 	{
-		return $this->getService()->isAppById($value);
+		static $enum = null;
+		if ($enum === null) {
+			$enum = $this->getData()->getEnum('category');
+		}
+
+		return $enum;
+	}
+
+	/**
+	 * 获取“应用”所有选项
+	 * @return array
+	 */
+	public function getAppEnum()
+	{
+		static $enum = null;
+		if ($enum === null) {
+			$enum = $this->getData()->getEnum('app');
+		}
+
+		return $enum;
 	}
 
 	/**
 	 * 验证是否是模块类型
-	 * @param integer $value
+	 * @param string $value
 	 * @return boolean
 	 */
-	public function isModById($value)
+	public function isMod($value)
 	{
-		return $this->getService()->isModById($value);
+		return $this->getService()->isMod($value);
 	}
 
 	/**
@@ -391,7 +402,7 @@ class Amcas extends Model
 
 		// 从数据库中读取控制器数据
 		Log::echoTrace('Query ctrls from tr_user_amcas Begin ...');
-		$ret = $this->getService()->findAllByPid($modId);
+		$ret = $this->findAllByPid($modId);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			Log::errExit(__LINE__, 'Query ctrls from tr_user_amcas Failed!');
 		}
