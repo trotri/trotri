@@ -208,33 +208,40 @@ class FormBuilder extends form\FormBuilder
 			return $this;
 		}
 
-		foreach ($elements as $columnName => $element) {
-			if (!in_array($columnName, $columns)) {
-				unset($elements[$columnName]);
+		$_elements = array();
+		foreach ($columns as $columnName) {
+			if (!isset($elements[$columnName])) {
+				continue;
+			}
+
+			$element = $elements[$columnName];
+			if (!is_array($element)) {
 				continue;
 			}
 
 			if (!isset($element['__object__']) && isset($element['type'])) {
 				$type = $element['type'];
 				if (isset(self::$_typeObjectMap[$type])) {
-					$elements[$columnName]['__object__'] = self::$_typeObjectMap[$type];
+					$element['__object__'] = self::$_typeObjectMap[$type];
 				}
 			}
 
 			if (!isset($element['__tid__'])) {
-				$elements[$columnName]['__tid__'] = self::DEFAULT_TID;
+				$element['__tid__'] = self::DEFAULT_TID;
 			}
 
 			if (isset($element['table'])) {
-				unset($elements[$columnName]['table']);
+				unset($element['table']);
 			}
 
 			if (isset($element['search'])) {
-				unset($elements[$columnName]['search']);
+				unset($element['search']);
 			}
+
+			$_elements[$columnName] = $element;
 		}
 
-		parent::setElements($elements);
+		parent::setElements($_elements);
 	}
 
 	/**

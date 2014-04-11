@@ -11,6 +11,7 @@
 namespace smods\ucenter\validator;
 
 use slib\BaseValidator;
+use slib\ErrorNo;
 
 /**
  * UserGroupsGroupPidExists class file
@@ -23,16 +24,49 @@ use slib\BaseValidator;
 class UserGroupsGroupPidExists extends BaseValidator
 {
 	/**
+	 * @var smods\Mod 寄存业务层的model类实例
+	 */
+	public static $object = null;
+
+	/**
+	 * @var string 操作类型：insert、update
+	 */
+	public static $opType = '';
+
+	/**
+	 * @var integer 主键ID
+	 */
+	public static $id = 0;
+
+	/**
+	 * @var integer 父ID
+	 */
+	public static $pid = 0;
+
+	/**
 	 * @var string 默认出错后的提醒消息
 	 */
 	protected $_message = '"%value%" from this user groups has the group pid not exists.';
 
 	/**
 	 * (non-PHPdoc)
-	 * @see slib.BaseValidator::runValid()
+	 * @see tfc\validator.Validator::isValid()
 	 */
-	public function runValid()
+	public function isValid()
 	{
-		
+		$object = self::$object;
+		$opType = trim(self::$opType);
+		$pid    = (int) self::$pid;
+
+		$this->objectIsValid($object);
+		$this->opTypeIsValid($object, $opType);
+		$this->pidIsValid($pid);
+
+		$ret = $object->findByPk($pid);
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			return true;
+		}
+
+		return false;
 	}
 }

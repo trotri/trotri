@@ -100,6 +100,57 @@ class ModAmcas extends BaseModel
 	}
 
 	/**
+	 * 递归模式获取所有数据
+	 * @return array
+	 */
+	public function findRecur()
+	{
+		$amcas = array();
+
+		$ret = $this->findAllByPid(0);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $amcas;
+		}
+
+		$apps = $ret['data'];
+		foreach ($apps as $app) {
+			$ret = $this->findAllByPid($app['amca_id']);
+			$app['rows'] = $mods = array();
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$mods = $ret['data'];
+			}
+
+			foreach ($mods as $mod) {
+				$ret = $this->findAllByPid($app['amca_id']);
+				$mod['rows'] = $ctrls = array();
+				if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+					$ctrls = $ret['data'];
+				}
+
+				foreach ($ctrls as $ctrl) {
+					$ret = $this->findAllByPid($app['amca_id']);
+					$ctrl['rows'] = $acts = array();
+					if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+						$acts = $ret['data'];
+					}
+
+					foreach ($acts as $act) {
+						$ctrl['rows'][$act['amca_name']] = $act;
+					}
+
+					$mod['rows'][$ctrl['amca_name']] = $ctrl;
+				}
+
+				$app['rows'][$mod['amca_name']] = $mod;
+			}
+
+			$amcas[$app['amca_name']] = $app;
+		}
+
+		return $amcas;
+	}
+
+	/**
 	 * 通过父ID和事件名统计记录数
 	 * @param integer $amcaPid
 	 * @param string $amcaName
@@ -190,10 +241,6 @@ class ModAmcas extends BaseModel
 	 */
 	public function create(array $params = array())
 	{
-		UserAmcasAmcaNameUnique::$object = $this;
-		UserAmcasAmcaNameUnique::$opType = self::OP_TYPE_INSERT;
-		UserAmcasAmcaNameUnique::$pid = isset($params['amca_pid']) ? $params['amca_pid'] : -1;
-
 		if (!isset($params['category'])) {
 			$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 			$params['category'] = $data::CATEGORY_MOD;
@@ -210,10 +257,7 @@ class ModAmcas extends BaseModel
 	 */
 	public function modifyByPk($value, array $params)
 	{
-		UserAmcasAmcaNameUnique::$object = $this;
-		UserAmcasAmcaNameUnique::$opType = self::OP_TYPE_UPDATE;
 		UserAmcasAmcaNameUnique::$id = $value;
-		UserAmcasAmcaNameUnique::$pid = isset($params['amca_pid']) ? $params['amca_pid'] : -1;
 
 		if (!isset($params['category'])) {
 			$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
@@ -229,6 +273,10 @@ class ModAmcas extends BaseModel
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
 	{
+		UserAmcasAmcaNameUnique::$object = $this;
+		UserAmcasAmcaNameUnique::$opType = $opType;
+		UserAmcasAmcaNameUnique::$pid    = isset($attributes['amca_pid']) ? $attributes['amca_pid'] : -1;
+
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$rules = $data->getRules(array(
 			'amca_pid',

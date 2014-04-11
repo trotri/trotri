@@ -11,6 +11,7 @@
 namespace smods\ucenter\validator;
 
 use slib\BaseValidator;
+use slib\ErrorNo;
 
 /**
  * UserGroupsGroupNameUnique class file
@@ -23,16 +24,57 @@ use slib\BaseValidator;
 class UserGroupsGroupNameUnique extends BaseValidator
 {
 	/**
+	 * @var smods\Mod 寄存业务层的model类实例
+	 */
+	public static $object = null;
+
+	/**
+	 * @var string 操作类型：insert、update
+	 */
+	public static $opType = '';
+
+	/**
+	 * @var integer 主键ID
+	 */
+	public static $id = 0;
+
+	/**
 	 * @var string 默认出错后的提醒消息
 	 */
 	protected $_message = '"%value%" from this user groups has the same group name.';
 
 	/**
 	 * (non-PHPdoc)
-	 * @see slib.BaseValidator::runValid()
+	 * @see tfc\validator.Validator::isValid()
 	 */
-	public function runValid()
+	public function isValid()
 	{
-		
+		$object = self::$object;
+		$opType = trim(self::$opType);
+		$id     = (int) self::$id;
+
+		$this->objectIsValid($object);
+		$this->opTypeIsValid($object, $opType);
+		$this->idIsValid($object, $opType, $id);
+
+		$groupName = $this->getValue();
+		if (($groupName = trim($groupName)) === '') {
+			return false;
+		}
+
+		if ($object->isOpTypeUpdate($opType)) {
+			$dbGroupName = $object->getGroupNameById($id);
+			// 组名没有变更，不做检查
+			if ($dbGroupName === $groupName) {
+				return true;
+			}
+		}
+
+		$ret = $object->findByGroupName($groupName);
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			return false;
+		}
+
+		return true;
 	}
 }

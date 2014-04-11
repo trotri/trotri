@@ -14,6 +14,8 @@ use tfc\util\Language;
 use slib\BaseModel;
 use slib\Data;
 use slib\ErrorNo;
+use smods\ucenter\validator\UserGroupsGroupPidExists;
+use smods\ucenter\validator\UserGroupsGroupNameUnique;
 
 /**
  * ModGroups class file
@@ -52,6 +54,17 @@ class ModGroups extends BaseModel
 			$ret['data']['permission'] = array();
 		}
 
+		return $ret;
+	}
+
+	/**
+	 * 通过组名，查询一条记录。
+	 * @param string $value
+	 * @return array
+	 */
+	public function findByGroupName($value)
+	{
+		$ret = parent::findByAttributes(array('group_name' => trim($value)));
 		return $ret;
 	}
 
@@ -140,24 +153,100 @@ class ModGroups extends BaseModel
 	}
 
 	/**
-	 * 新增一条记录
+	 * 通过ID，获取组名
+	 * @param integer $value
+	 * @return string
+	 */
+	public function getGroupNameById($value)
+	{
+		return $this->getColById('group_name', $value);
+	}
+
+	/**
+	 * 通过主键，获取权限，并递归获取父级权限、父父级权限等
+	 * @param integer $groupId
+	 * @return array
+	 */
+	public function getPermissions($groupId)
+	{
+		$permissions = array();
+
+		// 获取组ID权限、父级权限、父父级权限等
+		$groupId = (int) $groupId;
+		while ($groupId > 0) {
+			$ret = $this->findByPk($groupId);
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$permissions[] = $ret['data']['permission'];
+				$groupId = $ret['data']['group_pid'];
+			}
+		}
+
+		// 将获取的权限去重
+		$data = array();
+		foreach ($permissions as $permission) {
+			if (is_array($permission)) {
+				foreach ($permission as $appName => $mods) {
+					if (is_array($mods)) {
+						foreach ($mods as $modName => $ctrls) {
+							if (is_array($ctrls)) {
+								foreach ($ctrls as $ctrlName => $powers) {
+									if (is_array($powers)) {
+										foreach ($powers as $powerName) {
+											if (!isset($data[$appName][$modName][$ctrlName])
+												|| !in_array($powerName, $data[$appName][$modName][$ctrlName])) {
+												$data[$appName][$modName][$ctrlName][] = $powerName;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * 新增一条记录，不新增“权限设置”字段
 	 * @param array $params
 	 * @return array
 	 */
 	public function create(array $params = array())
 	{
+		if (isset($params['permission'])) { unset($params['permission']); }
 		return $this->autoInsert($params);
 	}
 
 	/**
-	 * 通过主键，编辑一条记录
+	 * 通过主键，编辑一条记录，不编辑“权限设置”字段
 	 * @param integer $value
 	 * @param array $params
 	 * @return array
 	 */
 	public function modifyByPk($value, array $params)
 	{
+		UserGroupsGroupNameUnique::$id = $value;
+
+		if (isset($params['permission'])) { unset($params['permission']); }
 		return $this->autoUpdateByPk($value, $params);
+	}
+
+	/**
+	 * 通过主键，删除一条记录，并递归删除所有子记录
+	 * @param integer $value
+	 * @return array
+	 */
+	public function deleteByPk($value)
+	{
+		$groups = $this->getOptions($value);
+		$pks = array_keys($groups);
+		array_unshift($pks, $value);
+
+		$ret = $this->batchDeleteByPk($pks);
+		return $ret;
 	}
 
 	/**
@@ -165,7 +254,14 @@ class ModGroups extends BaseModel
 	 * @see slib.BaseModel::validate()
 	 */
 	public function validate(array $attributes = array(), $required = false, $opType = '')
-	{
+	{		
+		UserGroupsGroupNameUnique::$object = $this;
+		UserGroupsGroupNameUnique::$opType = $opType;
+
+		UserGroupsGroupPidExists::$object = $this;
+		UserGroupsGroupPidExists::$opType = $opType;
+		UserGroupsGroupPidExists::$pid = isset($attributes['group_pid']) ? $attributes['group_pid'] : -1;
+
 		$data = Data::getInstance($this->_className, $this->_moduleName, $this->getLanguage());
 		$rules = $data->getRules(array(
 			'group_pid',

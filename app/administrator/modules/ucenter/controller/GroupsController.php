@@ -29,12 +29,13 @@ class GroupsController extends BaseController
 	public function actions()
 	{
 		return array(
-			'index'        => 'modules\\ucenter\\action\\show\\GroupsIndex',
-			'view'         => 'modules\\ucenter\\action\\show\\GroupsView',
-			'create'       => 'modules\\ucenter\\action\\submit\\GroupsCreate',
-			'modify'       => 'modules\\ucenter\\action\\submit\\GroupsModify',
-			'remove'       => 'modules\\ucenter\\action\\submit\\GroupsRemove',
-			'singlemodify' => 'modules\\ucenter\\action\\submit\\GroupsSingleModify',
+			'index'            => 'modules\\ucenter\\action\\show\\GroupsIndex',
+			'view'             => 'modules\\ucenter\\action\\show\\GroupsView',
+			'create'           => 'modules\\ucenter\\action\\submit\\GroupsCreate',
+			'modify'           => 'modules\\ucenter\\action\\submit\\GroupsModify',
+			'remove'           => 'modules\\ucenter\\action\\submit\\GroupsRemove',
+			'singlemodify'     => 'modules\\ucenter\\action\\submit\\GroupsSingleModify',
+			'permissionmodify' => 'modules\\ucenter\\action\\submit\\GroupsPermissionModify',
 		);
 	}
 }

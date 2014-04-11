@@ -12,7 +12,6 @@ namespace slib;
 
 use tfc\ap\ErrorException;
 use tfc\validator\Validator;
-use tfc\saf\Log;
 
 /**
  * BaseValidator class file
@@ -25,38 +24,14 @@ use tfc\saf\Log;
 abstract class BaseValidator extends Validator
 {
 	/**
-	 * @var smods\Mod 寄存业务层的model类实例
+	 * 验证全局变量：object是否有效
+	 * @param slib\BaseModel $object
+	 * @return void
+	 * @throws ErrorException 如果object不是slib\BaseModel的子类，抛出异常
 	 */
-	public static $object = null;
-
-	/**
-	 * @var string 操作类型：insert、update
-	 */
-	public static $opType = '';
-
-	/**
-	 * @var integer 主键ID
-	 */
-	public static $id = 0;
-
-	/**
-	 * @var integer 父ID
-	 */
-	public static $pid = 0;
-
-	/**
-	 * 验证数据格式
-	 * @return boolean
-	 */
-	public abstract function runValid();
-
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\validator.Validator::isValid()
-	 */
-	public function isValid()
+	public function objectIsValid($object = null)
 	{
-		if (($object = self::$object) === null) {
+		if ($object === null) {
 			throw new ErrorException('BaseValidator self::$object is null.');
 		}
 
@@ -67,8 +42,18 @@ abstract class BaseValidator extends Validator
 		if (!$object instanceof BaseModel) {
 			throw new ErrorException('BaseValidator self::$object is not instance of slib\BaseModel.');
 		}
+	}
 
-		if (($opType = self::$opType) === '') {
+	/**
+	 * 验证全局变量：opType是否有效
+	 * @param slib\BaseModel $object
+	 * @param string $opType
+	 * @return void
+	 * @throws ErrorException 如果opType不等于insert或update，抛出异常
+	 */
+	public function opTypeIsValid(BaseModel $object, $opType = '')
+	{
+		if ($opType === '') {
 			throw new ErrorException('BaseValidator self::$opType is empty.');
 		}
 
@@ -77,25 +62,43 @@ abstract class BaseValidator extends Validator
 				'BaseValidator self::$op_type "%s" invalid.', $opType
 			));
 		}
+	}
 
-		if ($object->isOpTypeUpdate($opType)) {
-			self::$id = (int) self::$id;
-			if (self::$id <= 0) {
-				Log::warning(sprintf(
-					'self::$op_type "%s", self::$id "%d" must be at most zero.', $opType, self::$id
-				), ErrorNo::ERROR_SYSTEM_RUN_ERR, __METHOD__);
-				return false;
-			}
+	/**
+	 * 验证全局变量：id是否有效
+	 * @param slib\BaseModel $object
+	 * @param string $opType
+	 * @param integer $id
+	 * @return void
+	 * @throws ErrorException 如果新增时id<0或者编辑时id<=0，抛出异常
+	 */
+	public function idIsValid(BaseModel $object, $opType = '', $id)
+	{
+		if (($id = (int) $id) < 0) {
+			throw new ErrorException(sprintf(
+				'BaseValidator self::$id "%d" must be at most or equal zero.', $id
+			));
 		}
 
-		self::$pid = (int) self::$pid;
-		if (self::$pid < 0) {
-			Log::warning(sprintf(
-				'self::$pid "%d" must be at most or equal zero.', self::$pid
-			), ErrorNo::ERROR_SYSTEM_RUN_ERR, __METHOD__);
-			return false;
+		if ($object->isOpTypeUpdate($opType) && $id === 0) {
+			throw new ErrorException(sprintf(
+				'BaseValidator self::$op_type "%s", self::$id "%d" must be at most zero.', $opType, $id
+			));
 		}
+	}
 
-		return $this->runValid();
+	/**
+	 * 验证全局变量：pid是否有效
+	 * @param integer $pid
+	 * @return void
+	 * @throws ErrorException 如果pid<=0，抛出异常
+	 */
+	public function pidIsValid($pid)
+	{
+		if (($pid = (int) $pid) < 0) {
+			throw new ErrorException(sprintf(
+				'BaseValidator self::$pid "%d" must be at most or equal zero.', $pid
+			));
+		}
 	}
 }

@@ -355,6 +355,15 @@ class Amcas extends Model
 	}
 
 	/**
+	 * 递归模式获取所有数据
+	 * @return array
+	 */
+	public function findRecur()
+	{
+		return $this->getService()->findRecur();
+	}
+
+	/**
 	 * 验证是否是模块类型
 	 * @param string $value
 	 * @return boolean

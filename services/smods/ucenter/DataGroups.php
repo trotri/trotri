@@ -29,7 +29,7 @@ class DataGroups extends BaseData
 	public function getGroupPidRule()
 	{
 		return array(
-			'InArray' => array(array(), $this->_('MOD_UCENTER_USER_GROUPS_GROUP_PID_INARRAY')),
+			'smods\\ucenter\\validator\\UserGroupsGroupPidExists' => array(true, $this->_('MOD_UCENTER_USER_GROUPS_GROUP_PID_EXISTS')),
 		);
 	}
 
@@ -42,6 +42,7 @@ class DataGroups extends BaseData
 		return array(
 			'MinLength' => array(2, $this->_('MOD_UCENTER_USER_GROUPS_GROUP_NAME_MINLENGTH')),
 			'MaxLength' => array(50, $this->_('MOD_UCENTER_USER_GROUPS_GROUP_NAME_MAXLENGTH')),
+			'smods\\ucenter\\validator\\UserGroupsGroupNameUnique' => array(true, $this->_('MOD_UCENTER_USER_GROUPS_GROUP_NAME_UNIQUE')),
 		);
 	}
 

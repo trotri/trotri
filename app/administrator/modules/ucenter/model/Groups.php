@@ -104,6 +104,7 @@ class Groups extends Model
 				'type' => 'select',
 				'label' => Text::_('MOD_UCENTER_USER_GROUPS_GROUP_PID_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_GROUPS_GROUP_PID_HINT'),
+				'options' => $this->getOptions(),
 				'required' => true,
 				'search' => array(
 					'type' => 'text',
@@ -134,7 +135,9 @@ class Groups extends Model
 				'type' => 'text',
 				'label' => Text::_('MOD_UCENTER_USER_GROUPS_PERMISSION_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_GROUPS_PERMISSION_HINT'),
-				'required' => true,
+				'table' => array(
+					'callback' => array($this, 'getPermissionTblColumn')
+				),
 				'search' => array(
 					'type' => 'text',
 				),
@@ -144,7 +147,6 @@ class Groups extends Model
 				'type' => 'textarea',
 				'label' => Text::_('MOD_UCENTER_USER_GROUPS_DESCRIPTION_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USER_GROUPS_DESCRIPTION_HINT'),
-				'required' => true,
 				'search' => array(
 					'type' => 'text',
 				),
@@ -172,7 +174,11 @@ class Groups extends Model
 	 */
 	public function getOperate($data)
 	{
-		$params = array('id' => $data['group_id']);
+		$params = array(
+			'id' => $data['group_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
 		$componentsBuilder = PageHelper::getComponentsBuilder();
 
 		$modifyIcon = $componentsBuilder->getGlyphicon(array(
@@ -189,8 +195,32 @@ class Groups extends Model
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),
 		));
 
-		$output = '' . $modifyIcon . $removeIcon;
+		$output = $modifyIcon . $removeIcon;
 		return $output;
+	}
+
+	/**
+	 * 获取列表页“权限设置”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getPermissionTblColumn($data)
+	{
+		$params = array(
+			'id' => $data['group_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$componentsBuilder = PageHelper::getComponentsBuilder();
+
+		$modifyIcon = $componentsBuilder->getGlyphicon(array(
+			'type' => $componentsBuilder->getGlyphiconModify(),
+			'url' => $this->getUrl('permissionmodify', Mvc::$controller, Mvc::$module, $params),
+			'jsfunc' => $componentsBuilder->getJsFuncHref(),
+			'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),
+		));
+
+		return $modifyIcon;
 	}
 
 	/**
@@ -219,4 +249,24 @@ class Groups extends Model
 		return $this->getService()->getOptions($groupPid, $padStr, $leftPad, $rightPad);
 	}
 
+	/**
+	 * 通过主键，获取权限，并递归获取父级权限、父父级权限等
+	 * @param integer $groupId
+	 * @return array
+	 */
+	public function getPermissions($groupId)
+	{
+		return $this->getService()->getOptions($groupId);
+	}
+
+	/**
+	 * 获取所有的事件，并选中有权限的事件
+	 * @param integer $groupId
+	 * @return array
+	 */
+	public function getAmcas($groupId)
+	{
+		$amcas = Model::getInstance('Amcas')->findRecur();
+		return $amcas;
+	}
 }

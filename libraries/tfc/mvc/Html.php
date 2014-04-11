@@ -539,12 +539,21 @@ class Html
 
     /**
      * 对页面展示内容编码
-     * @param mixed $value
+     * @param mixed $param
      * @return string
      */
-    public function encode($value)
+    public function encode($param)
     {
-        return htmlspecialchars($value, ENT_QUOTES, $this->getEncoding());
+        if (is_array($param)) {
+            foreach ($param as $key => $value) {
+                $param[$key] = $this->encode($value);
+            }
+        }
+        else {
+            $param = htmlspecialchars($param, ENT_QUOTES, $this->getEncoding());
+        }
+
+        return $param;
     }
 
     /**
