@@ -14,6 +14,7 @@ $formBuilder = $this->createWidget('views\bootstrap\widgets\FormBuilder',
 );
 
 $html = $formBuilder->getHtml();
+$eleName = 'amcas';
 ?>
 
 <!-- FormBuilder -->
@@ -48,18 +49,26 @@ foreach ($this->amcas as $appName => $app) :
 <!-- mod -->
 <?php
 foreach ($app['rows'] as $modName => $mod) :
-	$modName = strtolower($modName);
-	echo $html->openTag('div', array('class' => 'form-group')), "\n";
-	echo $html->tag('label', array('class' => 'control-label'), $mod['prompt']), "\n";
-	echo $html->tag('div', array('class' => 'col-lg-4'), ''), "\n";
-	echo $html->closeTag('div'), "\n";
+	echo $formBuilder->createElement('views\bootstrap\components\form\ICheckboxElement', array(
+		'label' => $mod['prompt'] . ' [' . $modName . '] : ',
+		'name' => '__mod__',
+		'options' => array(
+			$eleName . '[' . $appName . '][' . $modName . ']' => $this->CFG_SYSTEM_GLOBAL_CHECKED_ALL
+		),
+	))->fetch();
 	if (!isset($mod['rows'])) : continue; endif;
 ?>
 
 <!-- ctrl -->
 <?php
 foreach ($mod['rows'] as $ctrlName => $ctrl) :
-	
+	$name = $eleName . '[' . $appName . '][' . $modName . '][' . $ctrlName . '][]';
+	echo $formBuilder->createElement('views\bootstrap\components\form\ICheckboxElement', array(
+		'label' => $ctrl['prompt'],
+		'name' => $name,
+		'options' => $ctrl['powers'],
+		'value' => $ctrl['checked']
+	))->fetch();
 endforeach;
 ?>
 <!-- /ctrl -->

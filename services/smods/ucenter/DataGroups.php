@@ -10,6 +10,7 @@
 
 namespace smods\ucenter;
 
+use tfc\util\Power;
 use slib\BaseData;
 
 /**
@@ -22,6 +23,40 @@ use slib\BaseData;
  */
 class DataGroups extends BaseData
 {
+	/**
+	 * @var string 权限：SELECT
+	 */
+	const POWER_SELECT = Power::MODE_S;
+
+	/**
+	 * @var string 权限：INSERT
+	 */
+	const POWER_INSERT = Power::MODE_I;
+
+	/**
+	 * @var string 权限：UPDATE
+	 */
+	const POWER_UPDATE = Power::MODE_U;
+
+	/**
+	 * @var string 权限：DELETE
+	 */
+	const POWER_DELETE = Power::MODE_D;
+
+	/**
+	 * 获取“权限”所有选项
+	 * @return array
+	 */
+	public function getPowerEnum()
+	{
+		return array(
+			self::POWER_SELECT => $this->_('MOD_UCENTER_USER_GROUPS_ENUM_POWER_SELECT'),
+			self::POWER_INSERT => $this->_('MOD_UCENTER_USER_GROUPS_ENUM_POWER_INSERT'),
+			self::POWER_UPDATE => $this->_('MOD_UCENTER_USER_GROUPS_ENUM_POWER_UPDATE'),
+			self::POWER_DELETE => $this->_('MOD_UCENTER_USER_GROUPS_ENUM_POWER_DELETE'),
+		);
+	}
+
 	/**
 	 * 获取“所属父组名”验证规则
 	 * @return array

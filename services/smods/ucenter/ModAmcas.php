@@ -121,14 +121,14 @@ class ModAmcas extends BaseModel
 			}
 
 			foreach ($mods as $mod) {
-				$ret = $this->findAllByPid($app['amca_id']);
+				$ret = $this->findAllByPid($mod['amca_id']);
 				$mod['rows'] = $ctrls = array();
 				if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 					$ctrls = $ret['data'];
 				}
 
 				foreach ($ctrls as $ctrl) {
-					$ret = $this->findAllByPid($app['amca_id']);
+					$ret = $this->findAllByPid($ctrl['amca_id']);
 					$ctrl['rows'] = $acts = array();
 					if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 						$acts = $ret['data'];
@@ -298,7 +298,6 @@ class ModAmcas extends BaseModel
 		$rules = array(
 			'amca_pid' => 'intval',
 			'amca_name' => 'trim',
-			'amca_pname' => 'trim',
 			'prompt' => 'trim',
 			// 'sort' => 'intval',
 			'category' => 'trim',
@@ -314,6 +313,7 @@ class ModAmcas extends BaseModel
 	protected function _cleanPostValidator(array $attributes = array(), $opType = '')
 	{
 		$rules = array(
+			'amca_name' => 'strtolower',
 		);
 
 		return $this->_clean($rules, $attributes);

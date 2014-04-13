@@ -266,7 +266,18 @@ class Groups extends Model
 	 */
 	public function getAmcas($groupId)
 	{
+		$enum = $this->getData()->getPowerEnum();
+
 		$amcas = Model::getInstance('Amcas')->findRecur();
+		foreach ($amcas as $appName => $app) {
+			foreach ($app['rows'] as $modName => $mod) {
+				foreach ($mod['rows'] as $ctrlName => $ctrl) {
+					$amcas[$appName]['rows'][$modName]['rows'][$ctrlName]['powers'] = $enum;
+					$amcas[$appName]['rows'][$modName]['rows'][$ctrlName]['checked'] = array();
+				}
+			}
+		}
+
 		return $amcas;
 	}
 }
