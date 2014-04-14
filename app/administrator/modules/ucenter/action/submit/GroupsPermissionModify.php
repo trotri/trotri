@@ -11,8 +11,10 @@
 namespace modules\ucenter\action\submit;
 
 use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use library\action\ModifyAction;
 use library\Model;
+use library\ErrorNo;
 
 /**
  * GroupsPermissionModify class file
@@ -36,16 +38,26 @@ class GroupsPermissionModify extends ModifyAction
 		$mod = Model::getInstance('Groups');
 		$id = $req->getInteger('id');
 		if ($this->isPost()) {
-			
+			$ret = $mod->modifyPermissionByPk($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$lastIndexUrl = $mod->getLastIndexUrl();
+				if ($this->isSubmitTypeSave()) {
+					$ret['last_index_url'] = $lastIndexUrl;
+					$this->forward('permissionmodify', Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($this->isSubmitTypeSaveClose()) {
+					$url = $this->applyParams($lastIndexUrl, $ret);
+					$this->redirect($url);
+				}
+			}
 		}
 
 		$mod = Model::getInstance('Groups');
-
-		$amcas = $mod->getAmcas($id);
+		$ret['data'] = $mod->getAmcas($id);
 
 		$this->assign('id', $id);
-		$this->assign('amcas', $amcas);
+		$this->assign('breadcrumbs', $mod->getBreadcrumbs($id));
 		$this->assign('elements', $mod->getElementsRender());
-		$this->render();
+		$this->render($ret);
 	}
 }

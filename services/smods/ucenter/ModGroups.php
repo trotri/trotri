@@ -10,7 +10,10 @@
 
 namespace smods\ucenter;
 
+use slib\Model;
+
 use tfc\util\Language;
+use tfc\saf\Log;
 use slib\BaseModel;
 use slib\Data;
 use slib\ErrorNo;
@@ -232,6 +235,117 @@ class ModGroups extends BaseModel
 
 		if (isset($params['permission'])) { unset($params['permission']); }
 		return $this->autoUpdateByPk($value, $params);
+	}
+
+	/**
+	 * 通过主键，编辑“权限设置”
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyPermissionByPk($value, array $params)
+	{
+		$value = (int) $value;
+		$params = isset($params['amcas']) ? $params['amcas'] : null;
+		if (!is_array($params)) {
+			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+			$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+			Log::warning(sprintf(
+				'%s pk "%d", amcas "%s"', $errMsg, $value, $params
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $value
+			);
+		}
+
+		$amcas = Model::getInstance('Amcas', 'ucenter', $this->getLanguage())->findRecur();
+		$powers = Data::getInstance('Groups', 'ucenter', $this->getLanguage())->getEnum('power');
+
+		$data = array();
+		foreach ($params as $appName => $mods) {
+			if (!isset($amcas[$appName])) {
+				$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+				$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+				Log::warning(sprintf(
+					'%s pk "%d", app name "%s" not exists', $errMsg, $value, $appName
+				), $errNo, __METHOD__);
+
+				return array(
+					'err_no' => $errNo,
+					'err_msg' => $errMsg,
+					'id' => $value
+				);
+			}
+
+			if (!is_array($mods)) {
+				continue;
+			}
+
+			foreach ($mods as $modName => $ctrls) {
+				if (!isset($amcas[$appName]['rows'][$modName])) {
+					$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+					$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+					Log::warning(sprintf(
+						'%s pk "%d", app name "%s", mod name "%s" not exists', $errMsg, $value, $appName, $modName
+					), $errNo, __METHOD__);
+
+					return array(
+						'err_no' => $errNo,
+						'err_msg' => $errMsg,
+						'id' => $value
+					);
+				}
+
+				if (!is_array($ctrls)) {
+					continue;
+				}
+
+				foreach ($ctrls as $ctrlName => $_powers) {
+					if (!isset($amcas[$appName]['rows'][$modName]['rows'][$ctrlName])) {
+						$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+						$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+						Log::warning(sprintf(
+							'%s pk "%d", app name "%s", mod name "%s", ctrl_name "%s" not exists', $errMsg, $value, $appName, $modName, $ctrlName
+						), $errNo, __METHOD__);
+
+						return array(
+							'err_no' => $errNo,
+							'err_msg' => $errMsg,
+							'id' => $value
+						);
+					}
+
+					if (!is_array($_powers)) {
+						continue;
+					}
+
+					foreach ($_powers as $_power) {
+						$_power = (int) $_power;
+						if (!isset($powers[$_power])) {
+							$errNo = ErrorNo::ERROR_ARGS_UPDATE;
+							$errMsg = $this->_('ERROR_MSG_ERROR_ARGS_UPDATE');
+							Log::warning(sprintf(
+								'%s pk "%d", app name "%s", mod name "%s", ctrl_name "%s", power "%d" is wrong', $errMsg, $value, $appName, $modName, $ctrlName, $_power
+							), $errNo, __METHOD__);
+
+							return array(
+								'err_no' => $errNo,
+								'err_msg' => $errMsg,
+								'id' => $value
+							);
+						}
+
+						$data[$appName][$modName][$ctrlName][] = $_power;
+					}
+				}
+			}
+		}
+
+		$data = serialize($data);
+		$ret = $this->updateByPk($value, array('permission' => $data));
+		return $ret;
 	}
 
 	/**

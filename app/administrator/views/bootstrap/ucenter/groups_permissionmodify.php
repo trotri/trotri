@@ -15,6 +15,12 @@ $formBuilder = $this->createWidget('views\bootstrap\widgets\FormBuilder',
 
 $html = $formBuilder->getHtml();
 $eleName = 'amcas';
+
+$extendParentPermissionIcon = $html->tag('span', array(
+	'class' => 'glyphicon glyphicon-share-alt',
+	'data-original-title' => $this->MOD_UCENTER_USER_GROUPS_EXTEND_PARENT_PERMISSION_LABEL,
+	'title' => $this->MOD_UCENTER_USER_GROUPS_EXTEND_PARENT_PERMISSION_LABEL
+), '');
 ?>
 
 <!-- FormBuilder -->
@@ -23,13 +29,15 @@ $eleName = 'amcas';
 <ul class="nav nav-tabs">
 <?php
 $attributes = array('class' => 'active');
-foreach ($this->amcas as $appName => $rows) :
+foreach ($this->data as $appName => $rows) :
 	echo $html->openTag('li', $attributes);
 	echo $html->a($rows['prompt'], '#'.$appName, array('data-toggle' => 'tab'));
 	$attributes = array();
 endforeach;
 ?>
 </ul><!-- /.nav nav-tabs -->
+
+<?php $this->widget('views\bootstrap\widgets\Breadcrumbs', $this->breadcrumbs); ?>
 
 <div class="form-group">
   <div class="col-lg-1"></div>
@@ -41,7 +49,7 @@ endforeach;
 <!-- app -->
 <?php
 $attributes = array('class' => 'tab-pane fade active in');
-foreach ($this->amcas as $appName => $app) :
+foreach ($this->data as $appName => $app) :
 	echo $html->openTag('div', array('id' => $appName) + $attributes), "\n";
 	$attributes = array('class' => 'tab-pane fade');
 ?>
@@ -63,11 +71,20 @@ foreach ($app['rows'] as $modName => $mod) :
 <?php
 foreach ($mod['rows'] as $ctrlName => $ctrl) :
 	$name = $eleName . '[' . $appName . '][' . $modName . '][' . $ctrlName . '][]';
+	$options = array();
+	foreach ($ctrl['powers'] as $key => $value) {
+		if (isset($ctrl['pchecked']) && in_array($key, $ctrl['pchecked'])) {
+			$value .= '&nbsp;' . $extendParentPermissionIcon;
+		}
+
+		$options[$key] = $value;
+	}
+
 	echo $formBuilder->createElement('views\bootstrap\components\form\ICheckboxElement', array(
 		'label' => $ctrl['prompt'],
 		'name' => $name,
-		'options' => $ctrl['powers'],
-		'value' => $ctrl['checked']
+		'options' => $options,
+		'value' => isset($ctrl['checked']) ? $ctrl['checked'] : array()
 	))->fetch();
 endforeach;
 ?>

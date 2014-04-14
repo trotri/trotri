@@ -256,7 +256,7 @@ class Groups extends Model
 	 */
 	public function getPermissions($groupId)
 	{
-		return $this->getService()->getOptions($groupId);
+		return $this->getService()->getPermissions($groupId);
 	}
 
 	/**
@@ -266,18 +266,69 @@ class Groups extends Model
 	 */
 	public function getAmcas($groupId)
 	{
+		$ret = $this->findByPk($groupId);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return array();
+		}
+
 		$enum = $this->getData()->getPowerEnum();
+		$permissions = $this->getPermissions($groupId);
+		$groupPid = (int) $ret['data']['group_pid'];
+		$parentPermissions = $this->getPermissions($groupPid);
 
 		$amcas = Model::getInstance('Amcas')->findRecur();
 		foreach ($amcas as $appName => $app) {
 			foreach ($app['rows'] as $modName => $mod) {
 				foreach ($mod['rows'] as $ctrlName => $ctrl) {
 					$amcas[$appName]['rows'][$modName]['rows'][$ctrlName]['powers'] = $enum;
-					$amcas[$appName]['rows'][$modName]['rows'][$ctrlName]['checked'] = array();
+					if (isset($permissions[$appName][$modName][$ctrlName])) {
+						$amcas[$appName]['rows'][$modName]['rows'][$ctrlName]['checked'] = $permissions[$appName][$modName][$ctrlName];
+					}
+					if (isset($parentPermissions[$appName][$modName][$ctrlName])) {
+						$amcas[$appName]['rows'][$modName]['rows'][$ctrlName]['pchecked'] = $parentPermissions[$appName][$modName][$ctrlName];
+					}
 				}
 			}
 		}
 
 		return $amcas;
+	}
+
+	/**
+	 * 通过主键，获取组名，并依次获取上级组名
+	 * @param integer $value
+	 * @return array
+	 */
+	public function getBreadcrumbs($value)
+	{
+		$breadcrumbs = array();
+		$url = $this->getUrlManager();
+
+		$value = (int) $value;
+		while ($value > 0) {
+			$ret = $this->findByPk($value);
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				$breadcrumbs[] = array(
+					'label' => $ret['data']['group_name'],
+					'href' => $url->getUrl('permissionmodify', Mvc::$controller, Mvc::$module, array('id' => $ret['data']['group_id']))
+				);
+
+				$value = $ret['data']['group_pid'];
+			}
+		}
+
+		$breadcrumbs = array_reverse($breadcrumbs);
+		return $breadcrumbs;
+	}
+
+	/**
+	 * 通过主键，编辑“权限设置”
+	 * @param integer $value
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyPermissionByPk($value, array $params)
+	{
+		return $this->getService()->modifyPermissionByPk($value, $params);
 	}
 }
