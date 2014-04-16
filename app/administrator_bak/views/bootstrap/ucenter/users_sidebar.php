@@ -40,8 +40,8 @@ if ($this->controller === 'users') {
 	$this->widget('ui\bootstrap\widgets\SearchBuilder',
 		array(
 			'action' => $this->getUrlManager()->getUrl('index', 'users', 'ucenter'),
-			'elementCollections' => $this->element_collections,
-			'elements' => array(
+			'elements' => $this->elements,
+			'columns' => array(
 				'login_name',
 				'user_name',
 				'user_mail',

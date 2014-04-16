@@ -331,4 +331,13 @@ class Groups extends Model
 	{
 		return $this->getService()->modifyPermissionByPk($value, $params);
 	}
+
+	/**
+	 * 递归方式获取所有的组，默认用空格填充子类别左边用于和父类别错位（只返回ID和组名的键值对）
+	 * @return array
+	 */
+	public function findPairs()
+	{
+		return $this->getService()->findPairs();
+	}
 }

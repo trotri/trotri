@@ -11,6 +11,7 @@
 namespace smods\ucenter;
 
 use slib\BaseData;
+use slib\Data;
 
 /**
  * DataUsers class file
@@ -88,6 +89,15 @@ class DataUsers extends BaseData
 			self::LOGIN_TYPE_NAME => $this->_('MOD_UCENTER_USERS_ENUM_LOGIN_TYPE_NAME'),
 			self::LOGIN_TYPE_PHONE => $this->_('MOD_UCENTER_USERS_ENUM_LOGIN_TYPE_PHONE'),
 		);
+	}
+
+	/**
+	 * 获取“用户分组ID”所有选项
+	 * @return array
+	 */
+	public function getGroupIdsEnum()
+	{
+		return Data::getInstance('Groups', 'ucenter', $this->getLanguage())->getGroupIdsEnum();
 	}
 
 	/**
@@ -239,4 +249,18 @@ class DataUsers extends BaseData
 		);
 	}
 
+	/**
+	 * 获取“用户分组ID”验证规则
+	 * @return array
+	 */
+	public function getGroupIdsRule()
+	{
+		$enum = $this->getGroupIdsEnum();
+		return array(
+			'InArray' => array(
+				$enum,
+				$this->_('MOD_UCENTER_USERS_GROUP_IDS_INARRAY')
+			),
+		);
+	}
 }

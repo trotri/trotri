@@ -15,6 +15,7 @@ use tfc\util\Language;
 use tfc\util\String;
 use slib\BaseModel;
 use slib\Data;
+use slib\Model;
 use slib\ErrorNo;
 use smods\ucenter\validator\UsersLoginName;
 use smods\ucenter\validator\UsersLoginNameUnique;
@@ -82,9 +83,16 @@ class ModUsers extends BaseModel
 	 */
 	public function findByPk($value)
 	{
+		$ret = Model::getInstance('UserGroups', 'ucenter', $this->getLanguage())->findGroupIdsByUserId($value);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$groupIds = $ret['data'];
 		$ret = parent::findByPk($value);
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 			unset($ret['data']['password']);
+			$ret['data']['group_ids'] = $groupIds;
 		}
 
 		return $ret;
@@ -136,6 +144,7 @@ class ModUsers extends BaseModel
 		}
 
 		$repassword = isset($params['repassword']) ? trim($params['repassword']) : '';
+		$groupIds = isset($params['group_ids']) ? (array) $params['group_ids'] : array();
 
 		$opType = self::OP_TYPE_INSERT;
 
@@ -146,6 +155,7 @@ class ModUsers extends BaseModel
 
 		$this->_filterAttributes($params);
 		$params['repassword'] = $repassword;
+		$params['group_ids'] = $groupIds;
 
 		$attributes = $this->_cleanPreValidator($params, $opType);
 		$ret = $this->validatePreInsert($attributes, true);
@@ -153,10 +163,22 @@ class ModUsers extends BaseModel
 			return $ret;
 		}
 
-		unset($attributes['repassword']);
+		unset($attributes['repassword'], $attributes['group_ids']);
 		$attributes['password'] = $this->encrypt($attributes['password'], $attributes['salt']);
+
 		$attributes = $this->_cleanPostValidator($attributes, $opType);
 		$ret = $this->insert($attributes, true);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$userId = $ret['id'];
+		$ret = Model::getInstance('UserGroups', 'ucenter', $this->getLanguage())->modify($userId, $groupIds);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$ret['id'] = $userId;
 		return $ret;
 	}
 
@@ -188,6 +210,8 @@ class ModUsers extends BaseModel
 			unset($params['password']);
 		}
 
+		$groupIds = isset($params['group_ids']) ? (array) $params['group_ids'] : array();
+
 		$opType = self::OP_TYPE_UPDATE;
 
 		UsersLoginName::$object = $this;
@@ -197,11 +221,13 @@ class ModUsers extends BaseModel
 		UsersLoginNameUnique::$id = $value;
 
 		$this->_filterAttributes($params);
+		if ($password !== '') {
+			$params['repassword'] = $repassword;
+		}
+
+		$params['group_ids'] = $groupIds;
 
 		$attributes = $this->_cleanPreValidator($params, $opType);
-		if ($password !== '') {
-			$attributes['repassword'] = $repassword;
-		}
 
 		$ret = $this->validatePreUpdate($attributes, false);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
@@ -213,8 +239,21 @@ class ModUsers extends BaseModel
 			$attributes['password'] = $this->encrypt($attributes['password'], $attributes['salt']);
 		}
 
+		unset($attributes['group_ids']);
+
 		$attributes = $this->_cleanPostValidator($attributes, $opType);
 		$ret = $this->updateByPk($value, $attributes);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$userId = $ret['id'];
+		$ret = Model::getInstance('UserGroups', 'ucenter', $this->getLanguage())->modify($userId, $groupIds);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$ret['id'] = $userId;
 		return $ret;
 	}
 
@@ -233,6 +272,7 @@ class ModUsers extends BaseModel
 			'user_mail',
 			'user_phone',
 			'forbidden',
+			'group_ids',
 		));
 
 		if (!isset($attributes['user_name']) || $attributes['user_name'] === '') {

@@ -12,6 +12,7 @@ namespace smods\ucenter;
 
 use tfc\util\Power;
 use slib\BaseData;
+use slib\Model;
 
 /**
  * DataGroups class file
@@ -55,6 +56,21 @@ class DataGroups extends BaseData
 			self::POWER_UPDATE => $this->_('MOD_UCENTER_USER_GROUPS_ENUM_POWER_UPDATE'),
 			self::POWER_DELETE => $this->_('MOD_UCENTER_USER_GROUPS_ENUM_POWER_DELETE'),
 		);
+	}
+
+	/**
+	 * 获取“用户分组ID”所有选项
+	 * @return array
+	 */
+	public function getGroupIdsEnum()
+	{
+		static $enum = null;
+		if ($enum === null) {
+			$mod = Model::getInstance('Groups', 'ucenter', $this->getLanguage());
+			$enum = $mod->getGroupIds();
+		}
+
+		return $enum;
 	}
 
 	/**

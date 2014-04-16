@@ -72,15 +72,17 @@ class ModGroups extends BaseModel
 	}
 
 	/**
-	 * 获取所有的组名
+	 * 获取所有的组Id
 	 * @return array
 	 */
-	public function getGroupNames()
+	public function getGroupIds()
 	{
-		$ret = $this->findPairsByAttributes(array('group_id', 'group_name'), array(), 'sort');
+		$ret = $this->findColumnsByAttributes(array('group_id'), array(), 'sort');
 		$data = array();
 		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			$data = $ret['data'];
+			foreach ($ret['data'] as $rows) {
+				$data[] = (int) $rows['group_id'];
+			}
 		}
 
 		return $data;
@@ -153,6 +155,25 @@ class ModGroups extends BaseModel
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * 递归方式获取所有的组，默认用空格填充子类别左边用于和父类别错位（只返回ID和组名的键值对）
+	 * @return array
+	 */
+	public function findPairs()
+	{
+		$data = array();
+		$ret = $this->findLists();
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $data;
+		}
+
+		foreach ($ret['data'] as $row) {
+			$data[$row['group_id']] = $row['group_name'];
+		}
+
+		return $data;
 	}
 
 	/**

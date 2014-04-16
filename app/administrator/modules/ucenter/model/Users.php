@@ -98,6 +98,7 @@ class Users extends Model
 	{
 		$data = $this->getData();
 		$isModify = (Mvc::$action === self::ACT_MODIFY) ? true : false;
+		$groups = Model::getInstance('Groups')->findPairs();
 		$output = array(
 			'user_id' => array(
 				'__tid__' => 'main',
@@ -114,7 +115,7 @@ class Users extends Model
 				'label' => Text::_('MOD_UCENTER_USERS_LOGIN_NAME_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USERS_LOGIN_NAME_HINT'),
 				'required' => $isModify ? false : true,
-				'disabled' => $isModify ? true : false,
+				'readonly' => $isModify ? true : false,
 				'search' => array(
 					'type' => 'text',
 				),
@@ -132,7 +133,7 @@ class Users extends Model
 			),
 			'password' => array(
 				'__tid__' => 'main',
-				'type' => 'text',
+				'type' => 'password',
 				'label' => Text::_('MOD_UCENTER_USERS_PASSWORD_LABEL'),
 				'hint' => $isModify ? Text::_('MOD_UCENTER_USERS_PASSWORD_MODIFY_HINT') : Text::_('MOD_UCENTER_USERS_PASSWORD_HINT'),
 				'required' => $isModify ? false : true,
@@ -142,7 +143,7 @@ class Users extends Model
 			),
 			'repassword' => array(
 				'__tid__' => 'main',
-				'type' => 'text',
+				'type' => 'password',
 				'label' => Text::_('MOD_UCENTER_USERS_REPASSWORD_LABEL'),
 				'hint' => Text::_('MOD_UCENTER_USERS_REPASSWORD_HINT'),
 				'required' => $isModify ? false : true,
@@ -307,6 +308,17 @@ class Users extends Model
 				'hint' => Text::_('MOD_UCENTER_USERS_TRASH_HINT'),
 				'options' => $data->getEnum('trash'),
 				'value' => $data::TRASH_N,
+				'search' => array(
+					'type' => 'select',
+				),
+			),
+			'group_ids' => array(
+				'__tid__' => 'groups',
+				'__object__' => 'views\\bootstrap\\ucenter\\UsersGroupsCbElement',
+				'type' => 'checkbox',
+				'label' => '',
+				'hint' => '',
+				'options' => $groups,
 				'search' => array(
 					'type' => 'select',
 				),

@@ -13,7 +13,6 @@ namespace smods\ucenter;
 use tfc\ap\Registry;
 use slib\BaseData;
 use slib\Model;
-use smods\ucenter\ModAmcas;
 
 /**
  * DataAmcas class file
