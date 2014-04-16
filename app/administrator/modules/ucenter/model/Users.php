@@ -66,7 +66,7 @@ class Users extends Model
 			return $lastIndexUrl;
 		}
 
-		$params = array('trash' => 'n');
+		$params = array();
 		return $this->getUrl(self::ACT_INDEX, Mvc::$controller, Mvc::$module, $params);
 	}
 
@@ -116,6 +116,9 @@ class Users extends Model
 				'hint' => Text::_('MOD_UCENTER_USERS_LOGIN_NAME_HINT'),
 				'required' => $isModify ? false : true,
 				'readonly' => $isModify ? true : false,
+				'table' => array(
+					'callback' => array($this, 'getLoginNameLink')
+				),
 				'search' => array(
 					'type' => 'text',
 				),
@@ -275,6 +278,9 @@ class Users extends Model
 				'hint' => Text::_('MOD_UCENTER_USERS_VALID_MAIL_HINT'),
 				'options' => $data->getEnum('valid_mail'),
 				'value' => $data::VALID_MAIL_N,
+				'table' => array(
+					'callback' => array($this, 'getValidMailTblColumn')
+				),
 				'search' => array(
 					'type' => 'select',
 				),
@@ -286,6 +292,9 @@ class Users extends Model
 				'hint' => Text::_('MOD_UCENTER_USERS_VALID_PHONE_HINT'),
 				'options' => $data->getEnum('valid_phone'),
 				'value' => $data::VALID_PHONE_N,
+				'table' => array(
+					'callback' => array($this, 'getValidPhoneTblColumn')
+				),
 				'search' => array(
 					'type' => 'select',
 				),
@@ -297,6 +306,9 @@ class Users extends Model
 				'hint' => Text::_('MOD_UCENTER_USERS_FORBIDDEN_HINT'),
 				'options' => $data->getEnum('forbidden'),
 				'value' => $data::FORBIDDEN_N,
+				'table' => array(
+					'callback' => array($this, 'getForbiddenTblColumn')
+				),
 				'search' => array(
 					'type' => 'select',
 				),
@@ -356,14 +368,103 @@ class Users extends Model
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_MODIFY'),
 		));
 
-		$removeIcon = $componentsBuilder->getGlyphicon(array(
+		$trashIcon = $componentsBuilder->getGlyphicon(array(
 			'type' => $componentsBuilder->getGlyphiconRemove(),
-			'url' => $this->getUrl(self::ACT_REMOVE, Mvc::$controller, Mvc::$module, $params),
+			'url' => $this->getUrl(self::ACT_TRASH, Mvc::$controller, Mvc::$module, $params),
 			'jsfunc' => $componentsBuilder->getJsFuncDialogRemove(),
 			'title' => Text::_('CFG_SYSTEM_GLOBAL_REMOVE'),
 		));
 
-		$output = '' . $modifyIcon . $removeIcon;
+		$output = '' . $modifyIcon . $trashIcon;
+		return $output;
+	}
+
+	/**
+	 * 获取列表页“登录名”的A标签
+	 * @param array $data
+	 * @return string
+	 */
+	public function getLoginNameLink($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl(self::ACT_VIEW, Mvc::$controller, Mvc::$module, $params);
+		$output = $this->a($data['login_name'], $url);
+		return $output;
+	}
+
+	/**
+	 * 获取列表页“是否已验证邮箱”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getValidMailTblColumn($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'column_name' => 'valid_mail',
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$output = PageHelper::getComponentsBuilder()->getSwitch(array(
+			'id' => $data['user_id'],
+			'name' => 'valid_mail',
+			'value' => $data['valid_mail'],
+			'href' => $url
+		));
+
+		return $output;
+	}
+
+	/**
+	 * 获取列表页“是否已验证手机号”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getValidPhoneTblColumn($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'column_name' => 'valid_phone',
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$output = PageHelper::getComponentsBuilder()->getSwitch(array(
+			'id' => $data['user_id'],
+			'name' => 'valid_phone',
+			'value' => $data['valid_phone'],
+			'href' => $url
+		));
+
+		return $output;
+	}
+
+	/**
+	 * 获取列表页“是否禁用”选项
+	 * @param array $data
+	 * @return string
+	 */
+	public function getForbiddenTblColumn($data)
+	{
+		$params = array(
+			'id' => $data['user_id'],
+			'column_name' => 'forbidden',
+			'last_index_url' => $this->getLastIndexUrl()
+		);
+
+		$url = $this->getUrl('singlemodify', Mvc::$controller, Mvc::$module, $params);
+		$output = PageHelper::getComponentsBuilder()->getSwitch(array(
+			'id' => $data['user_id'],
+			'name' => 'forbidden',
+			'value' => $data['forbidden'],
+			'href' => $url
+		));
+
 		return $output;
 	}
 

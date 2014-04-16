@@ -24,6 +24,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 			'valid_phone',
 			'forbidden',
 			'trash',
+			'group_ids',
 			'_button_history_back_',
 		)
 	)

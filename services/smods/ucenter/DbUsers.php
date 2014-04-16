@@ -42,24 +42,15 @@ class DbUsers extends BaseDb
 	public function search(array $attributes = array(), $order, $limit, $offset)
 	{
 		$commandBuilder = $this->getCommandBuilder();
-		$tblUsers = $this->getQuoteTableName();
-		$tblAliasUsers = $commandBuilder->quoteColumnName('u');
+		$tblprefix = $this->getDbProxy()->getTblprefix();
 
-		
-		$tblGroups = Db::getDb('UserGroups')->getQuoteTableName();
-		$tblAliasGroups = $commandBuilder->quoteColumnName('g');
-		$columnPk = $commandBuilder->quoteColumnName('user_id');
-		$columnNames = $commandBuilder->quoteColumnNames($this->getTableSchema()->columnNames);
-		if (($index = array_search($columnPk, $columnNames)) !== false) {
-			unset($columnNames[$index]);
-		}
-
-		$command = 'SELECT SQL_CALC_FOUND_ROWS ' . $tblAliasUsers . '.' . $columnPk . ', ' . implode(', ', $columnNames) . ' FROM ' . $tblUsers . ' AS ' . $tblAliasUsers;
-		$command .= ' LEFT JOIN ' . $tblGroups . ' AS ' . $tblAliasGroups . ' ON ' . $tblAliasUsers . '.' . $columnPk . ' = ' . $tblAliasGroups . '.' . $columnPk;
+		$command = 'SELECT SQL_CALC_FOUND_ROWS `u`.*, `g`.`group_id` FROM `' . $tblprefix . 'users` AS `u`';
+		$command .= ' LEFT JOIN `' . $tblprefix . 'user_usergroups_map` AS `g`';
+		$command .= ' ON `u`.`user_id` = `g`.`user_id`';
 
 		$condition = '1';
 		foreach ($attributes as $columnName => $value) {
-			$alias = ($columnName === 'group_id') ? $tblAliasGroups : $tblAliasUsers;
+			$alias = ($columnName === 'group_id') ? '`g`' : '`u`';
 			$condition .= ' AND ' . $alias . '.' . $commandBuilder->quoteColumnName($columnName) . ' = ' . $commandBuilder::PLACE_HOLDERS;
 		}
 

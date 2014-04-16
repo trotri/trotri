@@ -13,6 +13,7 @@ namespace smods\ucenter;
 use tfc\ap\Ap;
 use tfc\util\Language;
 use tfc\util\String;
+use tfc\saf\Log;
 use slib\BaseModel;
 use slib\Data;
 use slib\Model;
@@ -52,29 +53,57 @@ class ModUsers extends BaseModel
 	public function search(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
 		$rules = array(
-			'user_id' => 'intval',
 			'login_name' => 'trim',
 			'login_type' => 'trim',
 			'user_name' => 'trim',
 			'user_mail' => 'trim',
-			'user_phone' => 'intval',
-			'dt_registered' => 'trim',
-			'dt_last_login' => 'trim',
-			'dt_last_repwd' => 'trim',
-			'ip_registered' => 'intval',
-			'ip_last_login' => 'intval',
-			'ip_last_repwd' => 'intval',
-			'login_count' => 'intval',
-			'repwd_count' => 'intval',
+			'user_phone' => 'trim',
 			'valid_mail' => 'trim',
 			'valid_phone' => 'trim',
 			'forbidden' => 'trim',
 			'trash' => 'trim',
 		);
 
+		$data = Data::getInstance('Users', 'ucenter', $this->getLanguage());
+		$params['group_id'] = isset($params['group_ids']) ? (int) $params['group_ids'] : 0;
+		$params['trash'] = $data::TRASH_N;
+
 		$this->_filterCleanEmpty($params, $rules);
 
-		return $this->findAllByAttributes($params, $order, $limit, $offset);
+		$data = $this->getDb()->search($params, $order, $limit, $offset);
+		if ($data === false) {
+			$errNo = ErrorNo::ERROR_DB_SELECT;
+			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT');
+			Log::warning(sprintf(
+				'%s attributes "%s", order "%s", limit "%d", offset "%d"',
+				$errMsg, serialize($params), $order, $limit, $offset
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = $this->_('ERROR_MSG_SUCCESS_SELECT');
+		Log::debug(sprintf(
+			'%s attributes "%s", order "%s", limit "%d", offset "%d"',
+			$errMsg, serialize($params), $order, $limit, $offset
+		), __METHOD__);
+
+		$ret = array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'data' => $data,
+			'paginator' => array(
+				'attributes' => $params,
+				'order' => $order,
+				'limit' => $limit,
+				'offset' => $offset
+			)
+		);
+
+		return $this->_applyFoundRows($ret, self::QU_OPT_CALC_FOUND_ROWS);
 	}
 
 	/**
