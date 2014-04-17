@@ -42,9 +42,12 @@ class ButtonBuilder extends Widget
 		$attributes['type'] = 'button';
 		$attributes['class'] = 'btn btn-' . ($primary ? 'primary' : 'default');
 		if ($jsfunc !== '') {
-			$jsfunc = 'getJsFunc' . $jsfunc;
-			if (method_exists($builder, $jsfunc)) {
-				$attributes['onclick'] = 'return ' . $builder->$jsfunc() . '(\'' . $url . '\');';
+			$jsMethod = 'getJsFunc' . $jsfunc;
+			if (method_exists($builder, $jsMethod)) {
+				$attributes['onclick'] = 'return ' . $builder->$jsMethod() . '(\'' . $url . '\');';
+			}
+			else {
+				$attributes['onclick'] = 'return ' . $jsfunc . '(\'' . $url . '\');';
 			}
 		}
 

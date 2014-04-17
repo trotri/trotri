@@ -468,4 +468,31 @@ class Users extends Model
 		return $output;
 	}
 
+	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param array $values
+	 * @param array $attributes
+	 * @return array
+	 */
+	public function batchModifyByPk(array $values, array $attributes = array())
+	{
+		return $this->getService()->batchUpdateByPk($values, $attributes);
+	}
+
+	/**
+	 * 用户登录
+	 * @param string $loginName
+	 * @param string $password
+	 * @param boolean $rememberMe
+	 * @return array
+	 */
+	public function login($loginName, $password, $rememberMe = false)
+	{
+		$ret = $this->getService()->login($loginName, $password);
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		
+	}
 }

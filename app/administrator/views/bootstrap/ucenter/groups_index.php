@@ -8,7 +8,7 @@ $this->widget(
 		'data' => $this->data,
 		'columns' => array(
 			'group_name',
-			'group_pid',
+			// 'group_pid',
 			'sort',
 			'permission',
 			'description',

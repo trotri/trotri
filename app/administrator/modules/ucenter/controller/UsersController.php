@@ -37,6 +37,7 @@ class UsersController extends BaseController
 			'remove'       => 'modules\\ucenter\\action\\submit\\UsersRemove',
 			'singlemodify' => 'modules\\ucenter\\action\\submit\\UsersSingleModify',
 			'trash'        => 'modules\\ucenter\\action\\submit\\UsersTrash',
+			'login'        => 'modules\\ucenter\\action\\show\\UsersLogin',
 		);
 	}
 }

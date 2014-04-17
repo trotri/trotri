@@ -24,6 +24,26 @@ use slib\Data;
 class DataUsers extends BaseData
 {
 	/**
+	 * @var integer 登录失败：登录名为空
+	 */
+	const ERROR_LOGIN_NAME_EMPTY     = 3001;
+
+	/**
+	 * @var integer 登录失败：密码为空
+	 */
+	const ERROR_LOGIN_PASSWORD_EMPTY = 3002;
+
+	/**
+	 * @var integer 登录失败：登录名不存在
+	 */
+	const ERROR_LOGIN_NAME_UNDEFINED = 3003;
+
+	/**
+	 * @var integer 登录失败：密码错误
+	 */
+	const ERROR_LOGIN_PASSWORD_WRONG = 3004;
+
+	/**
 	 * @var string 登录方式：mail
 	 */
 	const LOGIN_TYPE_MAIL = 'mail';

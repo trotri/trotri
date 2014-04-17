@@ -134,8 +134,7 @@ class ModUsers extends BaseModel
 	 */
 	public function findByLoginName($value)
 	{
-		$ret = parent::findByAttributes(array('login_name' => trim($value)));
-		return $ret;
+		return parent::findByAttributes(array('login_name' => trim($value)));
 	}
 
 	/**
@@ -408,5 +407,67 @@ class ModUsers extends BaseModel
 	{
 		$data = Data::getInstance('Users', 'ucenter', $this->getLanguage());
 		return $loginType === $data::LOGIN_TYPE_PHONE;
+	}
+
+	/**
+	 * 用户登录
+	 * @param string $loginName
+	 * @param string $password
+	 * @return array
+	 */
+	public function login($loginName, $password)
+	{
+		$data = Data::getInstance('Users', 'ucenter', $this->getLanguage());
+
+		if (($loginName = trim($loginName)) === '') {
+			$errNo = $data::ERROR_LOGIN_NAME_EMPTY;
+			$errMsg = $this->_('MOD_UCENTER_USERS_LOGIN_NAME_EMPTY');
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg
+			);
+		}
+
+		if (($password = trim($password)) === '') {
+			$errNo = $data::ERROR_LOGIN_PASSWORD_EMPTY;
+			$errMsg = $this->_('MOD_UCENTER_USERS_LOGIN_PASSWORD_EMPTY');
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'login_name' => $loginName
+			);
+		}
+
+		$ret = $this->findByLoginName($loginName);
+		if ($ret['err_no'] === ErrorNo::ERROR_DB_SELECT_EMPTY) {
+			$errNo = $data::ERROR_LOGIN_NAME_UNDEFINED;
+			$errMsg = $this->_('MOD_UCENTER_USERS_LOGIN_NAME_UNDEFINED');
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'login_name' => $loginName
+			);
+		}
+
+		$salt = $ret['data']['salt'];
+		$password = $this->encrypt($password, $salt);
+		if ($password !== $ret['data']['password']) {
+			$errNo = $data::ERROR_LOGIN_PASSWORD_WRONG;
+			$errMsg = $this->_('MOD_UCENTER_USERS_LOGIN_PASSWORD_WRONG');
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'login_name' => $loginName
+			);
+		}
+
+		$userId = (int) $ret['data']['user_id'];
+		$loginName = $ret['data']['login_name'];
+		return array(
+			'err_no' => ErrorNo::SUCCESS_NUM,
+			'err_msg' => '',
+			'user_id' => $userId,
+			'login_name' => $loginName
+		);
 	}
 }
