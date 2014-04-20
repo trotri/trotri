@@ -38,6 +38,11 @@ class Cfg
     protected static $_ral = null;
 
     /**
+     * @var array 用于寄存Key的配置
+     */
+    protected static $_key = null;
+
+    /**
      * @var array 用于寄存缓存的配置
      */
     protected static $_cache = null;
@@ -127,6 +132,28 @@ class Cfg
 
         throw new ErrorException(sprintf(
             'Cfg no ral cfg is registered for name "%s".', $name
+        ));
+    }
+
+    /**
+     * 通过配置名获取Key的配置
+     * @param string $name
+     * @return array
+     * @throws ErrorException 如果指定的配置名不存在，抛出异常
+     */
+    public static function getKey($name)
+    {
+        if (self::$_key === null) {
+            $file = DIR_CFG_KEY . DS . 'cluster.php';
+            self::$_key = self::getCfg($file);
+        }
+
+        if (isset(self::$_key[$name])) {
+            return self::$_key[$name];
+        }
+
+        throw new ErrorException(sprintf(
+            'Cfg no key cfg is registered for name "%s".', $name
         ));
     }
 

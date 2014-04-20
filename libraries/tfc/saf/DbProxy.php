@@ -18,6 +18,27 @@ use tfc\db\Transaction;
 /**
  * DbProxy class file
  * 数据库代理操作类，连接失败尝试重试、记录操作日志、主从数据库连接管理（待扩展）
+ * <pre>
+ * 配置 /cfg/db/cluster.php：
+ * return array (
+ *   'service' => array (
+ *     'dsn' => string,      // Data Source Name
+ *     'username' => string, // 数据库用户名
+ *     'password' => string, // 数据库密码
+ *     'charset' => string,  // 数据库字符编码
+ *     'retry' => integer,   // 连接数据库失败后，尝试重连的最大次数
+ *     'tblprefix' => string // 表前缀
+ *   ),
+ *   'administrator' => array (
+ *     'dsn' => 'mysql:host=localhost;dbname=trotri',
+ *     'username' => 'root',
+ *     'password' => '123456',
+ *     'charset' => 'utf8',
+ *     'retry' => 3,
+ *     'tblprefix' => 'tr_'
+ *   ),
+ * );
+ * </pre>
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: DbProxy.php 1 2013-04-05 01:38:06Z huan.song $
  * @package tfc.saf

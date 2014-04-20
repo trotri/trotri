@@ -32,6 +32,7 @@ class SiteController extends BaseController
 			'index'        => 'modules\\system\\action\\show\\SiteIndex',
 			'about'        => 'modules\\system\\action\\show\\SiteAbout',
 			'err404'       => 'modules\\system\\action\\show\\SiteErr404',
+			'test'         => 'modules\\system\\action\\show\\SiteTest',
 		);
 	}
 }

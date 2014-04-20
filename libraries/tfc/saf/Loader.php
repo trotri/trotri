@@ -145,6 +145,11 @@ defined('DIR_CFG_DB') || define('DIR_CFG_DB', DIR_CFG . DS . 'db');
 defined('DIR_CFG_RAL') || define('DIR_CFG_RAL', DIR_CFG . DS . 'ral');
 
 /**
+ * Key的配置文件存放目录
+ */
+defined('DIR_CFG_KEY') || define('DIR_CFG_KEY', DIR_CFG . DS . 'key');
+
+/**
  * 缓存的配置文件存放目录
  */
 defined('DIR_CFG_CACHE') || define('DIR_CFG_CACHE', DIR_CFG . DS . 'cache');

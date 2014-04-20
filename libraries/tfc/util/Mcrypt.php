@@ -10,6 +10,8 @@
 
 namespace tfc\util;
 
+use tfc\ap\ErrorException;
+
 /**
  * Mcrypt class file
  * 可逆的加密方法类，基于流加密算法
@@ -20,209 +22,217 @@ namespace tfc\util;
  */
 class Mcrypt
 {
-	/**
-	 * @var integer 默认的随机密钥长度，取值 0-32
-	 */
-	const DEFAULT_RND_KEY_LEN = 8;
+    /**
+     * @var integer 默认的随机密钥长度，取值 0-32
+     */
+    const DEFAULT_RND_KEY_LEN = 8;
 
-	/**
-	 * @var integer 随机密钥长度，取值 0-32。
-	 * 如果值等于0，会造成Reused Key Attack
-	 * 如果数值过小，会造成弱IV（Initialization Vector），有暴力破解的风险
-	 */
-	protected $_rndKeyLen = self::DEFAULT_RND_KEY_LEN;
+    /**
+     * @var integer 随机密钥长度，取值 0-32
+     */
+    protected $_rndKeyLen = self::DEFAULT_RND_KEY_LEN;
 
-	/**
-	 * @var integer 密文有效期
-	 */
-	protected $_expiry = 0;
+    /**
+     * @var string 加密密钥
+     */
+    protected $_cryptKey = '';
 
-	/**
-	 * @var string 加密密钥
-	 */
-	protected $_cryptKey = '';
+    /**
+     * @var string 签名密钥
+     */
+    protected $_signKey = '';
 
-	/**
-	 * @var string 签名密钥
-	 */
-	protected $_signKey = '';
+    /**
+     * 构造方法：初始化加密密钥、签名密钥、密文有效期和随机密钥长度
+     * @param string $cryptKey
+     * @param string $signKey
+     * @param integer $rndKeyLen
+     */
+    public function __construct($cryptKey, $signKey, $rndKeyLen = self::DEFAULT_RND_KEY_LEN)
+    {
+        if (($cryptKey = trim($cryptKey)) === '') {
+            throw new ErrorException(
+                'Mcrypt cryptKey must be string and not empty.'
+            );
+        }
 
-	/**
-	 * 构造方法：初始化加密密钥、签名密钥
-	 * @param string $cryptKey
-	 * @param integer $rndKeyLen
-	 * @param integer $expiry
-	 */
-	public function __construct($key, $expiry = 0, $rndKeyLen = self::DEFAULT_RND_KEY_LEN)
-	{
-		
-	}
+        if (($signKey = trim($signKey)) === '') {
+            throw new ErrorException(
+                'Mcrypt signKey must be string and not empty.'
+            );
+        }
 
-	/**
-	 * 解密运算
-	 * @param string $ciphertext
-	 * @return string
-	 */
-	public function decode($ciphertext)
-	{
-		$rndKey = $this->getRndKey($ciphertext);
-		$cryptKey = $this->getCryptKey($rndKey);
+        if (($rndKeyLen = (int) $rndKeyLen) < 0) {
+            $rndKeyLen = 0;
+        }
 
-		$string = base64_decode(substr($ciphertext, strlen($rndKey)));
-		$string = $this->xorCalc($string, $cryptKey);
-		$plaintext = substr($string, 26);
+        $this->_cryptKey  = md5($cryptKey);
+        $this->_signKey   = md5($signKey);
+        $this->_rndKeyLen = min(32, $rndKeyLen);
+    }
 
-		$expiry = $this->getExpiry($string);
-		if ($expiry > 0 && $expiry <= mktime()) {
-			return false;
-		}
+    /**
+     * 解密运算
+     * @param string $ciphertext
+     * @return string
+     */
+    public function decode($ciphertext)
+    {
+        $rndKeyLen = $this->getRndKeyLen();
+        $rndKey    = substr($ciphertext, 0, $rndKeyLen);
+        $cryptKey  = $this->getCryptKey($rndKey);
+        $signKey   = $this->getSignKey($rndKey);
 
-		if ($this->getSign('', $string) !== $this->getSign($plaintext)) {
-			return false;
-		}
+        $string = base64_decode(substr($ciphertext, $rndKeyLen));
+        $string = $this->calc($string, $cryptKey);
 
-		return $plaintext;
-	}
+        $expiry    = substr($string, 0, 10);
+        $sign      = substr($string, 10, 16);
+        $plaintext = substr($string, 26);
 
-	/**
-	 * 加密运算
-	 * @param string $plaintext
-	 * @return string
-	 */
-	public function encode($plaintext)
-	{
-		$rndKey = $this->getRndKey();
-		$cryptKey = $this->getCryptKey($rndKey);
-		$string = $this->getExpiry() . $this->getSignKey() . $plaintext;
-		$string = $this->xorCalc($string, $cryptKey);
-		return $rndKey.str_replace('=', '', base64_encode($string));
-	}
+        if ($expiry > 0 && $expiry <= mktime()) {
+            return '';
+        }
 
-	/**
-	 * 异或位运算
-	 * @param string $string “密文” 或者 由“有效期{0-10}”、“签名密钥{10-26}”、“原字符串”组成的字符串
-	 * @param string $cryptKey
-	 * @return string
-	 */
-	public function xorCalc($string, $cryptKey)
-	{
-		$ret = '';
+        if ($sign !== $this->sign($plaintext, $signKey)) {
+            return '';
+        }
 
-		$strLen = strlen($string);
-		$iv = $this->getIv($cryptKey);
-		for ($a = $j = $i = 0; $i < $strLen; $i++) {
-			$a = ($a + 1) % 256;
-			$j = ($j + $iv[$a]) % 256;
-			$tmp = $iv[$a];
-			$iv[$a] = $iv[$j];
-			$iv[$j] = $tmp;
-			$ret .= chr(ord($string[$i]) ^ ($iv[($iv[$a] + $iv[$j]) % 256]));
-		}
+        return $plaintext;
+    }
 
-		return $ret;
-	}
+    /**
+     * 加密运算
+     * @param string $plaintext
+     * @param integer $expiry
+     * @return string
+     */
+    public function encode($plaintext, $expiry = 0)
+    {
+        if (($expiry = (int) $expiry) < 0) {
+            $expiry = 0;
+        }
 
-	/**
-	 * 通过加密密钥，获取初始化向量 Initialization Vector
-	 * @param string $cryptKey
-	 * @return array
-	 */
-	public function getIv($cryptKey)
-	{
-		$ret = array();
+        $expiry    = sprintf('%010d', $expiry > 0 ? $expiry + mktime() : 0);
+        $rndKeyLen = $this->getRndKeyLen();
+        $rndKey    = $this->getRndKey($rndKeyLen);
+        $cryptKey  = $this->getCryptKey($rndKey);
+        $signKey   = $this->getSignKey($rndKey);
 
-		$keyLen = strlen($cryptKey);
+        $string = $expiry . $this->sign($plaintext, $signKey) . $plaintext;
+        $string = $this->calc($string, $cryptKey);
+        return $rndKey . str_replace('=', '', base64_encode($string));
+    }
 
-		$rndKey = array();
-		for ($i = 0; $i <= 255; $i++) {
-			$rndKey[$i] = ord($cryptKey[$i % $keyLen]);
-		}
+    /**
+     * 异或位运算
+     * @param string $string “密文” 或者 由“有效期{0-10}”+“签名密钥{10-26}”+“原字符串”组成的字符串
+     * @param string $cryptKey
+     * @return string
+     */
+    public function calc($string, $cryptKey)
+    {
+        $ret = '';
 
-		$ret = range(0, 255);
-		for ($j = $i = 0; $i < 256; $i++) {
-			$j = ($j + $ret[$i] + $rndKey[$i]) % 256;
-			$tmp = $ret[$i];
-			$ret[$i] = $ret[$j];
-			$ret[$j] = $tmp;
-		}
+        $strLen = strlen($string);
+        $iv = $this->getIv($cryptKey);
+        for ($a = $j = $i = 0; $i < $strLen; $i++) {
+            $a = ($a + 1) % 256;
+            $j = ($j + $iv[$a]) % 256;
+            $tmp = $iv[$a];
+            $iv[$a] = $iv[$j];
+            $iv[$j] = $tmp;
+            $ret .= chr(ord($string[$i]) ^ ($iv[($iv[$a] + $iv[$j]) % 256]));
+        }
 
-		return $ret;
-	}
+        return $ret;
+    }
 
-	/**
-	 * 获取原始明文的签名，防止明文被篡改
-	 * @param string $plaintext 原始明文
-	 * @param string $string 由“有效期{0-10}”、“签名密钥{10-26}”、“原字符串”组成
-	 * @return string
-	 */
-	public function getSign($plaintext, $string = '')
-	{
-		if ($string) {
-			return substr($string, 10, 16);
-		}
+    /**
+     * 通过加密密钥，获取初始化向量IV（Initialization Vector）
+     * @param string $cryptKey
+     * @return array
+     */
+    public function getIv($cryptKey)
+    {
+        $ret = array();
 
-		return md5($plaintext . $this->getSignKey(), true);
-	}
+        $keyLen = strlen($cryptKey);
+        $rndKey = array();
+        for ($i = 0; $i <= 255; $i++) {
+            $rndKey[$i] = ord($cryptKey[$i % $keyLen]);
+        }
 
-	/**
-	 * 获取签名密钥
-	 * @return string
-	 */
-	public function getSignKey()
-	{
-		return md5($this->_signKey);
-	}
+        $ret = range(0, 255);
+        for ($j = $i = 0; $i < 256; $i++) {
+            $j = ($j + $ret[$i] + $rndKey[$i]) % 256;
+            $tmp = $ret[$i];
+            $ret[$i] = $ret[$j];
+            $ret[$j] = $tmp;
+        }
 
-	/**
-	 * 获取加密密钥
-	 * @param string $rndKey
-	 * @return string
-	 */
-	public function getCryptKey($rndKey)
-	{
-		$cryptKey = md5($this->_cryptKey);
-		return md5(substr($cryptKey, 0, 16) . md5($cryptKey . $rndKey));
-	}
+        return $ret;
+    }
 
-	/**
-	 * 获取加密有效期
-	 * @param string $string 由“有效期{0-10}”、“签名密钥{10-26}”、“原字符串”组成
-	 * @return string
-	 */
-	public function getExpiry($string = '')
-	{
-		if ($string) {
-			return substr($string, 0, 10);
-		}
+    /**
+     * 对原始明文签名，防止明文被篡改
+     * @param string $plaintext 原始明文
+     * @param string $signKey
+     * @return string
+     */
+    public function sign($plaintext, $signKey)
+    {
+        return substr(md5($plaintext . $signKey), 0, 16);
+    }
 
-		return sprintf('%010d', $this->_expiry > 0 ? $this->_expiry + mktime() : 0);
-	}
+    /**
+     * 获取签名密钥
+     * @param string $rndKey
+     * @return string
+     */
+    public function getSignKey($rndKey)
+    {
+        return md5(md5($this->_signKey . $rndKey) . substr($this->_signKey, 16));
+    }
 
-	/**
-	 * 获取随机密钥，令密文无规律，即便原文和密钥完全相同，加密结果也会每次不同。
-	 * @param string $ciphertext 由“随机密钥{0-rndKeyLen}”、“密文”组成
-	 * @return string
-	 */
-	public function getRndKey($ciphertext = '')
-	{
-		if ($this->_rndKeyLen <= 0) {
-			return '';
-		}
+    /**
+     * 获取加密密钥
+     * @param string $rndKey
+     * @return string
+     */
+    public function getCryptKey($rndKey)
+    {
+        return md5(substr($this->_cryptKey, 0, 16) . md5($this->_cryptKey . $rndKey));
+    }
 
-		if ($ciphertext) {
-			return substr($ciphertext, 0, $this->_rndKeyLen < 32 ? $this->_rndKeyLen : 32);
-		}
+    /**
+     * 获取随机密钥的长度，取值 0-32。
+     * 如果该值等于0，有Reused Key Attack破解的风险
+     * 如果该值过小，会造成弱IV（Initialization Vector），有暴力破解的风险
+     * @return integer
+     */
+    public function getRndKeyLen()
+    {
+        return $this->_rndKeyLen;
+    }
 
-		return substr($this->random(), -$this->_rndKeyLen);
-	}
+    /**
+     * 获取随机密钥，令密文无规律，即使原文和密钥完全相同，加密结果也会每次不同
+     * @param integer $length
+     * @return string
+     */
+    public function getRndKey($length)
+    {
+        return $length > 0 ? substr($this->random(), 0, $length) : '';
+    }
 
-	/**
-	 * 获取随机数
-	 * @return string
-	 */
-	public function random()
-	{
-		$string = $_SERVER['SERVER_SOFTWARE'].$_SERVER['SERVER_NAME'].$_SERVER['SERVER_ADDR'].$_SERVER['SERVER_PORT'].$_SERVER['HTTP_USER_AGENT'].mt_rand().microtime();
-		return md5(substr(md5($string), 6).mt_rand());
-	}
+    /**
+     * 获取随机数
+     * @return string
+     */
+    public function random()
+    {
+        $string = $_SERVER['SERVER_SOFTWARE'].$_SERVER['SERVER_NAME'].$_SERVER['SERVER_ADDR'].$_SERVER['SERVER_PORT'].$_SERVER['HTTP_USER_AGENT'].mt_rand().microtime();
+        return md5(md5($string) . mt_rand());
+    }
 }

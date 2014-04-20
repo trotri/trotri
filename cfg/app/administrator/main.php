@@ -23,5 +23,12 @@ return array (
 		'list_rows' => 3, // 每页展示的行数
 		'list_pages' => 4, // 每页展示的页码数
 	),
+	'authentication' => array (
+		'cookie_name' => '',
+		'crypt_key' => '',
+		'sign_key' => '',
+		'expiry' => 86400,
+		'rnd_key_len' => 16
+	),
 	'navbar' => require_once 'navbar.php',
 );

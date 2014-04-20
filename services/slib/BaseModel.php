@@ -82,7 +82,7 @@ abstract class BaseModel extends BaseService
 	 */
 	public function __construct(BaseDb $db, Language $language)
 	{
-		list($tmp1, $this->_moduleName, $this->_className) = explode('\\', get_class($this));
+		list(, $this->_moduleName, $this->_className) = explode('\\', get_class($this));
 		$this->_className = substr($this->_className, 3);
 		parent::__construct($db, $language);
 	}

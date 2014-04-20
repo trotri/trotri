@@ -11,6 +11,7 @@
 namespace modules\system\action\show;
 
 use library\BaseAction;
+use tfc\util\Mcrypt;
 
 /**
  * SiteTest class file
@@ -28,6 +29,16 @@ class SiteTest extends BaseAction
 	 */
 	public function run()
 	{
-	
+		$cryptKey = 'rty';
+		$signKey = '123re45';
+
+		$mcrypt = new Mcrypt($cryptKey, $signKey, 4);
+		$plaintext = 'a|b|c|0|1|d';
+
+		$ciphertext = $mcrypt->encode($plaintext, 10);
+
+		echo 'plaintext: ', $plaintext, '<br/>';
+		echo 'ciphertext: ', $ciphertext, '  ', strlen($ciphertext), '<br/>';
+		echo '___:', $mcrypt->decode('906fMAYBqXVQu6cH7bc3ebdtmSdIQYU7TYRDnf8gAGOZXQej7/cR8A'), '<br/>';
 	}
 }

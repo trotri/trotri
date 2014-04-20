@@ -16,6 +16,27 @@ use tfc\util\Ral;
 /**
  * RalProxy class file
  * Ral代理操作类，调用CURL失败重试、记录操作日志、负载均衡管理（待扩展）
+ * <pre>
+ * 配置 /cfg/ral/cluster.php：
+ * return array (
+ *   'administrator' => array (
+ *     'server' => string,               // 服务器IP地址
+ *     'port' => integer,                // 服务器端口号
+ *     'connect_time_out_ms' => integer, // 链接超时：毫秒
+ *     'time_out_ms' => integer,         // 执行超时：毫秒
+ *     'converter' => string,            // 执行后返回数据类型
+ *     'retry' => integer,               // 重试次数
+ *   ),
+ *   'site' => array (
+ *     'server' => '127.0.0.1',
+ *     'port' => 80,
+ *     'connect_time_out_ms' => 200,
+ *     'time_out_ms' => 500,
+ *     'converter' => 'json',
+ *     'retry' => 1,
+ *   ),
+ * );
+ * </pre>
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: RalProxy.php 1 2013-04-05 01:38:06Z huan.song $
  * @package tfc.saf

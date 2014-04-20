@@ -8,13 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-return array (
-  'service' => array (
-    'dsn' => 'mysql:host=localhost;dbname=trotri',
-    'username' => 'root',
-    'password' => '123456',
-    'charset' => 'utf8',
-    'retry' => 3,
-    'tblprefix' => 'tr_'
-  ),
-);
+namespace library;
+
+/**
+ * Authorization class file
+ * 用户身份授权类
+ * @author 宋欢 <trotri@yeah.net>
+ * @version $Id: Authorization.php 1 2014-04-20 01:08:06Z huan.song $
+ * @package library
+ * @since 1.0
+ */
+class Authorization
+{
+	
+}
