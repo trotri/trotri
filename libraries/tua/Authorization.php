@@ -1,6 +1,6 @@
 <?php
 /**
- * Trotri
+ * Trotri User Authorize
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library;
+namespace tua;
 
 /**
  * Authorization class file
  * 用户身份授权类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Authorization.php 1 2014-04-20 01:08:06Z huan.song $
- * @package library
+ * @package tua
  * @since 1.0
  */
 class Authorization

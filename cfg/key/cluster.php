@@ -10,7 +10,7 @@
 
 return array (
   'authentication' => array (
-    'crypt' => 'IjfY309L6D0fF7leUr3HJ983',
+    'crypt' => '  IjfY309L6D0fF7leUr3HJ983  ',
     'sign' => 'kup30Lp9Ll20kIrTy4Lp35ek',
     'expiry' => 86400, // 1 Day
     'rnd_len' => 4
