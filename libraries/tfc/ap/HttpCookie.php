@@ -69,7 +69,7 @@ class HttpCookie
      * @param boolean $httponly TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击
      * @return boolean
      */
-    public static function add($name, $value, $expiry = 0, $path = '/', $domain = '', $secure = false, $httponly = false)
+    public static function add($name, $value, $expiry = 0, $path = '', $domain = '', $secure = false, $httponly = false)
     {
         return setcookie($name, $value, $expiry, $path, $domain, $secure, $httponly);
     }
@@ -83,7 +83,7 @@ class HttpCookie
      */
     public static function remove($name, $path = '/', $domain = '')
     {
-        return setcookie($name, false, mktime() - 86400, $path, $domain);
+        return setcookie($name, false, mktime() - 31536000, $path, $domain); // 过期1年
     }
 
     /**

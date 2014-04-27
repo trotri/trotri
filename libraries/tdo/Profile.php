@@ -81,7 +81,7 @@ class Profile
      */
     public static function getInstance($tableName, $idValue, DbProxy $dbProxy)
     {
-    	$tableName = strtolower($tableName);
+        $tableName = strtolower($tableName);
         $idValue = (int) $idValue;
         $name = $tableName . '[' . $idValue . ']';
         if (!isset(self::$_instances[$name])) {
@@ -217,12 +217,12 @@ class Profile
      */
     public function getIDCondition()
     {
-    	static $condition = null;
-    	if ($condition === null) {
-    		$condition = $this->getCommandBuilder()->quoteColumnName('profile_id') . ' = \'' . $this->_idValue . '\'';
-    	}
+        static $condition = null;
+        if ($condition === null) {
+            $condition = $this->getCommandBuilder()->quoteColumnName('profile_id') . ' = \'' . $this->_idValue . '\'';
+        }
 
-    	return $condition;
+        return $condition;
     }
 
     /**
@@ -231,12 +231,12 @@ class Profile
      */
     public function getUKCondition()
     {
-    	static $condition = null;
-    	if ($condition === null) {
-    		$condition = $this->getIDCondition() . ' AND ' . $this->getCommandBuilder()->quoteColumnName('profile_key') . ' = ' . CommandBuilder::PLACE_HOLDERS;
-    	}
+        static $condition = null;
+        if ($condition === null) {
+            $condition = $this->getIDCondition() . ' AND ' . $this->getCommandBuilder()->quoteColumnName('profile_key') . ' = ' . CommandBuilder::PLACE_HOLDERS;
+        }
 
-    	return $condition;
+        return $condition;
     }
 
     /**

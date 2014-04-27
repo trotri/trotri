@@ -14,7 +14,7 @@ use tfc\ap\HttpCookie;
 
 /**
  * Cookie class file
- * Cookie管理类，所有的Cookie都必须加密后保存
+ * Cookie管理类，所有的Cookie都应该加密后保存
  * <pre>
  * 配置 /cfg/app/appname/main.php：
  * return array (
@@ -123,6 +123,16 @@ class Cookie
     public function remove($name)
     {
         return HttpCookie::remove($name, $this->getPath(), $this->getDomain());
+    }
+
+    /**
+     * 判断Cookie名在Cookie中是否存在
+     * @param string $name
+     * @return boolean
+     */
+    public function has($name)
+    {
+        return HttpCookie::has($name);
     }
 
     /**

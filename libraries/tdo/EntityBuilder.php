@@ -74,36 +74,36 @@ class EntityBuilder
      */
     public function getTableSchema($tableName)
     {
-    	$className = 'tfc\\db\\TableSchema::' . strtolower($tableName);
-    	if (Singleton::has($className)) {
-    		return Singleton::get($className);
-    	}
+        $className = 'tfc\\db\\TableSchema::' . strtolower($tableName);
+        if (Singleton::has($className)) {
+            return Singleton::get($className);
+        }
 
-    	$ref = $this->getRefClass($tableName);
-    	$attributes = $ref->getDefaultProperties();
+        $ref = $this->getRefClass($tableName);
+        $attributes = $ref->getDefaultProperties();
 
-    	$tableSchema = new TableSchema();
-    	$tableSchema->name = $ref->hasConstant('TABLE_NAME') ? $ref->getConstant('TABLE_NAME') : $ref->getShortName();
-    	$tableSchema->autoIncrement = $ref->hasConstant('AUTO_INCREMENT') ? $ref->getConstant('AUTO_INCREMENT') : null;
-    	if (isset($attributes['primaryKey'])) {
-    		$tableSchema->primaryKey = $attributes['primaryKey'];
-    		unset($attributes['primaryKey']);
-    	}
+        $tableSchema = new TableSchema();
+        $tableSchema->name = $ref->hasConstant('TABLE_NAME') ? $ref->getConstant('TABLE_NAME') : $ref->getShortName();
+        $tableSchema->autoIncrement = $ref->hasConstant('AUTO_INCREMENT') ? $ref->getConstant('AUTO_INCREMENT') : null;
+        if (isset($attributes['primaryKey'])) {
+            $tableSchema->primaryKey = $attributes['primaryKey'];
+            unset($attributes['primaryKey']);
+        }
 
-    	$tableSchema->columnNames = array_keys($attributes);
-    	if ($tableSchema->primaryKey === null) {
-    		$tableSchema->primaryKey = $tableSchema->columnNames[0];
-    	}
+        $tableSchema->columnNames = array_keys($attributes);
+        if ($tableSchema->primaryKey === null) {
+            $tableSchema->primaryKey = $tableSchema->columnNames[0];
+        }
 
-    	foreach ($attributes as $key => $value) {
-    		if ($value === null) {
-    			unset($attributes[$key]);
-    		}
-    	}
-    	$tableSchema->attributeDefaults = $attributes;
+        foreach ($attributes as $key => $value) {
+            if ($value === null) {
+                unset($attributes[$key]);
+            }
+        }
+        $tableSchema->attributeDefaults = $attributes;
 
-    	Singleton::set($className, $tableSchema);
-    	return $tableSchema;
+        Singleton::set($className, $tableSchema);
+        return $tableSchema;
     }
 
     /**

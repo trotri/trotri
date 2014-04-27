@@ -199,7 +199,7 @@ class Logger
     {
         if (($traceLevel = (int) $traceLevel) < 0) {
             throw new ErrorException(sprintf(
-                'Logger Trace Level "%s" must be greater and equal than 0.', $traceLevel
+                'Logger Trace Level "%d" must be greater and equal than 0.', $traceLevel
             ));
         }
 

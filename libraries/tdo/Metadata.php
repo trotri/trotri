@@ -93,13 +93,13 @@ class Metadata
         foreach ($columns as $values) {
             $columnSchema = $this->getColumnSchema($values);
             if ($columnSchema->isPrimaryKey) {
-            	if ($tableSchema->primaryKey === null) {
-                	$tableSchema->primaryKey = $columnSchema->name;
-            	}
-            	else {
-            		$tableSchema->primaryKey = (array) $tableSchema->primaryKey;
-            		$tableSchema->primaryKey[] = $columnSchema->name;
-            	}
+                if ($tableSchema->primaryKey === null) {
+                    $tableSchema->primaryKey = $columnSchema->name;
+                }
+                else {
+                    $tableSchema->primaryKey = (array) $tableSchema->primaryKey;
+                    $tableSchema->primaryKey[] = $columnSchema->name;
+                }
             }
 
             if ($columnSchema->isAutoIncrement) {
@@ -115,7 +115,7 @@ class Metadata
         }
 
         if (is_array($tableSchema->primaryKey)) {
-        	$tableSchema->primaryKey = $this->getPrimary($tableName);
+            $tableSchema->primaryKey = $this->getPrimary($tableName);
         }
 
         return $this->_tableSchemas[$tableName] = $tableSchema;
@@ -150,20 +150,20 @@ class Metadata
      */
     public function getPrimary($tableName)
     {
-    	$sql = str_replace('`', '', $this->getCreateTable($tableName));
-    	$regs = array();
-    	$preg = '/PRIMARY KEY\s*\(([^\)]+)\)\s*/mi';
-    	preg_match_all($preg, $sql, $regs, PREG_SET_ORDER);
-		if ($regs === array()) {
-			return null;
-		}
+        $sql = str_replace('`', '', $this->getCreateTable($tableName));
+        $regs = array();
+        $preg = '/PRIMARY KEY\s*\(([^\)]+)\)\s*/mi';
+        preg_match_all($preg, $sql, $regs, PREG_SET_ORDER);
+        if ($regs === array()) {
+            return null;
+        }
 
-		$primaryKey = str_replace(' ', '', $regs[0][1]);
-		if (strpos($primaryKey, ',') === false) {
-			return $primaryKey;
-		}
+        $primaryKey = str_replace(' ', '', $regs[0][1]);
+        if (strpos($primaryKey, ',') === false) {
+            return $primaryKey;
+        }
 
-		return explode(',', $primaryKey);
+        return explode(',', $primaryKey);
     }
 
     /**

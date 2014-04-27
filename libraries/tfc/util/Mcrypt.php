@@ -47,6 +47,8 @@ class Mcrypt
      * @param string $cryptKey
      * @param string $signKey
      * @param integer $rndKeyLen
+     * @throws ErrorException 如果加密密钥为空，抛出异常
+     * @throws ErrorException 如果签名密钥为空，抛出异常
      */
     public function __construct($cryptKey, $signKey, $rndKeyLen = self::DEFAULT_RND_KEY_LEN)
     {
