@@ -11,7 +11,8 @@
 namespace modules\system\action\show;
 
 use library\BaseAction;
-use tfc\saf\Keys;
+use tfc\saf\Cookie;
+use tfc\util\Mcrypt;
 
 /**
  * SiteTest class file
@@ -29,22 +30,93 @@ class SiteTest extends BaseAction
 	 */
 	public function run()
 	{
-		$keys = new Keys('authentication');
+		$cookie = new Cookie('cookie');
 
-		//$crypt = $keys->getCrypt();
-		//var_dump($crypt);
+		/*
+		$encodeValue = $cookie->getEncodeValue();
+		var_dump($encodeValue);
 
-		$config = $keys->getConfig();
-		var_dump($config);
+		$cookie->setEncodeValue(false);
 
-		//$sign = $keys->getSign();
-		//var_dump($sign);
-/*
-		$expiry = $keys->getExpiry();
-		var_dump($expiry);
+		$encodeValue = $cookie->getEncodeValue();
+		var_dump($encodeValue);
 
-		$rndLen = $keys->getRndLen();
-		var_dump($expiry);
+		$encodeValue = $cookie->setEncodeValue(true)->getEncodeValue();
+		var_dump($encodeValue);
+		*/
+
+		// var_dump($cookie->getClusterName());
+
+		/*
+		$keyName = $cookie->getKeyName();
+		echo 'keyName: ';
+		var_dump($keyName);
+		echo '<br/>';
+
+		$path = $cookie->getPath();
+		echo 'path: ';
+		var_dump($path);
+		echo '<br/>';
+
+		$domain = $cookie->getDomain();
+		echo 'domain: ';
+		var_dump($domain);
+		echo '<br/>';
+
+		$secure = $cookie->getSecure();
+		echo 'secure: ';
+		var_dump($secure);
+		echo '<br/>';
+
+		$httponly = $cookie->getHttponly();
+		echo 'httponly: ';
+		var_dump($httponly);
+		echo '<br/>';
+		*/
+
+		/*
+		$mef = $cookie->getMef();
+		var_dump($mef);
+		*/
+
+		$cookie->setEncodeValue(true);
+
+		/*
+		$name = 'user';
+		$value = '123456';
+		$ret = $cookie->add($name, $value, mktime() + 15);
+		var_dump($ret);
+		*/
+		
+		$name = 'user';
+		$ret = $cookie->get($name);
+		var_dump($ret);
+		
+
+		/*
+		$name = 'admin';
+		$value = 'abc123';
+		$ret = $cookie->add($name, $value);
+		var_dump($ret);
+		*/
+
+		/*
+		$name = 'admin';
+		$ret = $cookie->get($name);
+		var_dump($ret);
+
+		$mcrypt = new Mcrypt('IjfY309L6D0fF7leUr3HJ983', 'kup30Lp9Ll20kIrTy4Lp35ek', 4);
+		$ret = $mcrypt->decode($ret);
+
+		var_dump($ret);
+		*/
+		
+		
+
+		/*
+		$name = 'admin';
+		$ret = $cookie->remove($name);
+		var_dump($ret);
 		*/
 	}
 }

@@ -14,7 +14,7 @@ use tfc\ap\ErrorException;
 
 /**
  * Mcrypt class file
- * 可逆的加密方法类，基于流加密算法
+ * 可逆的加密算法类，基于流加密算法
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Mcrypt.php 1 2014-04-17 16:48:06Z huan.song $
  * @package tfc.util

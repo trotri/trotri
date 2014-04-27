@@ -11,14 +11,14 @@
 namespace tfc\ap;
 
 /**
- * UserIdentity abstract class file
+ * UserIdentity class file
  * 用户身份管理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: UserIdentity.php 1 2013-04-05 01:08:06Z huan.song $
  * @package tfc.ap
  * @since 1.0
  */
-abstract class UserIdentity
+class UserIdentity
 {
     /**
      * @var integer 用户ID

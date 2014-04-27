@@ -1,10 +1,10 @@
 <?php
 /**
- * Trotri
+ * Trotri Foundation Classes
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright (c) 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -21,13 +21,13 @@ use tfc\ap\ErrorException;
  *   'authentication' => array (
  *     'crypt' => string,   // 加密密钥
  *     'sign' => string,    // 签名密钥
- *     'expiry' => integer, // 缺省的密文有效期，如果等于0，表示永久有效
+ *     'expiry' => integer, // 缺省的密文有效期，如果等于0，表示永久有效，单位：秒
  *     'rnd_len' => integer // 随机密钥长度，取值 0-32
  *   ),
  *   'site' => array (
  *     'crypt' => string,   // 加密密钥
  *     'sign' => string,    // 签名密钥
- *     'expiry' => integer, // 缺省的密文有效期，如果等于0，表示永久有效
+ *     'expiry' => integer, // 缺省的密文有效期，如果等于0，表示永久有效，单位：秒
  *     'rnd_len' => integer // 随机密钥长度，取值 0-32
  *   )
  * );
@@ -96,6 +96,7 @@ class Keys
 
     /**
      * 获取密钥配置信息
+     * @param mixed $key
      * @return mixed
      * @throws ErrorException 如果配置信息中没有指定加密密钥、签名密钥、缺省的密文有效期或随机密钥长度，抛出异常
      */

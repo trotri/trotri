@@ -40,6 +40,16 @@ defined('MAGIC_QUOTES_GPC') || define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc()
 defined('APP_NAME') || exit('Request Error, No defined APP_NAME');
 
 /**
+ * 时间常量，单位：秒
+ */
+define('MINUTE_IN_SECONDS', 60);
+define('HOUR_IN_SECONDS',   60 * MINUTE_IN_SECONDS);
+define('DAY_IN_SECONDS',    24 * HOUR_IN_SECONDS);
+define('WEEK_IN_SECONDS',    7 * DAY_IN_SECONDS);
+define('MONTH_IN_SECONDS',  10 * DAY_IN_SECONDS);
+define('YEAR_IN_SECONDS',  365 * DAY_IN_SECONDS);
+
+/**
  * 不同操作系统的目录分割符
  */
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);

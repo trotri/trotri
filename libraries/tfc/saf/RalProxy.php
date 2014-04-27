@@ -187,6 +187,7 @@ class RalProxy
 
     /**
      * 获取Ral配置信息，如果配置信息中没有指定连接数据库失败尝试重连次数，则由MAX_RETRY_TIMES常量指定次数
+     * @param mixed $key
      * @return mixed
      * @throws ErrorException 如果没有指定服务器名称或IP地址、服务器端口号、连接超时、执行超时或获取数据后转码方式，抛出异常
      */
