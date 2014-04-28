@@ -11,8 +11,7 @@
 namespace modules\system\action\show;
 
 use library\BaseAction;
-use tfc\saf\Cookie;
-use tfc\util\Mcrypt;
+use tid\Authentication;
 
 /**
  * SiteTest class file
@@ -30,93 +29,76 @@ class SiteTest extends BaseAction
 	 */
 	public function run()
 	{
-		$cookie = new Cookie('cookie');
+		$authentication = new Authentication('authentication', 'aaa');
 
 		/*
-		$encodeValue = $cookie->getEncodeValue();
-		var_dump($encodeValue);
-
-		$cookie->setEncodeValue(false);
-
-		$encodeValue = $cookie->getEncodeValue();
-		var_dump($encodeValue);
-
-		$encodeValue = $cookie->setEncodeValue(true)->getEncodeValue();
-		var_dump($encodeValue);
-		*/
-
-		// var_dump($cookie->getClusterName());
-
-		/*
-		$keyName = $cookie->getKeyName();
-		echo 'keyName: ';
-		var_dump($keyName);
-		echo '<br/>';
-
-		$path = $cookie->getPath();
-		echo 'path: ';
-		var_dump($path);
-		echo '<br/>';
-
-		$domain = $cookie->getDomain();
-		echo 'domain: ';
-		var_dump($domain);
-		echo '<br/>';
-
-		$secure = $cookie->getSecure();
-		echo 'secure: ';
-		var_dump($secure);
-		echo '<br/>';
-
-		$httponly = $cookie->getHttponly();
-		echo 'httponly: ';
-		var_dump($httponly);
-		echo '<br/>';
+		var_dump($authentication->getCookieClusterName());
+		var_dump($authentication->getCookieName());
 		*/
 
 		/*
-		$mef = $cookie->getMef();
-		var_dump($mef);
-		*/
-
-		$cookie->setEncodeValue(true);
-
-		/*
-		$name = 'user';
-		$value = '123456';
-		$ret = $cookie->add($name, $value, mktime() + 15);
+		$ret = $authentication->getCookie();
 		var_dump($ret);
+		echo '<br/>';
 		*/
+
+		/*
+		$ret = $authentication->hasIdentity();
+		var_dump($ret);
+		echo '<br/>';
+		*/
+
+		/*
+		$ret = $authentication->getIdentity();
+		var_dump($ret);
+		echo '<br/>';
+		*/
+
+		/*
+		$ret = $authentication->clearIdentity();
+		var_dump($ret);
+		echo '<br/>';
+		*/
+
+		/*
+		$userId = 1000000000;
+		$userName = '  songhuansonghuansonghuan   ';
+		$password = '  abc123abc123abc123abc123abc123abc123abc123abc123    ';
+		$expiry = 0;
+		$ret = $authentication->setIdentity($userId, $userName, $password, $expiry);
+		var_dump($ret);
+		echo '<br/>';
+		*/
+
 		
-		$name = 'user';
-		$ret = $cookie->get($name);
+		echo '<pre>';
+		$ret = $authentication->getIdentity();
 		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $authentication->getIdentity();
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $authentication->getIdentity();
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $authentication->getIdentity();
+		var_dump($ret);
+		echo '<br/>';
 		
 
 		/*
-		$name = 'admin';
-		$value = 'abc123';
-		$ret = $cookie->add($name, $value);
+		$userId = '2a';
+		$userName = 'ssssssssssssssssssssssssssssssss';
+		$password = "a*&()b";
+		$expiry = "0";
+		$ret = $authentication->setIdentity($userId, $userName, $password, $expiry);
 		var_dump($ret);
-		*/
-
-		/*
-		$name = 'admin';
-		$ret = $cookie->get($name);
-		var_dump($ret);
-
-		$mcrypt = new Mcrypt('IjfY309L6D0fF7leUr3HJ983', 'kup30Lp9Ll20kIrTy4Lp35ek', 4);
-		$ret = $mcrypt->decode($ret);
-
-		var_dump($ret);
+		echo '<br/>';
 		*/
 		
 		
-
-		/*
-		$name = 'admin';
-		$ret = $cookie->remove($name);
-		var_dump($ret);
-		*/
 	}
 }
