@@ -21,6 +21,26 @@ namespace tid;
 class Authorization
 {
 	/**
+	 * @var integer 权限：SELECT
+	 */
+	const SELECT    = Role::SELECT; // 0x01
+
+	/**
+	 * @var integer 权限：INSERT
+	 */
+	const INSERT    = Role::INSERT; // 0x02
+
+	/**
+	 * @var integer 权限：UPDATE
+	 */
+	const UPDATE    = Role::UPDATE; // 0x04
+
+	/**
+	 * @var integer 权限：DELETE
+	 */
+	const DELETE    = Role::DELETE; // 0x08
+
+	/**
 	 * @var array 寄存所有的角色
 	 */
 	protected $_roles = array();
@@ -30,17 +50,17 @@ class Authorization
 	 * @param string $appName
 	 * @param string $modName
 	 * @param string $ctrlName
-	 * @param string $actName
+	 * @param integer $power
 	 * @return boolean
 	 */
-	public function isAllowed($appName, $modName, $ctrlName, $actName)
+	public function isAllowed($appName, $modName, $ctrlName, $power)
 	{
 		if ($this->_roles === array()) {
 			return false;
 		}
 
 		foreach ($this->_roles as $role) {
-			if ($role->hasResource($appName, $modName, $ctrlName, $actName)) {
+			if ($role->isAllowed($appName, $modName, $ctrlName, $power)) {
 				return true;
 			}
 		}
@@ -53,12 +73,12 @@ class Authorization
 	 * @param string $appName
 	 * @param string $modName
 	 * @param string $ctrlName
-	 * @param string $actName
+	 * @param integer $power
 	 * @return boolean
 	 */
-	public function isDenied($appName, $modName, $ctrlName, $actName)
+	public function isDenied($appName, $modName, $ctrlName, $power)
 	{
-		return !$this->isAllowed($appName, $modName, $ctrlName, $actName);
+		return !$this->isAllowed($appName, $modName, $ctrlName, $power);
 	}
 
 	/**
@@ -128,5 +148,45 @@ class Authorization
 	{
 		$this->_roles = array();
 		return $this;
+	}
+
+	/**
+	 * 删除所有的角色资源文件
+	 * @return boolean
+	 */
+	public function flush()
+	{
+		$dir = $this->getDir();
+		$fileNames = scandir($dir);
+		if (is_array($fileNames)) {
+			if (count($fileNames) === 2) {
+				return true;
+			}
+
+			foreach ($fileNames as $fileName) {
+				if ($fileName === '.' || $fileName === '..') {
+					continue;
+				}
+
+				$fileName = $dir . DS . $fileName;
+				@unlink($fileName);
+			}
+
+			$fileNames = scandir($dir);
+			if (count($fileNames) === 2) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * 获取角色资源所在的目录名
+	 * @return string
+	 */
+	public function getDir()
+	{
+		return DIR_DATA_RUNTIME_ROLES;
 	}
 }

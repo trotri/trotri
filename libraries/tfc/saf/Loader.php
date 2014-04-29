@@ -175,14 +175,14 @@ defined('DIR_DATA') || define('DIR_DATA', DIR_ROOT . DS . 'data');
 defined('DIR_DATA_APP') || define('DIR_DATA_APP', DIR_DATA . DS . 'app' . DS . APP_NAME);
 
 /**
- * 角色授权数据缓存目录
- */
-defined('DIR_DATA_ROLES') || define('DIR_DATA_ROLES', DIR_DATA . DS . 'roles');
-
-/**
  * 运行时生成的临时文件存放目录
  */
 defined('DIR_DATA_RUNTIME') || define('DIR_DATA_RUNTIME', DIR_DATA . DS . 'runtime');
+
+/**
+ * 角色授权数据缓存目录
+ */
+defined('DIR_DATA_RUNTIME_ROLES') || define('DIR_DATA_RUNTIME_ROLES', DIR_DATA_RUNTIME . DS . 'roles');
 
 /**
  * 运行时生成的表实体类存放目录
@@ -216,16 +216,16 @@ is_dir(DIR_LOG_APP) || mkdir(DIR_LOG_APP, 0664, true);
 is_dir(DIR_LOG_APP) || exit('Request Error, Create Log Dir Failed');
 
 /**
- * 初始化角色授权数据缓存目录
- */
-is_dir(DIR_DATA_ROLES) || mkdir(DIR_DATA_ROLES, 0664, true);
-is_dir(DIR_DATA_ROLES) || exit('Request Error, Create Roles Dir Failed');
-
-/**
  * 初始化数据文件存放根目录、当前项目的数据文件存放目录
  */
 is_dir(DIR_DATA_RUNTIME) || mkdir(DIR_DATA_RUNTIME, 0664, true);
 is_dir(DIR_DATA_RUNTIME) || exit('Request Error, Create RunTime Dir Failed');
+
+/**
+ * 初始化角色授权数据缓存目录
+ */
+is_dir(DIR_DATA_RUNTIME_ROLES) || mkdir(DIR_DATA_RUNTIME_ROLES, 0664, true);
+is_dir(DIR_DATA_RUNTIME_ROLES) || exit('Request Error, Create RunTime Roles Dir Failed');
 
 /**
  * 初始化表实体类存放目录

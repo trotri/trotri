@@ -205,7 +205,7 @@ class Power
             ));
         }
 
-        return (boolean) $userMode & $powerMode;
+        return (boolean) ($userMode & $powerMode);
     }
 
     /**

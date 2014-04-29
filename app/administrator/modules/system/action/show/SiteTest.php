@@ -11,7 +11,7 @@
 namespace modules\system\action\show;
 
 use library\BaseAction;
-use tid\Authentication;
+use tid\Role;
 
 /**
  * SiteTest class file
@@ -29,76 +29,218 @@ class SiteTest extends BaseAction
 	 */
 	public function run()
 	{
-		$authentication = new Authentication('authentication', 'aaa');
+		$name = 'public';
+		$role = new Role($name);
 
-		/*
-		var_dump($authentication->getCookieClusterName());
-		var_dump($authentication->getCookieName());
-		*/
-
-		/*
-		$ret = $authentication->getCookie();
-		var_dump($ret);
-		echo '<br/>';
-		*/
-
-		/*
-		$ret = $authentication->hasIdentity();
-		var_dump($ret);
-		echo '<br/>';
-		*/
-
-		/*
-		$ret = $authentication->getIdentity();
-		var_dump($ret);
-		echo '<br/>';
-		*/
-
-		/*
-		$ret = $authentication->clearIdentity();
-		var_dump($ret);
-		echo '<br/>';
-		*/
-
-		/*
-		$userId = 1000000000;
-		$userName = '  songhuansonghuansonghuan   ';
-		$password = '  abc123abc123abc123abc123abc123abc123abc123abc123    ';
-		$expiry = 0;
-		$ret = $authentication->setIdentity($userId, $userName, $password, $expiry);
-		var_dump($ret);
-		echo '<br/>';
-		*/
-
-		
 		echo '<pre>';
-		$ret = $authentication->getIdentity();
-		var_dump($ret);
+		
+		$resources = $role->getResources();
+		print_r($resources);
 		echo '<br/>';
 		
-		$ret = $authentication->getIdentity();
-		var_dump($ret);
+		$ret = $role->isDenied('administrator', 'builder', 'fields', Role::SELECT);
+		echo '1: '; var_dump($ret);
 		echo '<br/>';
 		
-		$ret = $authentication->getIdentity();
-		var_dump($ret);
+		$ret = $role->isDenied('administrator', 'builder', 'fields', Role::INSERT);
+		echo '2: '; var_dump($ret);
 		echo '<br/>';
 		
-		$ret = $authentication->getIdentity();
-		var_dump($ret);
+		$ret = $role->isDenied('administrator', 'builder', 'fields', 3);
+		echo '3: '; var_dump($ret);
 		echo '<br/>';
 		
+		$ret = $role->isDenied('administrator', 'builder', 'fields', Role::UPDATE);
+		echo '4: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isDenied('administrator', 'builder', 'fields', 5);
+		echo '5: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isDenied('administrator', 'builder', 'fields', 6);
+		echo '6: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isDenied('administrator', 'builder', 'fields', 7);
+		echo '7: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isDenied('administrator', 'builder', 'fields', Role::DELETE);
+		echo '8: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isDenied('administrator', 'builder', 'fields', 9);
+		echo '9: '; var_dump($ret);
+		echo '<br/>';
 
 		/*
-		$userId = '2a';
-		$userName = 'ssssssssssssssssssssssssssssssss';
-		$password = "a*&()b";
-		$expiry = "0";
-		$ret = $authentication->setIdentity($userId, $userName, $password, $expiry);
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 1);
+		echo '1: '; var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 2);
+		echo '2: '; var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 3);
+		echo '3: '; var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 4);
+		echo '4: '; var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 5);
+		echo '5: '; var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 6);
+		echo '6: '; var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 7);
+		echo '7: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 8);
+		echo '8: '; var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->isAllowed('administrator', 'builder', 'fields', 9);
+		echo '9: '; var_dump($ret);
+		echo '<br/>';
+		*/
+
+		/*
+		$ret = $role->allow('administrator', 'builder', 'fields', "2");
+		var_dump($ret);
+		echo '<br/>';
+		
+		
+		$ret = $role->allow('administrator', 'builder', 'fields', '4');
+		var_dump($ret);
+		echo '<br/>';
+
+		
+		$ret = $role->allow('administrator', 'builder', 'fields', 1);
+		var_dump($ret);
+		echo '<br/>';
+
+		$ret = $role->allow('administrator', 'builder', 'fields', 8);
+		var_dump($ret);
+		echo '<br/>';
+		*/
+
+		/*
+		$ret = $role->deny('administrator', 'builder', ' ', "2");
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->deny('administrator', ' ', 'fields', "2");
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->deny('administrator', 'builder', 'fieldsa', "2");
+		var_dump($ret);
+		echo '<br/>';
+*/
+		/*
+		$ret = $role->allow('administrator', 'system', 'fields', "2");
+		var_dump($ret);
+		echo '<br/>';
+	
+		$ret = $role->allow('administrator', 'system', 'fields', '4');
+		var_dump($ret);
+		echo '<br/>';
+		
+		
+		$ret = $role->allow('administrator', 'system', 'fields', 1);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->allow('administrator', 'system', 'fields', 8);
+		var_dump($ret);
+		echo '<br/>';
+		*/
+		
+		/*
+		$resources = $role->getResources();
+		print_r($resources);
+		echo '<br/>';
+		*/
+		
+		/*
+		$ret = $role->allow('administrator', 'system', 'types', "2");
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->allow('administrator', 'system', 'types', '4');
+		var_dump($ret);
+		echo '<br/>';
+		
+		
+		$ret = $role->allow('administrator', 'system', 'types', 1);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->allow('administrator', 'system', 'types', 8);
 		var_dump($ret);
 		echo '<br/>';
 		*/
 		
 		
+
+		/*
+		$ret = $role->writeResources();
+		var_dump($ret);
+		*/
+
+		//$ret = $role->clearResources();
+		//var_dump($ret);
+
+		/*
+		$ret = $role->deny('administrator', 'system', 'fields', 8);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->deny('administrator', 'system', 'fields', 2);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->deny('administrator', 'system', 'fields', 3);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->deny('administrator', 'system', 'fields', 1);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$ret = $role->deny('administrator', 'system', 'fields', 4);
+		var_dump($ret);
+		echo '<br/>';
+		
+		$resources = $role->getResources();
+		print_r($resources);
+		echo '<br/>';
+		*/
+		
+
+		/*
+		$resources = $role->readResources();
+		print_r($resources);
+		echo '<br/>';
+		*/
+
+		/*
+		$resources = $role->getResources();
+		print_r($resources);
+		echo '<br/>';
+		*/
+
+		/*
+		$ret = $role->isValid(2, true);
+		var_dump($ret);
+		*/
 	}
 }
