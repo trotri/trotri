@@ -20,173 +20,153 @@ namespace tid;
  */
 class Authorization
 {
-	/**
-	 * @var integer 权限：SELECT
-	 */
-	const SELECT    = Role::SELECT; // 0x01
+    /**
+     * @var array 寄存所有的角色
+     */
+    protected $_roles = array();
 
-	/**
-	 * @var integer 权限：INSERT
-	 */
-	const INSERT    = Role::INSERT; // 0x02
+    /**
+     * 是否允许访问
+     * @param string $appName
+     * @param string $modName
+     * @param string $ctrlName
+     * @param integer $power
+     * @return boolean
+     */
+    public function isAllowed($appName, $modName, $ctrlName, $power)
+    {
+        if ($this->_roles === array()) {
+            return false;
+        }
 
-	/**
-	 * @var integer 权限：UPDATE
-	 */
-	const UPDATE    = Role::UPDATE; // 0x04
+        foreach ($this->_roles as $role) {
+            if ($role->isAllowed($appName, $modName, $ctrlName, $power)) {
+                return true;
+            }
+        }
 
-	/**
-	 * @var integer 权限：DELETE
-	 */
-	const DELETE    = Role::DELETE; // 0x08
+        return false;
+    }
 
-	/**
-	 * @var array 寄存所有的角色
-	 */
-	protected $_roles = array();
+    /**
+     * 是否拒绝访问
+     * @param string $appName
+     * @param string $modName
+     * @param string $ctrlName
+     * @param integer $power
+     * @return boolean
+     */
+    public function isDenied($appName, $modName, $ctrlName, $power)
+    {
+        return !$this->isAllowed($appName, $modName, $ctrlName, $power);
+    }
 
-	/**
-	 * 是否允许访问
-	 * @param string $appName
-	 * @param string $modName
-	 * @param string $ctrlName
-	 * @param integer $power
-	 * @return boolean
-	 */
-	public function isAllowed($appName, $modName, $ctrlName, $power)
-	{
-		if ($this->_roles === array()) {
-			return false;
-		}
+    /**
+     * 获取一个角色
+     * @param string $name
+     * @return tid\Role
+     */
+    public function getRole($name)
+    {
+        if ($this->hasRole($name)) {
+            return $this->_roles[$name];
+        }
 
-		foreach ($this->_roles as $role) {
-			if ($role->isAllowed($appName, $modName, $ctrlName, $power)) {
-				return true;
-			}
-		}
+        return null;
+    }
 
-		return false;
-	}
+    /**
+     * 添加一个角色，如果角色名已经存在，则替换老值
+     * @param Role $role
+     * @return tid\Authorization
+     */
+    public function addRole(Role $role)
+    {
+        $name = $role->getName();
+        $this->_roles[$name] = $role;
+        return $this;
+    }
 
-	/**
-	 * 是否拒绝访问
-	 * @param string $appName
-	 * @param string $modName
-	 * @param string $ctrlName
-	 * @param integer $power
-	 * @return boolean
-	 */
-	public function isDenied($appName, $modName, $ctrlName, $power)
-	{
-		return !$this->isAllowed($appName, $modName, $ctrlName, $power);
-	}
+    /**
+     * 删除一个角色
+     * @param string $name
+     * @return tid\Authorization
+     */
+    public function removeRole($name)
+    {
+        if ($this->hasRole($name)) {
+            unset($this->_roles[$name]);
+        }
 
-	/**
-	 * 获取所有的角色
-	 * @return array
-	 */
-	public function getRoles()
-	{
-		return $this->_roles;
-	}
+        return $this;
+    }
 
-	/**
-	 * 获取一个角色
-	 * @param string $name
-	 * @return tid\Role
-	 */
-	public function getRole($name)
-	{
-		if ($this->hasRole($name)) {
-			return $this->_roles[$name];
-		}
+    /**
+     * 判断角色是否存在
+     * @param string $name
+     * @return boolean
+     */
+    public function hasRole($name)
+    {
+        return isset($this->_roles[$name]);
+    }
 
-		return null;
-	}
+    /**
+     * 获取所有的角色
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->_roles;
+    }
 
-	/**
-	 * 添加一个角色，如果角色名已经存在，则替换老值
-	 * @param Role $role
-	 * @return tid\Authorization
-	 */
-	public function addRole(Role $role)
-	{
-		$name = $role->getName();
-		$this->_roles[$name] = $role;
-		return $this;
-	}
+    /**
+     * 清空所有的角色
+     * @return tid\Authorization
+     */
+    public function clearRoles()
+    {
+        $this->_roles = array();
+        return $this;
+    }
 
-	/**
-	 * 删除一个角色
-	 * @param string $name
-	 * @return tid\Authorization
-	 */
-	public function removeRole($name)
-	{
-		if ($this->hasRole($name)) {
-			unset($this->_roles[$name]);
-		}
+    /**
+     * 删除所有的角色资源文件
+     * @return boolean
+     */
+    public function flush()
+    {
+        $dir = $this->getDir();
+        $fileNames = scandir($dir);
+        if (is_array($fileNames)) {
+            if (count($fileNames) === 2) {
+                return true;
+            }
 
-		return $this;
-	}
+            foreach ($fileNames as $fileName) {
+                if ($fileName === '.' || $fileName === '..') {
+                    continue;
+                }
 
-	/**
-	 * 判断角色是否存在
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function hasRole($name)
-	{
-		return isset($this->_roles[$name]);
-	}
+                $fileName = $dir . DS . $fileName;
+                @unlink($fileName);
+            }
 
-	/**
-	 * 清空所有的角色
-	 * @return tid\Authorization
-	 */
-	public function clearRoles()
-	{
-		$this->_roles = array();
-		return $this;
-	}
+            $fileNames = scandir($dir);
+            if (count($fileNames) === 2) {
+                return true;
+            }
+        }
 
-	/**
-	 * 删除所有的角色资源文件
-	 * @return boolean
-	 */
-	public function flush()
-	{
-		$dir = $this->getDir();
-		$fileNames = scandir($dir);
-		if (is_array($fileNames)) {
-			if (count($fileNames) === 2) {
-				return true;
-			}
+        return false;
+    }
 
-			foreach ($fileNames as $fileName) {
-				if ($fileName === '.' || $fileName === '..') {
-					continue;
-				}
-
-				$fileName = $dir . DS . $fileName;
-				@unlink($fileName);
-			}
-
-			$fileNames = scandir($dir);
-			if (count($fileNames) === 2) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * 获取角色资源所在的目录名
-	 * @return string
-	 */
-	public function getDir()
-	{
-		return DIR_DATA_RUNTIME_ROLES;
-	}
+    /**
+     * 获取角色资源所在的目录名
+     * @return string
+     */
+    public function getDir()
+    {
+        return DIR_DATA_RUNTIME_ROLES;
+    }
 }
