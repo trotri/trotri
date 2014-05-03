@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace srv;
 
 /**
  * ErrorNo class file
  * 业务层：常用错误码类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ErrorNo.php 1 2013-05-18 14:58:59Z huan.song $
- * @package app
+ * @package srv
  * @since 1.0
  */
 class ErrorNo

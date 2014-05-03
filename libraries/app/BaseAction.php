@@ -25,7 +25,7 @@ use tfc\saf\Cfg;
  * <pre>
  * 配置 /cfg/app/appname/main.php：
  * return array (
- *   'charset' => 'utf-8',  // 项目编码，不区分大小写
+ *   'encoding' => 'utf-8', // 项目编码，不区分大小写
  *   'language' => 'zh-CN', // 输出的语言种类，区分大小写
  * );
  * </pre>
@@ -80,7 +80,7 @@ abstract class BaseAction extends Action
 	{
 		// 验证配置中的项目编码是否合法
 		try {
-			$encoding = strtoupper(trim(Cfg::getApp('charset')));
+			$encoding = strtoupper(trim(Cfg::getApp('encoding')));
 			Ap::setEncoding($encoding);
 		}
 		catch (ErrorException $e) {

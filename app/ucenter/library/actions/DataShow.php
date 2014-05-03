@@ -8,20 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library;
+namespace library\actions;
+
+use app\DataAction;
 
 /**
- * Constant class file
- * 常用常量类
+ * DataShow abstract class file
+ * DataShow基类，用于Ajax调用和对其他项目提供的接口，需要规范输出数据格式
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Constant.php 1 2013-04-05 01:08:06Z huan.song $
- * @package library
+ * @version $Id: DataShow.php 1 2013-04-05 01:08:06Z huan.song $
+ * @package library.actions
  * @since 1.0
  */
-class Constant
+abstract class DataShow extends DataAction
 {
-	/**
-	 * @var string 数据库配置名
-	 */
-	const DB_CLUSTER = 'ucenter';
 }

@@ -8,31 +8,26 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\system\action\show;
+namespace modules\system\action\site;
 
-use library\action\base\ShowAction;
+use library\actions;
 
 /**
- * SiteErr404 class file
- * 系统管理-404错误页
+ * Remove class file
+ * 删除数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SiteErr404.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.system.action.show
+ * @version $Id: Remove.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.system.action.site
  * @since 1.0
  */
-class SiteErr404 extends ShowAction
+class Remove extends actions\Remove
 {
-	/**
-	 * @var string 页面首次渲染的布局名
-	 */
-	public $layoutName = 'column1';
-
 	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\interfaces.Action::run()
 	 */
 	public function run()
 	{
-	
+		exit('modules\\system\\action\\site\\Remove');
 	}
 }

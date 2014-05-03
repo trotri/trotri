@@ -13,13 +13,14 @@ namespace app;
 use tfc\ap\Ap;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
+use tfc\util\String;
 use tfc\saf\Text;
 use tfc\saf\Log;
-use tfc\util\String;
+use tfc\saf\Cfg;
 
 /**
  * ShowAction abstract class file
- * ShowAction基类，用于展示数据，需要加载模板
+ * ShowAction基类，用于展示数据，加载模板
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ShowAction.php 1 2013-04-05 01:08:06Z huan.song $
  * @package app
@@ -31,6 +32,41 @@ abstract class ShowAction extends BaseAction
 	 * @var string 页面首次渲染的布局名
 	 */
 	public $layoutName = 'column2';
+
+	/**
+	 * (non-PHPdoc)
+	 * @see app.BaseAction::_init()
+	 */
+	protected function _init()
+	{
+		parent::_init();
+		$this->_initView();
+	}
+
+	/**
+     * 初始化模板解析类
+     * <pre>
+     * 配置 /cfg/app/appname/main.php：
+     * return array (
+     *   'view' => array (
+     *     'skin_name' => 'bootstrap', // 模板风格
+     *     'charset' => 'utf-8',       // HTML编码
+     *     'tpl_extension' => '.php',  // 模板后缀
+     *     'version' => '1.0',         // Js、Css文件的版本号
+     *   ),
+     * );
+     * </pre>
+     * @return void
+     */
+	protected function _initView()
+	{
+		$viw = Mvc::getView();
+		$viw->viewDirectory = DIR_APP_VIEWS;
+		$viw->skinName      = Cfg::getApp('skin_name', 'view');
+		$viw->tplExtension  = Cfg::getApp('tpl_extension', 'view');
+		$viw->charset       = Cfg::getApp('charset', 'view');
+		$viw->version       = Cfg::getApp('version', 'view');
+	}
 
 	/**
 	 * 展示页面，输出数据

@@ -42,7 +42,7 @@ abstract class DataAction extends BaseAction
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library.BaseAction::_init()
+	 * @see app.BaseAction::_init()
 	 */
 	protected function _init()
 	{

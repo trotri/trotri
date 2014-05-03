@@ -10,6 +10,8 @@
 
 namespace app;
 
+use tfc\ap\ErrorException;
+use tfc\mvc\Mvc;
 use tfc\mvc\Controller;
 
 /**
@@ -22,4 +24,29 @@ use tfc\mvc\Controller;
  */
 abstract class BaseController extends Controller
 {
+	/**
+	 * (non-PHPdoc)
+	 * @see tfc\mvc.Controller::getActionByMap()
+	 */
+	public function getActionByMap(array $maps, $id)
+	{
+		try {
+			$action = parent::getActionByMap($maps, $id);
+		}
+		catch (ErrorException $e) {
+			$action = $this->getActionById($id);
+		}
+
+		return $action;
+	}
+
+	/**
+	 * 根据ActionId，获取Action类的路径
+	 * @param string $id
+	 * @return string
+	 */
+	public function getActionById($id)
+	{
+		return 'modules\\' . Mvc::$module . '\\action\\' . Mvc::$controller . '\\' . $id;
+	}
 }

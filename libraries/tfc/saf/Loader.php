@@ -85,6 +85,16 @@ defined('DIR_ROOT') || define('DIR_ROOT', substr(DIR_LIBRARIES, 0, -10));
 defined('DIR_SERVICES') || define('DIR_SERVICES', DIR_ROOT . DS . 'services');
 
 /**
+ * 公共业务目录，新版
+ */
+defined('DIR_SRV') || define('DIR_SRV', DIR_ROOT . DS . 'srv');
+
+/**
+ * 公共业务的所有语言包存放目录
+ */
+defined('DIR_SRV_LANGUAGES') || define('DIR_SRV_LANGUAGES', DIR_SRV . DS . 'languages');
+
+/**
  * 当前项目目录
  */
 defined('DIR_APP') || define('DIR_APP', DIR_ROOT . DS . 'app' . DS . APP_NAME);
@@ -236,7 +246,7 @@ is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entitie
 /**
  * 设置公共框架和代码库目录、当前项目的公共代码库目录、当前项目的所有模块存放目录到PHP INI自动加载目录
  */
-set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_SERVICES . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) 
+set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_SERVICES . PS . DIR_SRV . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) 
  || 
 exit('Request Error, your server configuration not allowed to change PHP include path');
 
@@ -254,6 +264,15 @@ function spl_autoload($className)
  * 注册__autoload方法
  */
 spl_autoload_register('spl_autoload') || exit('Request Error, unable to register autoload as an autoloading method');
+
+/**
+ * 初始化$_GET、$_POST、$_COOKIE值，在指定的预定义字符前添加反斜杠
+ */
+if (!MAGIC_QUOTES_GPC) {
+	$_GET    = \tfc\util\String::addslashes($_GET);
+	$_POST   = \tfc\util\String::addslashes($_POST);
+	$_COOKIE = \tfc\util\String::addslashes($_COOKIE);
+}
 
 if (!function_exists('debug_dump')) {
     /**

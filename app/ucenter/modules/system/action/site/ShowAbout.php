@@ -8,31 +8,26 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\system\action\show;
+namespace modules\system\action\site;
 
-use library\action\base\ShowAction;
+use library\actions;
 
 /**
- * SiteAbout class file
- * 系统管理-About
+ * ShowAbout class file
+ * About
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SiteAbout.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.system.action.show
+ * @version $Id: ShowAbout.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.system.action.site
  * @since 1.0
  */
-class SiteAbout extends ShowAction
+class ShowAbout extends actions\Show
 {
-	/**
-	 * @var string 页面首次渲染的布局名
-	 */
-	public $layoutName = 'column1';
-
 	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\interfaces.Action::run()
 	 */
 	public function run()
 	{
-	
+		exit('modules\\system\\action\\site\\ShowAbout');
 	}
 }

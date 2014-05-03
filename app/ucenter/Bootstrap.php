@@ -24,19 +24,11 @@ use tfc\saf\Cfg;
 class Bootstrap extends ap\Bootstrap
 {
 	/**
-	 * 初始化$_REQUEST、$_GET、$_POST、$_COOKIE值
-	 * 1.在指定的预定义字符前添加反斜杠
-	 * 2.XSSClean
+	 * 初始化$_GET、$_POST、$_COOKIE值，XSSClean
 	 * @return void
 	 */
 	public function _initRGPC()
 	{
-		if (!MAGIC_QUOTES_GPC) {
-			$_GET    = String::addslashes($_GET);
-			$_POST   = String::addslashes($_POST);
-			$_COOKIE = String::addslashes($_COOKIE);
-		}
-
 		$rawKeys = array('last_index_url', 'http_referer');
 
 		foreach ($_GET as $key => $value) {
@@ -82,8 +74,6 @@ class Bootstrap extends ap\Bootstrap
 	 */
 	public function _initEncoding()
 	{
-		$encoding = strtoupper(trim(Cfg::getApp('charset')));
-		ap\Ap::setEncoding($encoding);
 	}
 
 	/**
@@ -92,8 +82,6 @@ class Bootstrap extends ap\Bootstrap
 	 */
 	public function _initLanguageType()
 	{
-		$languageType = trim(Cfg::getApp('language'));
-		ap\Ap::setLanguageType($languageType);
 	}
 
     /**
@@ -110,12 +98,6 @@ class Bootstrap extends ap\Bootstrap
      */
     public function _initView()
     {
-    	$viw = Mvc::getView();
-    	$viw->viewDirectory = DIR_APP_VIEWS;
-    	$viw->skinName      = Cfg::getApp('skin_name', 'view');
-    	$viw->tplExtension  = Cfg::getApp('tpl_extension', 'view');
-    	$viw->charset       = Cfg::getApp('charset', 'view');
-    	$viw->version       = Cfg::getApp('version', 'view');
     }
 
     /**

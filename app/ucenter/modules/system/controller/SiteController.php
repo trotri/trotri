@@ -10,7 +10,7 @@
 
 namespace modules\system\controller;
 
-use library\BaseController;
+use app\BaseController;
 
 /**
  * SiteController class file
@@ -22,17 +22,4 @@ use library\BaseController;
  */
 class SiteController extends BaseController
 {
-	/**
-	 * (non-PHPdoc)
-	 * @see tfc\mvc.Controller::actions()
-	 */
-	public function actions()
-	{
-		return array(
-			'index'        => 'modules\\system\\action\\show\\SiteIndex',
-			'about'        => 'modules\\system\\action\\show\\SiteAbout',
-			'err404'       => 'modules\\system\\action\\show\\SiteErr404',
-			'test'         => 'modules\\system\\action\\show\\SiteTest',
-		);
-	}
 }

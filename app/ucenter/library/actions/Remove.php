@@ -8,20 +8,16 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace library;
+namespace library\actions;
 
 /**
- * Constant class file
- * 常用常量类
+ * Remove abstract class file
+ * Remove基类，删除数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Constant.php 1 2013-04-05 01:08:06Z huan.song $
- * @package library
+ * @version $Id: Remove.php 1 2013-04-05 01:08:06Z huan.song $
+ * @package library.actions
  * @since 1.0
  */
-class Constant
+abstract class Remove extends Show
 {
-	/**
-	 * @var string 数据库配置名
-	 */
-	const DB_CLUSTER = 'ucenter';
 }

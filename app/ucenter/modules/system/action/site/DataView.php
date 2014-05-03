@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\system\action\submit;
+namespace modules\system\action\site;
 
-use library\action\base\RemoveAction;
+use library\actions;
 
 /**
- * ToolsCacheClear class file
- * 系统工具-清理缓存
+ * DataView class file
+ * 查询数据详情接口
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ToolsCacheClear.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.system.action.submit
+ * @version $Id: DataView.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.system.action.site
  * @since 1.0
  */
-class ToolsCacheClear extends RemoveAction
+class DataView extends actions\DataShow
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +28,6 @@ class ToolsCacheClear extends RemoveAction
 	 */
 	public function run()
 	{
-	
+		exit('modules\\system\\action\\site\\DataView');
 	}
 }

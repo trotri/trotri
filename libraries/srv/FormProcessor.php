@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace srv;
 
 use tfc\ap\Request;
 
@@ -17,7 +17,7 @@ use tfc\ap\Request;
  * 表单数据处理基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FormProcessor.php 1 2013-03-29 16:48:06Z huan.song $
- * @package app
+ * @package srv
  * @since 1.0
  */
 abstract class FormProcessor
