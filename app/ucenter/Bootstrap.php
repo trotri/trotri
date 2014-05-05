@@ -11,7 +11,6 @@
 use tfc\ap;
 use tfc\mvc\Mvc;
 use tfc\util\String;
-use tfc\saf\Cfg;
 
 /**
  * Bootstrap class file

@@ -12,10 +12,11 @@ return array (
 	'encoding' => 'utf-8', // 项目编码，不区分大小写
 	'language' => 'zh-CN', // 输出的语言种类，区分大小写
 	'view' => array (
-		'skin_name' => 'bootstrap', // 模板风格
-		'charset' => 'utf-8',       // HTML编码
-		'tpl_extension' => '.php',  // 模板后缀
-		'version' => '1.0',         // Js、Css文件的版本号
+		'skin_name' => 'bootstrap',     // 模板风格
+		'charset' => 'utf-8',           // HTML编码
+		'tpl_extension' => '.php',      // 模板后缀
+		'version' => '1.0',             // Js、Css文件的版本号
+		'bootstrap_version' => '3.0.3', // Bootstrap文件的版本号
 	),
 	'paginator' => array (
 		'page_var' => 'paged',      // 从$_GET或$_POST中获取当前页的键名，缺省：paged

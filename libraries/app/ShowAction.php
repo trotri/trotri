@@ -11,12 +11,14 @@
 namespace app;
 
 use tfc\ap\Ap;
+use tfc\ap\ErrorException;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
 use tfc\util\String;
 use tfc\saf\Text;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
+use tfc\saf\ErrorNo;
 
 /**
  * ShowAction abstract class file
@@ -49,10 +51,11 @@ abstract class ShowAction extends BaseAction
      * 配置 /cfg/app/appname/main.php：
      * return array (
      *   'view' => array (
-     *     'skin_name' => 'bootstrap', // 模板风格
-     *     'charset' => 'utf-8',       // HTML编码
-     *     'tpl_extension' => '.php',  // 模板后缀
-     *     'version' => '1.0',         // Js、Css文件的版本号
+     *     'skin_name' => 'bootstrap',     // 模板风格
+     *     'charset' => 'utf-8',           // HTML编码
+     *     'tpl_extension' => '.php',      // 模板后缀
+     *     'version' => '1.0',             // Js、Css文件的版本号
+     *     'bootstrap_version' => '3.0.3', // Bootstrap文件的版本号
      *   ),
      * );
      * </pre>
@@ -61,11 +64,15 @@ abstract class ShowAction extends BaseAction
 	protected function _initView()
 	{
 		$viw = Mvc::getView();
-		$viw->viewDirectory = DIR_APP_VIEWS;
-		$viw->skinName      = Cfg::getApp('skin_name', 'view');
-		$viw->tplExtension  = Cfg::getApp('tpl_extension', 'view');
-		$viw->charset       = Cfg::getApp('charset', 'view');
-		$viw->version       = Cfg::getApp('version', 'view');
+		$viw->viewDirectory     = DIR_APP_VIEWS;
+		$viw->skinName          = Cfg::getApp('skin_name', 'view');
+		$viw->tplExtension      = Cfg::getApp('tpl_extension', 'view');
+		$viw->charset           = Cfg::getApp('charset', 'view');
+		$viw->version           = Cfg::getApp('version', 'view');
+		try {
+			$viw->bootstrap_version = Cfg::getApp('bootstrap_version', 'view');
+		}
+		catch (ErrorException $e) {}
 	}
 
 	/**

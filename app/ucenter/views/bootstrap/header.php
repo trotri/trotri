@@ -7,10 +7,19 @@
 <title>Trotri</title>
 
 <!-- Bootstrap core CSS -->
-<?php echo $this->getHtml()->cssFile($this->css_url . '/bootstrap.min.css?v=' . $this->version); ?>
-<?php echo $this->getHtml()->cssFile($this->css_url . '/bootstrap-theme.min.css?v=' . $this->version); ?>
-<?php echo $this->getHtml()->cssFile($this->js_url . '/bootstrap-switch/bootstrap-switch.css?v=' . $this->version); ?>
-<?php echo $this->getHtml()->cssFile($this->js_url . '/jquery-icheck/square-blue.css?v=' . $this->version); ?>
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap.min.css'); ?>
+
+<!-- Bootstrap theme CSS -->
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap-theme.min.css'); ?>
+
+<!-- Bootstrap-switch CSS -->
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.min.css'); ?>
+
+<!-- Jquery-icheck CSS -->
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/jquery-icheck/skins/square/blue.css'); ?>
+
+<!-- jQuery JS -->
+<?php echo $this->getHtml()->cssFile($this->static_url . '/js/jquery-1.11.0.min.js'); ?>
 
 <!-- Custom styles for this template -->
 <?php echo $this->getHtml()->cssFile($this->css_url . '/template.css?v=' . $this->version); ?>
@@ -20,13 +29,11 @@ var g_url = "<?php echo $this->script_url; ?>"; var g_uri = "<?php echo $this->r
 var g_mod = "<?php echo $this->module; ?>"; var g_ctrl = "<?php echo $this->controller; ?>"; var g_act = "<?php echo $this->action; ?>";
 </script>
 
-<?php echo $this->getHtml()->jsFile($this->static_url . '/js/jquery-1.11.0.min.js?v=' . $this->version); ?>
-
-<?php echo $this->getHtml()->jsFile($this->js_url . '/template.js?v=' . $this->version); ?>
+<!-- Just for debugging purposes. Don't actually copy this line! -->
+<!--[if lt IE 9]><?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/ie8-responsive-file-warning.js'); ?><![endif]-->
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
-  <?php echo $this->getHtml()->jsFile($this->js_url . '/assets/html5shiv.js?v=' . $this->version); ?>
-  <?php echo $this->getHtml()->jsFile($this->js_url . '/assets/respond.min.js?v=' . $this->version); ?>
+  <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/html5shiv.min.js'); ?>
+  <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/respond.min.js'); ?>
 <![endif]-->
-<!-- /Header -->

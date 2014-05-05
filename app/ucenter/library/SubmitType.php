@@ -109,7 +109,7 @@ class SubmitType
 	 * 验证是否是批量提交
 	 * @return boolean
 	 */
-	public function isBatch()
+	public static function isBatch()
 	{
 		$isBatch = Ap::getRequest()->getInteger('is_batch');
 		return ($isBatch === 1);
@@ -119,7 +119,7 @@ class SubmitType
 	 * 获取ID值，如果是批量提交，则ID为英文逗号分隔的字符串
 	 * @return mixed
 	 */
-	public function getPk()
+	public static function getPk()
 	{
 		if ($this->isBatch()) {
 			$ids = Ap::getRequest()->getTrim('ids');
