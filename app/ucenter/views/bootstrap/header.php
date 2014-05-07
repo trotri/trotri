@@ -5,24 +5,18 @@
 <?php echo $this->getHtml()->meta('', '', 'description'); ?>
 <?php echo $this->getHtml()->meta('', '', 'author'); ?>
 <title>Trotri</title>
-
 <!-- Bootstrap core CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap.min.css'); ?>
-
 <!-- Bootstrap theme CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap-theme.min.css'); ?>
-
 <!-- Bootstrap-switch CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.min.css'); ?>
-
 <!-- Jquery-icheck CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/jquery-icheck/skins/square/blue.css'); ?>
-
-<!-- jQuery JS -->
-<?php echo $this->getHtml()->cssFile($this->static_url . '/js/jquery-1.11.0.min.js'); ?>
-
 <!-- Custom styles for this template -->
 <?php echo $this->getHtml()->cssFile($this->css_url . '/template.css?v=' . $this->version); ?>
+<!-- jQuery JS -->
+<?php echo $this->getHtml()->cssFile($this->static_url . '/js/jquery-1.11.0.min.js'); ?>
 
 <script type="text/javascript">
 var g_url = "<?php echo $this->script_url; ?>"; var g_uri = "<?php echo $this->request_uri; ?>"; var g_logId = "<?php echo $this->log_id; ?>";
