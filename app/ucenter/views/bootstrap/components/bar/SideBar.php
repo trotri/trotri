@@ -12,7 +12,8 @@ namespace views\bootstrap\components\bar;
 
 use tfc\mvc\Widget;
 use tfc\saf\Text;
-use library\PageHelper;
+use views\bootstrap\components\ComponentsConstant;
+use views\bootstrap\components\ComponentsBuilder;
 
 /**
  * SideBar class file
@@ -66,14 +67,13 @@ class SideBar extends Widget
 	 */
 	public function getIcon(array $config)
 	{
-		$componentsBuilder = PageHelper::getComponentsBuilder();
 		$label = isset($config['label']) ? $config['label'] : '';
 		return $this->getHtml()->tag('span', array(
-			'class'               => 'glyphicon glyphicon-' . $componentsBuilder->getGlyphiconCreate() . ' pull-right',
+			'class'               => 'glyphicon glyphicon-' . ComponentsConstant::GLYPHICON_CREATE . ' pull-right',
 			'data-toggle'         => 'tooltip',
 			'data-placement'      => 'left',
 			'data-original-title' => Text::_($label),
-			'onclick' => 'return ' . $componentsBuilder->getJsFuncHref() . '(\'' . $this->getUrl($config) . '\')'
+			'onclick' => 'return ' . ComponentsConstant::JSFUNC_HREF . '(\'' . $this->getUrl($config) . '\')'
 		), '');
 	}
 

@@ -35,7 +35,15 @@ class Index extends actions\Show
 		$mod = new Amcas();
 
 		$apps = $mod->findAppPrompts();
+		if ($apps === array()) {
+			$this->err404();
+		}
+
 		$appId = Ap::getRequest()->getInteger('app_id');
+		if ($appId === 0) {
+			$row = array_keys(array_slice($apps, 0, 1, true));
+			$appId = array_shift($row);
+		}
 
 		if (!isset($apps[$appId])) {
 			$this->err404();

@@ -10,15 +10,12 @@
 
 namespace views\bootstrap\components\bar;
 
-use views\bootstrap\components\ComponentsConstant;
-
-use views\bootstrap\components\ComponentsBuilder;
-
 use tfc\mvc\Widget;
 use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
-use app\PageHelper;
+use views\bootstrap\components\ComponentsConstant;
+use views\bootstrap\components\ComponentsBuilder;
 
 /**
  * NavBar class file

@@ -17,6 +17,14 @@ return array (
     'retry' => 3,
     'tblprefix' => 'tr_'
   ),
+  'ucenter' => array (
+    'dsn' => 'mysql:host=localhost;dbname=trotri',
+    'username' => 'root',
+    'password' => '123456',
+    'charset' => 'utf8',
+    'retry' => 3,
+    'tblprefix' => 'tr_'
+  ),
   'service' => array (
     'dsn' => 'mysql:host=localhost;dbname=trotri',
     'username' => 'root',

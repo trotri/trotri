@@ -62,6 +62,13 @@ interface Cache
     public function delete($key);
 
     /**
+     * 通过缓存名判断缓存值是否已经存在
+     * @param mixed $key
+     * @return boolean
+     */
+    public function has($key);
+
+    /**
      * 使所有缓存数据立即失效
      * @return boolean
      */
