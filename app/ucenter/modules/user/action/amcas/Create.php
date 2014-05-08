@@ -11,6 +11,9 @@
 namespace modules\user\action\amcas;
 
 use library\actions;
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
+use modules\user\model\Amcas;
 
 /**
  * Create class file
@@ -28,6 +31,5 @@ class Create extends actions\Create
 	 */
 	public function run()
 	{
-		exit('modules\\system\\action\\site\\Create');
 	}
 }

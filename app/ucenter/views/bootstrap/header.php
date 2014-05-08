@@ -16,7 +16,7 @@
 <!-- Custom styles for this template -->
 <?php echo $this->getHtml()->cssFile($this->css_url . '/template.css?v=' . $this->version); ?>
 <!-- jQuery JS -->
-<?php echo $this->getHtml()->cssFile($this->static_url . '/js/jquery-1.11.0.min.js'); ?>
+<?php echo $this->getHtml()->jsFile($this->static_url . '/js/jquery-1.11.0.min.js'); ?>
 
 <script type="text/javascript">
 var g_url = "<?php echo $this->script_url; ?>"; var g_uri = "<?php echo $this->request_uri; ?>"; var g_logId = "<?php echo $this->log_id; ?>";

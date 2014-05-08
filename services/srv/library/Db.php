@@ -161,11 +161,13 @@ abstract class Db
 			return $this->getCache($name);
 		}
 
-		$rows = $this->fetchAll($sql, $params, \PDO::FETCH_COLUMN);
+		$rows = $this->fetchAll($sql, $params, \PDO::FETCH_NUM);
 		if ($rows && is_array($rows)) {
 			$data = array();
 			foreach ($rows as $row) {
-				$data[$row[0]] = $row[1];
+				if (isset($row[0]) && isset($row[1])) {
+					$data[$row[0]] = $row[1];
+				}
 			}
 
 			$this->setCache($name, $data);

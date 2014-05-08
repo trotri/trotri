@@ -10,9 +10,9 @@
 
 namespace modules\user\action\amcas;
 
-use tfc\mvc\Mvc;
 use library\actions;
-use srv\user\mods\Amcas;
+use tfc\ap\Ap;
+use modules\user\model\Amcas;
 
 /**
  * View class file
@@ -25,23 +25,19 @@ use srv\user\mods\Amcas;
 class View extends actions\Show
 {
 	/**
-	 * @var string 页面首次渲染的布局名
-	 */
-	public $layoutName = 'column2';
-
-	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc\interfaces.Action::run()
 	 */
 	public function run()
 	{
-		$viw = Mvc::getView();
-		$tplName = $this->getDefaultTplName();
+		$ret = array();
 
-		$this->assignSystem();
-		$this->assignUrl();
-		$this->assignLanguage();
+		$id = Ap::getRequest()->getInteger('id');
+		$mod = new Amcas();
 
-		$viw->display($tplName);
+		$ret = $mod->findByAmcaId($id);
+
+		$this->assign('tabs', $mod->getViewTabsRender());
+		$this->render($ret);
 	}
 }

@@ -10,11 +10,15 @@
 
 namespace views\bootstrap\components\bar;
 
+use views\bootstrap\components\ComponentsConstant;
+
+use views\bootstrap\components\ComponentsBuilder;
+
 use tfc\mvc\Widget;
 use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
-use library\PageHelper;
+use app\PageHelper;
 
 /**
  * NavBar class file
@@ -109,14 +113,13 @@ class NavBar extends Widget
 	 */
 	public function getIcon(array $config)
 	{
-		$componentsBuilder = PageHelper::getComponentsBuilder();
 		$label = isset($config['label']) ? $config['label'] : '';
 		return $this->getHtml()->tag('span', array(
-			'class'               => 'glyphicon glyphicon-' . $componentsBuilder->getGlyphiconCreate() . ' pull-right',
+			'class'               => 'glyphicon glyphicon-' . ComponentsConstant::GLYPHICON_CREATE . ' pull-right',
 			'data-toggle'         => 'tooltip',
 			'data-placement'      => 'left',
 			'data-original-title' => Text::_($label),
-			'onclick' => 'return ' . $componentsBuilder->getJsFuncHref() . '(\'' . $this->getUrl($config) . '\')'
+			'onclick' => 'return ' . ComponentsConstant::JSFUNC_HREF . '(\'' . $this->getUrl($config) . '\')'
 		), '');
 	}
 

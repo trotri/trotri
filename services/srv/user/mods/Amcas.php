@@ -45,7 +45,14 @@ class Amcas extends Model
 	 */
 	public function findByAmcaId($amcaId)
 	{
-		return $this->callFetchMethod($this->_dbAmcas, 'findByAmcaId', array($amcaId));
+		$ret = $this->callFetchMethod($this->_dbAmcas, 'findByAmcaId', array($amcaId));
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$enum = DataAmcas::getCategoryEnum();
+		$ret['data']['category_text'] = isset($enum[$ret['data']['category']]) ? $enum[$ret['data']['category']] : '';
+		return $ret;
 	}
 
 	/**

@@ -41,7 +41,11 @@ class Amcas extends Db
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
-		$sql = 'SELECT `amca_id`, `amca_pid`, `amca_name`, `prompt`, `sort`, `category` FROM `' . $tableName . '` WHERE `amca_id` = ?';
+		$sql = 'SELECT ';
+		$sql .= '`a`.`amca_id`, `a`.`amca_pid`, `a`.`amca_name`, `a`.`prompt`, `a`.`sort`, `a`.`category`, `b`.`amca_name` AS `amca_pname`, `b`.`prompt` AS `pprompt` ';
+		$sql .= 'FROM `' . $tableName . '` AS `a` LEFT JOIN `' . $tableName . '` AS `b` ';
+		$sql .= 'ON `a`.`amca_pid` = `b`.`amca_id` WHERE `a`.`amca_id` = ?';
+
 		return $this->fetch($sql, $amcaId);
 	}
 
