@@ -106,7 +106,7 @@ class Statement extends Application
      * @param integer $fetchMode
      * @param integer $cursor
      * @param integer $offset
-     * @return array|false
+     * @return mixed
      */
     public function fetch($sql = null, $params = null, $fetchMode = \PDO::FETCH_ASSOC, $cursor = null, $offset = null)
     {

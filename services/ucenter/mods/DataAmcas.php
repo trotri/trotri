@@ -8,16 +8,16 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace srv\user\mods;
+namespace ucenter\mods;
 
-use srv\library\Text;
+use ucenter\library\Lang;
 
 /**
  * DataAmcas class file
  * 业务层：数据管理类，寄存常量、选项
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: DataAmcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package srv.user.mods
+ * @package ucenter.mods
  * @since 1.0
  */
 class DataAmcas
@@ -51,10 +51,10 @@ class DataAmcas
 		static $enum = null;
 		if ($enum === null) {
 			$enum = array(
-				self::CATEGORY_APP => Text::_('MOD_USER_USER_AMCAS_ENUM_CATEGORY_APP'),
-				self::CATEGORY_MOD => Text::_('MOD_USER_USER_AMCAS_ENUM_CATEGORY_MOD'),
-				self::CATEGORY_CTRL => Text::_('MOD_USER_USER_AMCAS_ENUM_CATEGORY_CTRL'),
-				self::CATEGORY_ACT => Text::_('MOD_USER_USER_AMCAS_ENUM_CATEGORY_ACT'),
+				self::CATEGORY_APP => Lang::_('ENUM_USER_AMCAS_CATEGORY_APP'),
+				self::CATEGORY_MOD => Lang::_('ENUM_USER_AMCAS_CATEGORY_MOD'),
+				self::CATEGORY_CTRL => Lang::_('ENUM_USER_AMCAS_CATEGORY_CTRL'),
+				self::CATEGORY_ACT => Lang::_('ENUM_USER_AMCAS_CATEGORY_ACT'),
 			);
 		}
 

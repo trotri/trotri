@@ -8,11 +8,12 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace srv\user\mods;
+namespace ucenter\mods;
 
-use srv\library\FormProcessor;
-use srv\library\Text;
+use tfc\validator\DbExists2Validator;
 
+use srv\FormProcessor;
+use ucenter\library\Lang;
 use tfc\validator\AlphaValidator;
 use tfc\validator\EqualValidator;
 use tfc\validator\MinLengthValidator;
@@ -25,190 +26,112 @@ use tfc\validator\DbExistsValidator;
  * 业务层：表单数据处理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FpAmcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package srv.user.mods
+ * @package ucenter.mods
  * @since 1.0
  */
 class FpAmcas extends FormProcessor
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see srv\library.FormProcessor::process()
+	 * @see srv.FormProcessor::process()
 	 */
 	public function process(array $params = array(), $id = 0)
 	{
-		if (($amcaId = (int) $id) <= 0) {
-			return false;
-		}
-
-		$amcaPid = 0;
-		if (isset($params['amca_pid'])) {
-			$amcaPid = (int) $params['amca_pid'];
+		if ($this->isInsert()) {
+			if (!$this->required($params, 'amca_name', 'amca_pid', 'category')) {
+				return false;
+			}
 		}
 		else {
-			if ($this->isUpdate()) {
-				$amcas = $this->_object->findByAmcaId($amcaId);
-				if ($amcas && isset($amcas['amca_pid'])) {
-					$amcaPid = $amcas['amca_pid'];
-				}
-				else {
-					return false;
-				}
+			if (($amcaId = (int) $id) <= 0) {
+				return false;
 			}
 		}
 
-		$amcaName = isset($params['amca_name']) ? trim($params['amca_name']) : '';
-		$prompt = isset($params['prompt']) ? trim($params['prompt']) : '';
-		$category = isset($params['category']) ? trim($params['category']) : DataAmcas::CATEGORY_MOD;
-		$sort = isset($params['sort']) ? (int) $params['sort'] : 0;
+		if (isset($params['amca_pid'])) {
+			$amcaPid = (int) $params['amca_pid'];
+			if (!$this->isValidAmcaPid($amcaPid)) {
+				return false;
+			}
+		}
+		else {
+			$amcaPid = $this->_object->getAmcaPidByAmcaId($amcaId);
+			if ($amcaPid < 0) {
+				return false;
+			}
+		}
 
-		$this->isValidAmcaPid($amcaPid);
-		$this->isValidAmcaName($amcaName, $amcaId, $amcaPid);
-		$this->isValidPrompt($prompt);
-		$this->isValidCategory($category);
-		$this->isValidSort($sort);
+		if (isset($params['amca_name'])) {
+			$this->isValidAmcaName($params['amca_name'], $amcaId, $amcaPid);
+		}
 
+		$this->run($params, 'category', 'prompt', 'sort');
 		return !$this->hasError();
 	}
 
 	/**
 	 * 验证“父ID”
-	 * @param integer $amcaPid
+	 * @param integer $value
 	 * @return boolean
 	 */
-	public function isValidAmcaPid($amcaPid)
+	public function getAmcaPidRule($value)
 	{
-		if ($amcaPid !== 0) {
-			$dbProxy = $this->_object->getDbProxy();
-			$errMsg = Text::_('MOD_USER_USER_AMCAS_AMCA_PID_EXISTS');
-			$columnName = 'amca_pid';
-
-			$validator = new DbExistsValidator($amcaPid, true, $errMsg, $dbProxy, 'amcas', 'amca_pid');
-			if (!$validator->isValid()) {
-				$this->addError($columnName, $validator->getMessage());
-				return false;
-			}
-		}
-
-		$this->amca_pid = $amcaPid;
-		return true;
+		return array(
+			'DbExistsValidator' => new DbExistsValidator($value, true, Lang::_('FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), 'amcas', 'amca_pid')
+		);
 	}
 
 	/**
 	 * 验证“事件名”
-	 * @param string $amcaName
+	 * @param string $value
 	 * @param integer $amcaId
 	 * @param integer $amcaPid
-	 * @return boolean
+	 * @return array
 	 */
-	public function isValidAmcaName($amcaName, $amcaId, $amcaPid)
+	public function getAmcaNameRule($value, $amcaId, $amcaPid)
 	{
-		if ($this->isUpdate()) {
-			if ($amcaName === '') {
-				return true;
-			}
-
-			if ($this->_object->getAmcaNameByAmcaId($amcaId) === $amcaName) {
-				return true;
-			}
-		}
-
-		$columnName = 'amca_name';
-
-		$validator = new MinLengthValidator($amcaName, 2, Text::_('MOD_USER_USER_AMCAS_AMCA_NAME_MINLENGTH'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		$validator = new MaxLengthValidator($amcaName, 16, Text::_('MOD_USER_USER_AMCAS_AMCA_NAME_MAXLENGTH'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		$validator = new AlphaValidator($amcaName, true, Text::_('MOD_USER_USER_AMCAS_AMCA_NAME_ALPHA'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		if ($this->_object->countByPidAndName($amcaPid, $amcaName) > 0) {
-			$this->addError($columnName, Text::_('MOD_USER_USER_AMCAS_AMCA_NAME_UNIQUE'));
-		}
-
-		$this->amca_name = strtolower($amcaName);
-		return true;
+		return array(
+			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
+			'MaxLengthValidator' => new MaxLengthValidator($value, 16, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
+			'AlphaValidator' => new AlphaValidator($value, true, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_ALPHA')),
+			'DbExists2Validator' => new DbExists2Validator($value, true, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), 'amcas', 'amca_name', 'amca_pid', $amcaPid)
+		);
 	}
 
 	/**
 	 * 验证“类型”，只能新增或编辑“模块”类型
-	 * @param string $category
+	 * @param string $value
 	 * @return boolean
 	 */
-	public function isValidCategory($category)
+	public function getCategoryRule($value)
 	{
-		if ($this->isUpdate() && $category === '') {
-			return true;
-		}
-
-		$columnName = 'category';
-
-		$validator = new EqualValidator($category, DataAmcas::CATEGORY_MOD, Text::_('MOD_USER_USER_AMCAS_CATEGORY_EQUAL'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		$this->category = $category;
-		return true;
+		return array(
+			'EqualValidator' => new EqualValidator($value, DataAmcas::CATEGORY_MOD, Lang::_('FILTER_USER_AMCAS_CATEGORY_EQUAL'))
+		);
 	}
 
 	/**
 	 * 验证“提示”
-	 * @param string $prompt
-	 * @return boolean
+	 * @param string $value
+	 * @return array
 	 */
-	public function isValidPrompt($prompt)
+	public function getPromptRule($value)
 	{
-		if ($this->isUpdate() && $prompt === '') {
-			return true;
-		}
-
-		$columnName = 'prompt';
-
-		$validator = new MinLengthValidator($prompt, 2, Text::_('MOD_USER_USER_AMCAS_PROMPT_MINLENGTH'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		$validator = new MaxLengthValidator($prompt, 50, Text::_('MOD_USER_USER_AMCAS_PROMPT_MAXLENGTH'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		$this->prompt = $prompt;
-		return true;
+		return array(
+			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('FILTER_USER_AMCAS_PROMPT_MINLENGTH')),
+			'MaxLengthValidator' => new MaxLengthValidator($value, 50, Lang::_('FILTER_USER_AMCAS_PROMPT_MAXLENGTH'))
+		);
 	}
 
-	/**
-	 * 验证“排序”
-	 * @param integer $sort
-	 * @return boolean
-	 */
-	public function isValidSort($sort)
+	 /**
+	  * 验证“排序”
+	  * @param integer $value
+	  * @return array
+	  */
+	public function getSortRule($value)
 	{
-		$columnName = 'sort';
-
-		$validator = new NumericValidator($sort, true, Text::_('MOD_USER_USER_AMCAS_SORT_NUMERIC'));
-		if (!$validator->isValid()) {
-			$this->addError($columnName, $validator->getMessage());
-			return false;
-		}
-
-		$this->sort = $sort;
-		return true;
+		return array(
+			'NumericValidator' => new NumericValidator($value, true, Lang::_('FILTER_USER_AMCAS_SORT_NUMERIC')),
+		);
 	}
-
 }

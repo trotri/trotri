@@ -8,18 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace srv\user\db;
+namespace ucenter\db;
 
-use srv\library\Db;
-use srv\user\library\Constant;
-use srv\user\library\TableNames;
+use srv\Db;
+use ucenter\library\Constant;
+use ucenter\library\TableNames;
 
 /**
  * Amcas class file
  * 数据库操作类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Amcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package srv.user.db
+ * @package ucenter.db
  * @since 1.0
  */
 class Amcas extends Db
@@ -41,12 +41,8 @@ class Amcas extends Db
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
-		$sql = 'SELECT ';
-		$sql .= '`a`.`amca_id`, `a`.`amca_pid`, `a`.`amca_name`, `a`.`prompt`, `a`.`sort`, `a`.`category`, `b`.`amca_name` AS `amca_pname`, `b`.`prompt` AS `pprompt` ';
-		$sql .= 'FROM `' . $tableName . '` AS `a` LEFT JOIN `' . $tableName . '` AS `b` ';
-		$sql .= 'ON `a`.`amca_pid` = `b`.`amca_id` WHERE `a`.`amca_id` = ?';
-
-		return $this->fetch($sql, $amcaId);
+		$sql = 'SELECT `amca_id`, `amca_pid`, `amca_name`, `prompt`, `sort`, `category` FROM `' . $tableName . '` WHERE `amca_id` = ?';
+		return $this->fetchAssoc($sql, $amcaId);
 	}
 
 	/**
@@ -102,14 +98,14 @@ class Amcas extends Db
 	 * 新增一条记录
 	 * @param array $params
 	 * @param boolean $ignore
-	 * @return integer|false
+	 * @return integer
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
-		if (!isset($params['amca_pid']) || !isset($params['amca_name']) || !isset($params['category'])) {
+		if (!$this->required($params, 'amca_pid', 'amca_name', 'category')) {
 			return false;
 		}
-
+	
 		if (($amcaPid = (int) $params['amca_pid']) < 0) {
 			return false;
 		}
@@ -146,7 +142,7 @@ class Amcas extends Db
 	 * 通过主键，编辑一条记录
 	 * @param integer $amcaId
 	 * @param array $params
-	 * @return integer|false
+	 * @return integer
 	 */
 	public function modify($amcaId, array $params = array())
 	{
@@ -205,7 +201,7 @@ class Amcas extends Db
 	/**
 	 * 通过主键，删除一条记录
 	 * @param integer $amcaId
-	 * @return integer|false
+	 * @return integer
 	 */
 	public function remove($amcaId)
 	{
@@ -214,8 +210,7 @@ class Amcas extends Db
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
-		$sql = $this->getCommandBuilder()->createDelete($tableName, '`amca_id` = ?');
+		$sql = 'DELETE FROM `' . $tableName . '` WHERE `amca_id` = ?';
 		return $this->delete($sql, $amcaId);
 	}
-
 }

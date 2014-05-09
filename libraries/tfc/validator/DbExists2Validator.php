@@ -14,14 +14,14 @@ use tfc\ap\ErrorException;
 use tfc\saf\DbProxy;
 
 /**
- * DbExistsValidator class file
+ * DbExists2Validator class file
  * 验证值是否在数据库表中是否存在
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DbExistsValidator.php 1 2013-03-29 16:48:06Z huan.song $
+ * @version $Id: DbExists2Validator.php 1 2013-03-29 16:48:06Z huan.song $
  * @package tfc.validator
  * @since 1.0
  */
-class DbExistsValidator extends Validator
+class DbExists2Validator extends Validator
 {
     /**
      * @var instance of tfc\saf\DbProxy
@@ -39,6 +39,16 @@ class DbExistsValidator extends Validator
     protected $_columnName;
 
     /**
+     * @var string 字段名2
+     */
+    protected $_columnName2;
+
+    /**
+     * @var mixed 字段2的值
+     */
+    protected $_value2;
+
+    /**
      * @var string 默认出错后的提醒消息
      */
     protected $_message = 'A record matching the input was found.';
@@ -51,12 +61,16 @@ class DbExistsValidator extends Validator
      * @param tfc\saf\DbProxy $dbProxy
      * @param string $tableName
      * @param string $columnName
+     * @param string $columnName2
+     * @param mixed $value2
      */
-    public function __construct($value, $option, $message = '', DbProxy $dbProxy, $tableName, $columnName)
+    public function __construct($value, $option, $message = '', DbProxy $dbProxy, $tableName, $columnName, $columnName2, $value2)
     {
        $this->_dbProxy = $dbProxy;
        $this->_tableName = $tableName;
        $this->_columnName = $columnName;
+       $this->_columnName2 = $columnName2;
+       $this->_value2 = $value2;
     }
 
     /**
@@ -66,13 +80,13 @@ class DbExistsValidator extends Validator
     public function isValid()
     {
         if ($this->_dbProxy === null) {
-            throw new ErrorException('DbExistsValidator No database Proxy present.');
+            throw new ErrorException('DbExists2Validator No database Proxy present.');
         }
 
-        $sql = 'SELECT COUNT(*) FROM ' . $this->_tableName . ' WHERE ' . $this->_columnName . ' = ?';
-        $total = $this->_dbProxy->fetchColumn($sql, $this->getValue());
+        $sql = 'SELECT COUNT(*) FROM ' . $this->_tableName . ' WHERE ' . $this->_columnName2 . ' = ? AND ' . $this->_columnName . ' = ?';
+        $total = $this->_dbProxy->fetchColumn($sql, array($this->_value2, $this->getValue()));
         if ($total === false) {
-            throw new ErrorException('DbExistsValidator database Proxy Exec Sql Failed.');
+            throw new ErrorException('DbExists2Validator database Proxy Exec Sql Failed.');
         }
 
         return (($total > 0) == $this->getOption());

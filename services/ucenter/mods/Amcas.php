@@ -8,25 +8,25 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace srv\user\mods;
+namespace ucenter\mods;
 
-use tfc\saf\ErrorNo;
-use srv\library\Model;
-use srv\library\Text;
-use srv\user\db\Amcas AS DbAmcas;
+use srv\Model;
+use ucenter\library\Constant;
+use ucenter\library\TableNames;
+use ucenter\db\Amcas AS DbAmcas;
 
 /**
- * ModAmcas class file
+ * Amcas class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModAmcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package srv.user.mods
+ * @version $Id: Amcas.php 1 2014-04-06 14:43:06Z huan.song $
+ * @package ucenter.mods
  * @since 1.0
  */
 class Amcas extends Model
 {
 	/**
-	 * @var instance of srv\user\db\Amcas
+	 * @var instance of ucenter\db\Amcas
 	 */
 	protected $_dbAmcas = null;
 
@@ -45,14 +45,8 @@ class Amcas extends Model
 	 */
 	public function findByAmcaId($amcaId)
 	{
-		$ret = $this->callFetchMethod($this->_dbAmcas, 'findByAmcaId', array($amcaId));
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return $ret;
-		}
-
-		$enum = DataAmcas::getCategoryEnum();
-		$ret['data']['category_text'] = isset($enum[$ret['data']['category']]) ? $enum[$ret['data']['category']] : '';
-		return $ret;
+		$row = $this->_dbAmcas->findByAmcaId($amcaId);
+		return $row;
 	}
 
 	/**
@@ -61,7 +55,8 @@ class Amcas extends Model
 	 */
 	public function findAppPrompts()
 	{
-		return $this->callFetchMethod($this->_dbAmcas, 'findAppPrompts');
+		$rows = $this->_dbAmcas->findAppPrompts();
+		return $rows;
 	}
 
 	/**
@@ -71,7 +66,8 @@ class Amcas extends Model
 	 */
 	public function findAllByAmcaPid($amcaPid)
 	{
-		return $this->callFetchMethod($this->_dbAmcas, 'findAllByAmcaPid', array($amcaPid));
+		$rows = $this->_dbAmcas->findAllByAmcaPid($amcaPid);
+		return $rows;
 	}
 
 	/**
@@ -84,12 +80,12 @@ class Amcas extends Model
 	{
 		$data = array();
 
-		$mods = $this->_dbAmcas->findAllByAmcaPid($appId);
+		$mods = $this->findAllByAmcaPid($appId);
 		if ($mods && is_array($mods)) {
 			foreach ($mods as $modRows) {
 				$data[] = $modRows;
 
-				$ctrls = $this->_dbAmcas->findAllByAmcaPid($modRows['amca_id']);
+				$ctrls = $this->findAllByAmcaPid($modRows['amca_id']);
 				if ($ctrls && is_array($ctrls)) {
 					foreach ($ctrls as $ctrlRows) {
 						$ctrlRows['amca_name'] = $padStr . $ctrlRows['amca_name'];
@@ -99,23 +95,7 @@ class Amcas extends Model
 			}
 		}
 
-		$errNo = ErrorNo::SUCCESS_NUM;
-
-		if (empty($data)) {
-			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT_EMPTY');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'data' => array()
-			);
-		}
-
-		$errMsg = Text::_('ERROR_MSG_SUCCESS_SELECT');
-		return array(
-			'err_no' => $errNo,
-			'err_msg' => $errMsg,
-			'data' => $data
-		);
+		return $data;
 	}
 
 	/**
@@ -126,22 +106,22 @@ class Amcas extends Model
 	{
 		$data = array();
 
-		$apps = $this->_dbAmcas->findAllByAmcaPid(0);
+		$apps = $this->findAllByAmcaPid(0);
 		if ($apps && is_array($apps)) {
 			foreach ($apps as $appRow) {
 				$appRow['rows'] = array();
 
-				$mods = $this->_dbAmcas->findAllByAmcaPid($appRow['amca_id']);
+				$mods = $this->findAllByAmcaPid($appRow['amca_id']);
 				if ($mods && is_array($mods)) {
 					foreach ($mods as $modRow) {
 						$modRow['rows'] = array();
 
-						$ctrls = $this->_dbAmcas->findAllByAmcaPid($modRow['amca_id']);
+						$ctrls = $this->findAllByAmcaPid($modRow['amca_id']);
 						if ($ctrls && is_array($ctrls)) {
 							foreach ($ctrls as $ctrlRow) {
 								$ctrlRow['rows'] = array();
 
-								$acts = $this->_dbAmcas->findAllByAmcaPid($ctrlRow['amca_id']);
+								$acts = $this->findAllByAmcaPid($ctrlRow['amca_id']);
 								if ($acts && is_array($acts)) {
 									foreach ($acts as $actRow) {
 										$ctrlRow['rows'][$actRow['amca_name']] = $actRow;
@@ -160,23 +140,7 @@ class Amcas extends Model
 			}
 		}
 
-		$errNo = ErrorNo::SUCCESS_NUM;
-
-		if (empty($data)) {
-			$errMsg = $this->_('ERROR_MSG_ERROR_DB_SELECT_EMPTY');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'data' => array()
-			);
-		}
-
-		$errMsg = Text::_('ERROR_MSG_SUCCESS_SELECT');
-		return array(
-			'err_no' => $errNo,
-			'err_msg' => $errMsg,
-			'data' => $data
-		);
+		return $data;
 	}
 
 	/**
@@ -186,8 +150,88 @@ class Amcas extends Model
 	 */
 	public function getAmcaNameByAmcaId($amcaId)
 	{
-		$ret = $this->findByAmcaId($amcaId);
-		return isset($ret['data']['amca_name']) ? $ret['data']['amca_name'] : '';
+		$row = $this->findByAmcaId($amcaId);
+		if (is_array($row)) {
+			return isset($row['amca_name']) ? $row['amca_name'] : '';
+		}
+
+		return '';
+	}
+
+	/**
+	 * 通过事件ID，获取类型
+	 * @param integer $amcaId
+	 * @return string
+	 */
+	public function getCategoryByAmcaId($amcaId)
+	{
+		$row = $this->findByAmcaId($amcaId);
+		if (is_array($row)) {
+			return isset($row['category']) ? $row['category'] : '';
+		}
+
+		return '';
+	}
+
+	/**
+	 * 通过事件ID，获取类型
+	 * @param integer $amcaId
+	 * @return string
+	 */
+	public function getCategoryLangByAmcaId($amcaId)
+	{
+		$row = $this->findByAmcaId($amcaId);
+		if (is_array($row) && isset($row['category'])) {
+			$enum = DataAmcas::getCategoryEnum();
+			return isset($enum[$row['category']]) ? $enum[$row['category']] : '';
+		}
+
+		return '';
+	}
+
+	/**
+	 * 通过事件ID，获取提示
+	 * @param integer $amcaId
+	 * @return string
+	 */
+	public function getPromptByAmcaId($amcaId)
+	{
+		$row = $this->findByAmcaId($amcaId);
+		if (is_array($row)) {
+			return isset($row['prompt']) ? $row['prompt'] : '';
+		}
+
+		return '';
+	}
+
+	/**
+	 * 通过事件ID，获取父事件ID
+	 * @param integer $amcaId
+	 * @return integer
+	 */
+	public function getAmcaPidByAmcaId($amcaId)
+	{
+		$row = $this->findByAmcaId($amcaId);
+		if (is_array($row)) {
+			return isset($row['amca_pid']) ? $row['amca_pid'] : -1;
+		}
+
+		return -1;
+	}
+
+	/**
+	 * 通过事件ID，获取父事件名
+	 * @param integer $amcaId
+	 * @return string
+	 */
+	public function getAmcaPnameByAmcaId($amcaId)
+	{
+		$amcaPid = $this->getAmcaPidByAmcaId($amcaId);
+		if ($amcaPid >= 0) {
+			return $this->getAmcaNameByAmcaId($amcaPid);
+		}
+
+		return '';
 	}
 
 	/**
@@ -198,19 +242,20 @@ class Amcas extends Model
 	 */
 	public function countByPidAndName($amcaPid, $amcaName)
 	{
-		return $this->_dbAmcas->countByPidAndName($amcaPid, $amcaName);
+		$total = $this->_dbAmcas->countByPidAndName($amcaPid, $amcaName);
+		return $total;
 	}
 
 	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @param boolean $ignore
-	 * @return array
+	 * @return integer
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
 		$fpAmcas = new FpAmcas($this, FpAmcas::OP_TYPE_INSERT);
-		return $this->callCreateMethod($this->_dbAmcas, 'create', $params, $fpAmcas, $ignore);
+		
 	}
 
 	/**
@@ -228,11 +273,11 @@ class Amcas extends Model
 	/**
 	 * 通过主键，删除一条记录
 	 * @param integer $amcaId
-	 * @return array
+	 * @return integer
 	 */
 	public function remove($amcaId)
 	{
-		return $this->callRemoveMethod($this->_dbAmcas, 'remove', array($amcaId));
+		$rowCount = $this->_dbAmcas->remove($amcaId);
+		return $rowCount;
 	}
-
 }
