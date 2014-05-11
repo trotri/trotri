@@ -8,9 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace ucenter\mods;
-
-use tfc\validator\DbExists2Validator;
+namespace ucenter\models;
 
 use srv\FormProcessor;
 use ucenter\library\Lang;
@@ -20,13 +18,14 @@ use tfc\validator\MinLengthValidator;
 use tfc\validator\MaxLengthValidator;
 use tfc\validator\NumericValidator;
 use tfc\validator\DbExistsValidator;
+use tfc\validator\DbExists2Validator;
 
 /**
  * FpAmcas class file
  * 业务层：表单数据处理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: FpAmcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package ucenter.mods
+ * @package ucenter.models
  * @since 1.0
  */
 class FpAmcas extends FormProcessor
@@ -37,42 +36,40 @@ class FpAmcas extends FormProcessor
 	 */
 	public function process(array $params = array(), $id = 0)
 	{
+		$this->id = (int) $id;
+		if ($this->isUpdate() && $this->id <= 0) {
+			return false;
+		}
+
 		if ($this->isInsert()) {
 			if (!$this->required($params, 'amca_name', 'amca_pid', 'category')) {
-				return false;
-			}
-		}
-		else {
-			if (($amcaId = (int) $id) <= 0) {
 				return false;
 			}
 		}
 
 		if (isset($params['amca_pid'])) {
 			$amcaPid = (int) $params['amca_pid'];
-			if (!$this->isValidAmcaPid($amcaPid)) {
+			if (!$this->isValid('amca_pid', $amcaPid, $this->getAmcaPidRule($amcaPid))) {
 				return false;
 			}
 		}
 		else {
-			$amcaPid = $this->_object->getAmcaPidByAmcaId($amcaId);
+			$amcaPid = $this->_object->getAmcaPidByAmcaId($this->id);
 			if ($amcaPid < 0) {
 				return false;
 			}
+
+			$this->amca_pid = $amcaPid;
 		}
 
-		if (isset($params['amca_name'])) {
-			$this->isValidAmcaName($params['amca_name'], $amcaId, $amcaPid);
-		}
-
-		$this->run($params, 'category', 'prompt', 'sort');
+		$this->run($params, 'amca_name', 'category', 'prompt', 'sort');
 		return !$this->hasError();
 	}
 
 	/**
 	 * 验证“父ID”
 	 * @param integer $value
-	 * @return boolean
+	 * @return array
 	 */
 	public function getAmcaPidRule($value)
 	{
@@ -84,24 +81,28 @@ class FpAmcas extends FormProcessor
 	/**
 	 * 验证“事件名”
 	 * @param string $value
-	 * @param integer $amcaId
-	 * @param integer $amcaPid
 	 * @return array
 	 */
-	public function getAmcaNameRule($value, $amcaId, $amcaPid)
+	public function getAmcaNameRule($value)
 	{
+		if ($this->isUpdate()) {
+			if ($this->_object->getAmcaNameByAmcaId($this->id) === $value) {
+				return array();
+			}
+		}
+
 		return array(
 			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
 			'MaxLengthValidator' => new MaxLengthValidator($value, 16, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
 			'AlphaValidator' => new AlphaValidator($value, true, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_ALPHA')),
-			'DbExists2Validator' => new DbExists2Validator($value, true, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), 'amcas', 'amca_name', 'amca_pid', $amcaPid)
+			'DbExists2Validator' => new DbExists2Validator($value, true, Lang::_('FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), 'amcas', 'amca_name', 'amca_pid', $this->amca_pid)
 		);
 	}
 
 	/**
 	 * 验证“类型”，只能新增或编辑“模块”类型
 	 * @param string $value
-	 * @return boolean
+	 * @return array
 	 */
 	public function getCategoryRule($value)
 	{

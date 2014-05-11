@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace ucenter\mods;
+namespace ucenter\models;
 
 use ucenter\library\Lang;
 
@@ -17,7 +17,7 @@ use ucenter\library\Lang;
  * 业务层：数据管理类，寄存常量、选项
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: DataAmcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package ucenter.mods
+ * @package ucenter.models
  * @since 1.0
  */
 class DataAmcas

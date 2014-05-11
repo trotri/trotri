@@ -12,7 +12,7 @@ namespace modules\user\action\amcas;
 
 use library\actions;
 use tfc\ap\Ap;
-use modules\user\model\Amcas;
+use modules\user\service\Amcas;
 
 /**
  * View class file
@@ -33,11 +33,12 @@ class View extends actions\Show
 		$ret = array();
 
 		$id = Ap::getRequest()->getInteger('id');
-		$mod = new Amcas();
+		$service = new Amcas();
 
-		$ret = $mod->findByAmcaId($id);
+		$ret = $service->findByAmcaId($id);
 
-		$this->assign('tabs', $mod->getViewTabsRender());
+		$this->assign('tabs', $service->getViewTabsRender());
+		$this->assign('service', $service);
 		$this->render($ret);
 	}
 }

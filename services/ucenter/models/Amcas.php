@@ -8,11 +8,9 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace ucenter\mods;
+namespace ucenter\models;
 
 use srv\Model;
-use ucenter\library\Constant;
-use ucenter\library\TableNames;
 use ucenter\db\Amcas AS DbAmcas;
 
 /**
@@ -20,7 +18,7 @@ use ucenter\db\Amcas AS DbAmcas;
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Amcas.php 1 2014-04-06 14:43:06Z huan.song $
- * @package ucenter.mods
+ * @package ucenter.models
  * @since 1.0
  */
 class Amcas extends Model
@@ -254,20 +252,34 @@ class Amcas extends Model
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
-		$fpAmcas = new FpAmcas($this, FpAmcas::OP_TYPE_INSERT);
-		
+		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_INSERT);
+		$hasError = $this->_formProcessor->process($params);
+		if ($hasError) {
+			return false;
+		}
+
+		$attributes = $this->_formProcessor->getValues();
+		$lastInsertId = $this->_dbAmcas->create($attributes, $ignore);
+		return $lastInsertId;
 	}
 
 	/**
 	 * 通过主键，编辑一条记录
 	 * @param integer $amcaId
 	 * @param array $params
-	 * @return array
+	 * @return integer
 	 */
 	public function modify($amcaId, array $params = array())
 	{
-		$fpAmcas = new FpAmcas($this, FpAmcas::OP_TYPE_UPDATE);
-		return $this->callModifyMethod($this->_dbAmcas, 'modify', $amcaId, $params, $fpAmcas);
+		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_UPDATE);
+		$hasError = $this->_formProcessor->process($params);
+		if ($hasError) {
+			return false;
+		}
+
+		$attributes = $this->_formProcessor->getValues();
+		$rowCount = $this->_dbAmcas->modify($amcaId, $attributes);
+		return $rowCount;
 	}
 
 	/**

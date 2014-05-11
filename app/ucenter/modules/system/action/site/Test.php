@@ -11,6 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
+use ucenter\db;
 
 /**
  * Test class file
@@ -28,6 +29,6 @@ class Test extends actions\Show
 	 */
 	public function run()
 	{
-		exit('modules\\system\\action\\site\\Test');
+		
 	}
 }

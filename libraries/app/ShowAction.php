@@ -18,7 +18,6 @@ use tfc\util\String;
 use tfc\saf\Text;
 use tfc\saf\Log;
 use tfc\saf\Cfg;
-use tfc\saf\ErrorNo;
 
 /**
  * ShowAction abstract class file

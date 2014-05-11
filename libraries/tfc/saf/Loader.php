@@ -264,9 +264,9 @@ spl_autoload_register('spl_autoload') || exit('Request Error, unable to register
  * 初始化$_GET、$_POST、$_COOKIE值，在指定的预定义字符前添加反斜杠
  */
 if (!MAGIC_QUOTES_GPC) {
-	$_GET    = \tfc\util\String::addslashes($_GET);
-	$_POST   = \tfc\util\String::addslashes($_POST);
-	$_COOKIE = \tfc\util\String::addslashes($_COOKIE);
+    $_GET    = \tfc\util\String::addslashes($_GET);
+    $_POST   = \tfc\util\String::addslashes($_POST);
+    $_COOKIE = \tfc\util\String::addslashes($_COOKIE);
 }
 
 if (!function_exists('debug_dump')) {

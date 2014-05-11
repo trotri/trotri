@@ -1,21 +1,21 @@
 <?php
 /**
- * Trotri Foundation Classes
+ * Trotri
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright (c) 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace tfc\saf;
+namespace app;
 
 /**
  * ErrorNo class file
  * 常用错误码类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ErrorNo.php 1 2013-05-18 14:58:59Z huan.song $
- * @package tfc.saf
+ * @package app
  * @since 1.0
  */
 class ErrorNo

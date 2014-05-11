@@ -34,6 +34,11 @@ abstract class FormProcessor
 	const OP_TYPE_UPDATE = 'UPDATE';
 
 	/**
+	 * @var integer 寄存ID值
+	 */
+	public $id = 0;
+
+	/**
 	 * @var string 操作类型：新增记录或编辑记录
 	 */
 	protected $_opType = '';
@@ -135,8 +140,17 @@ abstract class FormProcessor
 				continue;
 			}
 
-			$funcName = 'isValid' . str_replace('_', '', $columnName);
-			$this->$funcName($columnName, $params[$columnName]);
+			$value = $params[$columnName];
+
+			$method = 'get' . str_replace('_', '', $columnName) . 'Rule';
+			if (method_exists($this, $method)) {
+				$validators = $this->$method($value);
+			}
+			else {
+				$validators = array();
+			}
+
+			$this->isValid($columnName, $value, $validators);
 		}
 	}
 

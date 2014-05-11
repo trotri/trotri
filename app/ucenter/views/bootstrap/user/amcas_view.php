@@ -6,50 +6,58 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 		'values' => $this->data,
 		'elements' => array(
 			'amca_id' => array(
-				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => $this->MOD_USER_USER_AMCAS_AMCA_ID_LABEL,
 				'readonly' => true
 			),
 			'amca_name' => array(
-				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => $this->MOD_USER_USER_AMCAS_AMCA_NAME_LABEL,
 				'readonly' => true
 			),
-			'amca_pname' => array(
-				'__tid__' => 'main',
+			'amca_pid' => array(
 				'type' => 'text',
 				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PNAME_LABEL,
-				'readonly' => true
+				'readonly' => true,
+			),
+			'amca_pname' => array(
+				'type' => 'text',
+				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PNAME_LABEL,
+				'readonly' => true,
+				'value' => $this->service->getAmcaNameById($this->data['amca_pid']),
 			),
 			'prompt' => array(
-				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => $this->MOD_USER_USER_AMCAS_PROMPT_LABEL,
 				'readonly' => true
 			),
 			'sort' => array(
-				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => $this->MOD_USER_USER_AMCAS_SORT_LABEL,
 				'readonly' => true
 			),
-			'category_text' => array(
-				'__tid__' => 'main',
+			'category' => array(
 				'type' => 'text',
 				'label' => $this->MOD_USER_USER_AMCAS_CATEGORY_LABEL,
 				'readonly' => true
+			),
+			'category_lang' => array(
+				'type' => 'text',
+				'label' => $this->MOD_USER_USER_AMCAS_CATEGORY_LABEL,
+				'readonly' => true,
+				'value' => $this->service->getCategoryLangByAmcaId($this->data['category']),
 			),
 			'_button_history_back_' => views\bootstrap\components\ComponentsBuilder::getButtonHistoryBack(),
 		),
 		'columns' => array(
 			'amca_id',
 			'amca_name',
+			'amca_pid',
 			'amca_pname',
 			'prompt',
 			'sort',
-			'category_text',
+			'category',
+			'category_lang',
 			'_button_history_back_',
 		)
 	)

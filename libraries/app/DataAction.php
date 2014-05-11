@@ -14,7 +14,6 @@ use tfc\ap\Ap;
 use tfc\ap\InvalidArgumentException;
 use tfc\util\Encoder;
 use tfc\saf\Log;
-use tfc\saf\ErrorNo;
 
 /**
  * DataAction abstract class file
