@@ -10,6 +10,8 @@
 
 namespace app;
 
+use tfc\ap\HttpCookie;
+use tfc\mvc\Mvc;
 use tfc\saf\Log;
 use srv\Model;
 
@@ -23,6 +25,56 @@ use srv\Model;
  */
 abstract class Service
 {
+	/**
+	 * @var string 存放最后一次访问的列表页链接的Cookie名
+	 */
+	const COOKIE_NAME_LAST_LIST_URL = 'last_list_url';
+
+	/**
+	 * 获取查询列表数据Action名
+	 * @return string
+	 */
+	public abstract function getActList();
+
+	/**
+	 * 获取默认最后一次访问的列表页链接
+	 * @return string
+	 */
+	public function getDefaultLastListUrl()
+	{
+		return Mvc::getView()->getUrlManager()->getUrl($this->getActList(), Mvc::$controller, Mvc::$module);
+	}
+
+	/**
+	 * 获取最后一次访问的列表页链接
+	 * @return string
+	 */
+	public function getLastListUrl()
+	{
+		$value = HttpCookie::get(self::COOKIE_NAME_LAST_LIST_URL);
+		if ($value !== null && strpos($value, '__') !== false) {
+			list($router, $url) = explode('__', $value);
+			if ($router === Mvc::$module . '_' . Mvc::$controller . '_' . $this->getActList()) {
+				return base64_decode($url);
+			}
+		}
+
+		return $this->getDefaultLastListUrl();
+	}
+
+	/**
+	 * 设置最后一次访问的列表页链接
+	 * @param array $params
+	 * @return void
+	 */
+	public function setLastListUrl(array $params = array())
+	{
+		$url = Mvc::getView()->getUrlManager()->getUrl($this->getActList(), Mvc::$controller, Mvc::$module, $params);
+		$router = Mvc::$module . '_' . Mvc::$controller . '_' . $this->getActList();
+		$value = $router . '__' . str_replace('=', '', base64_encode($url));
+		HttpCookie::add(self::COOKIE_NAME_LAST_LIST_URL, $value);
+	}
+
 	/**
 	 * 调用查询类方法
 	 * @param srv\Model $object
@@ -168,7 +220,8 @@ abstract class Service
 			return array(
 				'err_no' => $errNo,
 				'err_msg' => $errMsg,
-				'id' => $id
+				'id' => $id,
+				'errors' => $errors
 			);
 		}
 

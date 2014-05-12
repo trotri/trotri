@@ -3,9 +3,10 @@ use views\bootstrap\components\ComponentsBuilder;
 
 $this->widget('views\bootstrap\widgets\FormBuilder',
 	array(
-		'name' => 'create',
-		'action' => $this->getUrlManager()->getUrl($this->action),
+		'name' => 'modify',
+		'action' => $this->getUrlManager()->getUrl($this->action, '', '', array('id' => $this->id)),
 		'tabs' => $this->tabs,
+		'values' => $this->data,
 		'errors' => $this->errors,
 		'elements' => array(
 			'amca_name' => array(
@@ -24,7 +25,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PNAME_LABEL,
 				'hint' => $this->MOD_USER_USER_AMCAS_AMCA_PNAME_HINT,
 				'readonly' => true,
-				'value' => $this->srv->getAmcaNameByAmcaId($this->amca_pid),
+				'value' => $this->srv->getAmcaNameByAmcaId($this->data['amca_pid']),
 			),
 			'prompt' => array(
 				'type' => 'text',

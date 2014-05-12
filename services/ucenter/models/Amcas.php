@@ -322,7 +322,7 @@ class Amcas extends Model
 	public function modify($amcaId, array $params = array())
 	{
 		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_UPDATE, $this->_dbAmcas->getDbProxy());
-		if (!$this->_formProcessor->process($params)) {
+		if (!$this->_formProcessor->process($params, $amcaId)) {
 			return false;
 		}
 

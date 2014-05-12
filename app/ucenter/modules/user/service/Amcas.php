@@ -11,6 +11,7 @@
 namespace modules\user\service;
 
 use app\Service;
+use ucenter\models\DataAmcas;
 use library\UcenterFactory;
 
 /**
@@ -34,6 +35,15 @@ class Amcas extends Service
 	public function __construct()
 	{
 		$this->_modAmcas = UcenterFactory::getInstance('Amcas');
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see app.Service::getActList()
+	 */
+	public function getActList()
+	{
+		return 'index';
 	}
 
 	/**
@@ -229,6 +239,7 @@ class Amcas extends Service
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
+		$params['category'] = DataAmcas::CATEGORY_MOD;
 		$ret = $this->callCreateMethod($this->_modAmcas, 'create', $params, $ignore);
 		return $ret;
 	}

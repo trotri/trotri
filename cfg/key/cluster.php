@@ -14,5 +14,11 @@ return array (
     'sign' => 'kup30Lp9Ll20kIrTy4Lp35ek',
     'expiry' => MONTH_IN_SECONDS,
     'rnd_len' => 4
+  ),
+  'cookie' => array (
+    'crypt' => 'T0j9i12Uw6povXA5I',
+    'sign' => 'P9h4Oj2jk1E90esA',
+    'expiry' => DAY_IN_SECONDS,
+    'rnd_len' => 4
   )
 );

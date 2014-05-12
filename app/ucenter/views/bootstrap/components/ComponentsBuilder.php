@@ -80,12 +80,11 @@ class ComponentsBuilder
 
 	/**
 	 * 获取表单的“取消”按钮信息，如果存在“最后一次访问的列表页链接”，则跳转到“最后一次访问的列表页”，否则跳转到缺省页面
-	 * @param array $params
+	 * @param string $url
 	 * @return array
 	 */
-	public static function getButtonCancel(array $params = array())
+	public static function getButtonCancel($url = '')
 	{
-		$url = isset($params['url']) ? $params['url'] : '';
 		$output = array(
 			'type'      => 'button',
 			'label'     => Text::_('CFG_SYSTEM_GLOBAL_CANCEL'),

@@ -31,5 +31,12 @@ return array (
 		'secure' => false,              // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
 		'httponly' => true,             // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
 	),
+	'cookie' => array (
+		'key_name' => 'cookie',         // 密钥配置名
+		'domain' => '',                 // Cookie的有效域名，缺省：当前域名
+		'path' => '/',                  // Cookie的有效服务器路径，缺省：/
+		'secure' => false,              // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
+		'httponly' => true,             // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
+	),
 	'navbar' => require_once 'navbar.php',
 );

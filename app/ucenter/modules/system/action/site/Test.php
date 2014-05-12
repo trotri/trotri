@@ -11,7 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
-use ucenter\db;
+use modules\user\service\Amcas;
 
 /**
  * Test class file
@@ -29,6 +29,8 @@ class Test extends actions\Show
 	 */
 	public function run()
 	{
-		
+		$srvAmcas = new Amcas();
+		$url = $srvAmcas->getLastListUrl();
+		exit($url);
 	}
 }

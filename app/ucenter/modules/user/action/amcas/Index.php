@@ -58,6 +58,8 @@ class Index extends actions\Show
 			$this->err404();
 		}
 
+		$srv->setLastListUrl(array('app_id' => $appId));
+
 		$this->assign('srv', $srv);
 		$this->assign('app_id', $appId);
 		$this->assign('apps', $apps);

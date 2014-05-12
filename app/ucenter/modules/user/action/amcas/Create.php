@@ -39,6 +39,12 @@ class Create extends actions\Create
 		$req = Ap::getRequest();
 		$srv = new Amcas();
 		$submitType = new SubmitType();
+		$lastListUrl = $srv->getLastListUrl();
+
+		$amcaPid = $req->getInteger('amca_pid');
+		if ($amcaPid <= 0) {
+			$this->err404();
+		}
 
 		if ($submitType->isPost()) {
 			$ret = $srv->create($req->getPost());
@@ -47,17 +53,13 @@ class Create extends actions\Create
 					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
 				elseif ($submitType->isTypeSaveNew()) {
-					$this->forward('create', Mvc::$controller, Mvc::$module, $ret);
+					$this->forward('create', Mvc::$controller, Mvc::$module, array('amca_pid' => $amcaPid));
 				}
 				elseif ($submitType->isTypeSaveClose()) {
-					$this->forward('index', Mvc::$controller, Mvc::$module, $ret);
+					$url = $this->applyParams($lastListUrl, $ret);
+					$this->redirect($url);
 				}
 			}
-		}
-
-		$amcaPid = $req->getInteger('amca_pid');
-		if ($amcaPid <= 0) {
-			$this->err404();
 		}
 
 		if (!$srv->isApp($srv->getCategoryByAmcaId($amcaPid))) {
@@ -69,6 +71,7 @@ class Create extends actions\Create
 		$this->assign('amca_pid', $amcaPid);
 		$this->assign('enum_category', DataAmcas::getCategoryEnum());
 		$this->assign('category', DataAmcas::CATEGORY_MOD);
+		$this->assign('last_list_url', $lastListUrl);
 		$this->render($ret);
 	}
 }
