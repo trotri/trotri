@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\ShowAction;
+
 /**
  * Create abstract class file
  * Create基类，展示新增表单
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class Create extends Show
+abstract class Create extends ShowAction
 {
 }

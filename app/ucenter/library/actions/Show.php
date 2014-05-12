@@ -10,8 +10,7 @@
 
 namespace library\actions;
 
-use tfc\ap\Ap;
-use app\ShowAction;
+use library\ShowAction;
 
 /**
  * Show abstract class file
@@ -23,12 +22,4 @@ use app\ShowAction;
  */
 abstract class Show extends ShowAction
 {
-	/**
-	 * 页面重定向到404页面
-	 * @return void
-	 */
-	public function err404()
-	{
-		$this->forward('err404', 'site', 'system');
-	}
 }

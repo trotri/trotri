@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\DataAction;
+
 /**
  * DataModify abstract class file
  * DataModify基类，编辑数据接口
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class DataModify extends DataShow
+abstract class DataModify extends DataAction
 {
 }

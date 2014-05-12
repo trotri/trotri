@@ -13,7 +13,10 @@ namespace modules\user\action\amcas;
 use library\actions;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use modules\user\model\Amcas;
+use library\ErrorNo;
+use library\SubmitType;
+use ucenter\models\DataAmcas;
+use modules\user\service\Amcas;
 
 /**
  * Create class file
@@ -31,5 +34,41 @@ class Create extends actions\Create
 	 */
 	public function run()
 	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$srv = new Amcas();
+		$submitType = new SubmitType();
+
+		if ($submitType->isPost()) {
+			$ret = $srv->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($submitType->isTypeSave()) {
+					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($submitType->isTypeSaveNew()) {
+					$this->forward('create', Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($submitType->isTypeSaveClose()) {
+					$this->forward('index', Mvc::$controller, Mvc::$module, $ret);
+				}
+			}
+		}
+
+		$amcaPid = $req->getInteger('amca_pid');
+		if ($amcaPid <= 0) {
+			$this->err404();
+		}
+
+		if (!$srv->isApp($srv->getCategoryByAmcaId($amcaPid))) {
+			$this->err404();
+		}
+
+		$this->assign('srv', $srv);
+		$this->assign('tabs', $srv->getViewTabsRender());
+		$this->assign('amca_pid', $amcaPid);
+		$this->assign('enum_category', DataAmcas::getCategoryEnum());
+		$this->assign('category', DataAmcas::CATEGORY_MOD);
+		$this->render($ret);
 	}
 }

@@ -51,10 +51,10 @@ class DataAmcas
 		static $enum = null;
 		if ($enum === null) {
 			$enum = array(
-				self::CATEGORY_APP => Lang::_('ENUM_USER_AMCAS_CATEGORY_APP'),
-				self::CATEGORY_MOD => Lang::_('ENUM_USER_AMCAS_CATEGORY_MOD'),
-				self::CATEGORY_CTRL => Lang::_('ENUM_USER_AMCAS_CATEGORY_CTRL'),
-				self::CATEGORY_ACT => Lang::_('ENUM_USER_AMCAS_CATEGORY_ACT'),
+				self::CATEGORY_APP => Lang::_('UCENTER_ENUM_USER_AMCAS_CATEGORY_APP'),
+				self::CATEGORY_MOD => Lang::_('UCENTER_ENUM_USER_AMCAS_CATEGORY_MOD'),
+				self::CATEGORY_CTRL => Lang::_('UCENTER_ENUM_USER_AMCAS_CATEGORY_CTRL'),
+				self::CATEGORY_ACT => Lang::_('UCENTER_ENUM_USER_AMCAS_CATEGORY_ACT'),
 			);
 		}
 

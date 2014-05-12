@@ -12,6 +12,7 @@ namespace srv;
 
 use tfc\ap\ErrorException;
 use tfc\validator\Validator;
+use tfc\saf\DbProxy;
 
 /**
  * FormProcessor abstract class file
@@ -49,6 +50,11 @@ abstract class FormProcessor
 	protected $_object = null;
 
 	/**
+	 * @var tfc\saf\DbProxy 寄存数据库代理操作类
+	 */
+	protected $_dbProxy = null;
+
+	/**
 	 * @var array 寄存所有错误信息
 	 */
 	protected $_errors = array();
@@ -62,9 +68,10 @@ abstract class FormProcessor
 	 * 构造方法：初始化操作类型
 	 * @param srv\Model $object
 	 * @param string $opType 'INSERT' or 'UPDATE'
+	 * @param tfc\saf\DbProxy $dbProxy
 	 * @throws ErrorException 如果指定的操作类型不是INSERT或UPDATE，抛出异常
 	 */
-	public function __construct(Model $object, $opType)
+	public function __construct(Model $object, $opType, DbProxy $dbProxy = null)
 	{
 		$this->_object = $object;
 
@@ -75,6 +82,7 @@ abstract class FormProcessor
         }
 
         $this->_opType = $opType;
+        $this->_dbProxy = $dbProxy;
 	}
 
 	/**
@@ -387,6 +395,6 @@ abstract class FormProcessor
 	 */
 	public function getDbProxy()
 	{
-		return $this->_object->getDbProxy();
+		return $this->_dbProxy;
 	}
 }

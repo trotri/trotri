@@ -32,35 +32,19 @@ return array(
 		),
 		3 => array(
 			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_INDEX',
-			'm' => 'ucenter', 'c' => 'amcas', 'a' => 'index',
+			'm' => 'user', 'c' => 'amcas', 'a' => 'index',
 		),
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
-			'm' => 'builder', 'c' => 'index', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_ADMINISTRATOR',
+			'm' => 'administrator', 'c' => 'site', 'a' => 'index'
 		),
-		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
-			'm' => 'builder', 'c' => 'index', 'a' => 'index',
-			'icon' => array(
-				'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE',
-				'm' => 'builder', 'c' => 'index', 'a' => 'create',
-			)
-		),
-		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_TRASHINDEX',
-			'm' => 'builder', 'c' => 'index', 'a' => 'trashindex'
-		),
-		3 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_SCHEMA_INDEX',
-			'm' => 'builder', 'c' => 'schema', 'a' => 'index'
-		)
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_ABOUT',
-			'm' => 'system', 'c' => 'site', 'a' => 'about'
+			'label' => 'CFG_SYSTEM_URLS_RDTOOL',
+			'm' => 'rdtool', 'c' => 'site', 'a' => 'index'
 		)
 	),
 );

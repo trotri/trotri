@@ -66,11 +66,13 @@ class DbExists2Validator extends Validator
      */
     public function __construct($value, $option, $message = '', DbProxy $dbProxy, $tableName, $columnName, $columnName2, $value2)
     {
-       $this->_dbProxy = $dbProxy;
-       $this->_tableName = $tableName;
-       $this->_columnName = $columnName;
-       $this->_columnName2 = $columnName2;
-       $this->_value2 = $value2;
+        parent::__construct($value, $option, $message);
+
+        $this->_dbProxy = $dbProxy;
+        $this->_tableName = $this->_dbProxy->getTblprefix() . $tableName;
+        $this->_columnName = $columnName;
+        $this->_columnName2 = $columnName2;
+        $this->_value2 = $value2;
     }
 
     /**

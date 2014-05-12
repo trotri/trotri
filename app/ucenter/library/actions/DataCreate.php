@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\DataAction;
+
 /**
  * DataCreate abstract class file
  * DataCreate基类，新增数据接口
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class DataCreate extends DataShow
+abstract class DataCreate extends DataAction
 {
 }

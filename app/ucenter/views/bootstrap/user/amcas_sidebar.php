@@ -20,7 +20,7 @@ $config = array(
 	),
 	'amcas' => array(
 		'label' => 'MOD_USER_URLS_AMCAS_INDEX',
-		'm' => 'ucenter', 'c' => 'amcas', 'a' => 'index',
+		'm' => 'user', 'c' => 'amcas', 'a' => 'index',
 	),
 );
 

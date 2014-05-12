@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\ShowAction;
+
 /**
  * Modify abstract class file
  * Modify基类，展示编辑表单
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class Modify extends Show
+abstract class Modify extends ShowAction
 {
 }

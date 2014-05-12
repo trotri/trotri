@@ -279,6 +279,11 @@ if (!function_exists('debug_dump')) {
     function debug_dump($expression, $coercion = false)
     {
         if (DEBUG || $coercion) {
+            $response = \tfc\ap\Ap::getResponse();
+            if (!$response->headersSent()) {
+                $response->contentType('text/html', \tfc\ap\Ap::getEncoding());
+            }
+
             echo '<pre>';
             var_dump($expression);
             echo '</pre>';

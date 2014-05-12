@@ -10,7 +10,7 @@
 
 namespace library\actions;
 
-use app\DataAction;
+use library\DataAction;
 
 /**
  * DataShow abstract class file

@@ -105,7 +105,7 @@ class Amcas extends Db
 		if (!$this->required($params, 'amca_pid', 'amca_name', 'category')) {
 			return false;
 		}
-	
+
 		if (($amcaPid = (int) $params['amca_pid']) < 0) {
 			return false;
 		}

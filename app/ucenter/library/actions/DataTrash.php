@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\DataAction;
+
 /**
  * DataTrash abstract class file
  * DataTrash基类，将数据移至回收站和从回收站还原数据接口
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class DataTrash extends DataShow
+abstract class DataTrash extends DataAction
 {
 }

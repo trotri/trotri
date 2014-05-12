@@ -77,7 +77,7 @@ abstract class Service
 	{
 		$lastInsertId = $object->$method($params, $ignore);
 		$errors = $object->getErrors();
-		if (($lastInsertId === false && $errors === array()) || $lastInsertId <= 0) {
+		if (($lastInsertId === false && $errors === array()) || $lastInsertId === 0 || $lastInsertId < 0) {
 			$errNo = ErrorNo::ERROR_DB_INSERT;
 			$errMsg = Lang::_('ERROR_MSG_ERROR_DB_INSERT');
 			Log::warning(sprintf(

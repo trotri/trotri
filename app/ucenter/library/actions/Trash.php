@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\ShowAction;
+
 /**
  * Trash abstract class file
  * Trash基类，将数据移至回收站和从回收站还原数据
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class Trash extends Show
+abstract class Trash extends ShowAction
 {
 }

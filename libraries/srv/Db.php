@@ -289,7 +289,7 @@ abstract class Db extends Cache
 	 */
 	public function query($sql, $params = null)
 	{
-		$params = $this->quoteValue($params);
+		// $params = $this->quoteValue($params);
 		return $this->getDbProxy()->query($sql, $params);
 	}
 

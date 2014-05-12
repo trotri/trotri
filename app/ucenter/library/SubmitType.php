@@ -75,7 +75,7 @@ class SubmitType
 	 */
 	public static function isTypeSave()
 	{
-		return self::getType() === self::SUBMIT_TYPE_SAVE;
+		return self::getType() === self::TYPE_SAVE;
 	}
 
 	/**
@@ -84,7 +84,7 @@ class SubmitType
 	 */
 	public static function isTypeSaveClose()
 	{
-		return self::getType() === self::SUBMIT_TYPE_SAVE_CLOSE;
+		return self::getType() === self::TYPE_SAVE_CLOSE;
 	}
 
 	/**
@@ -93,7 +93,7 @@ class SubmitType
 	 */
 	public static function isTypeSaveNew()
 	{
-		return self::getType() === self::SUBMIT_TYPE_SAVE_NEW;
+		return self::getType() === self::TYPE_SAVE_NEW;
 	}
 
 	/**

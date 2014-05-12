@@ -28,6 +28,6 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		exit('modules\\system\\action\\site\\Modify');
+		
 	}
 }

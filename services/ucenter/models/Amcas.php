@@ -188,6 +188,57 @@ class Amcas extends Model
 	}
 
 	/**
+	 * 通过类型，获取类型名
+	 * @param string $category
+	 * @return string
+	 */
+	public function getCategoryLangByCategory($category)
+	{
+		$enum = DataAmcas::getCategoryEnum();
+		return isset($enum[$category]) ? $enum[$category] : '';
+	}
+
+	/**
+	 * 验证是否是应用类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isApp($category)
+	{
+		return ($category === DataAmcas::CATEGORY_APP);
+	}
+
+	/**
+	 * 验证是否是模块类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isMod($category)
+	{
+		return ($category === DataAmcas::CATEGORY_MOD);
+	}
+
+	/**
+	 * 验证是否是控制器类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isCtrl($category)
+	{
+		return ($category === DataAmcas::CATEGORY_CTRL);
+	}
+
+	/**
+	 * 验证是否是行动类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isAct($category)
+	{
+		return ($category === DataAmcas::CATEGORY_ACT);
+	}
+
+	/**
 	 * 通过事件ID，获取提示
 	 * @param integer $amcaId
 	 * @return string
@@ -252,9 +303,8 @@ class Amcas extends Model
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
-		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_INSERT);
-		$hasError = $this->_formProcessor->process($params);
-		if ($hasError) {
+		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_INSERT, $this->_dbAmcas->getDbProxy());
+		if (!$this->_formProcessor->process($params)) {
 			return false;
 		}
 
@@ -271,9 +321,8 @@ class Amcas extends Model
 	 */
 	public function modify($amcaId, array $params = array())
 	{
-		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_UPDATE);
-		$hasError = $this->_formProcessor->process($params);
-		if ($hasError) {
+		$this->_formProcessor = new FpAmcas($this, FpAmcas::OP_TYPE_UPDATE, $this->_dbAmcas->getDbProxy());
+		if (!$this->_formProcessor->process($params)) {
 			return false;
 		}
 

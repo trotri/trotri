@@ -131,6 +131,56 @@ class Amcas extends Service
 	}
 
 	/**
+	 * 通过类型，获取类型名
+	 * @param string $category
+	 * @return string
+	 */
+	public function getCategoryLangByCategory($category)
+	{
+		return $this->_modAmcas->getCategoryLangByCategory($category);
+	}
+
+	/**
+	 * 验证是否是应用类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isApp($category)
+	{
+		return $this->_modAmcas->isApp($category);
+	}
+
+	/**
+	 * 验证是否是模块类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isMod($category)
+	{
+		return $this->_modAmcas->isMod($category);
+	}
+
+	/**
+	 * 验证是否是控制器类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isCtrl($category)
+	{
+		return $this->_modAmcas->isCtrl($category);
+	}
+
+	/**
+	 * 验证是否是行动类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isAct($category)
+	{
+		return $this->_modAmcas->isAct($category);
+	}
+
+	/**
 	 * 通过事件ID，获取提示
 	 * @param integer $amcaId
 	 * @return string

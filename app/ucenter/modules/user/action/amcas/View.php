@@ -30,15 +30,15 @@ class View extends actions\Show
 	 */
 	public function run()
 	{
-		$ret = array();
+		$req = Ap::getRequest();
+		$srv = new Amcas();
 
-		$id = Ap::getRequest()->getInteger('id');
-		$service = new Amcas();
+		$id = $req->getInteger('id');
 
-		$ret = $service->findByAmcaId($id);
+		$ret = $srv->findByAmcaId($id);
 
-		$this->assign('tabs', $service->getViewTabsRender());
-		$this->assign('service', $service);
+		$this->assign('srv', $srv);
+		$this->assign('tabs', $srv->getViewTabsRender());
 		$this->render($ret);
 	}
 }

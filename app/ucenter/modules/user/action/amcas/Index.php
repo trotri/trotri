@@ -12,8 +12,8 @@ namespace modules\user\action\amcas;
 
 use library\actions;
 use tfc\ap\Ap;
-use tfc\saf\ErrorNo;
-use modules\user\model\Amcas;
+use app\ErrorNo;
+use modules\user\service\Amcas;
 
 /**
  * Index class file
@@ -32,14 +32,14 @@ class Index extends actions\Show
 	public function run()
 	{
 		$req = Ap::getRequest();
-		$mod = new Amcas();
+		$srv = new Amcas();
 
-		$apps = $mod->findAppPrompts();
+		$apps = $srv->findAppPrompts();
 		if ($apps === array()) {
 			$this->err404();
 		}
 
-		$appId = Ap::getRequest()->getInteger('app_id');
+		$appId = $req->getInteger('app_id');
 		if ($appId === 0) {
 			$row = array_keys(array_slice($apps, 0, 1, true));
 			$appId = array_shift($row);
@@ -53,12 +53,12 @@ class Index extends actions\Show
 		unset($apps[$appId]);
 		$apps = array($appId => $prompt) + $apps;
 
-		$ret = $mod->findModCtrls($appId);
+		$ret = $srv->findModCtrls($appId);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			$this->err404();
 		}
 
-		$this->assign('mod', $mod);
+		$this->assign('srv', $srv);
 		$this->assign('app_id', $appId);
 		$this->assign('apps', $apps);
 		$this->render($ret);

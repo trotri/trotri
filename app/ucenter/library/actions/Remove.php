@@ -10,6 +10,8 @@
 
 namespace library\actions;
 
+use library\ShowAction;
+
 /**
  * Remove abstract class file
  * Remove基类，删除数据
@@ -18,6 +20,6 @@ namespace library\actions;
  * @package library.actions
  * @since 1.0
  */
-abstract class Remove extends Show
+abstract class Remove extends ShowAction
 {
 }
