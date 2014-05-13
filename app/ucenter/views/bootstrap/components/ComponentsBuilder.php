@@ -26,10 +26,9 @@ class ComponentsBuilder
 {
 	/**
 	 * 获取表单的“保存”按钮信息
-	 * @param array $params
 	 * @return array
 	 */
-	public static function getButtonSave(array $params = array())
+	public static function getButtonSave()
 	{
 		$output = array(
 			'type'      => 'button',
@@ -44,10 +43,9 @@ class ComponentsBuilder
 
 	/**
 	 * 获取表单的“保存并关闭”按钮信息
-	 * @param array $params
 	 * @return array
 	 */
-	public static function getButtonSaveClose(array $params = array())
+	public static function getButtonSaveClose()
 	{
 		$output = array(
 			'type'      => 'button',
@@ -62,10 +60,9 @@ class ComponentsBuilder
 
 	/**
 	 * 获取表单的“保存并新建”按钮信息
-	 * @param array $params
 	 * @return array
 	 */
-	public static function getButtonSaveNew(array $params = array())
+	public static function getButtonSaveNew()
 	{
 		$output = array(
 			'type'      => 'button',

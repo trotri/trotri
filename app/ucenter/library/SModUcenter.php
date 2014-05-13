@@ -10,17 +10,17 @@
 
 namespace library;
 
-use srv\Factory;
+use srv\SModFactory;
 
 /**
- * UcenterFactory class file
+ * SModUcenter class file
  * 模型类单例管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: UcenterFactory.php 1 2013-04-05 01:08:06Z huan.song $
+ * @version $Id: SModUcenter.php 1 2013-04-05 01:08:06Z huan.song $
  * @package library
  * @since 1.0
  */
-class UcenterFactory
+class SModUcenter
 {
 	/**
 	 * @var string 业务名
@@ -28,12 +28,12 @@ class UcenterFactory
 	const SRV_NAME = 'ucenter';
 
 	/**
-	 * 根据模型和类名获取类的实例，适用于类的构造方法没有参数，如果类的构造方法有参数，不能只通过类名区分不同的类
+	 * 根据类名获取类的实例，适用于类的构造方法没有参数，如果类的构造方法有参数，不能只通过类名区分不同的类
 	 * @param string $modName
 	 * @return instance of srv\Model
 	 */
 	public static function getInstance($modName)
 	{
-		return Factory::getInstance($modName, self::SRV_NAME);
+		return SModFactory::getInstance($modName, self::SRV_NAME);
 	}
 }

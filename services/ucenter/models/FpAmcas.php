@@ -75,7 +75,7 @@ class FpAmcas extends FormProcessor
 	public function getAmcaPidRule($value)
 	{
 		return array(
-			'DbExistsValidator' => new DbExistsValidator($value, true, Lang::_('UCENTER_FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_pid')
+			'DbExistsValidator' => new DbExistsValidator($value, true, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_pid')
 		);
 	}
 
@@ -93,10 +93,10 @@ class FpAmcas extends FormProcessor
 		}
 
 		return array(
-			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('UCENTER_FILTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
-			'MaxLengthValidator' => new MaxLengthValidator($value, 16, Lang::_('UCENTER_FILTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
-			'AlphaValidator' => new AlphaValidator($value, true, Lang::_('UCENTER_FILTER_USER_AMCAS_AMCA_NAME_ALPHA')),
-			'DbExists2Validator' => new DbExists2Validator($value, false, Lang::_('UCENTER_FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_name', 'amca_pid', $this->amca_pid)
+			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
+			'MaxLengthValidator' => new MaxLengthValidator($value, 16, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
+			'AlphaValidator' => new AlphaValidator($value, true, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_NAME_ALPHA')),
+			'DbExists2Validator' => new DbExists2Validator($value, false, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_name', 'amca_pid', $this->amca_pid)
 		);
 	}
 
@@ -108,7 +108,7 @@ class FpAmcas extends FormProcessor
 	public function getCategoryRule($value)
 	{
 		return array(
-			'EqualValidator' => new EqualValidator($value, DataAmcas::CATEGORY_MOD, Lang::_('UCENTER_FILTER_USER_AMCAS_CATEGORY_EQUAL'))
+			'EqualValidator' => new EqualValidator($value, DataAmcas::CATEGORY_MOD, Lang::_('MOD_FILTER_USER_AMCAS_CATEGORY_EQUAL'))
 		);
 	}
 
@@ -120,8 +120,8 @@ class FpAmcas extends FormProcessor
 	public function getPromptRule($value)
 	{
 		return array(
-			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('UCENTER_FILTER_USER_AMCAS_PROMPT_MINLENGTH')),
-			'MaxLengthValidator' => new MaxLengthValidator($value, 50, Lang::_('UCENTER_FILTER_USER_AMCAS_PROMPT_MAXLENGTH'))
+			'MinLengthValidator' => new MinLengthValidator($value, 2, Lang::_('MOD_FILTER_USER_AMCAS_PROMPT_MINLENGTH')),
+			'MaxLengthValidator' => new MaxLengthValidator($value, 50, Lang::_('MOD_FILTER_USER_AMCAS_PROMPT_MAXLENGTH'))
 		);
 	}
 
@@ -133,7 +133,7 @@ class FpAmcas extends FormProcessor
 	public function getSortRule($value)
 	{
 		return array(
-			'NumericValidator' => new NumericValidator($value, true, Lang::_('UCENTER_FILTER_USER_AMCAS_SORT_NUMERIC')),
+			'NumericValidator' => new NumericValidator($value, true, Lang::_('MOD_FILTER_USER_AMCAS_SORT_NUMERIC')),
 		);
 	}
 }

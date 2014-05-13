@@ -15,8 +15,8 @@ use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use library\ErrorNo;
 use library\SubmitType;
-use ucenter\models\DataAmcas;
-use modules\user\service\Amcas;
+use modules\user\service\Amcas AS SrvAmcas;
+use modules\user\elements\Amcas AS EleAmcas;
 
 /**
  * Create class file
@@ -37,9 +37,9 @@ class Create extends actions\Create
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$srv = new Amcas();
+		$srv = new SrvAmcas();
+		$ele = new EleAmcas($srv);
 		$submitType = new SubmitType();
-		$lastListUrl = $srv->getLastListUrl();
 
 		$amcaPid = $req->getInteger('amca_pid');
 		if ($amcaPid <= 0) {
@@ -56,7 +56,7 @@ class Create extends actions\Create
 					$this->forward('create', Mvc::$controller, Mvc::$module, array('amca_pid' => $amcaPid));
 				}
 				elseif ($submitType->isTypeSaveClose()) {
-					$url = $this->applyParams($lastListUrl, $ret);
+					$url = $this->applyParams($ele->getLLU(), $ret);
 					$this->redirect($url);
 				}
 			}
@@ -66,12 +66,8 @@ class Create extends actions\Create
 			$this->err404();
 		}
 
-		$this->assign('srv', $srv);
-		$this->assign('tabs', $srv->getViewTabsRender());
+		$this->assign('elements', $ele);
 		$this->assign('amca_pid', $amcaPid);
-		$this->assign('enum_category', DataAmcas::getCategoryEnum());
-		$this->assign('category', DataAmcas::CATEGORY_MOD);
-		$this->assign('last_list_url', $lastListUrl);
 		$this->render($ret);
 	}
 }

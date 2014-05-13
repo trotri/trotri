@@ -1,63 +1,22 @@
 <?php
-$this->widget('views\bootstrap\widgets\FormBuilder',
+$this->widget('views\bootstrap\widgets\ViewBuilder',
 	array(
 		'name' => 'view',
-		'tabs' => $this->tabs,
 		'values' => $this->data,
+		'elements_object' => $this->elements,
 		'elements' => array(
-			'amca_id' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_ID_LABEL,
-				'readonly' => true
-			),
-			'amca_name' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_NAME_LABEL,
-				'readonly' => true
-			),
-			'amca_pid' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PID_LABEL,
-				'readonly' => true,
-			),
 			'amca_pname' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PNAME_LABEL,
-				'readonly' => true,
-				'value' => $this->srv->getAmcaNameByAmcaId($this->data['amca_pid']),
+				'value' => $this->elements->srv->getAmcaNameByAmcaId($this->data['amca_pid']),
 			),
-			'prompt' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_PROMPT_LABEL,
-				'readonly' => true
-			),
-			'sort' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_SORT_LABEL,
-				'readonly' => true
-			),
-			'category' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_CATEGORY_LABEL,
-				'readonly' => true
-			),
-			'category_lang' => array(
-				'type' => 'text',
-				'label' => $this->MOD_USER_USER_AMCAS_CATEGORY_LABEL,
-				'readonly' => true,
-				'value' => $this->srv->getCategoryLangByAmcaId($this->data['amca_pid']),
-			),
-			'_button_history_back_' => views\bootstrap\components\ComponentsBuilder::getButtonHistoryBack(),
 		),
 		'columns' => array(
 			'amca_id',
 			'amca_name',
-			// 'amca_pid',
+			'amca_pid',
 			'amca_pname',
 			'prompt',
 			'sort',
-			// 'category',
-			'category_lang',
+			'category',
 			'_button_history_back_',
 		)
 	)

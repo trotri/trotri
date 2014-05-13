@@ -10,16 +10,17 @@
 
 namespace modules\user\service;
 
+use tfc\saf\Text;
 use app\Service;
 use ucenter\models\DataAmcas;
-use library\UcenterFactory;
+use library\SModUcenter;
 
 /**
  * Amcas class file
  * 用户可访问的事件
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Amcas.php 1 2014-04-06 14:43:07Z huan.song $
- * @package modules.ucenter.model
+ * @package modules.user.service
  * @since 1.0
  */
 class Amcas extends Service
@@ -34,27 +35,84 @@ class Amcas extends Service
 	 */
 	public function __construct()
 	{
-		$this->_modAmcas = UcenterFactory::getInstance('Amcas');
+		$this->_modAmcas = SModUcenter::getInstance('Amcas');
 	}
 
 	/**
 	 * (non-PHPdoc)
-	 * @see app.Service::getActList()
+	 * @see app.Elements::getElementsRender()
 	 */
-	public function getActList()
+	public function getElementsRender()
 	{
-		return 'index';
+		$output = array(
+			'amca_id' => array(
+				'__tid__' => 'main',
+				'type' => 'hidden',
+				'label' => Text::_('MOD_USER_USER_AMCAS_AMCA_ID_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_AMCA_ID_HINT'),
+			),
+			'amca_name' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_USER_USER_AMCAS_AMCA_NAME_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_AMCA_NAME_HINT'),
+				'required' => true,
+			),
+			'amca_pid' => array(
+				'__tid__' => 'main',
+				'type' => 'hidden',
+				'label' => Text::_('MOD_USER_USER_AMCAS_AMCA_PID_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_AMCA_PID_HINT'),
+				'required' => true,
+			),
+			'amca_pname' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_USER_USER_AMCAS_AMCA_PNAME_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_AMCA_PNAME_HINT'),
+				'disabled' => true,
+			),
+			'prompt' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_USER_USER_AMCAS_PROMPT_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_PROMPT_HINT'),
+				'required' => true,
+			),
+			'sort' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_USER_USER_AMCAS_SORT_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_SORT_HINT'),
+				'required' => true,
+			),
+			'category' => array(
+				'__tid__' => 'main',
+				'type' => 'radio',
+				'label' => Text::_('MOD_USER_USER_AMCAS_CATEGORY_LABEL'),
+				'hint' => Text::_('MOD_USER_USER_AMCAS_CATEGORY_HINT'),
+				'options' => DataAmcas::getCategoryEnum(),
+				'value' => DataAmcas::CATEGORY_MOD,
+				'disabled' => true,
+			),
+		);
+
+		return $output;
 	}
 
 	/**
-	 * 获取Input表单元素分类标签
-	 * @return array
+	 * 获取列表页“事件名”的A标签
+	 * @param array $data
+	 * @return string
 	 */
-	public function getViewTabsRender()
+	public function getAmcaNameLink($data)
 	{
-		$output = array(
+		$params = array(
+			'id' => $data['amca_id'],
 		);
 
+		$url = $this->urlManager->getUrl('view', $this->controller, $this->module, $params);
+		$output = $this->html->a($data['amca_name'], $url);
 		return $output;
 	}
 

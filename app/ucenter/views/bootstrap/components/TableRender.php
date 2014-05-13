@@ -10,6 +10,8 @@
 
 namespace views\bootstrap\components;
 
+use app\Elements;
+
 /**
  * TableRender class file
  * 表格渲染基类
@@ -21,11 +23,16 @@ namespace views\bootstrap\components;
 class TableRender
 {
 	/**
-	 * @var 模板解析类、业务类、URL管理类、页面辅助类、模型名、控制器名、方法名
+	 * @var app\Elements 表单元素管理类
+	 */
+	public $elements_object = null;
+
+	/**
+	 * @var 业务处理类、模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、列表页方法名
 	 */
 	public
-		$view,
 		$srv,
+		$view,
 		$urlManager,
 		$html,
 		$module,
@@ -33,20 +40,19 @@ class TableRender
 		$action;
 
 	/**
-	 * 构造方法，初始化模板解析类、业务类、URL管理类、页面辅助类、模型名、控制器名、方法名
-	 * @param unknown_type $view
+	 * 构造方法，初始化表单元素管理类、业务处理类、模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名
+	 * @param app\Elements $elements
 	 */
-	public function __construct($view)
+	public function __construct(Elements $elements)
 	{
-		$this->view = $view;
-		if (isset($this->view->srv)) {
-			$this->srv = $this->view->srv;
-		}
+		$this->elements_object = $elements;
 
-		$this->urlManager = $this->view->getUrlManager();
-		$this->html = $this->view->getHtml();
-		$this->module = $this->view->module;
-		$this->controller = $this->view->controller;
-		$this->action = $this->view->action;
+		$this->srv = $this->elements_object->srv;
+		$this->view = $this->elements_object->view;
+		$this->urlManager = $this->elements_object->urlManager;
+		$this->html = $this->elements_object->html;
+		$this->module = $this->elements_object->module;
+		$this->controller = $this->elements_object->controller;
+		$this->action = $this->elements_object->action;
 	}
 }

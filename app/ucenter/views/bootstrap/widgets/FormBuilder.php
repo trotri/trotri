@@ -10,8 +10,11 @@
 
 namespace views\bootstrap\widgets;
 
+use tfc\ap\ErrorException;
 use tfc\mvc\form;
 use tfc\saf\Text;
+use app\Elements;
+use views\bootstrap\components\ComponentsBuilder;
 
 /**
  * FormBuilder class file
@@ -32,6 +35,11 @@ class FormBuilder extends form\FormBuilder
 	 * @var array 寄存表单属性
 	 */
 	public $attributes = array('class' => 'form-horizontal');
+
+	/**
+	 * @var app\Elements 表单元素管理类
+	 */
+	public $elements_object = null;
 
 	/**
 	 * @var array Input表单元素分类标签
@@ -69,12 +77,12 @@ class FormBuilder extends form\FormBuilder
 			unset($this->_tplVars['action']);
 		}
 
+		// 初始化表单元素管理类
+		$this->initElementsObject();
+
 		// 初始化分类标签
 		$this->_tabs['main']['prompt'] = Text::_('CFG_SYSTEM_GLOBAL_VIEWTAB_MAIN_PROMPT');
-		if (isset($this->_tplVars['tabs'])) {
-			$this->setTabs($this->_tplVars['tabs']);
-			unset($this->_tplVars['tabs']);
-		}
+		$this->setTabs($this->elements_object->getViewTabsRender());
 
 		parent::_init();
 	}
@@ -198,10 +206,12 @@ class FormBuilder extends form\FormBuilder
 	 */
 	public function initElements()
 	{
-		$elements = isset($this->_tplVars['elements']) ? (array) $this->_tplVars['elements'] : array();
+		$elements = $this->elements_object->getElementsRender();
 		if ($elements === array()) {
 			return $this;
 		}
+
+		$extends = isset($this->_tplVars['elements']) ? (array) $this->_tplVars['elements'] : array();
 
 		$columns = isset($this->_tplVars['columns']) ? (array) $this->_tplVars['columns'] : array();
 		if ($columns === array()) {
@@ -210,13 +220,28 @@ class FormBuilder extends form\FormBuilder
 
 		$_elements = array();
 		foreach ($columns as $columnName) {
-			if (!isset($elements[$columnName])) {
-				continue;
+			if (substr($columnName, 0, 8) === '_button_') {
+				$funcName = 'get' . str_replace('_', '', $columnName);
+				if ($columnName === '_button_cancel_') {
+					$element = ComponentsBuilder::$funcName($this->elements_object->getLLU());
+				}
+				else {
+					$element = ComponentsBuilder::$funcName();
+				}
 			}
+			else {
+				if (!isset($elements[$columnName])) {
+					continue;
+				}
 
-			$element = $elements[$columnName];
-			if (!is_array($element)) {
-				continue;
+				$element = $elements[$columnName];
+				if (!is_array($element)) {
+					continue;
+				}
+
+				if (isset($extends[$columnName]) && is_array($extends[$columnName])) {
+					$element = array_merge($element, $extends[$columnName]);
+				}
 			}
 
 			if (!isset($element['__object__']) && isset($element['type'])) {
@@ -247,6 +272,24 @@ class FormBuilder extends form\FormBuilder
 		}
 
 		return parent::createElement($className, $config);
+	}
+
+	/**
+	 * 初始化表单元素管理类
+	 * @return views\bootstrap\widgets\FormBuilder
+	 */
+	public function initElementsObject()
+	{
+		if (isset($this->_tplVars['elements_object'])) {
+			$this->elements_object = $this->_tplVars['elements_object'];
+			unset($this->_tplVars['elements_object']);
+		}
+
+		if ($this->elements_object === null || !$this->elements_object instanceof Elements) {
+			throw new ErrorException('FormBuilder elements_object is not instanceof app\Elements.');
+		}
+
+		return $this;
 	}
 
 	/**

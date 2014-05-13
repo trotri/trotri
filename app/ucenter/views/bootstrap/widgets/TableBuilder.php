@@ -12,6 +12,8 @@ namespace views\bootstrap\widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
+use app\Elements;
+use views\bootstrap\components\TableRender;
 
 /**
  * TableBuilder class file
@@ -39,11 +41,28 @@ class TableBuilder extends Widget
 	protected $_elements = array();
 
 	/**
+	 * @var app\Elements 表单元素管理类
+	 */
+	public $elements_object = null;
+
+	/**
+	 * @var views\bootstrap\components\TableRender 表格渲染类
+	 */
+	public $table_render = null;
+
+	/**
 	 * (non-PHPdoc)
 	 * @see tfc\mvc.Widget::run()
 	 */
 	public function run()
 	{
+		// 初始化表格渲染类
+		$this->initTableRender();
+
+		// 初始化表单元素管理类
+		$this->initElementsObject();
+
+		// 初始化所有表单元素
 		$this->initElements();
 
 		if (isset($this->_tplVars['checkedToggle'])) {
@@ -104,7 +123,12 @@ class TableBuilder extends Widget
 
 			foreach ($this->_elements as $columnName => $element) {
 				if ($element['callback'] !== null) {
-					$value = @call_user_func($element['callback'], &$row);
+					if (is_string($element['callback'])) {
+						$value = @call_user_func(array($this->table_render, $element['callback']), &$row);
+					}
+					elseif (is_array($element['callback'])) {
+						$value = @call_user_func($element['callback'], &$row);
+					}
 				}
 				elseif (isset($row[$columnName])) {
 					$value = $row[$columnName];
@@ -132,15 +156,49 @@ class TableBuilder extends Widget
 	}
 
 	/**
+	 * 初始化表单元素管理类
+	 * @return views\bootstrap\widgets\TableBuilder
+	 */
+	public function initElementsObject()
+	{
+		$this->elements_object = $this->table_render->elements_object;
+		if ($this->elements_object === null || !$this->elements_object instanceof Elements) {
+			throw new ErrorException('TableBuilder elements_object is not instanceof app\Elements.');
+		}
+
+		return $this;
+	}
+
+	/**
+	 * 初始化表格渲染类
+	 * @return views\bootstrap\widgets\TableBuilder
+	 */
+	public function initTableRender()
+	{
+		if (isset($this->_tplVars['table_render'])) {
+			$this->table_render = $this->_tplVars['table_render'];
+			unset($this->_tplVars['table_render']);
+		}
+
+		if ($this->table_render === null || !$this->table_render instanceof TableRender) {
+			throw new ErrorException('TableBuilder table_render is not instanceof views\bootstrap\components\TableRender.');
+		}
+
+		return $this;
+	}
+
+	/**
 	 * 初始化表单元素
 	 * @return views\bootstrap\widgets\TableBuilder
 	 */
 	public function initElements()
 	{
-		$elements = isset($this->_tplVars['elements']) ? (array) $this->_tplVars['elements'] : array();
+		$elements = $this->elements_object->getElementsRender();
 		if ($elements === array()) {
 			return $this;
 		}
+
+		$extends = isset($this->_tplVars['elements']) ? (array) $this->_tplVars['elements'] : array();
 
 		$columns = isset($this->_tplVars['columns']) ? (array) $this->_tplVars['columns'] : array();
 		if ($columns === array()) {
@@ -148,13 +206,25 @@ class TableBuilder extends Widget
 		}
 
 		foreach ($columns as $columnName) {
-			if (!isset($elements[$columnName])) {
-				continue;
+			if ($columnName === '_operate_') {
+				$element = array(
+					'label' => $this->table_render->view->CFG_SYSTEM_GLOBAL_OPERATE,
+					'callback' => 'getOperate'
+				);
 			}
+			else {
+				if (!isset($elements[$columnName])) {
+					continue;
+				}
 
-			$element = $elements[$columnName];
-			if (!is_array($element)) {
-				continue;
+				$element = $elements[$columnName];
+				if (!is_array($element)) {
+					continue;
+				}
+
+				if (isset($extends[$columnName]) && is_array($extends[$columnName])) {
+					$element = array_merge($element, $extends[$columnName]);
+				}
 			}
 
 			$this->_elements[$columnName] = array(

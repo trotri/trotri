@@ -6,23 +6,17 @@ class TableRender extends views\bootstrap\components\TableRender
 {
 	public function getAmcaNameLink($data)
 	{
-		$params = array(
-			'id' => $data['amca_id'],
-		);
-
-		$url = $this->urlManager->getUrl('view', $this->controller, $this->module, $params);
-		$output = $this->html->a($data['amca_name'], $url);
-		return $output;
+		return $this->elements_object->getAmcaNameLink($data);
 	}
 
 	public function getAmcaPname($data)
 	{
-		return $this->srv->getAmcaNameByAmcaId($data['amca_pid']);
+		return $this->elements_object->getAmcaPnameTblColumn($data);
 	}
 
 	public function getCategoryLang($data)
 	{
-		return $this->srv->getCategoryLangByCategory($data['category']);
+		return $this->elements_object->getCategoryLangTblColumn($data);
 	}
 
 	public function getOperate($data)
@@ -61,7 +55,7 @@ class TableRender extends views\bootstrap\components\TableRender
 	}
 }
 
-$tblRender = new TableRender($this);
+$tblRender = new TableRender($this->elements);
 ?>
 
 <?php $this->display('user/amcas_index_btns'); ?>
@@ -71,46 +65,25 @@ $this->widget(
 	'views\bootstrap\widgets\TableBuilder',
 	array(
 		'data' => $this->data,
+		'table_render' => $tblRender,
 		'elements' => array(
-			'amca_id' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_ID_LABEL
-			),
 			'amca_name' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_NAME_LABEL,
-				'callback' => array($tblRender, 'getAmcaNameLink')
-			),
-			'amca_pid' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PID_LABEL
+				'callback' => 'getAmcaNameLink'
 			),
 			'amca_pname' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_AMCA_PNAME_LABEL,
-				'callback' => array($tblRender, 'getAmcaPname')
-			),
-			'prompt' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_PROMPT_LABEL
-			),
-			'sort' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_SORT_LABEL
-			),
-			'category' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_CATEGORY_LABEL
+				'callback' => 'getAmcaPname'
 			),
 			'category_lang' => array(
-				'label' => $this->MOD_USER_USER_AMCAS_CATEGORY_LABEL,
-				'callback' => array($tblRender, 'getCategoryLang')
-			),
-			'_operate_' => array(
-				'label' => $this->CFG_SYSTEM_GLOBAL_OPERATE,
-				'callback' => array($tblRender, 'getOperate')
+				'callback' => 'getCategoryLang'
 			),
 		),
 		'columns' => array(
 			'amca_name',
-			// 'amca_pid',
-			// 'amca_pname',
+			'amca_pid',
+			'amca_pname',
 			'prompt',
 			'sort',
-			// 'category',
+			'category',
 			'category_lang',
 			'amca_id',
 			'_operate_',

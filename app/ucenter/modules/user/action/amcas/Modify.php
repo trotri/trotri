@@ -15,8 +15,8 @@ use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use library\ErrorNo;
 use library\SubmitType;
-use ucenter\models\DataAmcas;
-use modules\user\service\Amcas;
+use modules\user\service\Amcas AS SrvAmcas;
+use modules\user\elements\Amcas AS EleAmcas;
 
 /**
  * Modify class file
@@ -37,9 +37,9 @@ class Modify extends actions\Modify
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$srv = new Amcas();
+		$srv = new SrvAmcas();
+		$ele = new EleAmcas($srv);
 		$submitType = new SubmitType();
-		$lastListUrl = $srv->getLastListUrl();
 
 		$id = $req->getInteger('id');
 		if ($id <= 0) {
@@ -49,14 +49,14 @@ class Modify extends actions\Modify
 		if ($submitType->isPost()) {
 			$ret = $srv->modify($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				if ($this->isSubmitTypeSave()) {
+				if ($submitType->isTypeSave()) {
 					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
 				}
-				elseif ($this->isSubmitTypeSaveNew()) {
+				elseif ($submitType->isTypeSaveNew()) {
 					$this->forward('create', Mvc::$controller, Mvc::$module, array('amca_pid' => $req->getInteger('amca_pid')));
 				}
-				elseif ($this->isSubmitTypeSaveClose()) {
-					$url = $this->applyParams($lastListUrl, $ret);
+				elseif ($submitType->isTypeSaveClose()) {
+					$url = $this->applyParams($ele->getLLU(), $ret);
 					$this->redirect($url);
 				}
 			}
@@ -67,12 +67,8 @@ class Modify extends actions\Modify
 			$ret = $srv->findByAmcaId($id);
 		}
 
-		$this->assign('srv', $srv);
-		$this->assign('tabs', $srv->getViewTabsRender());
+		$this->assign('elements', $ele);
 		$this->assign('id', $id);
-		$this->assign('enum_category', DataAmcas::getCategoryEnum());
-		$this->assign('category', DataAmcas::CATEGORY_MOD);
-		$this->assign('last_list_url', $lastListUrl);
 		$this->render($ret);
 	}
 }

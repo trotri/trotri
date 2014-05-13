@@ -12,7 +12,8 @@ namespace modules\user\action\amcas;
 
 use library\actions;
 use tfc\ap\Ap;
-use modules\user\service\Amcas;
+use modules\user\service\Amcas AS SrvAmcas;
+use modules\user\elements\Amcas AS EleAmcas;
 
 /**
  * View class file
@@ -31,14 +32,14 @@ class View extends actions\Show
 	public function run()
 	{
 		$req = Ap::getRequest();
-		$srv = new Amcas();
+		$srv = new SrvAmcas();
+		$ele = new EleAmcas($srv);
 
 		$id = $req->getInteger('id');
 
 		$ret = $srv->findByAmcaId($id);
 
-		$this->assign('srv', $srv);
-		$this->assign('tabs', $srv->getViewTabsRender());
+		$this->assign('elements', $ele);
 		$this->render($ret);
 	}
 }

@@ -11,14 +11,14 @@
 namespace srv;
 
 /**
- * Factory class file
- * 模型类单例管理，通过类名获取类的实例，并且保证在一次PHP的运行周期内只创建一次实例
+ * SModFactory class file
+ * 业务层模型类单例管理，通过类名获取类的实例，并且保证在一次PHP的运行周期内只创建一次实例
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Factory.php 1 2013-04-05 20:00:06Z huan.song $
+ * @version $Id: SModFactory.php 1 2013-04-05 20:00:06Z huan.song $
  * @package srv
  * @since 1.0
  */
-class Factory
+class SModFactory
 {
 	/**
 	 * @var array 用于寄存全局的实例
@@ -26,7 +26,7 @@ class Factory
 	protected static $_instances = array();
 
 	/**
-	 * 根据模型和类名获取类的实例，适用于类的构造方法没有参数，如果类的构造方法有参数，不能只通过类名区分不同的类
+	 * 根据业务名和类名获取类的实例，适用于类的构造方法没有参数，如果类的构造方法有参数，不能只通过类名区分不同的类
 	 * @param string $modName
 	 * @param string $srvName
 	 * @return instance of srv\Model
