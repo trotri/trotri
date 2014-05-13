@@ -32,7 +32,7 @@ class Index extends actions\Show
 	public function run()
 	{
 		$req = Ap::getRequest();
-		$srv = new SrvAmcas();
+		$srv = new Amcas();
 
 		$apps = $srv->findAppPrompts();
 		if ($apps === array()) {
@@ -58,9 +58,9 @@ class Index extends actions\Show
 			$this->err404();
 		}
 
-		$ele->setLLU(array('app_id' => $appId));
+		$srv->setLLU(array('app_id' => $appId));
 
-		$this->assign('elements', $ele);
+		$this->assign('elements', $srv);
 		$this->assign('app_id', $appId);
 		$this->assign('apps', $apps);
 		$this->render($ret);

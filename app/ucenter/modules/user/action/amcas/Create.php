@@ -15,8 +15,7 @@ use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use library\ErrorNo;
 use library\SubmitType;
-use modules\user\service\Amcas AS SrvAmcas;
-use modules\user\elements\Amcas AS EleAmcas;
+use modules\user\service\Amcas;
 
 /**
  * Create class file
@@ -37,8 +36,7 @@ class Create extends actions\Create
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$srv = new SrvAmcas();
-		$ele = new EleAmcas($srv);
+		$srv = new Amcas();
 		$submitType = new SubmitType();
 
 		$amcaPid = $req->getInteger('amca_pid');
@@ -56,7 +54,7 @@ class Create extends actions\Create
 					$this->forward('create', Mvc::$controller, Mvc::$module, array('amca_pid' => $amcaPid));
 				}
 				elseif ($submitType->isTypeSaveClose()) {
-					$url = $this->applyParams($ele->getLLU(), $ret);
+					$url = $this->applyParams($srv->getLLU(), $ret);
 					$this->redirect($url);
 				}
 			}
@@ -66,7 +64,7 @@ class Create extends actions\Create
 			$this->err404();
 		}
 
-		$this->assign('elements', $ele);
+		$this->assign('elements', $srv);
 		$this->assign('amca_pid', $amcaPid);
 		$this->render($ret);
 	}

@@ -29,6 +29,11 @@ abstract class Elements
 	const LLU_COOKIE_NAME = 'last_list_url';
 
 	/**
+	 * @var integer 存放在Cookie中的列表页链接数量
+	 */
+	const LLU_COOKIE_COUNT = 4;
+
+	/**
 	 * @var string 缺省的列表页方法名
 	 */
 	const DEFAULT_ACT_NAME_LIST = 'index';
@@ -69,6 +74,15 @@ abstract class Elements
 		$this->module = Mvc::$module;
 		$this->controller = Mvc::$controller;
 		$this->action = Mvc::$action;
+
+		$this->_init();
+	}
+
+	/**
+	 * 子类构造方法：子类调用此方法作为构造方法，避免重写父类构造方法
+	 */
+	protected function _init()
+	{
 	}
 
 	/**
@@ -86,12 +100,10 @@ abstract class Elements
 	 */
 	public function getLLU()
 	{
-		$value = HttpCookie::get(self::LLU_COOKIE_NAME);
-		if ($value !== null && strpos($value, '__') !== false) {
-			list($router, $url) = explode('__', $value);
-			if ($router === $this->module . '_' . $this->controller . '_' . $this->actNameList) {
-				return base64_decode($url);
-			}
+		$urls = $this->getLLUs();
+		$router = $this->module . '_' . $this->controller . '_' . $this->actNameList;
+		if (isset($urls[$router])) {
+			return $urls[$router];
 		}
 
 		return $this->getLLUDefault();
@@ -104,10 +116,32 @@ abstract class Elements
 	 */
 	public function setLLU(array $params = array())
 	{
-		$url = $this->urlManager->getUrl($this->actNameList, $this->controller, $this->module, $params);
+		$urls = $this->getLLUs();
 		$router = $this->module . '_' . $this->controller . '_' . $this->actNameList;
-		$value = $router . '__' . str_replace('=', '', base64_encode($url));
+		$urls[$router] = $this->urlManager->getUrl($this->actNameList, $this->controller, $this->module, $params);
+		while (count($urls) > self::LLU_COOKIE_COUNT) {
+			array_shift($urls);
+		}
+
+		$value = str_replace('=', '', base64_encode(serialize($urls)));
 		HttpCookie::add(self::LLU_COOKIE_NAME, $value);
+	}
+
+	/**
+	 * 获取Cookie中所有的列表页链接
+	 * @return array
+	 */
+	public function getLLUs()
+	{
+		$value = HttpCookie::get(self::LLU_COOKIE_NAME);
+		if ($value !== null) {
+			$urls = unserialize(base64_decode($value));
+			if (is_array($urls)) {
+				return $urls;
+			}
+		}
+
+		return array();
 	}
 
 	/**

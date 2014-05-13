@@ -13,8 +13,7 @@ namespace modules\user\action\amcas;
 use library\actions;
 use tfc\ap\Ap;
 use library\ErrorNo;
-use modules\user\service\Amcas AS SrvAmcas;
-use modules\user\elements\Amcas AS EleAmcas;
+use modules\user\service\Amcas;
 
 /**
  * Remove class file
@@ -33,8 +32,7 @@ class Remove extends actions\Remove
 	public function run()
 	{
 		$req = Ap::getRequest();
-		$srv = new SrvAmcas();
-		$ele = new EleAmcas($srv);
+		$srv = new Amcas();
 
 		$id = $req->getInteger('id');
 		$ret = $srv->remove($id);

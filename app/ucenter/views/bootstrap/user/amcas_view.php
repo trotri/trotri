@@ -6,7 +6,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'elements_object' => $this->elements,
 		'elements' => array(
 			'amca_pname' => array(
-				'value' => $this->elements->srv->getAmcaNameByAmcaId($this->data['amca_pid']),
+				'value' => $this->elements->getAmcaNameByAmcaId($this->data['amca_pid']),
 			),
 		),
 		'columns' => array(

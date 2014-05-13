@@ -31,9 +31,9 @@ class Amcas extends Service
 	protected $_modAmcas = null;
 
 	/**
-	 * 构造方法：初始化业务层模型类
+	 * 初始化业务层模型类
 	 */
-	public function __construct()
+	public function _init()
 	{
 		$this->_modAmcas = SModUcenter::getInstance('Amcas');
 	}

@@ -10,7 +10,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 				'value' => $this->amca_pid
 			),
 			'amca_pname' => array(
-				'value' => $this->elements->srv->getAmcaNameByAmcaId($this->amca_pid),
+				'value' => $this->elements->getAmcaNameByAmcaId($this->amca_pid),
 			),
 		),
 		'columns' => array(

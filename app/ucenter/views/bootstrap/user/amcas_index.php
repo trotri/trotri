@@ -11,17 +11,17 @@ class TableRender extends views\bootstrap\components\TableRender
 
 	public function getAmcaPname($data)
 	{
-		return $this->elements_object->getAmcaPnameTblColumn($data);
+		return $this->elements_object->getAmcaPnameByAmcaId($data['amca_pid']);
 	}
 
 	public function getCategoryLang($data)
 	{
-		return $this->elements_object->getCategoryLangTblColumn($data);
+		return $this->elements_object->getCategoryLangByCategory($data['category']);
 	}
 
 	public function getOperate($data)
 	{
-		if (!$this->srv->isMod($data['category'])) {
+		if (!$this->elements_object->isMod($data['category'])) {
 			return '';
 		}
 

@@ -31,7 +31,6 @@ class TableRender
 	 * @var 业务处理类、模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、列表页方法名
 	 */
 	public
-		$srv,
 		$view,
 		$urlManager,
 		$html,
@@ -47,7 +46,6 @@ class TableRender
 	{
 		$this->elements_object = $elements;
 
-		$this->srv = $this->elements_object->srv;
 		$this->view = $this->elements_object->view;
 		$this->urlManager = $this->elements_object->urlManager;
 		$this->html = $this->elements_object->html;

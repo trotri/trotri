@@ -11,6 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
+use tfc\ap\HttpCookie;
 use modules\user\service\Amcas;
 
 /**
@@ -29,8 +30,24 @@ class Test extends actions\Show
 	 */
 	public function run()
 	{
-		$srvAmcas = new Amcas();
-		$url = $srvAmcas->getLastListUrl();
-		exit($url);
+		$srv = new Amcas();
+
+		/*
+		$urls['a1-b1-c1'] = 'a1';
+		$urls['a2-b2-c2'] = 'a2';
+		$urls['a3-b3-c3'] = 'a3';
+		$urls['a4-b4-c4'] = 'a4';
+		$urls['a5-b5-c5'] = 'a5';
+
+		$value = str_replace('=', '', base64_encode(serialize($urls)));
+		HttpCookie::add('last_list_url', $value);
+		*/
+
+		$srv->setLLU();
+		$urls = $srv->getLLUs();
+
+		echo '<pre>';
+		print_r($urls);
+		exit();
 	}
 }
