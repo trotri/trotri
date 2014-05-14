@@ -11,6 +11,11 @@
 namespace library\actions;
 
 use library\ShowAction;
+use tfc\ap\Ap;
+use tfc\mvc\Mvc;
+use app\SrvFactory;
+use app\SubmitType;
+use library\ErrorNo;
 
 /**
  * Modify abstract class file
@@ -22,4 +27,57 @@ use library\ShowAction;
  */
 abstract class Modify extends ShowAction
 {
+	/**
+	 * 执行操作：编辑数据
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$id = $this->getPk();
+		if ($id <= 0) {
+			$this->err404();
+		}
+
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$srv = SrvFactory::getInstance($className);
+		$submitType = new SubmitType();
+
+		if ($submitType->isPost()) {
+			$ret = $srv->modify($id, $req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($submitType->isTypeSave()) {
+					$this->forward($srv->actNameModify, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($submitType->isTypeSaveNew()) {
+					$this->forward($srv->actNameCreate, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($submitType->isTypeSaveClose()) {
+					$url = $this->applyParams($srv->getLLU(), $ret);
+					$this->redirect($url);
+				}
+			}
+
+			$ret['data'] = $req->getPost();
+		}
+		else {
+			$ret = $srv->findByPk($id);
+		}
+
+		$this->assign('id', $id);
+		$this->assign('elements', $srv);
+		$this->render($ret);
+	}
+
+	/**
+	 * 获取ID值
+	 * @return integer
+	 */
+	public function getPk()
+	{
+		return Ap::getRequest()->getInteger('id');
+	}
 }

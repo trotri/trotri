@@ -39,6 +39,11 @@ abstract class Elements
 	const DEFAULT_ACT_NAME_LIST = 'index';
 
 	/**
+	 * @var string 缺省的详情页方法名
+	 */
+	const DEFAULT_ACT_NAME_VIEW = 'view';
+
+	/**
 	 * @var string 缺省的新增数据方法名
 	 */
 	const DEFAULT_ACT_NAME_CREATE = 'create';
@@ -49,7 +54,7 @@ abstract class Elements
 	const DEFAULT_ACT_NAME_MODIFY = 'modify';
 
 	/**
-	 * @var 业务处理类、模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、列表页方法名
+	 * @var 模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
 	 */
 	public
 		$view,
@@ -59,12 +64,12 @@ abstract class Elements
 		$controller,
 		$action,
 		$actNameList = self::DEFAULT_ACT_NAME_LIST,
+		$actNameView = self::DEFAULT_ACT_NAME_VIEW,
 		$actNameCreate = self::DEFAULT_ACT_NAME_CREATE,
 		$actNameModify = self::DEFAULT_ACT_NAME_MODIFY;
 
 	/**
-	 * 构造方法，初始化业务处理类、模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名
-	 * @param app\Service $srv
+	 * 构造方法，初始化模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
 	 */
 	public function __construct()
 	{

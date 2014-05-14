@@ -11,8 +11,6 @@
 namespace modules\user\action\amcas;
 
 use library\actions;
-use tfc\ap\Ap;
-use modules\user\service\Amcas;
 
 /**
  * View class file
@@ -22,7 +20,7 @@ use modules\user\service\Amcas;
  * @package modules.user.action.amcas
  * @since 1.0
  */
-class View extends actions\Show
+class View extends actions\View
 {
 	/**
 	 * (non-PHPdoc)
@@ -30,14 +28,6 @@ class View extends actions\Show
 	 */
 	public function run()
 	{
-		$req = Ap::getRequest();
-		$srv = new Amcas();
-
-		$id = $req->getInteger('id');
-
-		$ret = $srv->findByAmcaId($id);
-
-		$this->assign('elements', $srv);
-		$this->render($ret);
+		$this->execute('Amcas');
 	}
 }

@@ -13,8 +13,9 @@ namespace library\actions;
 use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
+use app\SrvFactory;
+use app\SubmitType;
 use library\ErrorNo;
-use library\SubmitType;
 
 /**
  * Create abstract class file
@@ -26,4 +27,37 @@ use library\SubmitType;
  */
 abstract class Create extends ShowAction
 {
+	/**
+	 * 执行操作：新增数据
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$srv = SrvFactory::getInstance($className, $moduleName);
+		$submitType = new SubmitType();
+
+		if ($submitType->isPost()) {
+			$ret = $srv->create($req->getPost());
+			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+				if ($submitType->isTypeSave()) {
+					$this->forward($srv->actNameModify, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($submitType->isTypeSaveNew()) {
+					$this->forward($srv->actNameCreate, Mvc::$controller, Mvc::$module, $ret);
+				}
+				elseif ($submitType->isTypeSaveClose()) {
+					$url = $this->applyParams($srv->getLLU(), $ret);
+					$this->redirect($url);
+				}
+			}
+		}
+
+		$this->assign('elements', $srv);
+		$this->render($ret);
+	}
 }

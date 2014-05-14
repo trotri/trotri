@@ -23,7 +23,7 @@ use modules\user\service\Amcas;
  * @package modules.user.action.amcas
  * @since 1.0
  */
-class Index extends actions\Show
+class Index extends actions\Index
 {
 	/**
 	 * (non-PHPdoc)

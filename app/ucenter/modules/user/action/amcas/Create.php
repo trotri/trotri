@@ -11,11 +11,7 @@
 namespace modules\user\action\amcas;
 
 use library\actions;
-use tfc\ap\Ap;
-use tfc\mvc\Mvc;
-use library\ErrorNo;
-use library\SubmitType;
-use modules\user\service\Amcas;
+use app\SrvFactory;
 
 /**
  * Create class file
@@ -33,39 +29,14 @@ class Create extends actions\Create
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$srv = new Amcas();
-		$submitType = new SubmitType();
-
-		$amcaPid = $req->getInteger('amca_pid');
+		$srv = SrvFactory::getInstance('Amcas');
+		$amcaPid = $srv->getAmcaPid();
 		if ($amcaPid <= 0) {
 			$this->err404();
 		}
 
-		if ($submitType->isPost()) {
-			$ret = $srv->create($req->getPost());
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				if ($submitType->isTypeSave()) {
-					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
-				}
-				elseif ($submitType->isTypeSaveNew()) {
-					$this->forward('create', Mvc::$controller, Mvc::$module, array('amca_pid' => $amcaPid));
-				}
-				elseif ($submitType->isTypeSaveClose()) {
-					$url = $this->applyParams($srv->getLLU(), $ret);
-					$this->redirect($url);
-				}
-			}
-		}
-
-		if (!$srv->isApp($srv->getCategoryByAmcaId($amcaPid))) {
-			$this->err404();
-		}
-
-		$this->assign('elements', $srv);
 		$this->assign('amca_pid', $amcaPid);
-		$this->render($ret);
+
+		$this->execute('Amcas');
 	}
 }

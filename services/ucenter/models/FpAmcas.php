@@ -75,7 +75,7 @@ class FpAmcas extends FormProcessor
 	public function getAmcaPidRule($value)
 	{
 		return array(
-			'DbExistsValidator' => new DbExistsValidator($value, true, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_pid')
+			'DbExistsValidator' => new DbExistsValidator($value, true, Lang::_('MOD_FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_id')
 		);
 	}
 

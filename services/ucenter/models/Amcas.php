@@ -199,46 +199,6 @@ class Amcas extends Model
 	}
 
 	/**
-	 * 验证是否是应用类型
-	 * @param string $category
-	 * @return boolean
-	 */
-	public function isApp($category)
-	{
-		return ($category === DataAmcas::CATEGORY_APP);
-	}
-
-	/**
-	 * 验证是否是模块类型
-	 * @param string $category
-	 * @return boolean
-	 */
-	public function isMod($category)
-	{
-		return ($category === DataAmcas::CATEGORY_MOD);
-	}
-
-	/**
-	 * 验证是否是控制器类型
-	 * @param string $category
-	 * @return boolean
-	 */
-	public function isCtrl($category)
-	{
-		return ($category === DataAmcas::CATEGORY_CTRL);
-	}
-
-	/**
-	 * 验证是否是行动类型
-	 * @param string $category
-	 * @return boolean
-	 */
-	public function isAct($category)
-	{
-		return ($category === DataAmcas::CATEGORY_ACT);
-	}
-
-	/**
 	 * 通过事件ID，获取提示
 	 * @param integer $amcaId
 	 * @return string
@@ -281,6 +241,46 @@ class Amcas extends Model
 		}
 
 		return '';
+	}
+
+	/**
+	 * 验证是否是应用类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isApp($category)
+	{
+		return ($category === DataAmcas::CATEGORY_APP);
+	}
+
+	/**
+	 * 验证是否是模块类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isMod($category)
+	{
+		return ($category === DataAmcas::CATEGORY_MOD);
+	}
+
+	/**
+	 * 验证是否是控制器类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isCtrl($category)
+	{
+		return ($category === DataAmcas::CATEGORY_CTRL);
+	}
+
+	/**
+	 * 验证是否是行动类型
+	 * @param string $category
+	 * @return boolean
+	 */
+	public function isAct($category)
+	{
+		return ($category === DataAmcas::CATEGORY_ACT);
 	}
 
 	/**

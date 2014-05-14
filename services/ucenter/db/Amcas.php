@@ -210,7 +210,7 @@ class Amcas extends Db
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
-		$sql = 'DELETE FROM `' . $tableName . '` WHERE `amca_id` = ?';
-		return $this->delete($sql, $amcaId);
+		$sql = 'DELETE FROM `' . $tableName . '` WHERE `amca_id` = ? OR `amca_pid` = ?';
+		return $this->delete($sql, array($amcaId, $amcaId));
 	}
 }

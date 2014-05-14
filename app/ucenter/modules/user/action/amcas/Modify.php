@@ -11,11 +11,6 @@
 namespace modules\user\action\amcas;
 
 use library\actions;
-use tfc\ap\Ap;
-use tfc\mvc\Mvc;
-use library\ErrorNo;
-use library\SubmitType;
-use modules\user\service\Amcas;
 
 /**
  * Modify class file
@@ -33,40 +28,6 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		$ret = array();
-
-		$req = Ap::getRequest();
-		$srv = new Amcas();
-		$submitType = new SubmitType();
-
-		$id = $req->getInteger('id');
-		if ($id <= 0) {
-			$this->err404();
-		}
-
-		if ($submitType->isPost()) {
-			$ret = $srv->modify($id, $req->getPost());
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				if ($submitType->isTypeSave()) {
-					$this->forward('modify', Mvc::$controller, Mvc::$module, $ret);
-				}
-				elseif ($submitType->isTypeSaveNew()) {
-					$this->forward('create', Mvc::$controller, Mvc::$module, array('amca_pid' => $req->getInteger('amca_pid')));
-				}
-				elseif ($submitType->isTypeSaveClose()) {
-					$url = $this->applyParams($srv->getLLU(), $ret);
-					$this->redirect($url);
-				}
-			}
-
-			$ret['data'] = $req->getPost();
-		}
-		else {
-			$ret = $srv->findByAmcaId($id);
-		}
-
-		$this->assign('elements', $srv);
-		$this->assign('id', $id);
-		$this->render($ret);
+		$this->execute('Amcas');
 	}
 }

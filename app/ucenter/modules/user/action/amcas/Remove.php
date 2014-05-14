@@ -31,10 +31,6 @@ class Remove extends actions\Remove
 	 */
 	public function run()
 	{
-		$req = Ap::getRequest();
-		$srv = new Amcas();
-
-		$id = $req->getInteger('id');
-		$ret = $srv->remove($id);
+		$this->execute('Amcas');
 	}
 }

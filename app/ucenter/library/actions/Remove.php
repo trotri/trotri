@@ -11,6 +11,8 @@
 namespace library\actions;
 
 use library\ShowAction;
+use tfc\ap\Ap;
+use app\SrvFactory;
 
 /**
  * Remove abstract class file
@@ -22,4 +24,54 @@ use library\ShowAction;
  */
 abstract class Remove extends ShowAction
 {
+	/**
+	 * 执行操作：删除数据和批量删除数据
+	 * @param string $className
+	 * @param string $moduleName
+	 * @return void
+	 */
+	public function execute($className, $moduleName = '')
+	{
+		$srv = SrvFactory::getInstance($className);
+		$funcName = $this->getFuncName();
+		$ret = $srv->$funcName($this->getPk());
+
+		$url = $this->applyParams($srv->getLLU(), $ret);
+		$this->redirect($url);
+	}
+
+	/**
+	 * 获取ID值，如果是批量提交，则ID为英文逗号分隔的字符串
+	 * @return mixed
+	 */
+	public function getPk()
+	{
+		if ($this->isBatch()) {
+			$ids = Ap::getRequest()->getTrim('ids');
+			$ids = explode(',', $ids);
+			return $ids;
+		}
+
+		return Ap::getRequest()->getInteger('id');
+	}
+
+	/**
+	 * 获取方法名
+	 * @return string
+	 */
+	public function getFuncName()
+	{
+		$funcName = $this->isBatch() ? 'batchRemove' : 'remove';
+		return $funcName;
+	}
+
+	/**
+	 * 验证是否是批量提交
+	 * @return boolean
+	 */
+	public function isBatch()
+	{
+		$isBatch = Ap::getRequest()->getInteger('is_batch');
+		return ($isBatch === 1);
+	}
 }
