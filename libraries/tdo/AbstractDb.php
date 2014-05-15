@@ -1,23 +1,25 @@
 <?php
 /**
- * Trotri Foundation Classes
+ * Trotri Data Objects
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright (c) 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace tfc\saf;
+namespace tdo;
 
 use tfc\ap\Cache;
+use tfc\ap\Singleton;
+use tfc\saf\DbProxy;
 
 /**
  * AbstractDb abstract class file
- * 数据库基类
+ * 数据库操作基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: AbstractDb.php 1 2013-05-18 14:58:59Z huan.song $
- * @package tfc.saf
+ * @package tdo
  * @since 1.0
  */
 abstract class AbstractDb extends Cache
@@ -26,6 +28,11 @@ abstract class AbstractDb extends Cache
      * @var boolean 是否缓存查询结果
      */
     public $isCached = true;
+
+    /**
+     * @var string 数据库配置名
+     */
+    protected $_clusterName = null;
 
     /**
      * @var string 表前缀
@@ -38,13 +45,9 @@ abstract class AbstractDb extends Cache
     protected $_dbProxy = null;
 
     /**
-     * 构造方法：初始化数据库代理操作类
-     * @param tfc\saf\DbProxy $dbProxy
+     * @var instance of tdo\CommandBuilder
      */
-    public function __construct(DbProxy $dbProxy)
-    {
-        $this->_dbProxy = $dbProxy;
-    }
+    protected $_commandBuilder = null;
 
     /**
      * 获取多个结果集
@@ -308,6 +311,16 @@ abstract class AbstractDb extends Cache
     }
 
     /**
+     * 获取"SELECT SQL_CALC_FOUND_ROWS"语句的查询总数
+     * @return integer
+     */
+    public function getFoundRows()
+    {
+        $sql = 'SELECT FOUND_ROWS()';
+        return $this->fetchColumn($sql);
+    }
+
+    /**
      * 获取表前缀
      * @return string
      */
@@ -326,6 +339,39 @@ abstract class AbstractDb extends Cache
      */
     public function getDbProxy()
     {
+        if ($this->_dbProxy === null) {
+            $clusterName = $this->getClusterName();
+            $className = 'tfc\\saf\\DbProxy::' . $clusterName;
+            if (($dbProxy = Singleton::get($className)) === null) {
+                $dbProxy = new DbProxy($clusterName);
+                Singleton::set($className, $dbProxy);
+            }
+
+            $this->_dbProxy = $dbProxy;
+        }
+
         return $this->_dbProxy;
+    }
+
+    /**
+     * 获取创建简单的执行命令类
+     * @return tdo\CommandBuilder
+     */
+    public function getCommandBuilder()
+    {
+        if ($this->_commandBuilder === null) {
+            $this->_commandBuilder = Singleton::getInstance('tdo\\CommandBuilder');
+        }
+
+        return $this->_commandBuilder;
+    }
+
+    /**
+     * 获取数据库配置名
+     * @return string
+     */
+    public function getClusterName()
+    {
+        return $this->_clusterName;
     }
 }

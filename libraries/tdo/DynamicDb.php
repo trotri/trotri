@@ -8,21 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace dsrv;
-
-use srv;
-use tdo\EntityBuilder;
-use tdo\CommandBuilder;
+namespace tdo;
 
 /**
- * Db abstract class file
- * 数据库操作基类
+ * DynamicDb abstract class file
+ * 动态数据库操作基类，自动读取并缓存表结构，自动组建并执行SQL语句
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Db.php 1 2013-05-18 14:58:59Z huan.song $
- * @package dsrv
+ * @version $Id: DynamicDb.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package tdo
  * @since 1.0
  */
-abstract class Db extends srv\Db
+abstract class DynamicDb extends AbstractDb
 {
     /**
      * @var instance of tfc\db\TableSchema
@@ -55,12 +51,7 @@ abstract class Db extends srv\Db
      */
     public function __construct($tableName)
     {
-        $tblPrefix = $this->getTblprefix();
-        if ($tblPrefix !== '' && stripos($tableName, $tblPrefix) !== 0) {
-            $tableName = $tblPrefix . $tableName;
-        }
-
-        $this->_tableName = $tableName;
+        $this->setTableName($tableName);
     }
 
     /**
@@ -255,16 +246,6 @@ abstract class Db extends srv\Db
     }
 
     /**
-     * 获取"SELECT SQL_CALC_FOUND_ROWS"语句的查询总数
-     * @return integer
-     */
-    public function getFoundRows()
-    {
-        $sql = 'SELECT FOUND_ROWS()';
-        return $this->getDbProxy()->fetchColumn($sql);
-    }
-
-    /**
      * 新增一条记录
      * @param array $attributes
      * @param boolean $ignore
@@ -386,6 +367,23 @@ abstract class Db extends srv\Db
     }
 
     /**
+     * 设置表名
+     * @param string $tableName
+     * @return tdo\DynamicDb
+     */
+    public function setTableName($tableName)
+    {
+    	$tableName = strtolower(trim($tableName));
+        $tblPrefix = $this->getTblprefix();
+        if ($tblPrefix !== '' && stripos($tableName, $tblPrefix) !== 0) {
+            $tableName = $tblPrefix . $tableName;
+        }
+
+        $this->_tableName = $tableName;
+        return $this;
+    }
+
+    /**
      * 获取被引用的表名，可以放在SQL命令中执行
      * @return string
      */
@@ -419,8 +417,8 @@ abstract class Db extends srv\Db
     {
         if ($this->_quotePrimaryKey === null) {
             $primaryKey = $this->getPrimaryKey();
-            $funcName = is_array($primaryKey) ? 'quoteColumnNames' : 'quoteColumnName';
-            $this->_quotePrimaryKey = $this->getCommandBuilder()->$funcName($primaryKey);
+            $func = is_array($primaryKey) ? 'quoteColumnNames' : 'quoteColumnName';
+            $this->_quotePrimaryKey = $this->getCommandBuilder()->$func($primaryKey);
         }
 
         return $this->_quotePrimaryKey;
