@@ -24,24 +24,9 @@ use tdo\DynamicDb;
 abstract class DynamicModel extends AbstractModel
 {
 	/**
-	 * @var string 业务名
-	 */
-	protected $_srvName = '';
-
-	/**
-	 * @var string 模型类名
-	 */
-	protected $_className = '';
-
-	/**
 	 * @var string 表名
 	 */
 	protected $_tableName;
-
-	/**
-	 * @var instance of tdo\DynamicDb
-	 */
-	protected $_db = null;
 
 	/**
 	 * 构造方法：初始化表名
@@ -49,9 +34,10 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function __construct($tableName = '')
 	{
-		list($this->_srvName, ,$this->_className) = explode('\\', get_class($this));
+		parent::__construct();
+
 		if (($tableName = trim($tableName)) === '') {
-			$tableName = $this->_className;
+			$tableName = $this->getClassName();
 		}
 
 		$this->_tableName = $tableName;
@@ -333,32 +319,5 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function batchRestoreByPk(array $pks, $columnName = 'trash', $value = 'n')
 	{
-	}
-
-	/**
-	 * 获取数据库操作类
-	 * @return instance of tdo\DynamicDb
-	 */
-	public function getDb()
-	{
-		if ($this->_db === null) {
-			$className = $this->_srvName . '\\db\\' . $this->_className;
-			if (!class_exists($className)) {
-				throw new ErrorException(sprintf(
-					'DynamicModel is unable to find the db class "%s".', $className
-				));
-			}
-
-			$instance = new $className();
-			if (!$instance instanceof DynamicDb) {
-				throw new ErrorException(sprintf(
-					'DynamicModel db class "%s" is not instanceof tdo\DynamicDb.', $className
-				));
-			}
-
-			$this->_db = $instance;
-		}
-
-		return $this->_db;
 	}
 }

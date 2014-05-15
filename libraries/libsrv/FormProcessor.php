@@ -10,6 +10,8 @@
 
 namespace libsrv;
 
+use tfc\util\String;
+
 use tfc\ap\ErrorException;
 use tfc\validator\Validator;
 use tfc\saf\DbProxy;
@@ -37,7 +39,7 @@ abstract class FormProcessor
 	/**
 	 * @var integer 寄存ID值
 	 */
-	public $id = 0;
+	protected $_id = 0;
 
 	/**
 	 * @var string 操作类型：新增记录或编辑记录
@@ -65,24 +67,45 @@ abstract class FormProcessor
 	protected $_values = array();
 
 	/**
-	 * 构造方法：初始化操作类型
+	 * 构造方法：初始化模型类
 	 * @param libsrv\AbstractModel $object
-	 * @param string $opType 'INSERT' or 'UPDATE'
-	 * @param tfc\saf\DbProxy $dbProxy
-	 * @throws ErrorException 如果指定的操作类型不是INSERT或UPDATE，抛出异常
 	 */
-	public function __construct(AbstractModel $object, $opType, DbProxy $dbProxy = null)
+	public function __construct(AbstractModel $object)
 	{
 		$this->_object = $object;
+	}
 
+	/**
+	 * 执行表单数据验证操作
+	 * @param string $opType
+	 * @param array $params
+	 * @param integer $id
+	 * @return boolean
+	 * @throws ErrorException 如果指定的操作类型不是INSERT或UPDATE，抛出异常
+	 * @throws ErrorException 如果是UPDATE操作类型但是ID小于等于0，抛出异常
+	 */
+	public function run($opType, array $params, $id = 0)
+	{
+		$opType = strtoupper($opType);
 		if (!defined('static::OP_TYPE_' . $opType)) {
-            throw new ErrorException(sprintf(
-                'FormProcessor op type "%s" must be INSERT or UPDATE', $opType
-            ));
-        }
+			throw new ErrorException(sprintf(
+				'FormProcessor op type "%s" must be INSERT or UPDATE', $opType
+			));
+		}
 
-        $this->_opType = $opType;
-        $this->_dbProxy = $dbProxy;
+		$this->_opType = $opType;
+
+		$this->_id = (int) $id;
+		if ($this->isUpdate() && $this->_id <= 0) {
+			throw new ErrorException(sprintf(
+				'FormProcessor op type is Update, ID "%d" must be at least zero', $this->_id
+			));
+		}
+
+		$this->clearValues();
+		$this->clearErrors();
+
+		return $this->process($params);
 	}
 
 	/**
@@ -91,13 +114,13 @@ abstract class FormProcessor
 	 * @param integer $id
 	 * @return boolean
 	 */
-	public abstract function process(array $params, $id = 0);
+	public abstract function process(array $params);
 
 	/**
 	 * 验证字段必须存在
 	 * @param array $params
 	 * @return boolean
-	 * @throws ErrorException 如果字段名无效，抛出异常
+	 * @throws ErrorException 如果字段名不是字符串类型，抛出异常
 	 */
 	public function required(array $params)
 	{
@@ -125,11 +148,12 @@ abstract class FormProcessor
 	}
 
 	/**
-	 * 验证数据
+	 * 执行多个验证类
 	 * @param array $params
 	 * @return void
+	 * @throws ErrorException 如果字段名不是字符串类型，抛出异常
 	 */
-	public function run(array $params)
+	public function isValids(array $params)
 	{
 		$num = func_num_args();
 		if ($num < 2) {
@@ -153,12 +177,8 @@ abstract class FormProcessor
 			$method = 'get' . str_replace('_', '', $columnName) . 'Rule';
 			if (method_exists($this, $method)) {
 				$validators = $this->$method($value);
+				$this->isValid($columnName, $value, $validators);
 			}
-			else {
-				$validators = array();
-			}
-
-			$this->isValid($columnName, $value, $validators);
 		}
 	}
 
@@ -351,6 +371,16 @@ abstract class FormProcessor
 	}
 
 	/**
+	 * 清除所有的表单元素
+	 * @return libsrv\FormProcessor
+	 */
+	public function clearValues()
+	{
+		$this->_values = array();
+		return $this;
+	}
+
+	/**
 	 * 魔术方法：请求get开头的方法，获取一个表单元素的值
 	 * @param string $name
 	 * @return mixed
@@ -395,6 +425,10 @@ abstract class FormProcessor
 	 */
 	public function getDbProxy()
 	{
+		if ($this->_dbProxy === null) {
+			$this->_dbProxy = $this->_object->getDb()->getDbProxy();
+		}
+
 		return $this->_dbProxy;
 	}
 }

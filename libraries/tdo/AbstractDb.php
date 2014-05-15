@@ -317,7 +317,7 @@ abstract class AbstractDb extends Cache
     public function getFoundRows()
     {
         $sql = 'SELECT FOUND_ROWS()';
-        return $this->fetchColumn($sql);
+        return $this->getDbProxy()->fetchColumn($sql);
     }
 
     /**
