@@ -114,6 +114,21 @@ abstract class DynamicDb extends AbstractDb
     }
 
     /**
+     * 通过多个字段名和值，查询两个字段记录，字段之间用简单的AND连接，并且以键值对方式返回
+     * @param array $columnNames
+     * @param array $attributes
+     * @param string $order
+     * @param integer $limit
+     * @param integer $offset
+     * @return array
+     */
+    public function findPairsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+    {
+    	$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
+    	return $this->findPairsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset);
+    }
+
+    /**
      * 通过条件，查询多条记录，只查询指定的字段
      * @param array $columnNames
      * @param string $attributes
@@ -205,6 +220,22 @@ abstract class DynamicDb extends AbstractDb
     }
 
     /**
+     * 通过条件，查询两个字段记录，并且以键值对方式返回
+     * @param array $columnNames
+     * @param string $condition
+     * @param mixed $params
+     * @param string $order
+     * @param integer $limit
+     * @param integer $offset
+     * @return array
+     */
+    public function findPairsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0)
+    {
+    	$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $columnNames, $condition, $order, $limit, $offset);
+    	return $this->fetchPairs($sql, $params);
+    }
+
+    /**
      * 通过条件，查询多条记录，只查询指定的字段
      * @param array $columnNames
      * @param string $condition
@@ -259,7 +290,7 @@ abstract class DynamicDb extends AbstractDb
 
     /**
      * 通过主键，编辑一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
-     * @param array|integer $value
+     * @param integer|array $value
      * @param array $attributes
      * @return integer
      */
@@ -272,7 +303,7 @@ abstract class DynamicDb extends AbstractDb
 
     /**
      * 通过主键，删除一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
-     * @param array|integer $value
+     * @param integer|array $value
      * @return integer
      */
     public function removeByPk($value)

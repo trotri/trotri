@@ -12,6 +12,7 @@ namespace libsrv;
 
 use tfc\ap\Application;
 use tfc\ap\ErrorException;
+use tfc\saf\Log;
 use tdo\AbstractDb;
 
 /**
@@ -57,10 +58,10 @@ abstract class AbstractModel extends Application
 	 * 获取表单数据处理类
 	 * @return instance of libsrv\FormProcessor
 	 */
-	public function getFp()
+	public function getFormProcessor()
 	{
 		if ($this->_formProcessor === null) {
-			$this->setFp();
+			$this->setFormProcessor();
 		}
 
 		return $this->_formProcessor;
@@ -73,7 +74,7 @@ abstract class AbstractModel extends Application
 	 * @throws ErrorException 如果表单数据处理类类不存在，抛出异常
 	 * @throws ErrorException 如果获取的实例不是libsrv\FormProcessor类的子类，抛出异常
 	 */
-	public function setFp(FormProcessor $fp = null)
+	public function setFormProcessor(FormProcessor $fp = null)
 	{
 		if ($fp === null) {
 			$className = $this->getSrvName() . '\\models\\Fp' . $this->getClassName();
@@ -103,6 +104,25 @@ abstract class AbstractModel extends Application
 	public function getErrors($justOne = true)
 	{
 		return $this->getFp()->getErrors($justOne);
+	}
+
+	/**
+	 * 清理正整数数据，如果为负数则返回false
+	 * @param integer|array $value
+	 * @return mixed
+	 */
+	public function cleanPositiveInteger($value)
+	{
+		$result = Clean::positiveInteger($value);
+		if ($result === false) {
+			$isArr = is_array($value);
+			Log::warning(sprintf(
+				'AbstractModel cleanPositiveInteger ARGS Error, "%s" "%s" must be greater than 0',
+				($isArr ? 'PKs' : 'PK'), ($isArr ? serialize($value) : $value)
+			));
+		}
+
+		return $result;
 	}
 
 	/**

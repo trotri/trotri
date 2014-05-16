@@ -10,11 +10,9 @@
 
 namespace libsrv;
 
-use tfc\util\String;
-
 use tfc\ap\ErrorException;
 use tfc\validator\Validator;
-use tfc\saf\DbProxy;
+use tfc\saf\Log;
 
 /**
  * FormProcessor abstract class file
@@ -29,12 +27,12 @@ abstract class FormProcessor
 	/**
 	 * @var string 操作类型：新增记录
 	 */
-	const OP_TYPE_INSERT = 'INSERT';
+	const OP_INSERT = 'INSERT';
 
 	/**
 	 * @var string 操作类型：编辑记录
 	 */
-	const OP_TYPE_UPDATE = 'UPDATE';
+	const OP_UPDATE = 'UPDATE';
 
 	/**
 	 * @var integer 寄存ID值
@@ -79,33 +77,41 @@ abstract class FormProcessor
 	 * 执行表单数据验证操作
 	 * @param string $opType
 	 * @param array $params
-	 * @param integer $id
+	 * @param integer|array $id
 	 * @return boolean
 	 * @throws ErrorException 如果指定的操作类型不是INSERT或UPDATE，抛出异常
 	 * @throws ErrorException 如果是UPDATE操作类型但是ID小于等于0，抛出异常
 	 */
 	public function run($opType, array $params, $id = 0)
 	{
-		$opType = strtoupper($opType);
-		if (!defined('static::OP_TYPE_' . $opType)) {
-			throw new ErrorException(sprintf(
-				'FormProcessor op type "%s" must be INSERT or UPDATE', $opType
-			));
-		}
-
-		$this->_opType = $opType;
-
-		$this->_id = (int) $id;
-		if ($this->isUpdate() && $this->_id <= 0) {
-			throw new ErrorException(sprintf(
-				'FormProcessor op type is Update, ID "%d" must be at least zero', $this->_id
-			));
-		}
-
 		$this->clearValues();
 		$this->clearErrors();
 
-		return $this->process($params);
+		$this->_opType = strtoupper($opType);
+		if (!defined('static::OP_' . $this->_opType)) {
+			throw new ErrorException(sprintf(
+				'FormProcessor op type "%s" must be INSERT or UPDATE', $this->_opType
+			));
+		}
+
+		$this->_id = Clean::positiveInteger($id);
+		if ($this->isUpdate() && $this->_id === false) {
+			$isArr = is_array($id);
+			Log::warning(sprintf(
+				'FormProcessor op type is Update, "%s" "%s" must be greater than 0',
+				($isArr ? 'IDs' : 'ID'), ($isArr ? serialize($id) : $id)
+			));
+
+			return false;
+		}
+
+		$params = $this->_cleanPreProcess($params);
+		if ($this->_process($params)) {
+			$this->_cleanPostProcess();
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -114,7 +120,25 @@ abstract class FormProcessor
 	 * @param integer $id
 	 * @return boolean
 	 */
-	public abstract function process(array $params);
+	protected abstract function _process(array $params);
+
+	/**
+	 * 验证前清理数据，需要子类重写此方法
+	 * @param array $params
+	 * @return array
+	 */
+	protected function _cleanPreProcess(array $params)
+	{
+		return $params;
+	}
+
+	/**
+	 * 验证后清理数据，需要子类重写此方法
+	 * @return void
+	 */
+	protected function _cleanPostProcess()
+	{
+	}
 
 	/**
 	 * 验证字段必须存在
@@ -177,8 +201,12 @@ abstract class FormProcessor
 			$method = 'get' . str_replace('_', '', $columnName) . 'Rule';
 			if (method_exists($this, $method)) {
 				$validators = $this->$method($value);
-				$this->isValid($columnName, $value, $validators);
 			}
+			else {
+				$validators = array();
+			}
+
+			$this->isValid($columnName, $value, $validators);
 		}
 	}
 
@@ -407,7 +435,7 @@ abstract class FormProcessor
 	 */
 	public function isInsert()
 	{
-		return $this->_opType === self::OP_TYPE_INSERT;
+		return $this->_opType === self::OP_INSERT;
 	}
 
 	/**
@@ -416,7 +444,7 @@ abstract class FormProcessor
 	 */
 	public function isUpdate()
 	{
-		return $this->_opType === self::OP_TYPE_UPDATE;
+		return $this->_opType === self::OP_UPDATE;
 	}
 
 	/**

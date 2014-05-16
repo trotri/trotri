@@ -11,6 +11,7 @@
 namespace libsrv;
 
 use tfc\ap\ErrorException;
+use tfc\saf\Log;
 use tdo\DynamicDb;
 
 /**
@@ -26,7 +27,7 @@ abstract class DynamicModel extends AbstractModel
 	/**
 	 * @var string 表名
 	 */
-	protected $_tableName;
+	protected $_tableName = '';
 
 	/**
 	 * 构造方法：初始化表名
@@ -36,30 +37,30 @@ abstract class DynamicModel extends AbstractModel
 	{
 		parent::__construct();
 
-		if (($tableName = trim($tableName)) === '') {
-			$tableName = $this->getClassName();
-		}
-
-		$this->_tableName = $tableName;
+		$this->setTableName($tableName);
 	}
 
 	/**
 	 * 通过多个字段名和值，获取主键的值，字段之间用简单的AND连接。不支持联合主键
 	 * @param array $attributes
-	 * @return array
+	 * @return mixed
 	 */
 	public function getPkByAttributes(array $attributes = array())
 	{
+		$value = $this->getDb()->getPkByAttributes($attributes);
+		return $value;
 	}
 
 	/**
 	 * 通过多个字段名和值，获取某个列的值，字段之间用简单的AND连接，字段之间用简单的AND连接
 	 * @param string $columnName
 	 * @param array $attributes
-	 * @return array
+	 * @return mixed
 	 */
 	public function getByAttributes($columnName, array $attributes = array())
 	{
+		$value = $this->getDb()->getByAttributes($columnName, $attributes);
+		return $value;
 	}
 
 	/**
@@ -73,6 +74,8 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function findPairsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0)
 	{
+		$rows = $this->getDb()->findPairsByAttributes($columnNames, $attributes, $order, $limit, $offset);
+		return $rows;
 	}
 
 	/**
@@ -82,10 +85,13 @@ abstract class DynamicModel extends AbstractModel
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findColumnsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findColumnsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
+		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
+		return $this->findColumnsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -94,19 +100,24 @@ abstract class DynamicModel extends AbstractModel
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option)
 	{
+		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
+		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset, $option);
 	}
 
 	/**
 	 * 通过多个字段名和值，统计记录数，字段之间用简单的AND连接
 	 * @param array $attributes
-	 * @return array
+	 * @return integer
 	 */
 	public function countByAttributes(array $attributes = array())
 	{
+		$total = $this->getDb()->countByAttributes($attributes);
+		return $total;
 	}
 
 	/**
@@ -116,6 +127,8 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function findByAttributes(array $attributes = array())
 	{
+		$row = $this->getDb()->findByAttributes($attributes);
+		return $row;
 	}
 
 	/**
@@ -123,10 +136,12 @@ abstract class DynamicModel extends AbstractModel
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll($order = '', $limit = 0, $offset = 0)
+	public function findAll($order = '', $limit = 0, $offset = 0, $option = '')
 	{
+		return $this->findAllByCondition(1, null, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -141,6 +156,8 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function findPairsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0)
 	{
+		$rows = $this->getDb()->findPairsByCondition($columnNames, $condition, $params, $order, $limit, $offset);
+		return $rows;
 	}
 
 	/**
@@ -150,43 +167,91 @@ abstract class DynamicModel extends AbstractModel
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findColumnsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0)
+	public function findColumnsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
+		$db = $this->getDb();
+		$isCached = $db->isCached; // 记录原始数据
+		if ($option === 'SQL_CALC_FOUND_ROWS' && $db->isCached) {
+			$db->isCached = false; // 不记缓存
+		}
+
+		$rows = $db->findColumnsByCondition($columnNames, $condition, $params, $order, $limit, $offset, $option);
+		if ($rows && $option === 'SQL_CALC_FOUND_ROWS') {
+			$total = $db->getFoundRows();
+			$rows = array(
+				'rows' => $rows,
+				'total' => $total,
+				'attributes' => $params,
+				'order' => $order,
+				'limit' => $limit,
+				'offset' => $offset,
+			);
+		}
+
+		$db->isCached = $isCached; // 还原原始数据
+		return $rows;
 	}
 
 	/**
-	 * 通过条件，查询多条记录
+	 * 通过条件，查询多条记录，如果$option=SQL_CALC_FOUND_ROWS，则不记录缓存，并返回总记录行数
 	 * @param string $condition
 	 * @param mixed $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0)
+	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
+		$db = $this->getDb();
+		$isCached = $db->isCached; // 记录原始数据
+		if ($option === 'SQL_CALC_FOUND_ROWS' && $db->isCached) {
+			$db->isCached = false; // 不记缓存
+		}
+
+		$rows = $db->findAllByCondition($condition, $params, $order, $limit, $offset, $option);
+		if ($rows && $option === 'SQL_CALC_FOUND_ROWS') {
+			$total = $db->getFoundRows();
+			$rows = array(
+				'rows' => $rows,
+				'total' => $total,
+				'attributes' => $params,
+				'order' => $order,
+				'limit' => $limit,
+				'offset' => $offset,
+			);
+		}
+
+		$db->isCached = $isCached; // 还原原始数据
+		return $rows;
 	}
 
 	/**
 	 * 通过条件，统计记录数
 	 * @param string $condition
 	 * @param mixed $params
-	 * @return array
+	 * @return integer
 	 */
 	public function countByCondition($condition, $params = null)
 	{
+		$total = $this->getDb()->countByCondition($condition, $params);
+		return $total;
 	}
 
 	/**
 	 * 通过条件，获取主键的值。不支持联合主键
 	 * @param string $condition
 	 * @param mixed $params
-	 * @return array
+	 * @return mixed
 	 */
 	public function getPkByCondition($condition, $params = null)
 	{
+		$value = $this->getDb()->getPkByCondition($condition, $params);
+		return $value;
 	}
 
 	/**
@@ -194,10 +259,12 @@ abstract class DynamicModel extends AbstractModel
 	 * @param string $columnName
 	 * @param string $condition
 	 * @param mixed $params
-	 * @return array
+	 * @return mixed
 	 */
 	public function getByCondition($columnName, $condition, $params = null)
 	{
+		$value = $this->getDb()->getByCondition($columnName, $condition, $params);
+		return $value;
 	}
 
 	/**
@@ -208,16 +275,24 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function findByCondition($condition, $params = null)
 	{
+		$row = $this->getDb()->findByCondition($condition, $params);
+		return $row;
 	}
 
 	/**
 	 * 通过主键，获取某个列的值。不支持联合主键
 	 * @param string $columnName
 	 * @param integer $value
-	 * @return array
+	 * @return mixed
 	 */
 	public function getByPk($columnName, $value)
 	{
+		if (($value = $this->cleanPositiveInteger($value)) === false) {
+			return false;
+		}
+
+		$value = $this->getDb()->getByPk($columnName, $value);
+		return $value;
 	}
 
 	/**
@@ -227,54 +302,140 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function findByPk($value)
 	{
+		if (($value = $this->cleanPositiveInteger($value)) === false) {
+			return false;
+		}
+
+		$row = $this->getDb()->findByPk($value);
+		return $row;
+	}
+
+	/**
+	 * 获取"SELECT SQL_CALC_FOUND_ROWS"语句的查询总数
+	 * @return integer
+	 */
+	public function getFoundRows()
+	{
+		return $this->getDb()->getFoundRows();
 	}
 
 	/**
 	 * 新增一条记录
-	 * @param array $attributes
+	 * @param array $params
 	 * @param boolean $ignore
 	 * @return integer
 	 */
-	public function create(array $attributes = array(), $ignore = false)
+	public function create(array $params = array(), $ignore = false)
 	{
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_INSERT, $params)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$lastInsertId = $this->getDb()->create($attributes, $ignore);
+		return $lastInsertId;
 	}
 
 	/**
 	 * 通过主键，编辑一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
-	 * @param array|integer $value
-	 * @param array $attributes
+	 * @param integer|array $value
+	 * @param array $params
 	 * @return integer
 	 */
-	public function modifyByPk($value, array $attributes = array())
+	public function modifyByPk($value, array $params = array())
 	{
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_UPDATE, $params, $value)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$rowCount = $this->getDb()->modifyByPk($value, $attributes);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，字段名和字段值，编辑一条记录
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function singleModifyByPk($pk, $columnName, $value)
+	{
+		if (($pk = $this->cleanPositiveInteger($pk)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->modifyByPk($pk, array($columnName => $value));
+		return $rowCount;
 	}
 
 	/**
 	 * 通过主键，删除一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
-	 * @param array|integer $value
+	 * @param integer|array $value
 	 * @return integer
 	 */
 	public function removeByPk($value)
 	{
+		if (($value = $this->cleanPositiveInteger($value)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->removeByPk($value);
+		return $rowCount;
 	}
 
 	/**
 	 * 通过主键，编辑多条记录。不支持联合主键
 	 * @param array $values
-	 * @param array $attributes
+	 * @param array $params
 	 * @return integer
 	 */
-	public function batchModifyByPk(array $values, array $attributes = array())
+	public function batchModifyByPk(array $values, array $params = array())
 	{
+		$values = array_map('intval', $values);
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_UPDATE, $params, $values)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $values), $attributes);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，字段名和字段值，编辑多条记录
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchSingleModifyByPk(array $pks, $columnName, $value)
+	{
+		if (($pks = $this->cleanPositiveInteger($pks)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $pks), array($columnName => $value));
+		return $rowCount;
 	}
 
 	/**
 	 * 通过主键，删除多条记录。不支持联合主键
-	 * @param array $value
+	 * @param array $values
 	 * @return integer
 	 */
 	public function batchRemoveByPk(array $values)
 	{
+		if (($values = $this->cleanPositiveInteger($values)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->batchRemoveByPk(implode(',', $values));
+		return $rowCount;
 	}
 
 	/**
@@ -286,6 +447,7 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function trashByPk($pk, $columnName = 'trash', $value = 'y')
 	{
+		return $this->singleModifyByPk($pk, $columnName, $value);
 	}
 
 	/**
@@ -297,6 +459,7 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function batchTrashByPk(array $pks, $columnName = 'trash', $value = 'y')
 	{
+		return $this->batchSingleModifyByPk($pks, $columnName, $value);
 	}
 
 	/**
@@ -308,6 +471,7 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function restoreByPk($pk, $columnName = 'trash', $value = 'n')
 	{
+		return $this->singleModifyByPk($pk, $columnName, $value);
 	}
 
 	/**
@@ -319,5 +483,59 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function batchRestoreByPk(array $pks, $columnName = 'trash', $value = 'n')
 	{
+		return $this->batchSingleModifyByPk($pks, $columnName, $value);
+	}
+
+	/**
+	 * 设置数据库操作类
+	 * @param tdo\DynamicDb $db
+	 * @return instance of libsrv\DynamicModel
+	 * @throws ErrorException 如果DB类不存在，抛出异常
+	 * @throws ErrorException 如果获取的实例不是tdo\DynamicDb类的子类，抛出异常
+	 */
+	public function setDb(DynamicDb $db = null)
+	{
+		if ($db === null) {
+			$className = $this->getSrvName() . '\\db\\' . $this->getClassName();
+			if (!class_exists($className)) {
+				throw new ErrorException(sprintf(
+					'DynamicModel is unable to find the DB class "%s".', $className
+				));
+			}
+
+			$db = new $className($this->getTableName());
+			if (!$db instanceof DynamicDb) {
+				throw new ErrorException(sprintf(
+					'DynamicModel DB class "%s" is not instanceof tdo\DynamicDb.', $className
+				));
+			}
+		}
+
+		$this->_db = $db;
+		return $this;
+	}
+
+	/**
+	 * 获取表名
+	 * @return string
+	 */
+	public function getTableName()
+	{
+		return $this->_tableName;
+	}
+
+	/**
+	 * 设置表名
+	 * @param string $tableName
+	 * @return instance of libsrv\DynamicModel
+	 */
+	public function setTableName($tableName)
+	{
+		if (($tableName = trim($tableName)) === '') {
+			$tableName = $this->getClassName();
+		}
+
+		$this->_tableName = strtolower($tableName);
+		return $this;
 	}
 }
