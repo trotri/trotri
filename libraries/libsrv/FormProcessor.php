@@ -37,7 +37,7 @@ abstract class FormProcessor
 	/**
 	 * @var integer 寄存ID值
 	 */
-	protected $_id = 0;
+	public $id = 0;
 
 	/**
 	 * @var string 操作类型：新增记录或编辑记录
@@ -94,8 +94,8 @@ abstract class FormProcessor
 			));
 		}
 
-		$this->_id = Clean::positiveInteger($id);
-		if ($this->isUpdate() && $this->_id === false) {
+		$this->id = Clean::positiveInteger($id);
+		if ($this->isUpdate() && $this->id === false) {
 			$isArr = is_array($id);
 			Log::warning(sprintf(
 				'FormProcessor op type is Update, "%s" "%s" must be greater than 0',

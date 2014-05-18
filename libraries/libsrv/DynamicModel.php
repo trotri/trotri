@@ -25,19 +25,34 @@ use tdo\DynamicDb;
 abstract class DynamicModel extends AbstractModel
 {
 	/**
+	 * @var string 缺省的表名与分表数字之间的连接符
+	 */
+	const DEFAULT_TABLE_NUM_JOIN = '_';
+
+	/**
 	 * @var string 表名
 	 */
 	protected $_tableName = '';
 
 	/**
-	 * 构造方法：初始化表名
-	 * @param string $tableName
+	 * @var integer 分表数字，如果 >= 0 表示分表操作
 	 */
-	public function __construct($tableName = '')
+	protected $_tableNum = -1;
+
+	/**
+	 * @var string 表名与分表数字之间的连接符
+	 */
+	protected $_tableNumJoin = self::DEFAULT_TABLE_NUM_JOIN;
+
+	/**
+	 * 构造方法：初始化分表数字
+	 * @param integer $tableNum 分表数字，如果 >= 0 表示分表操作
+	 */
+	public function __construct($tableNum = -1)
 	{
 		parent::__construct();
 
-		$this->setTableName($tableName);
+		$this->_tableNum = (int) $tableNum;
 	}
 
 	/**
@@ -351,7 +366,7 @@ abstract class DynamicModel extends AbstractModel
 		}
 
 		$attributes = $formProcessor->getValues();
-		$rowCount = $this->getDb()->modifyByPk($value, $attributes);
+		$rowCount = $this->getDb()->modifyByPk($formProcessor->id, $attributes);
 		return $rowCount;
 	}
 
@@ -395,14 +410,13 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function batchModifyByPk(array $values, array $params = array())
 	{
-		$values = array_map('intval', $values);
 		$formProcessor = $this->getFormProcessor();
 		if (!$formProcessor->run(FormProcessor::OP_UPDATE, $params, $values)) {
 			return false;
 		}
 
 		$attributes = $formProcessor->getValues();
-		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $values), $attributes);
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $formProcessor->id), $attributes);
 		return $rowCount;
 	}
 
@@ -521,21 +535,18 @@ abstract class DynamicModel extends AbstractModel
 	 */
 	public function getTableName()
 	{
-		return $this->_tableName;
-	}
+		static $tableName = null;
 
-	/**
-	 * 设置表名
-	 * @param string $tableName
-	 * @return instance of libsrv\DynamicModel
-	 */
-	public function setTableName($tableName)
-	{
-		if (($tableName = trim($tableName)) === '') {
-			$tableName = $this->getClassName();
+		if ($tableName === null) {
+			if (($tableName = trim($this->_tableName)) === '') {
+				$tableName = $this->getClassName();
+			}
+
+			if ($this->_tableNum >= 0) {
+				$tableName .= $this->_tableNumJoin . $this->_tableNum;
+			}
 		}
 
-		$this->_tableName = strtolower($tableName);
-		return $this;
+		return $tableName;
 	}
 }

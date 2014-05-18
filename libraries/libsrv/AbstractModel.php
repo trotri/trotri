@@ -46,10 +46,9 @@ abstract class AbstractModel extends Application
 	protected $_db = null;
 
 	/**
-	 * 构造方法：初始化表名
-	 * @param string $tableName
+	 * 构造方法：初始化业务名和模型类名
 	 */
-	public function __construct($tableName = '')
+	public function __construct()
 	{
 		list($this->_srvName, , $this->_className) = explode('\\', get_class($this));
 	}
