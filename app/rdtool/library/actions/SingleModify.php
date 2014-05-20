@@ -11,7 +11,7 @@
 namespace library\actions;
 
 use tfc\ap\Ap;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * SingleModify abstract class file
@@ -33,7 +33,7 @@ abstract class SingleModify extends Modify
 	{
 		$ret = array();
 		$req = Ap::getRequest();
-		$srv = SrvFactory::getInstance($className, $moduleName);
+		$srv = Service::getInstance($className, $moduleName);
 
 		$columnName = $req->getTrim('column_name', '');
 		$value = $req->getParam('value', '');
@@ -42,7 +42,7 @@ abstract class SingleModify extends Modify
 		}
 
 		$funcName = $this->getFuncName();
-		$ret = $mod->$funcName($this->getPk(), array($columnName => $value));
+		$ret = $srv->$funcName($this->getPk(), array($columnName => $value));
 
 		$url = $this->applyParams($srv->getLLU(), $ret);
 		$this->redirect($url);

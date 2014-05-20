@@ -10,7 +10,7 @@
 
 namespace views\bootstrap\components;
 
-use app\Elements;
+use libapp\Elements;
 
 /**
  * TableRender class file
@@ -23,7 +23,7 @@ use app\Elements;
 class TableRender
 {
 	/**
-	 * @var app\Elements 表单元素管理类
+	 * @var libapp\Elements 表单元素管理类
 	 */
 	public $elements_object = null;
 
@@ -44,7 +44,7 @@ class TableRender
 
 	/**
 	 * 构造方法，初始化模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
-	 * @param app\Elements $elements
+	 * @param libapp\Elements $elements
 	 */
 	public function __construct(Elements $elements)
 	{

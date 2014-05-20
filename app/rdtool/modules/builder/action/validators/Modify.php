@@ -11,7 +11,7 @@
 namespace modules\builder\action\validators;
 
 use library\actions;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * Modify class file
@@ -29,13 +29,13 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		$srvValidators = SrvFactory::getInstance('Validators');
+		$srvValidators = Service::getInstance('Validators');
 		$fieldId = $srvValidators->getFieldId();
 		if ($fieldId <= 0) {
 			$this->err404();
 		}
 
-		$srvFields = SrvFactory::getInstance('Fields');
+		$srvFields = Service::getInstance('Fields');
 		$builderId = $srvFields->getBuilderIdByFieldId($fieldId);
 		if ($builderId <= 0) {
 			$this->err404();

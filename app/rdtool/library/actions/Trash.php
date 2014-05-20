@@ -12,7 +12,7 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * Trash abstract class file
@@ -32,7 +32,7 @@ abstract class Trash extends ShowAction
 	 */
 	public function execute($className, $moduleName = '')
 	{
-		$srv = SrvFactory::getInstance($className, $moduleName);
+		$srv = Service::getInstance($className, $moduleName);
 		$funcName = $this->getFuncName();
 		$ret = $srv->$funcName($this->getPk());
 

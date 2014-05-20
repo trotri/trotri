@@ -10,7 +10,7 @@
 
 namespace modules\builder\controller;
 
-use app\BaseController;
+use libapp\BaseController;
 
 /**
  * TypesController class file

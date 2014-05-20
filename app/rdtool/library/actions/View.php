@@ -12,7 +12,7 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * View abstract class file
@@ -38,7 +38,7 @@ abstract class View extends ShowAction
 		}
 
 		$req = Ap::getRequest();
-		$srv = SrvFactory::getInstance($className, $moduleName);
+		$srv = Service::getInstance($className, $moduleName);
 		$ret = $srv->findByPk($id);
 
 		$this->assign('elements', $srv);

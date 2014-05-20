@@ -12,7 +12,7 @@ namespace modules\builder\action\validators;
 
 use library\actions;
 use tfc\ap\Ap;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * Index class file
@@ -35,7 +35,7 @@ class Index extends actions\Index
 			$this->err404();
 		}
 
-		$srv = SrvFactory::getInstance('Fields');
+		$srv = Service::getInstance('Fields');
 		$builderId = $srv->getBuilderIdByFieldId($fieldId);
 		if ($builderId <= 0) {
 			$this->err404();

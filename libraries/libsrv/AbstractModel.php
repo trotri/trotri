@@ -125,6 +125,172 @@ abstract class AbstractModel extends Application
 	}
 
 	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @param boolean $ignore
+	 * @return integer
+	 */
+	public function create(array $params = array(), $ignore = false)
+	{
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_INSERT, $params)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$lastInsertId = $this->getDb()->create($attributes, $ignore);
+		return $lastInsertId;
+	}
+
+	/**
+	 * 通过主键，编辑一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
+	 * @param integer|array $value
+	 * @param array $params
+	 * @return integer
+	 */
+	public function modifyByPk($value, array $params = array())
+	{
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_UPDATE, $params, $value)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$rowCount = $this->getDb()->modifyByPk($formProcessor->id, $attributes);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，字段名和字段值，编辑一条记录
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function singleModifyByPk($pk, $columnName, $value)
+	{
+		if (($pk = $this->cleanPositiveInteger($pk)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->modifyByPk($pk, array($columnName => $value));
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，删除一条记录。如果是联合主键，则参数是数组，且数组中值的顺序必须和PRIMARY KEY (pk1, pk2)中的顺序相同
+	 * @param integer|array $value
+	 * @return integer
+	 */
+	public function removeByPk($value)
+	{
+		if (($value = $this->cleanPositiveInteger($value)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->removeByPk($value);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param array $values
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk(array $values, array $params = array())
+	{
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_UPDATE, $params, $values)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $formProcessor->id), $attributes);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，字段名和字段值，编辑多条记录
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchSingleModifyByPk(array $pks, $columnName, $value)
+	{
+		if (($pks = $this->cleanPositiveInteger($pks)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $pks), array($columnName => $value));
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，删除多条记录。不支持联合主键
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchRemoveByPk(array $values)
+	{
+		if (($values = $this->cleanPositiveInteger($values)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->batchRemoveByPk(implode(',', $values));
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，将一条记录移至回收站。不支持联合主键
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function trashByPk($pk, $columnName = 'trash', $value = 'y')
+	{
+		return $this->singleModifyByPk($pk, $columnName, $value);
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchTrashByPk(array $pks, $columnName = 'trash', $value = 'y')
+	{
+		return $this->batchSingleModifyByPk($pks, $columnName, $value);
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录。不支持联合主键
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function restoreByPk($pk, $columnName = 'trash', $value = 'n')
+	{
+		return $this->singleModifyByPk($pk, $columnName, $value);
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchRestoreByPk(array $pks, $columnName = 'trash', $value = 'n')
+	{
+		return $this->batchSingleModifyByPk($pks, $columnName, $value);
+	}
+
+	/**
 	 * 获取数据库操作类
 	 * @return instance of tdo\AbstractDb
 	 */

@@ -10,7 +10,7 @@
 
 namespace library;
 
-use app;
+use libapp;
 
 /**
  * DataAction abstract class file
@@ -20,6 +20,6 @@ use app;
  * @package library
  * @since 1.0
  */
-abstract class DataAction extends app\DataAction
+abstract class DataAction extends libapp\DataAction
 {
 }

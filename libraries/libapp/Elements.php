@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace libapp;
 
 use tfc\ap\HttpCookie;
 use tfc\mvc\Mvc;
@@ -18,7 +18,7 @@ use tfc\mvc\Mvc;
  * 表单元素管理基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Elements.php 1 2013-05-18 14:58:59Z huan.song $
- * @package app
+ * @package libapp
  * @since 1.0
  */
 abstract class Elements

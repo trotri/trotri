@@ -8,18 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\controller;
+namespace modules\builder\service;
 
-use libapp\BaseController;
+use library\BaseService;
 
 /**
- * GroupsController class file
- * 表单字段组
+ * Types class file
+ * 表单字段类型
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsController.php 1 2014-04-04 14:53:06Z Code Generator $
- * @package modules.builder.controller
+ * @version $Id: Types.php 1 2014-04-06 14:43:07Z huan.song $
+ * @package modules.builder.service
  * @since 1.0
  */
-class GroupsController extends BaseController
+class Types extends BaseService
 {
 }

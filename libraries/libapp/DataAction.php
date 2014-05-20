@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace libapp;
 
 use tfc\ap\Ap;
 use tfc\ap\InvalidArgumentException;
@@ -20,7 +20,7 @@ use tfc\saf\Log;
  * DataAction基类，用于Ajax调用和对其他项目提供的接口，需要规范输出数据格式
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: DataAction.php 1 2013-04-05 01:08:06Z huan.song $
- * @package app
+ * @package libapp
  * @since 1.0
  */
 abstract class DataAction extends BaseAction
@@ -42,7 +42,7 @@ abstract class DataAction extends BaseAction
 
 	/**
 	 * (non-PHPdoc)
-	 * @see app.BaseAction::_init()
+	 * @see libapp.BaseAction::_init()
 	 */
 	protected function _init()
 	{

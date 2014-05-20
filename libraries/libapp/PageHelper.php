@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace libapp;
 
 use tfc\ap\Ap;
 use tfc\ap\ErrorException;
@@ -32,7 +32,7 @@ use tfc\saf\Cfg;
  * </pre>
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: PageHelper.php 1 2013-04-05 01:08:06Z huan.song $
- * @package app
+ * @package libapp
  * @since 1.0
  */
 class PageHelper

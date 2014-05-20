@@ -12,8 +12,8 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
-use app\SrvFactory;
-use app\PageHelper;
+use libapp\Service;
+use libapp\PageHelper;
 use library\ErrorNo;
 
 /**
@@ -36,7 +36,7 @@ abstract class Index extends ShowAction
 	{
 		$ret = array();
 
-		$srv = SrvFactory::getInstance($className, $moduleName);
+		$srv = Service::getInstance($className, $moduleName);
 
 		$params = $this->getSearchParams();
 		$order = $this->getOrder();

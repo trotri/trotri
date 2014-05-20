@@ -11,7 +11,7 @@
 namespace modules\builder\action\groups;
 
 use library\actions;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * Modify class file
@@ -29,7 +29,7 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		$srv = SrvFactory::getInstance('Groups');
+		$srv = Service::getInstance('Groups');
 		$builderId = $srv->getBuilderId();
 		if ($builderId <= 0) {
 			$this->err404();

@@ -8,18 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\controller;
+namespace builder\models;
 
-use libapp\BaseController;
+use libsrv\FormProcessor;
+use builder\library\Lang;
 
 /**
- * GroupsController class file
- * 表单字段组
+ * FpBuilders class file
+ * 业务层：表单数据处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsController.php 1 2014-04-04 14:53:06Z Code Generator $
- * @package modules.builder.controller
+ * @version $Id: FpBuilders.php 1 2014-04-03 16:16:03Z Code Generator $
+ * @package builder.models
  * @since 1.0
  */
-class GroupsController extends BaseController
+class FpBuilders extends FormProcessor
 {
 }

@@ -11,7 +11,7 @@
 namespace modules\builder\action\fields;
 
 use library\actions;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * View class file
@@ -29,7 +29,7 @@ class View extends actions\View
 	 */
 	public function run()
 	{
-		$srv = SrvFactory::getInstance('Fields');
+		$srv = Service::getInstance('Fields');
 		$builderId = $srv->getBuilderId();
 		if ($builderId <= 0) {
 			$this->err404();

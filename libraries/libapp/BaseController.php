@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace libapp;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\Mvc;
@@ -19,7 +19,7 @@ use tfc\mvc\Controller;
  * 控制器基类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: BaseController.php 1 2013-04-05 01:08:06Z huan.song $
- * @package app
+ * @package libapp
  * @since 1.0
  */
 abstract class BaseController extends Controller

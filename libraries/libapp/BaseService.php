@@ -8,29 +8,29 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace libapp;
 
 use tfc\saf\Log;
-use srv\Model;
+use libsrv\AbstractModel;
 
 /**
- * Service abstract class file
+ * BaseService abstract class file
  * 业务层基类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Service.php 1 2013-05-18 14:58:59Z huan.song $
- * @package app
+ * @version $Id: BaseService.php 1 2013-05-18 14:58:59Z huan.song $
+ * @package libapp
  * @since 1.0
  */
-abstract class Service extends Elements
+abstract class BaseService extends Elements
 {
 	/**
 	 * 调用查询类方法
-	 * @param srv\Model $object
+	 * @param libsrv\AbstractModel $object
 	 * @param string $method
 	 * @param array $args
 	 * @return array
 	 */
-	public function callFetchMethod(Model $object, $method, array $args = array())
+	public function callFetchMethod(AbstractModel $object, $method, array $args = array())
 	{
 		$data = call_user_func_array(array($object, $method), $args);
 		if ($data === false) {
@@ -67,17 +67,17 @@ abstract class Service extends Elements
 
 	/**
 	 * 调用新增类方法
-	 * @param srv\Model $object
+	 * @param libsrv\AbstractModel $object
 	 * @param string $method
 	 * @param array $params
 	 * @param boolean $ignore
 	 * @return array
 	 */
-	public function callCreateMethod(Model $object, $method, array $params = array(), $ignore = false)
+	public function callCreateMethod(AbstractModel $object, $method, array $params = array(), $ignore = false)
 	{
 		$lastInsertId = $object->$method($params, $ignore);
 		$errors = $object->getErrors();
-		if (($lastInsertId === false && $errors === array()) || $lastInsertId === 0 || $lastInsertId < 0) {
+		if (($lastInsertId === false && $errors === array()) || $lastInsertId <= 0) {
 			$errNo = ErrorNo::ERROR_DB_INSERT;
 			$errMsg = Lang::_('ERROR_MSG_ERROR_DB_INSERT');
 			Log::warning(sprintf(
@@ -120,28 +120,14 @@ abstract class Service extends Elements
 
 	/**
 	 * 调用编辑类方法
-	 * @param srv\Model $object
+	 * @param libsrv\AbstractModel $object
 	 * @param string $method
-	 * @param integer $id
+	 * @param integer|array $id
 	 * @param array $params
 	 * @return array
 	 */
-	public function callModifyMethod(Model $object, $method, $id, array $params = array())
+	public function callModifyMethod(AbstractModel $object, $method, $id, array $params = array())
 	{
-		if (($id = (int) $id) <= 0) {
-			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
-			$errMsg = Lang::_('ERROR_MSG_ERROR_ARGS_UPDATE');
-			Log::warning(sprintf(
-				'%s callModifyMethod, model "%s", method "%s", id "%d", params "%s"',
-				$errMsg, get_class($object), $method, $id, serialize($params)
-			), $errNo, __METHOD__);
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'id' => $id
-			);
-		}
-
 		$rowCount = $object->$method($id, $params);
 		$errors = $object->getErrors();
 		if ($rowCount === false) {
@@ -149,8 +135,8 @@ abstract class Service extends Elements
 				$errNo = ErrorNo::ERROR_DB_UPDATE;
 				$errMsg = Lang::_('ERROR_MSG_ERROR_DB_UPDATE');
 				Log::warning(sprintf(
-					'%s callModifyMethod, model "%s", method "%s", id "%d", params "%s"',
-					$errMsg, get_class($object), $method, $id, serialize($params)
+					'%s callModifyMethod, model "%s", method "%s", id "%s", params "%s"',
+					$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id), serialize($params)
 				), $errNo, __METHOD__);
 				return array(
 					'err_no' => $errNo,
@@ -162,8 +148,8 @@ abstract class Service extends Elements
 			$errNo = ErrorNo::ERROR_ARGS_UPDATE;
 			$errMsg = Lang::_('ERROR_MSG_ERROR_ARGS_UPDATE');
 			Log::warning(sprintf(
-				'%s callModifyMethod, model "%s", method "%s", id "%d", params "%s", errors "%s"',
-				$errMsg, get_class($object), $method, $id, serialize($params), serialize($errors)
+				'%s callModifyMethod, model "%s", method "%s", id "%s", params "%s", errors "%s"',
+				$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id), serialize($params), serialize($errors)
 			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
@@ -176,8 +162,8 @@ abstract class Service extends Elements
 		$errNo = ErrorNo::SUCCESS_NUM;
 		$errMsg = ($rowCount > 0) ? Lang::_('ERROR_MSG_SUCCESS_UPDATE') : Lang::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
 		Log::debug(sprintf(
-			'%s callModifyMethod, model "%s", method "%s", id "%d", rowCount "%d", params "%s"',
-			$errMsg, get_class($object), $method, $id, $rowCount, serialize($params)
+			'%s callModifyMethod, model "%s", method "%s", id "%s", rowCount "%d", params "%s"',
+			$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id), $rowCount, serialize($params)
 		), $errNo, __METHOD__);
 
 		return array(
@@ -190,21 +176,20 @@ abstract class Service extends Elements
 
 	/**
 	 * 调用删除类方法
-	 * @param srv\Model $object
+	 * @param libsrv\AbstractModel $object
 	 * @param string $method
-	 * @param integer $id
+	 * @param integer|array $id
 	 * @return array
 	 */
-	public function callRemoveMethod(Model $object, $method, $id)
+	public function callRemoveMethod(AbstractModel $object, $method, $id)
 	{
-		$id = (int) $id;
 		$rowCount = $object->$method($id);
 		if ($rowCount === false) {
 			$errNo = ErrorNo::ERROR_DB_DELETE;
 			$errMsg = Lang::_('ERROR_MSG_ERROR_DB_DELETE');
 			Log::warning(sprintf(
-				'%s callRemoveMethod, model "%s", method "%s", id "%d"',
-				$errMsg, get_class($object), $method, $id
+				'%s callRemoveMethod, model "%s", method "%s", id "%s"',
+				$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id)
 			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
@@ -216,13 +201,14 @@ abstract class Service extends Elements
 		$errNo = ErrorNo::SUCCESS_NUM;
 		$errMsg = ($rowCount > 0) ? Lang::_('ERROR_MSG_SUCCESS_DELETE') : Lang::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
 		Log::debug(sprintf(
-			'%s callRemoveMethod, model "%s", method "%s", id "%d", rowCount "%d"',
-			$errMsg, get_class($object), $method, $id, $rowCount
+			'%s callRemoveMethod, model "%s", method "%s", id "%s", rowCount "%d"',
+			$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id), $rowCount
 		), $errNo, __METHOD__);
 
 		return array(
 			'err_no' => $errNo,
 			'err_msg' => $errMsg,
+			'id' => $id,
 			'row_count' => $rowCount
 		);
 	}

@@ -12,7 +12,7 @@ namespace modules\builder\action\schema;
 
 use library\actions;
 use tfc\ap\Ap;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * Gb class file
@@ -35,7 +35,7 @@ class Gb extends actions\Remove
 			$this->err404();
 		}
 
-		$srv = SrvFactory::getInstance('Schema');
+		$srv = Service::getInstance('Schema');
 		$srv->gb($tblName);
 	}
 }

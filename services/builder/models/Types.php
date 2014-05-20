@@ -8,18 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\controller;
+namespace builder\models;
 
-use libapp\BaseController;
+use libsrv\DynamicModel;
 
 /**
- * GroupsController class file
- * 表单字段组
+ * Types class file
+ * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GroupsController.php 1 2014-04-04 14:53:06Z Code Generator $
- * @package modules.builder.controller
+ * @version $Id: Types.php 1 2014-04-03 16:16:03Z Code Generator $
+ * @package builder.models
  * @since 1.0
  */
-class GroupsController extends BaseController
+class Types extends DynamicModel
 {
 }

@@ -12,7 +12,7 @@ namespace modules\builder\action\builders;
 
 use library\actions;
 use tfc\ap\Ap;
-use app\SrvFactory;
+use libapp\Service;
 
 /**
  * Gc class file
@@ -31,7 +31,7 @@ class Gc extends actions\Remove
 	public function run()
 	{
 		$id = Ap::getRequest()->getInteger('id');
-		$srv = SrvFactory::getInstance('Builders');
+		$srv = Service::getInstance('Builders');
 		$srv->gc($id);
 	}
 }

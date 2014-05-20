@@ -10,7 +10,7 @@
 
 namespace modules\system\controller;
 
-use app\BaseController;
+use libapp\BaseController;
 
 /**
  * SiteController class file

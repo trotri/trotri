@@ -28,6 +28,6 @@ class Err404 extends actions\View
 	 */
 	public function run()
 	{
-		exit('modules\\system\\action\\site\\Err404');
+		$this->render();
 	}
 }

@@ -13,8 +13,8 @@ namespace library\actions;
 use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use app\SrvFactory;
-use app\SubmitType;
+use libapp\Service;
+use libapp\SubmitType;
 use library\ErrorNo;
 
 /**
@@ -43,7 +43,7 @@ abstract class Modify extends ShowAction
 		$ret = array();
 
 		$req = Ap::getRequest();
-		$srv = SrvFactory::getInstance($className, $moduleName);
+		$srv = Service::getInstance($className, $moduleName);
 		$submitType = new SubmitType();
 		if ($submitType->isPost()) {
 			$ret = $srv->modify($id, $req->getPost());

@@ -10,7 +10,7 @@
 
 namespace library;
 
-use app;
+use libapp;
 
 /**
  * ShowAction abstract class file
@@ -20,7 +20,7 @@ use app;
  * @package library
  * @since 1.0
  */
-abstract class ShowAction extends app\ShowAction
+abstract class ShowAction extends libapp\ShowAction
 {
 	/**
 	 * 页面重定向到404页面

@@ -28,7 +28,7 @@ class Bootstrap extends ap\Bootstrap
 	 */
 	public function _initRGPC()
 	{
-		$rawKeys = array('last_index_url', 'http_referer');
+		$rawKeys = array('http_referer');
 
 		foreach ($_GET as $key => $value) {
 			if (in_array($key, $rawKeys)) {

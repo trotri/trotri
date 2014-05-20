@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace app;
+namespace libapp;
 
 use tfc\ap\Ap;
 use tfc\ap\ErrorException;
@@ -24,7 +24,7 @@ use tfc\saf\Cfg;
  * ShowAction基类，用于展示数据，加载模板
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: ShowAction.php 1 2013-04-05 01:08:06Z huan.song $
- * @package app
+ * @package libapp
  * @since 1.0
  */
 abstract class ShowAction extends BaseAction
@@ -36,7 +36,7 @@ abstract class ShowAction extends BaseAction
 
 	/**
 	 * (non-PHPdoc)
-	 * @see app.BaseAction::_init()
+	 * @see libapp.BaseAction::_init()
 	 */
 	protected function _init()
 	{
