@@ -46,7 +46,7 @@ abstract class Modify extends ShowAction
 		$srv = Service::getInstance($className, $moduleName);
 		$submitType = new SubmitType();
 		if ($submitType->isPost()) {
-			$ret = $srv->modify($id, $req->getPost());
+			$ret = $srv->modifyByPk($id, $req->getPost());
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($submitType->isTypeSave()) {
 					$this->forward($srv->actNameModify, Mvc::$controller, Mvc::$module, $ret);

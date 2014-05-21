@@ -24,6 +24,39 @@ use libsrv\AbstractModel;
 abstract class BaseService extends Elements
 {
 	/**
+	 * 查询数据
+	 * @param libsrv\AbstractModel $object
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function search(AbstractModel $object, array $params = array(), $order = '', $limit = null, $offset = null)
+	{
+		if ($limit === null) {
+			$limit = PageHelper::getListRows();
+		}
+
+		if ($offset === null) {
+			$offset = PageHelper::getFirstRow();
+		}
+
+		$ret = $this->callFetchMethod($object, 'findAllByAttributes', array($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS'));
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$data = $ret['data']['rows'];
+		unset($ret['data']['rows']);
+
+		$ret['paginator'] = $ret['data'];
+		$ret['data'] = $data;
+
+		return $ret;
+	}
+
+	/**
 	 * 调用查询类方法
 	 * @param libsrv\AbstractModel $object
 	 * @param string $method
@@ -77,7 +110,7 @@ abstract class BaseService extends Elements
 	{
 		$lastInsertId = $object->$method($params, $ignore);
 		$errors = $object->getErrors();
-		if (($lastInsertId === false && $errors === array()) || $lastInsertId <= 0) {
+		if (($lastInsertId === false && $errors === array()) || $lastInsertId === 0 || $lastInsertId < 0) {
 			$errNo = ErrorNo::ERROR_DB_INSERT;
 			$errMsg = Lang::_('ERROR_MSG_ERROR_DB_INSERT');
 			Log::warning(sprintf(

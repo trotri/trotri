@@ -61,7 +61,7 @@ abstract class Trash extends ShowAction
 	 */
 	public function getFuncName()
 	{
-		$funcName = $this->isRestore() ? 'restore' : 'trash';
+		$funcName = $this->isRestore() ? 'restoreByPk' : 'trashByPk';
 		if ($this->isBatch()) {
 			$funcName = 'batch' . ucfirst($funcName);
 		}

@@ -118,7 +118,7 @@ abstract class DynamicModel extends AbstractModel
 	 * @param string $option
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option)
+	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$condition = $this->getDb()->getCommandBuilder()->createAndCondition(array_keys($attributes));
 		return $this->findAllByCondition($condition, $attributes, $order, $limit, $offset, $option);

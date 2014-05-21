@@ -22,4 +22,9 @@ use libsrv\DynamicModel;
  */
 class Types extends DynamicModel
 {
+	/**
+	 * @var string 表名
+	 */
+	protected $_tableName = 'builder_types';
+
 }

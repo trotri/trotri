@@ -61,7 +61,7 @@ abstract class Remove extends ShowAction
 	 */
 	public function getFuncName()
 	{
-		$funcName = $this->isBatch() ? 'batchRemove' : 'remove';
+		$funcName = $this->isBatch() ? 'batchRemoveByPk' : 'removeByPk';
 		return $funcName;
 	}
 

@@ -13,13 +13,13 @@ namespace modules\builder\controller;
 use libapp\BaseController;
 
 /**
- * IndexController class file
+ * BuildersController class file
  * 生成代码
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: IndexController.php 1 2014-04-03 17:53:20Z Code Generator $
+ * @version $Id: BuildersController.php 1 2014-04-03 17:53:20Z Code Generator $
  * @package modules.builder.controller
  * @since 1.0
  */
-class IndexController extends BaseController
+class BuildersController extends BaseController
 {
 }

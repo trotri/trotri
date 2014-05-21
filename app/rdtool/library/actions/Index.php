@@ -12,6 +12,7 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
+use tfc\saf\Cfg;
 use libapp\Service;
 use libapp\PageHelper;
 use library\ErrorNo;
@@ -40,17 +41,47 @@ abstract class Index extends ShowAction
 
 		$params = $this->getSearchParams();
 		$order = $this->getOrder();
-		$limit = PageHelper::getFirstRow();
-		$offset = PageHelper::getListRows();
+		$limit = PageHelper::getListRows();
+		$offset = PageHelper::getFirstRow();
 
 		$ret = $srv->search($params, $order, $limit, $offset);
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			$this->err404();
 		}
 
-		$srv->setLLU($ret['paginator']);
+		$params = $this->getLLUParams($ret['paginator']);
+		$srv->setLLU($params);
 		$this->assign('elements', $srv);
 		$this->render($ret);
+	}
+
+	/**
+	 * 获取最后一次访问的列表页参数
+	 * @param array $params
+	 * @return array
+	 */
+	public function getLLUParams(array $params = array())
+	{
+		$attributes = isset($params['attributes']) ? (array) $params['attributes'] : array();
+		$order      = isset($params['order'])      ? trim($params['order'])        : '';
+		$listRows   = isset($params['limit'])      ? (int) $params['limit']        : 0;
+		$firstRow   = isset($params['offset'])     ? (int) $params['offset']       : 0;
+
+		if ($order !== '') {
+			$attributes['order'] = $order;
+		}
+
+		if ($listRows !== (int) Cfg::getApp('list_rows', 'paginator')) {
+			$attributes[PageHelper::getListRowsVar()] = $listRows;
+		}
+
+		$firstRow = max($firstRow, 0);
+		$currPage = floor($firstRow / $listRows) + 1;
+		if ($currPage > 0) {
+			$attributes[PageHelper::getPageVar()] = $currPage;
+		}
+
+		return $attributes;
 	}
 
 	/**

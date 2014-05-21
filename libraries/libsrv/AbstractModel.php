@@ -102,7 +102,7 @@ abstract class AbstractModel extends Application
 	 */
 	public function getErrors($justOne = true)
 	{
-		return $this->getFp()->getErrors($justOne);
+		return $this->getFormProcessor()->getErrors($justOne);
 	}
 
 	/**

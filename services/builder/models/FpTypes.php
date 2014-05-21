@@ -10,18 +10,15 @@
 
 namespace builder\models;
 
-use tfc\validator\NumericValidator;
-
-use tfc\validator\InArrayValidator;
+use libsrv\FormProcessor;
+use libsrv\Clean;
+use builder\library\Lang;
 
 use tfc\validator\AlphaValidator;
-
+use tfc\validator\NumericValidator;
+use tfc\validator\InArrayValidator;
 use tfc\validator\MaxLengthValidator;
-
 use tfc\validator\MinLengthValidator;
-
-use libsrv\FormProcessor;
-use builder\library\Lang;
 
 /**
  * FpTypes class file
@@ -47,6 +44,24 @@ class FpTypes extends FormProcessor
 
 		$this->isValids($params, 'type_name', 'form_type', 'field_type', 'category', 'sort');
 		return !$this->hasError();
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see libsrv.FormProcessor::_cleanPreProcess()
+	 */
+	protected function _cleanPreProcess(array $params)
+	{
+		$rules = array(
+			'type_name' => 'trim',
+			'form_type' => 'trim',
+			'field_type' => 'trim',
+			'category' => 'trim',
+			'sort' => 'intval',
+		);
+
+		$ret = $this->clean($rules, $params);
+		return $ret;
 	}
 
 	/**

@@ -86,61 +86,91 @@ class DataBuilders
 	 * 获取“是否生成扩展表”所有选项
 	 * @return array
 	 */
-	public function getTblProfileEnum()
+	public static function getTblProfileEnum()
 	{
-		return array(
-			self::TBL_PROFILE_Y => Lang::_('MOD_ENUM_GLOBAL_YES'),
-			self::TBL_PROFILE_N => Lang::_('MOD_ENUM_GLOBAL_NO'),
-		);
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::TBL_PROFILE_Y => Lang::_('MOD_ENUM_GLOBAL_YES'),
+				self::TBL_PROFILE_N => Lang::_('MOD_ENUM_GLOBAL_NO'),
+			);
+		}
+
+		return $enum;
 	}
 
 	/**
 	 * 获取“表引擎”所有选项
 	 * @return array
 	 */
-	public function getTblEngineEnum()
+	public static function getTblEngineEnum()
 	{
-		return array(
-			self::TBL_ENGINE_MYISAM => Lang::_('MOD_ENUM_BUILDERS_TBL_ENGINE_MYISAM'),
-			self::TBL_ENGINE_INNODB => Lang::_('MOD_ENUM_BUILDERS_TBL_ENGINE_INNODB'),
-		);
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::TBL_ENGINE_MYISAM => Lang::_('MOD_ENUM_BUILDERS_TBL_ENGINE_MYISAM'),
+				self::TBL_ENGINE_INNODB => Lang::_('MOD_ENUM_BUILDERS_TBL_ENGINE_INNODB'),
+			);
+		}
+
+		return $enum;
 	}
 
 	/**
 	 * 获取“表编码”所有选项
 	 * @return array
 	 */
-	public function getTblCharsetEnum()
+	public static function getTblCharsetEnum()
 	{
-		return array(
-			self::TBL_CHARSET_UTF8 => Lang::_('MOD_ENUM_BUILDERS_TBL_CHARSET_UTF8'),
-			self::TBL_CHARSET_GBK => Lang::_('MOD_ENUM_BUILDERS_TBL_CHARSET_GBK'),
-			self::TBL_CHARSET_GB2312 => Lang::_('MOD_ENUM_BUILDERS_TBL_CHARSET_GB2312'),
-		);
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::TBL_CHARSET_UTF8 => Lang::_('MOD_ENUM_BUILDERS_TBL_CHARSET_UTF8'),
+				self::TBL_CHARSET_GBK => Lang::_('MOD_ENUM_BUILDERS_TBL_CHARSET_GBK'),
+				self::TBL_CHARSET_GB2312 => Lang::_('MOD_ENUM_BUILDERS_TBL_CHARSET_GB2312'),
+			);
+		}
+
+		return $enum;
 	}
 
 	/**
 	 * 获取“移至回收站”所有选项
 	 * @return array
 	 */
-	public function getTrashEnum()
+	public static function getTrashEnum()
 	{
-		return array(
-			self::TRASH_Y => Lang::_('MOD_ENUM_GLOBAL_YES'),
-			self::TRASH_N => Lang::_('MOD_ENUM_GLOBAL_NO'),
-		);
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::TRASH_Y => Lang::_('MOD_ENUM_GLOBAL_YES'),
+				self::TRASH_N => Lang::_('MOD_ENUM_GLOBAL_NO'),
+			);
+		}
+
+		return $enum;
 	}
 
 	/**
 	 * 获取“数据列表每行操作Btn”所有选项
 	 * @return array
 	 */
-	public function getIndexRowBtnsEnum()
+	public static function getIndexRowBtnsEnum()
 	{
-		return array(
-			self::INDEX_ROW_BTNS_PENCIL => Lang::_('MOD_ENUM_BUILDERS_INDEX_ROW_BTNS_PENCIL'),
-			self::INDEX_ROW_BTNS_TRASH => Lang::_('MOD_ENUM_BUILDERS_INDEX_ROW_BTNS_TRASH'),
-			self::INDEX_ROW_BTNS_REMOVE => Lang::_('MOD_ENUM_BUILDERS_INDEX_ROW_BTNS_REMOVE'),
-		);
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::INDEX_ROW_BTNS_PENCIL => Lang::_('MOD_ENUM_BUILDERS_INDEX_ROW_BTNS_PENCIL'),
+				self::INDEX_ROW_BTNS_TRASH => Lang::_('MOD_ENUM_BUILDERS_INDEX_ROW_BTNS_TRASH'),
+				self::INDEX_ROW_BTNS_REMOVE => Lang::_('MOD_ENUM_BUILDERS_INDEX_ROW_BTNS_REMOVE'),
+			);
+		}
+
+		return $enum;
 	}
 }

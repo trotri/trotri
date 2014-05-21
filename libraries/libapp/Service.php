@@ -69,7 +69,7 @@ class Service
 	 * @param libapp\BaseService $instance
 	 * @return void
 	 */
-	public static function set($className, $moduleName, Service $instance)
+	public static function set($className, $moduleName, BaseService $instance)
 	{
 		self::$_instances[$moduleName][$className] = $instance;
 	}

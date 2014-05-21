@@ -61,4 +61,65 @@ class TableRender
 		$this->actNameCreate = $this->elements_object->actNameCreate;
 		$this->actNameModify = $this->elements_object->actNameModify;
 	}
+
+	/**
+	 * 获取“编辑”图标
+	 * @param array $params
+	 * @return array
+	 */
+	public function getModifyIcon(array $params)
+	{
+		return ComponentsBuilder::getGlyphicon(array(
+			'type' => ComponentsConstant::GLYPHICON_MODIFY,
+			'url' => $this->urlManager->getUrl($this->actNameModify, $this->controller, $this->module, $params),
+			'jsfunc' => ComponentsConstant::JSFUNC_HREF,
+			'title' => $this->view->CFG_SYSTEM_GLOBAL_MODIFY,
+		));
+	}
+
+	/**
+	 * 获取“彻底删除”图标
+	 * @param array $params
+	 * @return array
+	 */
+	public function getRemoveIcon(array $params)
+	{
+		return ComponentsBuilder::getGlyphicon(array(
+			'type' => ComponentsConstant::GLYPHICON_REMOVE,
+			'url' => $this->urlManager->getUrl('remove', $this->controller, $this->module, $params),
+			'jsfunc' => ComponentsConstant::JSFUNC_DIALOGREMOVE,
+			'title' => $this->view->CFG_SYSTEM_GLOBAL_REMOVE,
+		));
+	}
+
+	/**
+	 * 获取“移至回收站”图标
+	 * @param array $params
+	 * @return array
+	 */
+	public function getTrashIcon(array $params)
+	{
+		return ComponentsBuilder::getGlyphicon(array(
+			'type' => ComponentsConstant::GLYPHICON_TRASH,
+			'url' => $this->urlManager->getUrl('trash', $this->controller, $this->module, $params),
+			'jsfunc' => ComponentsConstant::JSFUNC_DIALOGTRASH,
+			'title' => $this->view->CFG_SYSTEM_GLOBAL_TRASH,
+		));
+	}
+
+	/**
+	 * 获取“恢复”图标
+	 * @param array $params
+	 * @return array
+	 */
+	public function getRestoreIcon(array $params)
+	{
+		$params['is_restore'] = '1';
+		return ComponentsBuilder::getGlyphicon(array(
+			'type' => ComponentsConstant::GLYPHICON_RESTORE,
+			'url' => $this->urlManager->getUrl('restore', $this->controller, $this->module, $params),
+			'jsfunc' => ComponentsConstant::JSFUNC_BATCHRESTORE,
+			'title' => $this->view->CFG_SYSTEM_GLOBAL_RESTORE,
+		));
+	}
 }

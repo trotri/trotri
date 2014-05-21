@@ -124,8 +124,8 @@ abstract class DynamicDb extends AbstractDb
      */
     public function findPairsByAttributes(array $columnNames, array $attributes = array(), $order = '', $limit = 0, $offset = 0)
     {
-    	$condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
-    	return $this->findPairsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset);
+        $condition = $this->getCommandBuilder()->createAndCondition(array_keys($attributes));
+        return $this->findPairsByCondition($columnNames, $condition, $attributes, $order, $limit, $offset);
     }
 
     /**
@@ -231,8 +231,8 @@ abstract class DynamicDb extends AbstractDb
      */
     public function findPairsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0)
     {
-    	$sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $columnNames, $condition, $order, $limit, $offset);
-    	return $this->fetchPairs($sql, $params);
+        $sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $columnNames, $condition, $order, $limit, $offset);
+        return $this->fetchPairs($sql, $params);
     }
 
     /**
@@ -404,7 +404,7 @@ abstract class DynamicDb extends AbstractDb
      */
     public function setTableName($tableName)
     {
-    	$tableName = strtolower(trim($tableName));
+        $tableName = strtolower(trim($tableName));
         $tblPrefix = $this->getTblprefix();
         if ($tblPrefix !== '' && stripos($tableName, $tblPrefix) !== 0) {
             $tableName = $tblPrefix . $tableName;
