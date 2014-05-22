@@ -40,7 +40,9 @@ class TableRender
 		$actNameList,
 		$actNameView,
 		$actNameCreate,
-		$actNameModify;
+		$actNameModify,
+		$actNameRemove,
+		$actNameTrash = 'trash';
 
 	/**
 	 * 构造方法，初始化模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
@@ -60,6 +62,7 @@ class TableRender
 		$this->actNameView = $this->elements_object->actNameView;
 		$this->actNameCreate = $this->elements_object->actNameCreate;
 		$this->actNameModify = $this->elements_object->actNameModify;
+		$this->actNameRemove = $this->elements_object->actNameRemove;
 	}
 
 	/**
@@ -86,7 +89,7 @@ class TableRender
 	{
 		return ComponentsBuilder::getGlyphicon(array(
 			'type' => ComponentsConstant::GLYPHICON_REMOVE,
-			'url' => $this->urlManager->getUrl('remove', $this->controller, $this->module, $params),
+			'url' => $this->urlManager->getUrl($this->actNameRemove, $this->controller, $this->module, $params),
 			'jsfunc' => ComponentsConstant::JSFUNC_DIALOGREMOVE,
 			'title' => $this->view->CFG_SYSTEM_GLOBAL_REMOVE,
 		));
@@ -101,7 +104,7 @@ class TableRender
 	{
 		return ComponentsBuilder::getGlyphicon(array(
 			'type' => ComponentsConstant::GLYPHICON_TRASH,
-			'url' => $this->urlManager->getUrl('trash', $this->controller, $this->module, $params),
+			'url' => $this->urlManager->getUrl($this->actNameTrash, $this->controller, $this->module, $params),
 			'jsfunc' => ComponentsConstant::JSFUNC_DIALOGTRASH,
 			'title' => $this->view->CFG_SYSTEM_GLOBAL_TRASH,
 		));
@@ -117,7 +120,7 @@ class TableRender
 		$params['is_restore'] = '1';
 		return ComponentsBuilder::getGlyphicon(array(
 			'type' => ComponentsConstant::GLYPHICON_RESTORE,
-			'url' => $this->urlManager->getUrl('trash', $this->controller, $this->module, $params),
+			'url' => $this->urlManager->getUrl($this->actNameTrash, $this->controller, $this->module, $params),
 			'jsfunc' => ComponentsConstant::JSFUNC_HREF,
 			'title' => $this->view->CFG_SYSTEM_GLOBAL_RESTORE,
 		));

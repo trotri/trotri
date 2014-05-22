@@ -83,6 +83,34 @@ class DataBuilders
 	const INDEX_ROW_BTNS_REMOVE = 'remove';
 
 	/**
+	 * @var string 代码类型：dynamic
+	 */
+	const SRV_TYPE_DYNAMIC = 'dynamic';
+
+	/**
+	 * @var string 代码类型：normal
+	 */
+	const SRV_TYPE_NORMAL = 'normal';
+
+	/**
+	 * 获取“是否生成扩展表”所有选项
+	 * @return array
+	 */
+	public static function getSrvTypeEnum()
+	{
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::SRV_TYPE_DYNAMIC => Lang::_('MOD_ENUM_BUILDERS_SRV_TYPE_DYNAMIC'),
+				self::SRV_TYPE_NORMAL => Lang::_('MOD_ENUM_BUILDERS_SRV_TYPE_NORMAL'),
+			);
+		}
+
+		return $enum;
+	}
+
+	/**
 	 * 获取“是否生成扩展表”所有选项
 	 * @return array
 	 */

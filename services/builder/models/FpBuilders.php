@@ -53,7 +53,7 @@ class FpBuilders extends FormProcessor
 			'builder_name', 'tbl_name', 'tbl_profile', 'tbl_engine', 'tbl_charset',
 			'tbl_comment', 'app_name', 'mod_name', 'ctrl_name', 'cls_name', 'fk_column',
 			'act_index_name', 'act_view_name', 'act_create_name', 'act_modify_name',
-			'act_remove_name', 'index_row_btns', 'author_name', 'author_mail', 'srv_name'
+			'act_remove_name', 'index_row_btns', 'author_name', 'author_mail', 'srv_name', 'srv_type'
 		);
 
 		return !$this->hasError();

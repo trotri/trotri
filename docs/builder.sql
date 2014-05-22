@@ -39,11 +39,12 @@ CREATE TABLE `tr_builders` (
   `tbl_engine` enum('MyISAM','InnoDB') NOT NULL DEFAULT 'InnoDB' COMMENT '表引擎',
   `tbl_charset` enum('utf8','gbk','gb2312') NOT NULL DEFAULT 'utf8' COMMENT '表编码',
   `tbl_comment` varchar(200) NOT NULL DEFAULT '' COMMENT '表描述',
+  `srv_type` enum('dynamic','normal') NOT NULL DEFAULT 'normal' COMMENT '代码类型，自动构建代码和SQL：dynamic、普通：normal',
+  `srv_name` varchar(100) NOT NULL DEFAULT '' COMMENT '业务名',
   `app_name` varchar(100) NOT NULL DEFAULT '' COMMENT '应用名',
   `mod_name` varchar(100) NOT NULL DEFAULT '' COMMENT '模块名',
-  `srv_name` varchar(100) NOT NULL DEFAULT '' COMMENT '业务名',
-  `ctrl_name` varchar(100) NOT NULL DEFAULT '' COMMENT '控制器名，默认和省略前缀的表名相同',
   `cls_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类名',
+  `ctrl_name` varchar(100) NOT NULL DEFAULT '' COMMENT '控制器名',
   `fk_column` varchar(100) NOT NULL DEFAULT '' COMMENT '外联其他表的字段名',
   `act_index_name` varchar(100) NOT NULL DEFAULT 'index' COMMENT '行动名-数据列表',
   `act_view_name` varchar(100) NOT NULL DEFAULT 'view' COMMENT '行动名-数据详情',
@@ -63,6 +64,8 @@ CREATE TABLE `tr_builders` (
   KEY `tbl_profile` (`tbl_profile`),
   KEY `tbl_engine` (`tbl_engine`),
   KEY `tbl_charset` (`tbl_charset`),
+  KEY `srv_type` (`srv_type`),
+  KEY `srv_name` (`srv_name`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='生成代码表';

@@ -110,6 +110,14 @@ class Builders extends BaseService
 				'options' => DataBuilders::getTblCharsetEnum(),
 				'value' => DataBuilders::TBL_CHARSET_UTF8,
 			),
+			'srv_type' => array(
+				'__tid__' => 'main',
+				'type' => 'radio',
+				'label' => Text::_('MOD_BUILDER_BUILDERS_TBL_CHARSET_LABEL'),
+				'hint' => Text::_('MOD_BUILDER_BUILDERS_TBL_CHARSET_HINT'),
+				'options' => DataBuilders::getSrvTypeEnum(),
+				'value' => DataBuilders::SRV_TYPE_NORMAL,
+			),
 			'tbl_comment' => array(
 				'__tid__' => 'main',
 				'type' => 'text',
