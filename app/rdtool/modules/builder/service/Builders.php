@@ -131,6 +131,13 @@ class Builders extends BaseService
 				'hint' => Text::_('MOD_BUILDER_BUILDERS_MOD_NAME_HINT'),
 				'required' => true,
 			),
+			'srv_name' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_BUILDER_BUILDERS_SRV_NAME_LABEL'),
+				'hint' => Text::_('MOD_BUILDER_BUILDERS_SRV_NAME_HINT'),
+				'required' => true,
+			),
 			'ctrl_name' => array(
 				'__tid__' => 'main',
 				'type' => 'text',
@@ -263,6 +270,17 @@ class Builders extends BaseService
 	}
 
 	/**
+	 * 获取列表页“生成代码名”选项
+	 * @param integer $builderId
+	 * @return string
+	 */
+	public function getBuilderNameByBuilderId($builderId)
+	{
+		$builderName = $this->_modBuilders->getByPk('builder_name', $builderId);
+		return $builderName ? $builderName : '';
+	}
+
+	/**
 	 * 查询数据
 	 * @param array $params
 	 * @param string $order
@@ -272,7 +290,21 @@ class Builders extends BaseService
 	 */
 	public function search(array $params = array(), $order = '', $limit = null, $offset = null)
 	{
-		$ret = parent::search($this->_modBuilders, array(), '', $limit, $offset);
+		$rules = array(
+			'builder_id' => 'intval',
+			'builder_name' => 'trim',
+			'tbl_name' => 'trim',
+			'tbl_profile' => 'trim',
+			'tbl_engine' => 'trim',
+			'tbl_charset' => 'trim',
+			'app_name' => 'trim',
+			'trash' => 'trim',
+			'author_name' => 'trim',
+			'author_mail' => 'trim',
+		);
+
+		$this->filterCleanEmpty($params, $rules);
+		$ret = parent::search($this->_modBuilders, $params, '', $limit, $offset);
 		return $ret;
 	}
 
@@ -320,5 +352,71 @@ class Builders extends BaseService
 	{
 		$ret = $this->callRemoveMethod($this->_modBuilders, 'removeByPk', $id);
 		return $ret;
+	}
+
+	/**
+	 * 通过主键，删除多条记录。不支持联合主键
+	 * @param array $ids
+	 * @return array
+	 */
+	public function batchRemoveByPk(array $ids)
+	{
+		$ret = $this->callRemoveMethod($this->_modBuilders, 'batchRemoveByPk', $ids);
+		return $ret;
+	}
+
+	/**
+	 * 通过主键，将一条记录移至回收站。不支持联合主键
+	 * @param integer $id
+	 * @return array
+	 */
+	public function trashByPk($id)
+	{
+		$ret = $this->callRemoveMethod($this->_modBuilders, 'trashByPk', $id);
+		return $ret;
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $ids
+	 * @return array
+	 */
+	public function batchTrashByPk(array $ids)
+	{
+		$ret = $this->callRemoveMethod($this->_modBuilders, 'batchTrashByPk', $ids);
+		return $ret;
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录
+	 * @param integer $pk
+	 * @return integer
+	 */
+	public function restoreByPk($pk)
+	{
+		$ret = $this->callRestoreMethod($this->_modBuilders, 'restoreByPk', $pk);
+		return $ret;
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $ids
+	 * @return integer
+	 */
+	public function batchRestoreByPk(array $ids)
+	{
+		$ret = $this->callRestoreMethod($this->_modBuilders, 'batchRestoreByPk', $ids);
+		return $ret;
+	}
+
+	/**
+	 * 通过Builders数据生成代码
+	 * @param integer $builderId
+	 * @return void
+	 */
+	public function gc($builderId)
+	{
+		$codeGenerator = new CodeGenerator($builderId);
+		$codeGenerator->run();
 	}
 }

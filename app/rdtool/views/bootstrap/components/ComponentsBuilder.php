@@ -125,13 +125,17 @@ class ComponentsBuilder
 		$href  = isset($params['href'])  ? $params['href']     : '';
 
 		$attributes = array(
+			'class'          => 'switch',
+			'data-on-label'  => Text::_('CFG_SYSTEM_GLOBAL_YES'),
+			'data-off-label' => Text::_('CFG_SYSTEM_GLOBAL_NO'),
 			'tbl_switch'     => 'yes',
 			'id'             => 'label_switch_' . $name . '_' . $id,
 			'name'           => 'label_switch',
-			'class'          => 'make-switch switch-small',
-			'data-on-label'  => Text::_('CFG_SYSTEM_GLOBAL_YES'),
-			'data-off-label' => Text::_('CFG_SYSTEM_GLOBAL_NO'),
 		);
+
+		if ($href !== '') {
+			$attributes['href'] = $href;
+		}
 
 		return Mvc::getView()->getHtml()->tag('div', $attributes, Mvc::getView()->getHtml()->checkbox($name, $value, ($value === 'y')));
 	}

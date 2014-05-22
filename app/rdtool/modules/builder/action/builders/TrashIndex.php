@@ -14,14 +14,14 @@ use library\actions;
 use tfc\ap\Ap;
 
 /**
- * Index class file
+ * TrashIndex class file
  * 查询回收站数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Index.php 1 2014-04-03 17:53:20Z Code Generator $
+ * @version $Id: TrashIndex.php 1 2014-04-03 17:53:20Z Code Generator $
  * @package modules.builder.action.builders
  * @since 1.0
  */
-class Index extends actions\Index
+class TrashIndex extends actions\Index
 {
 	/**
 	 * (non-PHPdoc)

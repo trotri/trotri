@@ -1,478 +1,251 @@
-/* ========================================================================
- * bootstrap-switch - v3.0.0
- * http://www.bootstrap-switch.org
- * ========================================================================
- * Copyright 2012-2013 Mattia Larentis
- *
- * ========================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================================
- */
+/* ============================================================
+ * bootstrapSwitch v1.3 by Larentis Mattia @spiritualGuru
+ * http://www.larentis.eu/switch/
+ * ============================================================
+ * Licensed under the Apache License, Version 2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * ============================================================ */
 
-(function() {
-  var __slice = [].slice;
+!function ($) {
+  "use strict";
 
-  (function($, window) {
-    'use strict';
-    var BootstrapSwitch;
-    BootstrapSwitch = (function() {
-      function BootstrapSwitch(element, options) {
-        if (options == null) {
-          options = {};
-        }
-        this.$element = $(element);
-        this.options = $.extend({}, $.fn.bootstrapSwitch.defaults, options, {
-          state: this.$element.is(':checked'),
-          size: this.$element.data('size'),
-          animate: this.$element.data('animate'),
-          disabled: this.$element.is(':disabled'),
-          readonly: this.$element.is('[readonly]'),
-          onColor: this.$element.data('on-color'),
-          offColor: this.$element.data('off-color'),
-          onText: this.$element.data('on-text'),
-          offText: this.$element.data('off-text'),
-          labelText: this.$element.data('label-text'),
-          baseClass: this.$element.data('base-class'),
-          wrapperClass: this.$element.data('wrapper-class')
-        });
-        this.$wrapper = $('<div>', {
-          "class": (function(_this) {
-            return function() {
-              var classes;
-              classes = ["" + _this.options.baseClass].concat(_this._getClasses(_this.options.wrapperClass));
-              classes.push(_this.options.state ? "" + _this.options.baseClass + "-on" : "" + _this.options.baseClass + "-off");
-              if (_this.options.size != null) {
-                classes.push("" + _this.options.baseClass + "-" + _this.options.size);
-              }
-              if (_this.options.animate) {
-                classes.push("" + _this.options.baseClass + "-animate");
-              }
-              if (_this.options.disabled) {
-                classes.push("" + _this.options.baseClass + "-disabled");
-              }
-              if (_this.options.readonly) {
-                classes.push("" + _this.options.baseClass + "-readonly");
-              }
-              if (_this.$element.attr('id')) {
-                classes.push("" + _this.options.baseClass + "-id-" + (_this.$element.attr('id')));
-              }
-              return classes.join(' ');
-            };
-          })(this)()
-        });
-        this.$container = $('<div>', {
-          "class": "" + this.options.baseClass + "-container"
-        });
-        this.$on = $('<span>', {
-          html: this.options.onText,
-          "class": "" + this.options.baseClass + "-handle-on " + this.options.baseClass + "-" + this.options.onColor
-        });
-        this.$off = $('<span>', {
-          html: this.options.offText,
-          "class": "" + this.options.baseClass + "-handle-off " + this.options.baseClass + "-" + this.options.offColor
-        });
-        this.$label = $('<label>', {
-          "for": this.$element.attr('id'),
-          html: this.options.labelText,
-          "class": "" + this.options.baseClass + "-label"
-        });
-        this.$element.on('init.bootstrapSwitch', (function(_this) {
-          return function() {
-            return _this.options.onInit.apply(element, arguments);
-          };
-        })(this));
-        this.$element.on('switchChange.bootstrapSwitch', (function(_this) {
-          return function() {
-            return _this.options.onSwitchChange.apply(element, arguments);
-          };
-        })(this));
-        this.$container = this.$element.wrap(this.$container).parent();
-        this.$wrapper = this.$container.wrap(this.$wrapper).parent();
-        this.$element.before(this.$on).before(this.$label).before(this.$off).trigger('init.bootstrapSwitch');
-        this._elementHandlers();
-        this._handleHandlers();
-        this._labelHandlers();
-        this._formHandler();
-      }
+  $.fn['bootstrapSwitch'] = function (method) {
+    var methods = {
+      init: function () {
+        return this.each(function () {
+            var $element = $(this)
+              , $div
+              , $switchLeft
+              , $switchRight
+              , $label
+              , myClasses = ""
+              , classes = $element.attr('class')
+              , color
+              , moving
+              , onLabel = "ON"
+              , offLabel = "OFF"
+              , icon = false;
 
-      BootstrapSwitch.prototype._constructor = BootstrapSwitch;
-
-      BootstrapSwitch.prototype.state = function(value, skip) {
-        if (typeof value === 'undefined') {
-          return this.options.state;
-        }
-        if (this.options.disabled || this.options.readonly) {
-          return this.$element;
-        }
-        value = !!value;
-        this.$element.prop('checked', value).trigger('change.bootstrapSwitch', skip);
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.toggleState = function(skip) {
-        if (this.options.disabled || this.options.readonly) {
-          return this.$element;
-        }
-        return this.$element.prop('checked', !this.options.state).trigger('change.bootstrapSwitch', skip);
-      };
-
-      BootstrapSwitch.prototype.size = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.size;
-        }
-        if (this.options.size != null) {
-          this.$wrapper.removeClass("" + this.options.baseClass + "-" + this.options.size);
-        }
-        if (value) {
-          this.$wrapper.addClass("" + this.options.baseClass + "-" + value);
-        }
-        this.options.size = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.animate = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.animate;
-        }
-        value = !!value;
-        this.$wrapper[value ? 'addClass' : 'removeClass']("" + this.options.baseClass + "-animate");
-        this.options.animate = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.disabled = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.disabled;
-        }
-        value = !!value;
-        this.$wrapper[value ? 'addClass' : 'removeClass']("" + this.options.baseClass + "-disabled");
-        this.$element.prop('disabled', value);
-        this.options.disabled = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.toggleDisabled = function() {
-        this.$element.prop('disabled', !this.options.disabled);
-        this.$wrapper.toggleClass("" + this.options.baseClass + "-disabled");
-        this.options.disabled = !this.options.disabled;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.readonly = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.readonly;
-        }
-        value = !!value;
-        this.$wrapper[value ? 'addClass' : 'removeClass']("" + this.options.baseClass + "-readonly");
-        this.$element.prop('readonly', value);
-        this.options.readonly = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.toggleReadonly = function() {
-        this.$element.prop('readonly', !this.options.readonly);
-        this.$wrapper.toggleClass("" + this.options.baseClass + "-readonly");
-        this.options.readonly = !this.options.readonly;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.onColor = function(value) {
-        var color;
-        color = this.options.onColor;
-        if (typeof value === 'undefined') {
-          return color;
-        }
-        if (color != null) {
-          this.$on.removeClass("" + this.options.baseClass + "-" + color);
-        }
-        this.$on.addClass("" + this.options.baseClass + "-" + value);
-        this.options.onColor = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.offColor = function(value) {
-        var color;
-        color = this.options.offColor;
-        if (typeof value === 'undefined') {
-          return color;
-        }
-        if (color != null) {
-          this.$off.removeClass("" + this.options.baseClass + "-" + color);
-        }
-        this.$off.addClass("" + this.options.baseClass + "-" + value);
-        this.options.offColor = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.onText = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.onText;
-        }
-        this.$on.html(value);
-        this.options.onText = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.offText = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.offText;
-        }
-        this.$off.html(value);
-        this.options.offText = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.labelText = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.labelText;
-        }
-        this.$label.html(value);
-        this.options.labelText = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.baseClass = function(value) {
-        return this.options.baseClass;
-      };
-
-      BootstrapSwitch.prototype.wrapperClass = function(value) {
-        if (typeof value === 'undefined') {
-          return this.options.wrapperClass;
-        }
-        if (!value) {
-          value = $.fn.bootstrapSwitch.defaults.wrapperClass;
-        }
-        this.$wrapper.removeClass(this._getClasses(this.options.wrapperClass).join(' '));
-        this.$wrapper.addClass(this._getClasses(value).join(' '));
-        this.options.wrapperClass = value;
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype.destroy = function() {
-        var $form;
-        $form = this.$element.closest('form');
-        if ($form.length) {
-          $form.off('reset.bootstrapSwitch').removeData('bootstrap-switch');
-        }
-        this.$container.children().not(this.$element).remove();
-        this.$element.unwrap().unwrap().off('.bootstrapSwitch').removeData('bootstrap-switch');
-        return this.$element;
-      };
-
-      BootstrapSwitch.prototype._elementHandlers = function() {
-        return this.$element.on({
-          'change.bootstrapSwitch': (function(_this) {
-            return function(e, skip) {
-              var checked;
-              e.preventDefault();
-              e.stopPropagation();
-              e.stopImmediatePropagation();
-              checked = _this.$element.is(':checked');
-              if (checked === _this.options.state) {
-                return;
-              }
-              _this.options.state = checked;
-              _this.$wrapper.removeClass(checked ? "" + _this.options.baseClass + "-off" : "" + _this.options.baseClass + "-on").addClass(checked ? "" + _this.options.baseClass + "-on" : "" + _this.options.baseClass + "-off");
-              if (!skip) {
-                if (_this.$element.is(':radio')) {
-                  $("[name='" + (_this.$element.attr('name')) + "']").not(_this.$element).prop('checked', false).trigger('change.bootstrapSwitch', true);
-                }
-                return _this.$element.trigger('switchChange.bootstrapSwitch', [checked]);
-              }
-            };
-          })(this),
-          'focus.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              e.stopImmediatePropagation();
-              return _this.$wrapper.addClass("" + _this.options.baseClass + "-focused");
-            };
-          })(this),
-          'blur.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              e.stopImmediatePropagation();
-              return _this.$wrapper.removeClass("" + _this.options.baseClass + "-focused");
-            };
-          })(this),
-          'keydown.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              if (!e.which || _this.options.disabled || _this.options.readonly) {
-                return;
-              }
-              switch (e.which) {
-                case 32:
-                  e.preventDefault();
-                  e.stopPropagation();
-                  e.stopImmediatePropagation();
-                  return _this.toggleState();
-                case 37:
-                  e.preventDefault();
-                  e.stopPropagation();
-                  e.stopImmediatePropagation();
-                  return _this.state(false);
-                case 39:
-                  e.preventDefault();
-                  e.stopPropagation();
-                  e.stopImmediatePropagation();
-                  return _this.state(true);
-              }
-            };
-          })(this)
-        });
-      };
-
-      BootstrapSwitch.prototype._handleHandlers = function() {
-        this.$on.on('click.bootstrapSwitch', (function(_this) {
-          return function(e) {
-            _this.state(false);
-            return _this.$element.trigger('focus.bootstrapSwitch');
-          };
-        })(this));
-        return this.$off.on('click.bootstrapSwitch', (function(_this) {
-          return function(e) {
-            _this.state(true);
-            return _this.$element.trigger('focus.bootstrapSwitch');
-          };
-        })(this));
-      };
-
-      BootstrapSwitch.prototype._labelHandlers = function() {
-        return this.$label.on({
-          'mousemove.bootstrapSwitch touchmove.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              var left, pageX, percent, right;
-              if (!_this.drag) {
-                return;
-              }
-              e.preventDefault();
-              pageX = e.pageX || e.originalEvent.touches[0].pageX;
-              percent = ((pageX - _this.$wrapper.offset().left) / _this.$wrapper.width()) * 100;
-              left = 25;
-              right = 75;
-              if (percent < left) {
-                percent = left;
-              } else if (percent > right) {
-                percent = right;
-              }
-              _this.$container.css('margin-left', "" + (percent - right) + "%");
-              return _this.$element.trigger('focus.bootstrapSwitch');
-            };
-          })(this),
-          'mousedown.bootstrapSwitch touchstart.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              if (_this.drag || _this.options.disabled || _this.options.readonly) {
-                return;
-              }
-              e.preventDefault();
-              _this.drag = true;
-              if (_this.options.animate) {
-                _this.$wrapper.removeClass("" + _this.options.baseClass + "-animate");
-              }
-              return _this.$element.trigger('focus.bootstrapSwitch');
-            };
-          })(this),
-          'mouseup.bootstrapSwitch touchend.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              if (!_this.drag) {
-                return;
-              }
-              e.preventDefault();
-              _this.drag = false;
-              _this.$element.prop('checked', parseInt(_this.$container.css('margin-left'), 10) > -(_this.$container.width() / 6)).trigger('change.bootstrapSwitch');
-              _this.$container.css('margin-left', '');
-              if (_this.options.animate) {
-                return _this.$wrapper.addClass("" + _this.options.baseClass + "-animate");
-              }
-            };
-          })(this),
-          'mouseleave.bootstrapSwitch': (function(_this) {
-            return function(e) {
-              return _this.$label.trigger('mouseup.bootstrapSwitch');
-            };
-          })(this)
-        });
-      };
-
-      BootstrapSwitch.prototype._formHandler = function() {
-        var $form;
-        $form = this.$element.closest('form');
-        if ($form.data('bootstrap-switch')) {
-          return;
-        }
-        return $form.on('reset.bootstrapSwitch', function() {
-          return window.setTimeout(function() {
-            return $form.find('input').filter(function() {
-              return $(this).data('bootstrap-switch');
-            }).each(function() {
-              return $(this).bootstrapSwitch('state', this.checked);
+            $.each(['switch-mini', 'switch-small', 'switch-large'], function (i, el) {
+              if (classes.indexOf(el) >= 0)
+                myClasses = el;
             });
-          }, 1);
-        }).data('bootstrap-switch', true);
-      };
 
-      BootstrapSwitch.prototype._getClasses = function(classes) {
-        var c, cls, _i, _len;
-        if (!$.isArray(classes)) {
-          return ["" + this.options.baseClass + "-" + classes];
-        }
-        cls = [];
-        for (_i = 0, _len = classes.length; _i < _len; _i++) {
-          c = classes[_i];
-          cls.push("" + this.options.baseClass + "-" + c);
-        }
-        return cls;
-      };
+            $element.addClass('has-switch');
 
-      return BootstrapSwitch;
+            if ($element.data('on') !== undefined)
+              color = "switch-" + $element.data('on');
 
-    })();
-    $.fn.bootstrapSwitch = function() {
-      var args, option, ret;
-      option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      ret = this;
-      this.each(function() {
-        var $this, data;
-        $this = $(this);
-        data = $this.data('bootstrap-switch');
-        if (!data) {
-          $this.data('bootstrap-switch', data = new BootstrapSwitch(this, option));
-        }
-        if (typeof option === 'string') {
-          return ret = data[option].apply(data, args);
-        }
-      });
-      return ret;
+            if ($element.data('on-label') !== undefined)
+              onLabel = $element.data('on-label');
+
+            if ($element.data('off-label') !== undefined)
+              offLabel = $element.data('off-label');
+
+            if ($element.data('icon') !== undefined)
+              icon = $element.data('icon');
+
+            $switchLeft = $('<span>')
+              .addClass("switch-left")
+              .addClass(myClasses)
+              .addClass(color)
+              .html(onLabel);
+
+            color = '';
+            if ($element.data('off') !== undefined)
+              color = "switch-" + $element.data('off');
+
+            $switchRight = $('<span>')
+              .addClass("switch-right")
+              .addClass(myClasses)
+              .addClass(color)
+              .html(offLabel);
+
+            $label = $('<label>')
+              .html("&nbsp;")
+              .addClass(myClasses)
+              .attr('for', $element.find('input').attr('id'));
+
+            if (icon) {
+              $label.html('<i class="icon icon-' + icon + '"></i>');
+            }
+
+            $div = $element.find(':checkbox').wrap($('<div>')).parent().data('animated', false);
+
+            if ($element.data('animated') !== false)
+              $div.addClass('switch-animate').data('animated', true);
+
+            $div
+              .append($switchLeft)
+              .append($label)
+              .append($switchRight);
+
+            $element.find('>div').addClass(
+              $element.find('input').is(':checked') ? 'switch-on' : 'switch-off'
+            );
+
+            if ($element.find('input').is(':disabled'))
+              $(this).addClass('deactivate');
+
+            var changeStatus = function ($this) {
+              $this.siblings('label').trigger('mousedown').trigger('mouseup').trigger('click');
+            };
+
+            $element.on('keydown', function (e) {
+              if (e.keyCode === 32) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                changeStatus($(e.target).find('span:first'));
+              }
+            });
+
+            $switchLeft.on('click', function (e) {
+              changeStatus($(this));
+            });
+
+            $switchRight.on('click', function (e) {
+              changeStatus($(this));
+            });
+
+            $element.find('input').on('change', function (e) {
+              var $this = $(this)
+                , $element = $this.parent()
+                , thisState = $this.is(':checked')
+                , state = $element.is('.switch-off');
+
+              e.preventDefault();
+
+              $element.css('left', '');
+
+              if (state === thisState) {
+
+                if (thisState)
+                  $element.removeClass('switch-off').addClass('switch-on');
+                else $element.removeClass('switch-on').addClass('switch-off');
+
+                if ($element.data('animated') !== false)
+                  $element.addClass("switch-animate");
+
+                $element.parent().trigger('switch-change', {'el': $this, 'value': thisState})
+              }
+            });
+
+            $element.find('label').on('mousedown touchstart', function (e) {
+              var $this = $(this);
+              moving = false;
+
+              e.preventDefault();
+              e.stopImmediatePropagation();
+
+              $this.closest('div').removeClass('switch-animate');
+
+              if ($this.closest('.has-switch').is('.deactivate'))
+                $this.unbind('click');
+              else {
+                $this.on('mousemove touchmove', function (e) {
+                  var $element = $(this).closest('.switch')
+                    , relativeX = (e.pageX || e.originalEvent.targetTouches[0].pageX) - $element.offset().left
+                    , percent = (relativeX / $element.width()) * 100
+                    , left = 25
+                    , right = 75;
+
+                  moving = true;
+
+                  if (percent < left)
+                    percent = left;
+                  else if (percent > right)
+                    percent = right;
+
+                  $element.find('>div').css('left', (percent - right) + "%")
+                });
+
+                $this.on('click touchend', function (e) {
+                  var $this = $(this)
+                    , $target = $(e.target)
+                    , $myCheckBox = $target.siblings('input');
+
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+
+                  $this.unbind('mouseleave');
+
+                  if (moving)
+                    $myCheckBox.prop('checked', !(parseInt($this.parent().css('left')) < -25));
+                  else $myCheckBox.prop("checked", !$myCheckBox.is(":checked"));
+
+                  moving = false;
+                  $myCheckBox.trigger('change');
+                });
+
+                $this.on('mouseleave', function (e) {
+                  var $this = $(this)
+                    , $myCheckBox = $this.siblings('input');
+
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+
+                  $this.unbind('mouseleave');
+                  $this.trigger('mouseup');
+
+                  $myCheckBox.prop('checked', !(parseInt($this.parent().css('left')) < -25)).trigger('change');
+                });
+
+                $this.on('mouseup', function (e) {
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+
+                  $(this).unbind('mousemove');
+                });
+              }
+            });
+          }
+        );
+      },
+      toggleActivation: function () {
+        $(this).toggleClass('deactivate');
+      },
+      isActive: function () {
+        return !$(this).hasClass('deactivate');
+      },
+      setActive: function (active) {
+        if (active)
+          $(this).removeClass('deactivate');
+        else $(this).addClass('deactivate');
+      },
+      toggleState: function (skipOnChange) {
+        var $input = $(this).find('input:checkbox');
+        $input.prop('checked', !$input.is(':checked')).trigger('change', skipOnChange);
+      },
+      setState: function (value, skipOnChange) {
+        $(this).find('input:checkbox').prop('checked', value).trigger('change', skipOnChange);
+      },
+      status: function () {
+        return $(this).find('input:checkbox').is(':checked');
+      },
+      destroy: function () {
+        var $div = $(this).find('div')
+          , $checkbox;
+
+        $div.find(':not(input:checkbox)').remove();
+
+        $checkbox = $div.children();
+        $checkbox.unwrap().unwrap();
+
+        $checkbox.unbind('change');
+
+        return $checkbox;
+      }
     };
-    $.fn.bootstrapSwitch.Constructor = BootstrapSwitch;
-    return $.fn.bootstrapSwitch.defaults = {
-      state: true,
-      size: null,
-      animate: true,
-      disabled: false,
-      readonly: false,
-      onColor: 'primary',
-      offColor: 'default',
-      onText: 'ON',
-      offText: 'OFF',
-      labelText: '&nbsp;',
-      baseClass: 'bootstrap-switch',
-      wrapperClass: 'wrapper',
-      onInit: function() {},
-      onSwitchChange: function() {}
-    };
-  })(window.jQuery, window);
 
-}).call(this);
+    if (methods[method])
+      return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    else if (typeof method === 'object' || !method)
+      return methods.init.apply(this, arguments);
+    else
+      $.error('Method ' + method + ' does not exist!');
+  };
+}(jQuery);
+
+$(function () {
+  $('.switch')['bootstrapSwitch']();
+});

@@ -194,7 +194,7 @@ abstract class DynamicModel extends AbstractModel
 		}
 
 		$rows = $db->findColumnsByCondition($columnNames, $condition, $params, $order, $limit, $offset, $option);
-		if ($rows && $option === 'SQL_CALC_FOUND_ROWS') {
+		if (is_array($rows) && $option === 'SQL_CALC_FOUND_ROWS') {
 			$total = $db->getFoundRows();
 			$rows = array(
 				'rows' => $rows,
@@ -229,7 +229,7 @@ abstract class DynamicModel extends AbstractModel
 		}
 
 		$rows = $db->findAllByCondition($condition, $params, $order, $limit, $offset, $option);
-		if ($rows && $option === 'SQL_CALC_FOUND_ROWS') {
+		if (is_array($rows) && $option === 'SQL_CALC_FOUND_ROWS') {
 			$total = $db->getFoundRows();
 			$rows = array(
 				'rows' => $rows,

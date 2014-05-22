@@ -3,10 +3,11 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 	array(
 		'name' => 'modify',
 		'action' => $this->getUrlManager()->getUrl($this->action, '', '', array('id' => $this->id)),
-		'tabs' => $this->tabs,
-		'values' => $this->data,
 		'errors' => $this->errors,
-		'elements' => $this->elements,
+		'values' => $this->data,
+		'elements_object' => $this->elements,
+		'elements' => array(
+		),
 		'columns' => array(
 			'builder_name',
 			'tbl_name',
@@ -16,6 +17,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 			'tbl_comment',
 			'app_name',
 			'mod_name',
+			'srv_name',
 			'ctrl_name',
 			'cls_name',
 			'fk_column',
@@ -31,9 +33,9 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 			'dt_created',
 			'dt_modified',
 			'_button_save_',
-			'_button_save2close_',
-			'_button_save2new_',
-			'_button_cancel_',
+			'_button_saveclose_',
+			'_button_savenew_',
+			'_button_cancel_'
 		)
 	)
 );

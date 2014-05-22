@@ -288,17 +288,7 @@ abstract class FormProcessor
 	 */
 	public function clean(array $rules, array $attributes)
 	{
-		if ($rules === null || $attributes === null) {
-			return ;
-		}
-
-		foreach ($rules as $columnName => $funcName) {
-			if (isset($attributes[$columnName])) {
-				$attributes[$columnName] = call_user_func($funcName, $attributes[$columnName]);
-			}
-		}
-
-		return $attributes;
+		return Clean::rules($rules, $attributes);
 	}
 
 	/**

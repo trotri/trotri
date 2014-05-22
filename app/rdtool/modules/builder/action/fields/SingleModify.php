@@ -20,7 +20,7 @@ use library\actions;
  * @package modules.builder.action.fields
  * @since 1.0
  */
-class SingleModify extends actions\Modify
+class SingleModify extends actions\SingleModify
 {
 	/**
 	 * (non-PHPdoc)

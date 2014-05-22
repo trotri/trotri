@@ -41,6 +41,7 @@ CREATE TABLE `tr_builders` (
   `tbl_comment` varchar(200) NOT NULL DEFAULT '' COMMENT '表描述',
   `app_name` varchar(100) NOT NULL DEFAULT '' COMMENT '应用名',
   `mod_name` varchar(100) NOT NULL DEFAULT '' COMMENT '模块名',
+  `srv_name` varchar(100) NOT NULL DEFAULT '' COMMENT '业务名',
   `ctrl_name` varchar(100) NOT NULL DEFAULT '' COMMENT '控制器名，默认和省略前缀的表名相同',
   `cls_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类名',
   `fk_column` varchar(100) NOT NULL DEFAULT '' COMMENT '外联其他表的字段名',

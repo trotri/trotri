@@ -243,7 +243,7 @@ abstract class AbstractModel extends Application
 	}
 
 	/**
-	 * 通过主键，将一条记录移至回收站。不支持联合主键
+	 * 通过主键，将一条记录移至回收站
 	 * @param integer $pk
 	 * @param string $columnName
 	 * @param string $value
@@ -267,7 +267,7 @@ abstract class AbstractModel extends Application
 	}
 
 	/**
-	 * 通过主键，从回收站还原一条记录。不支持联合主键
+	 * 通过主键，从回收站还原一条记录
 	 * @param integer $pk
 	 * @param string $columnName
 	 * @param string $value

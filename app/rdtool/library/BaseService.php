@@ -11,6 +11,7 @@
 namespace library;
 
 use libapp;
+use libsrv\Clean;
 
 /**
  * BaseService abstract class file
@@ -22,4 +23,30 @@ use libapp;
  */
 abstract class BaseService extends libapp\BaseService
 {
+	/**
+	 * 过滤数组（只保留指定的字段）、清理数据并且清除空数据（空字符，负数）
+	 * @param array $attributes
+	 * @param array $rules
+	 * @return void
+	 */
+	protected function filterCleanEmpty(array &$attributes = array(), array $rules = array())
+	{
+		$this->filterAttributes($attributes, array_keys($rules));
+		$attributes = Clean::rules($rules, $attributes);
+		foreach ($rules as $columnName => $funcName) {
+			if (!isset($attributes[$columnName])) {
+				continue;
+			}
+
+			if ($funcName === 'trim' && $attributes[$columnName] === '') {
+				unset($attributes[$columnName]);
+				continue;
+			}
+
+			if ($funcName === 'intval' && $attributes[$columnName] < 0) {
+				unset($attributes[$columnName]);
+				continue;
+			}
+		}
+	}
 }

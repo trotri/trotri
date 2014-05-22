@@ -2,9 +2,10 @@
 $this->widget('views\bootstrap\widgets\ViewBuilder',
 	array(
 		'name' => 'view',
-		'tabs' => $this->tabs,
 		'values' => $this->data,
-		'elements' => $this->elements,
+		'elements_object' => $this->elements,
+		'elements' => array(
+		),
 		'columns' => array(
 			'builder_id',
 			'builder_name',

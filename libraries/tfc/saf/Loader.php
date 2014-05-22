@@ -291,3 +291,26 @@ if (!function_exists('debug_dump')) {
         }
     }
 }
+
+if (!function_exists('debug_print_r')) {
+	/**
+	 * 测试打印数据，只有DEBUG或者强制的时候才输出
+	 * @param mixed $expression
+	 * @param boolean $coercion
+	 * @return void
+	 */
+	function debug_print_r($expression, $coercion = false)
+	{
+		if (DEBUG || $coercion) {
+			$response = \tfc\ap\Ap::getResponse();
+			if (!$response->headersSent()) {
+				$response->contentType('text/html', \tfc\ap\Ap::getEncoding());
+			}
+
+			echo '<pre>';
+			print_r($expression);
+			echo '</pre>';
+			exit;
+		}
+	}
+}

@@ -169,17 +169,17 @@ Core = {
   },
 
   /**
-   * 修复开关插件（点击开关插件时，不改变Radio值）
+   * 修复开关插件（点击开关插件时，不改变Checkbox值）
    * @return void
    */
   changeSwitchValue: function() {
-    $(".make-switch").each(function() {
-      var inputSelector = 'input[type!="hidden"]';
-      $(this).find(inputSelector).on("change", function (e, skipOnChange) {
-        var o = $(this).parent();
-        var v = o.hasClass("switch-on") ? "n" : "y";
-        o.find(":checkbox").val(v);
-      });
+    $(".switch").each(function() {
+      if ($(this).attr("name") == "label_switch") {
+        $(this).on("switch-change", function (e, data) {
+          var v = data.value ? "y" : "n";
+          $(data.el).val(v);
+        });
+      }
     });
   },
 
@@ -194,7 +194,7 @@ Core = {
     var o = $(btn).parents("form");
 
     // 修复开关插件Bug（开关插件在关闭的状态下不传值）
-    $(".make-switch > .switch-animate").find(":checkbox").each(function() {
+    $(".switch").find(":checkbox").each(function() {
       var e = $(this).parent();
       if (e.hasClass("switch-on")) { $(this).val("y"); }
       else if (e.hasClass("switch-off")) {

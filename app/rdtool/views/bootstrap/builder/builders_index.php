@@ -122,9 +122,11 @@ $this->widget(
 				'callback' => 'getTblProfile'
 			),
 			'builder_field_groups' => array(
+				'label' => $this->MOD_BUILDER_URLS_GROUPS_INDEX,
 				'callback' => 'getBuilderFieldGroups'
 			),
 			'builder_fields' => array(
+				'label' => $this->MOD_BUILDER_URLS_FIELDS_INDEX,
 				'callback' => 'getBuilderFields'
 			),
 		),

@@ -13,31 +13,17 @@ namespace builder\models;
 use libsrv\DynamicModel;
 
 /**
- * Builders class file
+ * Fields class file
  * 业务层：模型类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Builders.php 1 2014-04-03 16:16:03Z Code Generator $
+ * @version $Id: Fields.php 1 2014-04-03 16:16:03Z Code Generator $
  * @package builder.models
  * @since 1.0
  */
-class Builders extends DynamicModel
+class Fields extends DynamicModel
 {
 	/**
 	 * @var string 表名
 	 */
-	protected $_tableName = 'builders';
-
-	/**
-	 * (non-PHPdoc)
-	 * @see libsrv.DynamicModel::findByPk()
-	 */
-	public function findByPk($value)
-	{
-		$row = parent::findByPk($value);
-		if ($row && isset($row['index_row_btns'])) {
-			$row['index_row_btns'] = explode(',', $row['index_row_btns']);
-		}
-
-		return $row;
-	}
+	protected $_tableName = 'builder_fields';
 }

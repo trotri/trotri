@@ -10,7 +10,7 @@
 <!-- Bootstrap theme CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap-theme.min.css'); ?>
 <!-- Bootstrap-switch CSS -->
-<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.min.css'); ?>
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.css'); ?>
 <!-- Jquery-icheck CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/jquery-icheck/skins/square/blue.css'); ?>
 <!-- Custom styles for this template -->

@@ -1,6 +1,6 @@
 <!-- JavaScript -->
 <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/bootstrap.min.js'); ?>
-<?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.min.js'); ?>
+<?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.js'); ?>
 <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/jquery-icheck/icheck.min.js'); ?>
 <!-- /JavaScript -->
 

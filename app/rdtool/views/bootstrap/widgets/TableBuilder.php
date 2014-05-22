@@ -213,11 +213,7 @@ class TableBuilder extends Widget
 				);
 			}
 			else {
-				if (!isset($elements[$columnName])) {
-					continue;
-				}
-
-				$element = $elements[$columnName];
+				$element = isset($elements[$columnName]) ? $elements[$columnName] : array();
 				if (!is_array($element)) {
 					continue;
 				}

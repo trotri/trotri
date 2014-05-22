@@ -201,8 +201,8 @@ class FormBuilder extends form\FormBuilder
 	}
 
 	/**
-	 * 初始化表单元素
-	 * @return views\bootstrap\widgets\FormBuilder
+	 * (non-PHPdoc)
+	 * @see tfc\mvc\form.FormBuilder::initElements()
 	 */
 	public function initElements()
 	{

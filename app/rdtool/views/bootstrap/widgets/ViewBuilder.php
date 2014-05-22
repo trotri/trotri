@@ -21,8 +21,8 @@ namespace views\bootstrap\widgets;
 class ViewBuilder extends FormBuilder
 {
 	/**
-	 * 初始化表单元素
-	 * @return views\bootstrap\widgets\FormBuilder
+	 * (non-PHPdoc)
+	 * @see views\bootstrap\widgets.FormBuilder::initElements()
 	 */
 	public function initElements()
 	{

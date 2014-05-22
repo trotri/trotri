@@ -4,9 +4,9 @@ $this->widget(
 	'views\bootstrap\widgets\ButtonBuilder',
 	array(
 		'label' => $this->MOD_BUILDER_URLS_GROUPS_CREATE,
-		'jsfunc' => 'href',
+		'jsfunc' => \views\bootstrap\components\ComponentsConstant::JSFUNC_HREF,
 		'url' => $this->getUrlManager()->getUrl('create', '', '', array('builder_id' => $this->builder_id)),
-		'glyphicon' => 'create',
+		'glyphicon' => \views\bootstrap\components\ComponentsConstant::GLYPHICON_CREATE,
 		'primary' => true,
 	)
 );

@@ -245,4 +245,60 @@ abstract class BaseService extends Elements
 			'row_count' => $rowCount
 		);
 	}
+
+	/**
+	 * 调用从回收站还原数据类方法
+	 * @param libsrv\AbstractModel $object
+	 * @param string $method
+	 * @param integer|array $id
+	 * @return array
+	 */
+	public function callRestoreMethod(AbstractModel $object, $method, $id)
+	{
+		$rowCount = $object->$method($id);
+		if ($rowCount === false) {
+			$errNo = ErrorNo::ERROR_ARGS_RESTORE;
+			$errMsg = Lang::_('ERROR_MSG_ERROR_DB_RESTORE');
+			Log::warning(sprintf(
+				'%s callRestoreMethod, model "%s", method "%s", id "%s"',
+				$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id)
+			), $errNo, __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => $errMsg,
+				'id' => $id
+			);
+		}
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = ($rowCount > 0) ? Lang::_('ERROR_MSG_SUCCESS_RESTORE') : Lang::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+		Log::debug(sprintf(
+			'%s callRestoreMethod, model "%s", method "%s", id "%s", rowCount "%d"',
+			$errMsg, get_class($object), $method, (is_array($id) ? serialize($id) : $id), $rowCount
+		), $errNo, __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'id' => $id,
+			'row_count' => $rowCount
+		);
+	}
+
+	/**
+	 * 通过过滤数组，只保留指定的字段名
+	 * 如果没有指定要保留的字段名，则通过表的字段过滤
+	 * @param array $attributes
+	 * @param mixed $columnNames
+	 * @return void
+	 */
+	public function filterAttributes(array &$attributes = array(), $columnNames = null)
+	{
+		$columnNames = (array) $columnNames;
+		foreach ($attributes as $key => $value) {
+			if (!in_array($key, $columnNames)) {
+				unset($attributes[$key]);
+			}
+		}
+	}
 }

@@ -30,7 +30,7 @@ class SwitchElement extends InputElement
 	/**
 	 * @var string 表单元素的样式
 	 */
-	public $swClass = 'make-switch switch-small';
+	public $swClass = 'switch';
 
 	/**
 	 * @var string 选项ID
@@ -49,7 +49,7 @@ class SwitchElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see ui\bootstrap\form.InputElement::_init()
+	 * @see views\bootstrap\components\form.InputElement::_init()
 	 */
 	protected function _init()
 	{
@@ -70,7 +70,8 @@ class SwitchElement extends InputElement
 			'id'             => $this->swId . '_' . $name,
 			'class'          => $this->swClass,
 			'data-on-label'  => $this->swOn,
-			'data-off-label' => $this->swOff
+			'data-off-label' => $this->swOff,
+			'name'           => 'label_switch',
 		);
 
 		if ($this->value === 'y') {

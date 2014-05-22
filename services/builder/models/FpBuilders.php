@@ -10,23 +10,17 @@
 
 namespace builder\models;
 
-use tfc\validator\MailValidator;
-
-use tfc\validator\AlphaValidator;
-
-use tfc\validator\NotEmptyValidator;
-
-use tfc\validator\InArrayValidator;
-
-use tfc\validator\AlphaNumValidator;
-
-use tfc\validator\MaxLengthValidator;
-
-use tfc\validator\MinLengthValidator;
-
 use libsrv\FormProcessor;
 use libsrv\Clean;
 use builder\library\Lang;
+
+use tfc\validator\AlphaValidator;
+use tfc\validator\AlphaNumValidator;
+use tfc\validator\MinLengthValidator;
+use tfc\validator\MaxLengthValidator;
+use tfc\validator\MailValidator;
+use tfc\validator\NotEmptyValidator;
+use tfc\validator\InArrayValidator;
 
 /**
  * FpBuilders class file
@@ -59,7 +53,7 @@ class FpBuilders extends FormProcessor
 			'builder_name', 'tbl_name', 'tbl_profile', 'tbl_engine', 'tbl_charset',
 			'tbl_comment', 'app_name', 'mod_name', 'ctrl_name', 'cls_name', 'fk_column',
 			'act_index_name', 'act_view_name', 'act_create_name', 'act_modify_name',
-			'act_remove_name', 'index_row_btns', 'author_name', 'author_mail'
+			'act_remove_name', 'index_row_btns', 'author_name', 'author_mail', 'srv_name'
 		);
 
 		return !$this->hasError();
@@ -88,7 +82,7 @@ class FpBuilders extends FormProcessor
 			'act_create_name' => 'trim',
 			'act_modify_name' => 'trim',
 			'act_remove_name' => 'trim',
-			'index_row_btns' => 'Clean::trims',
+			'index_row_btns' => '\libsrv\Clean::trims',
 			'author_name' => 'trim',
 			'author_mail' => 'trim',
 			'dt_created' => 'trim',
@@ -97,6 +91,15 @@ class FpBuilders extends FormProcessor
 
 		$ret = $this->clean($rules, $params);
 		return $ret;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see libsrv.FormProcessor::_cleanPostProcess()
+	 */
+	protected function _cleanPostProcess()
+	{
+		$this->index_row_btns = Clean::join($this->index_row_btns);
 	}
 
 	/**
@@ -121,8 +124,8 @@ class FpBuilders extends FormProcessor
 	{
 		return array(
 			'AlphaNum' => new AlphaNumValidator($value, true, Lang::_('MOD_FILTER_BUILDERS_TBL_NAME_ALPHANUM')),
-			'MinLength' => new MinLengthValidator($value, 6, Lang::_('MOD_FILTER_BUILDERS_TBL_NAME_MINLENGTH')),
-			'MaxLength' => new MaxLengthValidator($value, 50, Lang::_('MOD_FILTER_BUILDERS_TBL_NAME_MAXLENGTH'))	
+			'MinLength' => new MinLengthValidator($value, 2, Lang::_('MOD_FILTER_BUILDERS_TBL_NAME_MINLENGTH')),
+			'MaxLength' => new MaxLengthValidator($value, 30, Lang::_('MOD_FILTER_BUILDERS_TBL_NAME_MAXLENGTH'))	
 		);
 	}
 
@@ -240,6 +243,10 @@ class FpBuilders extends FormProcessor
 	 */
 	public function getFkColumnRule($value)
 	{
+		if ($value === '') {
+			return array();
+		}
+
 		return array(
 			'AlphaNum' => new AlphaNumValidator($value, true, Lang::_('MOD_FILTER_BUILDERS_FK_COLUMN_ALPHANUM')),
 			'MinLength' => new MinLengthValidator($value, 2, Lang::_('MOD_FILTER_BUILDERS_FK_COLUMN_MINLENGTH')),

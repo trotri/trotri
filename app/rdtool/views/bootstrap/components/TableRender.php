@@ -117,8 +117,8 @@ class TableRender
 		$params['is_restore'] = '1';
 		return ComponentsBuilder::getGlyphicon(array(
 			'type' => ComponentsConstant::GLYPHICON_RESTORE,
-			'url' => $this->urlManager->getUrl('restore', $this->controller, $this->module, $params),
-			'jsfunc' => ComponentsConstant::JSFUNC_BATCHRESTORE,
+			'url' => $this->urlManager->getUrl('trash', $this->controller, $this->module, $params),
+			'jsfunc' => ComponentsConstant::JSFUNC_HREF,
 			'title' => $this->view->CFG_SYSTEM_GLOBAL_RESTORE,
 		));
 	}

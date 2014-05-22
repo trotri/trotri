@@ -23,11 +23,61 @@ use tfc\util\String;
 class Clean
 {
 	/**
+	 * 基于配置清理表单提交的数据
+	 * <pre>
+	 * 一.清理规则：
+	 * $rules = array(
+	 *	 'user_loginname' => 'trim',
+	 *	 'user_interest' => array($foo, 'explode')
+	 * );
+	 * 参数：
+	 * $attributes = array(
+	 *	 'user_loginname' => '  abcdefghi  ',
+	 *	 'user_interest' => ' 1, 2'
+	 * );
+	 * 结果：
+	 * $result = array(
+	 *	 'user_loginname' => 'abcdefghi',
+	 *	 'user_interest' => array(1, 2)
+	 * );
+	 *
+	 * 二.清理规则：
+	 * $rules = array(
+	 *	 'user_password' => 'md5',
+	 *	 'user_interest' => array($foo, 'implode')
+	 * );
+	 * 参数：
+	 * $attributes = array(
+	 *	 'user_password' => '  1234  ',
+	 *	 'user_interest' => array(1, 2)
+	 * );
+	 * 结果：
+	 * $result = array(
+	 *	 'user_loginname' => '81dc9bdb52d04dc20036dbd8313ed055',
+	 *	 'user_interest' => '1,2'
+	 * );
+	 * </pre>
+	 * @param array $rules
+	 * @param array $attributes
+	 * @return array
+	 */
+	public static function rules(array $rules, array $attributes)
+	{
+		foreach ($rules as $columnName => $funcName) {
+			if (isset($attributes[$columnName])) {
+				$attributes[$columnName] = call_user_func($funcName, $attributes[$columnName]);
+			}
+		}
+
+		return $attributes;
+	}
+
+	/**
 	 * 清理正整数数据，如果为负数则返回false
 	 * @param integer|array $value
 	 * @return mixed
 	 */
-	public function positiveInteger($value)
+	public static function positiveInteger($value)
 	{
 		if (is_array($value)) {
 			$value = array_map('intval', $value);

@@ -69,7 +69,7 @@ abstract class SingleModify extends Modify
 	 */
 	public function getFuncName()
 	{
-		$funcName = $this->isBatch() ? 'batchModify' : 'modify';
+		$funcName = $this->isBatch() ? 'batchModifyByPk' : 'modifyByPk';
 		return $funcName;
 	}
 

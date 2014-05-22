@@ -123,7 +123,7 @@ abstract class Elements
 	{
 		$urls = $this->getLLUs();
 		$router = $this->module . '_' . $this->controller . '_' . $this->actNameList;
-		$urls[$router] = $this->urlManager->getUrl($this->actNameList, $this->controller, $this->module, $params);
+		$urls[$router] = $this->urlManager->getUrl($this->action, $this->controller, $this->module, $params);
 		while (count($urls) > self::LLU_COOKIE_COUNT) {
 			array_shift($urls);
 		}
