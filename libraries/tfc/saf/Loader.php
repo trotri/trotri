@@ -90,6 +90,11 @@ defined('DIR_SERVICES') || define('DIR_SERVICES', DIR_ROOT . DS . 'services');
 defined('DIR_SERVICES_LANGUAGES') || define('DIR_SERVICES_LANGUAGES', DIR_SERVICES . DS . 'languages');
 
 /**
+ * 公共业务目录
+ */
+defined('DIR_SRV') || define('DIR_SRV', DIR_ROOT . DS . 'srv');
+
+/**
  * 当前项目目录
  */
 defined('DIR_APP') || define('DIR_APP', DIR_ROOT . DS . 'app' . DS . APP_NAME);

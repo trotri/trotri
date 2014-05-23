@@ -424,7 +424,7 @@ class Builders extends BaseService
 	 */
 	public function gc($builderId)
 	{
-		$codeGenerator = new CodeGenerator($builderId);
-		$codeGenerator->run();
+		$gcBuilder = new GcBuilder($builderId);
+		$gcBuilder->run();
 	}
 }

@@ -15,7 +15,7 @@ use libsrv\SModFactory;
 
 /**
  * GcSchema class file
- * 通过Builders数据生成代码
+ * Builders、Types、Groups、Fields、Validators数据寄存器
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: GcSchema.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.service
@@ -53,11 +53,14 @@ class GcSchema
 	public
 		$ucCtrlName        = '',
 		$ucClsName         = '',
+		$upTblName         = '',
+		$langPrev          = '',
 		$actSingleModify   = 'singlemodify',
-		$actTrashindexName = '',
+		$actTrashIndexName = '',
 		$actTrashName      = '',
 		$hasTrash          = false,
-		$hasSort           = false;
+		$hasSort           = false,
+		$pkColumn          = ''; // 将自增类型当主键
 
 	public
 		$types  = array(),  // 表单字段类型
@@ -75,15 +78,17 @@ class GcSchema
 		}
 
 		// 初始化工作开始
-		Log::echoTrace('Initialization Begin ...');
-		$this->_initBuilders()->_initTypes()->_initGroups()->_initFields()->_initValidators()->_initDirs();
-	
-		$this->_builders['act_single_modify'] = 'singlemodify';
-		$this->_builders['act_trashindex_name'] = $this->_hasTrash ? 'trash' . $this->_builders['act_index_name'] : '';
-		$this->_builders['act_trash_name'] = $this->_hasTrash ? 'trash' : '';
-	
+		Log::echoTrace('Initialization GcSchema Begin ...');
+
+		$this->_initBuilders()->_initTypes()->_initGroups()->_initFields()->_initValidators();
+
+		if ($this->hasTrash) {
+			$this->actTrashIndexName = 'trash' . $this->actIndexName;
+			$this->actTrashName = 'trash';
+		}
+
 		// 初始化工作结束
-		Log::echoTrace('Initialization End');
+		Log::echoTrace('Initialization GcSchema End');
 	}
 
 	/**
@@ -125,8 +130,11 @@ class GcSchema
 		$this->description   = $data['description'];
 		$this->authorName    = trim($data['author_name']);
 		$this->authorMail    = trim($data['author_mail']);
+
 		$this->ucClsName     = ucfirst($this->clsName);
 		$this->ucCtrlName    = ucfirst($this->ctrlName);
+		$this->upTblName     = strtoupper($this->tblName);
+		$this->langPrev      = strtoupper('MOD_' . $this->modName . '_' . $this->tblName);
 
 		Log::echoTrace('Query from ' . $tableName . ' Successfully');
 		return $this;
@@ -209,6 +217,132 @@ class GcSchema
 		$data = $object->findAllByAttributes(array('builder_id' => $this->builderId), 'sort', 0, 1000);
 		if ($data === false) {
 			Log::errExit(__LINE__, 'Query from ' . $tableName . ' Failed!');
+		}
+
+		foreach ($data as $rows) {
+			$groupId = (int) $rows['group_id'];
+			$typeId  = (int) $rows['type_id'];
+
+			if (!isset($this->groups[$groupId])) {
+				Log::errExit(__LINE__, 'Fields group_id "' . $groupId . '" Not Exists!');
+			}
+
+			if (!isset($this->types[$typeId])) {
+				Log::errExit(__LINE__, 'Fields type_id "' . $typeId . '" Not Exists!');
+			}
+
+			$temp = array();
+
+			$temp['field_id']              = (int) $rows['field_id'];
+			$temp['field_name']            = strtolower(trim($rows['field_name']));
+			$temp['column_length']         = trim($rows['column_length']);
+			$temp['column_auto_increment'] = ($rows['column_auto_increment'] === 'y' ? true : false);
+			$temp['column_unsigned']       = ($rows['column_unsigned'] === 'y' ? true : false);
+			$temp['column_comment']        = trim($rows['column_comment']);
+			$temp['builder_id']            = (int) $rows['builder_id'];
+			$temp['group_id']              = $groupId;
+			$temp['type_id']               = $typeId;
+			$temp['sort']                  = (int) $rows['sort'];
+			$temp['html_label']            = trim($rows['html_label']);
+			$temp['form_prompt']           = trim($rows['form_prompt']);
+			$temp['form_required']         = ($rows['form_required'] === 'y' ? true : false);
+			$temp['form_modifiable']       = ($rows['form_modifiable'] === 'y' ? true : false);
+			$temp['index_show']            = ($rows['index_show'] === 'y' ? true : false);
+			$temp['index_sort']            = (int) $rows['index_sort'];
+			$temp['form_create_show']      = ($rows['form_create_show'] === 'y' ? true : false);
+			$temp['form_create_sort']      = (int) $rows['form_create_sort'];
+			$temp['form_modify_show']      = ($rows['form_modify_show'] === 'y' ? true : false);
+			$temp['form_modify_sort']      = (int) $rows['form_modify_sort'];
+			$temp['form_search_show']      = ($rows['form_search_show'] === 'y' ? true : false);
+			$temp['form_search_sort']      = (int) $rows['form_search_sort'];
+
+			$temp['func_name']             = str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($temp['field_name']))));
+			$temp['up_field_name']         = strtoupper($temp['field_name']);
+			$temp['lang_label']            = $this->langPrev . '_' . $temp['up_field_name'] . '_LABEL';
+			$temp['lang_hint']             = $this->langPrev . '_' . $temp['up_field_name'] . '_HINT';
+
+			$temp['__tid__']               = $this->groups[$groupId]['group_name'];
+			$temp['form_type']             = $this->types[$typeId]['form_type'];
+			$temp['type_category']         = $this->types[$typeId]['category'];
+			$temp['field_type']            = $this->types[$typeId]['field_type'];
+
+			if ($temp['field_type'] === 'ENUM') {
+				$enums = array();
+				foreach (explode('|', $temp['column_length']) as $value) {
+					$constKey = $temp['up_field_name'] . '_' . strtoupper($value);
+					switch ($value) {
+						case 'y' :
+							$langKey = 'CFG_SYSTEM_GLOBAL_YES';
+							break;
+						case 'n' :
+							$langKey = 'CFG_SYSTEM_GLOBAL_NO';
+							break;
+						default :
+							$langKey = 'SRV_ENUM_' . $this->upTblName . '_' . $constKey;
+					}
+
+					$enums[] = array(
+						'const_key' => $constKey,
+						'lang_key'  => $langKey,
+						'value'     => $value
+					);
+				}
+
+				$temp['enums'] = $enums;
+			}
+
+			if ($temp['field_name'] === 'trash') {
+				$this->hasTrash = true;
+			}
+
+			if ($temp['field_name'] === 'sort') {
+				$this->hasSort = true;
+			}
+
+			if ($temp['column_auto_increment']) {
+				$this->pkColumn = $temp['field_name'];
+			}
+
+			$this->fields[] = $temp;
+		}
+
+		Log::echoTrace('Query from ' . $tableName . ' Successfully');
+		return $this;
+	}
+
+	/**
+	 * 初始化表单字段数据
+	 * @return instance of modules\builder\service\GcSchema
+	 */
+	protected function _initValidators()
+	{
+		$object = SModFactory::getInstance('Validators', self::SRV_NAME);
+		$tableName = $object->getTableName();
+
+		Log::echoTrace('Query from ' . $tableName . ' Begin ...');
+
+		foreach ($this->fields as $key => $fields) {
+			$data = $object->findAllByAttributes(array('field_id' => $fields['field_id']), 'sort', 0, 1000);
+			if ($data === false) {
+				Log::errExit(__LINE__, 'Query from ' . $tableName . ' Failed!');
+			}
+
+			$temp = array();
+			foreach ($data as $rows) {
+				$validatorId = (int) $rows['validator_id'];
+				$validatorName = trim($rows['validator_name']);
+				$temp[$validatorId] = array(
+					'validator_id'    => $validatorId,
+					'validator_name'  => $validatorName,
+					'options'         => $rows['options'],
+					'option_category' => strtolower(trim($rows['option_category'])),
+					'message'         => trim($rows['message']),
+					'when'            => strtolower(trim($rows['when'])),
+					'lang_key'        => 'SRV_FILTER_' . $this->upTblName . '_' . $fields['up_field_name'] . '_' . strtoupper($validatorName)
+				);
+			}
+
+			$this->fields[$key]['validators'] = $temp;
 		}
 
 		Log::echoTrace('Query from ' . $tableName . ' Successfully');

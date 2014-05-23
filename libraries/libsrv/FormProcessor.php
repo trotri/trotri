@@ -45,7 +45,7 @@ abstract class FormProcessor
 	protected $_opType = '';
 
 	/**
-	 * @var libsrv\AbstractModel 寄存业务层的model类实例
+	 * @var libsrv\AbstractService 寄存业务类实例
 	 */
 	protected $_object = null;
 
@@ -66,7 +66,7 @@ abstract class FormProcessor
 
 	/**
 	 * 构造方法：初始化模型类
-	 * @param libsrv\AbstractModel $object
+	 * @param libsrv\AbstractService $object
 	 */
 	public function __construct(AbstractModel $object)
 	{
