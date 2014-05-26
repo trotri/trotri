@@ -22,7 +22,7 @@ use tdo\DynamicDb;
  * @package libsrv
  * @since 1.0
  */
-abstract class DynamicService extends AbstractModel
+abstract class DynamicService extends AbstractService
 {
 	/**
 	 * @var string 缺省的表名与分表数字之间的连接符

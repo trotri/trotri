@@ -24,7 +24,7 @@ use libsrv\AbstractService;
 abstract class BaseModel extends Elements
 {
 	/**
-	 * 查询数据
+	 * 查询数据列表
 	 * @param libsrv\AbstractService $object
 	 * @param array $params
 	 * @param string $order

@@ -60,12 +60,18 @@ class GcSchema
 		$actTrashName      = '',
 		$hasTrash          = false,
 		$hasSort           = false,
-		$pkColumn          = ''; // 将自增类型当主键
+		$pkColumn          = '', // 将自增类型当主键
+		$fkFuncName        = '',
+		$fkVarName         = '';
 
 	public
-		$types  = array(),  // 表单字段类型
-		$groups = array(),  // 表单字段组数据
-		$fields = array();  // 表单字段数据
+		$types             = array(),  // 表单字段类型
+		$groups            = array(),  // 表单字段组数据
+		$fields            = array(),  // 表单字段数据
+		$listIndexColumns  = array(), // 列表模板字段顺序
+		$formViewColumns   = array(), // 详情表单字段顺序
+		$formCreateColumns = array(), // 新增表单字段顺序
+		$formModifyColumns = array(); // 编辑表单字段顺序
 
 	/**
 	 * 构造方法：初始化所有的全局变量
@@ -80,7 +86,13 @@ class GcSchema
 		// 初始化工作开始
 		Log::echoTrace('Initialization GcSchema Begin ...');
 
-		$this->_initBuilders()->_initTypes()->_initGroups()->_initFields()->_initValidators();
+		$this->_initBuilders()->_initTypes()->_initGroups()->_initFields()->_initValidators()->_initViewColumns();
+
+		if ($this->fkColumn) {
+			$this->fkFuncName    = $this->column2Name($this->fkColumn);
+			$this->fkVarName     = '$' . strtolower(substr($this->fkFuncName, 0, 1)) . substr($this->fkFuncName, 1);
+			$this->fkFuncName    = 'get' . $this->fkFuncName;
+		}
 
 		if ($this->hasTrash) {
 			$this->actTrashIndexName = 'trash' . $this->actIndexName;
@@ -195,7 +207,8 @@ class GcSchema
 				'group_id'   => $groupId,
 				'group_name' => trim($rows['group_name']),
 				'prompt'     => trim($rows['prompt']),
-				'is_default' => ((int) $rows['builder_id'] > 0) ? false : true
+				'is_default' => ((int) $rows['builder_id'] > 0) ? false : true,
+				'lang_key' => $this->langPrev . '_VIEWTAB_' . strtoupper($rows['group_name']) . '_PROMPT'
 			);
 		}
 
@@ -256,7 +269,7 @@ class GcSchema
 			$temp['form_search_show']      = ($rows['form_search_show'] === 'y' ? true : false);
 			$temp['form_search_sort']      = (int) $rows['form_search_sort'];
 
-			$temp['func_name']             = str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($temp['field_name']))));
+			$temp['func_name']             = $this->column2Name(strtolower($temp['field_name']));
 			$temp['up_field_name']         = strtoupper($temp['field_name']);
 			$temp['lang_label']            = $this->langPrev . '_' . $temp['up_field_name'] . '_LABEL';
 			$temp['lang_hint']             = $this->langPrev . '_' . $temp['up_field_name'] . '_HINT';
@@ -272,10 +285,10 @@ class GcSchema
 					$constKey = $temp['up_field_name'] . '_' . strtoupper($value);
 					switch ($value) {
 						case 'y' :
-							$langKey = 'CFG_SYSTEM_GLOBAL_YES';
+							$langKey = 'SRV_ENUM_GLOBAL_YES';
 							break;
 						case 'n' :
-							$langKey = 'CFG_SYSTEM_GLOBAL_NO';
+							$langKey = 'SRV_ENUM_GLOBAL_NO';
 							break;
 						default :
 							$langKey = 'SRV_ENUM_' . $this->upTblName . '_' . $constKey;
@@ -347,5 +360,78 @@ class GcSchema
 
 		Log::echoTrace('Query from ' . $tableName . ' Successfully');
 		return $this;
+	}
+
+	/**
+	 * 初始化模板字段顺序
+	 * @return instance of modules\builder\service\GcSchema
+	 */
+	protected function _initViewColumns()
+	{
+		Log::echoTrace('Init View Columns Begin ...');
+
+		$tmpListIndexShows = array();
+		$tmpFormCreateShows = array();
+		$tmpFormModifyShows = array();
+		foreach ($this->fields as $rows) {
+			if ($rows['index_show']) {
+				$tmpListIndexShows[$rows['index_sort']][] = $rows['field_name'];
+			}
+
+			if ($rows['form_create_show']) {
+				$tmpFormCreateShows[$rows['form_create_sort']][] = $rows['field_name'];
+			}
+
+			if ($rows['form_modify_show']) {
+				$tmpFormModifyShows[$rows['form_modify_sort']][] = $rows['field_name'];
+			}
+		}
+
+		ksort($tmpListIndexShows);
+		ksort($tmpFormCreateShows);
+		ksort($tmpFormModifyShows);
+
+		$listIndexShows = array();
+		$formViewShows = array();
+		$formCreateShows = array();
+		$formModifyShows = array();
+		foreach ($tmpListIndexShows as $columnNames) {
+			foreach ($columnNames as $columnName) {
+				$listIndexShows[] = $columnName;
+			}
+		}
+
+		foreach ($this->fields as $rows) {
+			$formViewShows[] = $rows['field_name'];
+		}
+
+		foreach ($tmpFormCreateShows as $columnNames) {
+			foreach ($columnNames as $columnName) {
+				$formCreateShows[] = $columnName;
+			}
+		}
+
+		foreach ($tmpFormModifyShows as $columnNames) {
+			foreach ($columnNames as $columnName) {
+				$formModifyShows[] = $columnName;
+			}
+		}
+
+		$this->listIndexColumns = $listIndexShows;
+		$this->formViewColumns = $formViewShows;
+		$this->formCreateColumns = $formCreateShows;
+		$this->formModifyColumns = $formModifyShows;
+
+		Log::echoTrace('Init View Columns End');
+	}
+
+	/**
+	 * 将字段名格式转换为函数名格式
+	 * @param string $name
+	 * @return string
+	 */
+	public function column2Name($name)
+	{
+		return str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($name))));
 	}
 }

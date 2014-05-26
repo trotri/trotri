@@ -246,7 +246,7 @@ is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entitie
 /**
  * 设置公共框架和代码库目录、当前项目的公共代码库目录、当前项目的所有模块存放目录到PHP INI自动加载目录
  */
-set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_SERVICES . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) 
+set_include_path('.' . PS . DIR_LIBRARIES . PS . DIR_SERVICES . PS . DIR_SRV . PS . DIR_APP . PS . trim(get_include_path(), '.' . PS)) 
  || 
 exit('Request Error, your server configuration not allowed to change PHP include path');
 

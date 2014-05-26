@@ -81,74 +81,247 @@ class GcBuilder
 	 */
 	public function gcViews()
 	{
-		$schema->fkColumn = 'builder_id';
-		$schema->hasTrash = true;
-		$schema->hasSort = true;
-		$schema->actTrashName = 'trash';
-		$schema->actTrashIndexName = 'trashindex';
-
-
 		$fileManager = $this->fileManager;
 		$schema = $this->schema;
+		$upCtrlName = strtoupper($schema->ctrlName);
+		$upModName = strtoupper($schema->modName);
 
 		Log::echoTrace('Generate Views Begin ...');
 
-		$tmpListIndexShows = array();
-		$tmpFormCreateShows = array();
-		$tmpFormModifyShows = array();
-		foreach ($schema->fields as $rows) {
-			if ($rows['index_show']) {
-				$tmpListIndexShows[$rows['index_sort']][] = $rows['field_name'];
-			}
+		// 创建 Sidebar View
+		$tmpFileName = $schema->ctrlName . '_sidebar';
+		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+		$stream = $fileManager->fopen($filePath);
 
-			if ($rows['form_create_show']) {
-				$tmpFormCreateShows[$rows['form_create_sort']][] = $rows['field_name'];
-			}
+		fwrite($stream, "<!-- SideBar -->\n");
+		fwrite($stream, "<div class=\"col-xs-6 col-sm-2 sidebar-offcanvas\" id=\"sidebar\">\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$config = array(\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\components\\bar\\SideBar', array('config' => \$config));\n");
+		fwrite($stream, "?>\n");
+		fwrite($stream, "</div><!-- /.col-xs-6 col-sm-2 -->\n");
+		fwrite($stream, "<!-- /SideBar -->\n\n");
 
-			if ($rows['form_modify_show']) {
-				$tmpFormModifyShows[$rows['form_modify_sort']][] = $rows['field_name'];
+		fwrite($stream, "<?php echo \$this->getHtml()->jsFile(\$this->js_url . '/mods/{$schema->modName}.js?v=' . \$this->version); ?>\n");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Index View Btns
+		$tmpFileName = $schema->ctrlName . '_' . $schema->actIndexName . '_btns';
+		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+		$stream = $fileManager->fopen($filePath);
+		fwrite($stream, "<form class=\"form-inline\">\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'views\\bootstrap\\widgets\\ButtonBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'label' => \$this->MOD_{$upModName}_URLS_{$upCtrlName}_CREATE,\n");
+		fwrite($stream, "\t\t'jsfunc' => \\views\\bootstrap\\components\\ComponentsConstant::JSFUNC_HREF,\n");
+		fwrite($stream, "\t\t'url' => \$this->getUrlManager()->getUrl('{$schema->actCreateName}', '', ''),\n");
+		fwrite($stream, "\t\t'glyphicon' => \\views\\bootstrap\\components\\ComponentsConstant::GLYPHICON_CREATE,\n");
+		fwrite($stream, "\t\t'primary' => true,\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>\n");
+		fwrite($stream, "</form>");
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Index View
+		$tmpFileName = $schema->ctrlName . '_' . $schema->actIndexName;
+		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+		$stream = $fileManager->fopen($filePath);
+
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "use views\\bootstrap\\components\\ComponentsConstant;\n");
+		fwrite($stream, "use views\\bootstrap\\components\\ComponentsBuilder;\n\n");
+		fwrite($stream, "class TableRender extends views\\bootstrap\\components\\TableRender\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\tpublic function getOperate(\$data)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t}\n");
+		fwrite($stream, "}\n\n");
+		fwrite($stream, "\$tblRender = new TableRender(\$this->elements);\n");
+		fwrite($stream, "?>\n\n");
+
+		fwrite($stream, "<?php \$this->display('{$schema->modName}/{$tmpFileName}_btns'); ?>\n\n");
+		fwrite($stream, "<?php\n");
+
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'views\\bootstrap\\widgets\\TableBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'data' => \$this->data,\n");
+		fwrite($stream, "\t\t'table_render' => \$tblRender,\n");
+		fwrite($stream, "\t\t'elements' => array(\n");
+		fwrite($stream, "\t\t),\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($schema->listIndexColumns as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
+		}
+		fwrite($stream, "\t\t\t'_operate_',\n");
+		fwrite($stream, "\t\t),\n");
+		fwrite($stream, "\t\t'checkedToggle' => '{$schema->pkColumn}',\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>\n\n");
+		fwrite($stream, "<?php \$this->display('{$schema->modName}/{$tmpFileName}_btns'); ?>\n\n");
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget(\n");
+		fwrite($stream, "\t'views\\bootstrap\\widgets\\PaginatorBuilder',\n");
+		fwrite($stream, "\t\$this->paginator\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>");
+
+		fclose($stream);
+		Log::echoTrace('Generate App View ' . $tmpFileName . ' Successfully');
+
+		if ($schema->hasTrash) {
+			// 创建 TrashIndex View Btns
+			$tmpFileName = $schema->ctrlName . '_' . $schema->actTrashIndexName . '_btns';
+			$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+			$stream = $fileManager->fopen($filePath);
+			fclose($stream);
+			Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+			// 创建 TrashIndex View
+			$tmpFileName = $schema->ctrlName . '_' . $schema->actTrashIndexName;
+			$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+			$stream = $fileManager->fopen($filePath);
+
+			fwrite($stream, "<?php\n");
+			fwrite($stream, "use views\\bootstrap\\components\\ComponentsConstant;\n");
+			fwrite($stream, "use views\\bootstrap\\components\\ComponentsBuilder;\n\n");
+			fwrite($stream, "class TableRender extends views\\bootstrap\\components\\TableRender\n");
+			fwrite($stream, "{\n");
+			fwrite($stream, "\tpublic function getOperate(\$data)\n");
+			fwrite($stream, "\t{\n");
+			fwrite($stream, "\t}\n");
+			fwrite($stream, "}\n\n");
+			fwrite($stream, "\$tblRender = new TableRender(\$this->elements);\n");
+			fwrite($stream, "?>\n\n");
+
+			fwrite($stream, "<?php \$this->display('{$schema->modName}/{$tmpFileName}_btns'); ?>\n\n");
+			fwrite($stream, "<?php\n");
+
+			fwrite($stream, "\$this->widget(\n");
+			fwrite($stream, "\t'views\\bootstrap\\widgets\\TableBuilder',\n");
+			fwrite($stream, "\tarray(\n");
+			fwrite($stream, "\t\t'data' => \$this->data,\n");
+			fwrite($stream, "\t\t'table_render' => \$tblRender,\n");
+			fwrite($stream, "\t\t'elements' => array(\n");
+			fwrite($stream, "\t\t),\n");
+			fwrite($stream, "\t\t'columns' => array(\n");
+			foreach ($schema->listIndexColumns as $columnName) {
+				fwrite($stream, "\t\t\t'{$columnName}',\n");
 			}
+			fwrite($stream, "\t\t\t'_operate_',\n");
+			fwrite($stream, "\t\t),\n");
+			fwrite($stream, "\t\t'checkedToggle' => '{$schema->pkColumn}',\n");
+			fwrite($stream, "\t)\n");
+			fwrite($stream, ");\n");
+			fwrite($stream, "?>\n\n");
+			fwrite($stream, "<?php \$this->display('{$schema->modName}/{$tmpFileName}_btns'); ?>\n\n");
+			fwrite($stream, "<?php\n");
+			fwrite($stream, "\$this->widget(\n");
+			fwrite($stream, "\t'views\\bootstrap\\widgets\\PaginatorBuilder',\n");
+			fwrite($stream, "\t\$this->paginator\n");
+			fwrite($stream, ");\n");
+			fwrite($stream, "?>");
+
+			fclose($stream);
+			Log::echoTrace('Generate App View ' . $tmpFileName . ' Successfully');
 		}
 
-		ksort($tmpListIndexShows);
-		ksort($tmpFormCreateShows);
-		ksort($tmpFormModifyShows);
+		// 创建 View View
+		$tmpFileName = $schema->ctrlName . '_' . $schema->actViewName;
+		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+		$stream = $fileManager->fopen($filePath);
 
-		$listIndexShows = array();
-		$formCreateShows = array();
-		$formModifyShows = array();
-		foreach ($tmpListIndexShows as $columnNames) {
-			foreach ($columnNames as $columnName) {
-				$listIndexShows[] = $columnName;
-			}
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\widgets\\ViewBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'view',\n");
+		fwrite($stream, "\t\t'values' => \$this->data,\n");
+		fwrite($stream, "\t\t'elements_object' => \$this->elements,\n");
+		fwrite($stream, "\t\t'elements' => array(\n");
+		fwrite($stream, "\t\t),\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($schema->formViewColumns as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
 		}
+		fwrite($stream, "\t\t\t'_button_history_back_'\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>");
 
-		foreach ($tmpFormCreateShows as $columnNames) {
-			foreach ($columnNames as $columnName) {
-				$formCreateShows[] = $columnName;
-			}
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Create View
+		$tmpFileName = $schema->ctrlName . '_' . $schema->actCreateName;
+		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+		$stream = $fileManager->fopen($filePath);
+
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\widgets\\FormBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'create',\n");
+		fwrite($stream, "\t\t'action' => \$this->getUrlManager()->getUrl(\$this->action),\n");
+		fwrite($stream, "\t\t'errors' => \$this->errors,\n");
+		fwrite($stream, "\t\t'elements_object' => \$this->elements,\n");
+		fwrite($stream, "\t\t'elements' => array(\n");
+		fwrite($stream, "\t\t),\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($schema->formCreateColumns as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
 		}
+		fwrite($stream, "\t\t\t'_button_save_',\n");
+		fwrite($stream, "\t\t\t'_button_saveclose_',\n");
+		fwrite($stream, "\t\t\t'_button_savenew_',\n");
+		fwrite($stream, "\t\t\t'_button_cancel_'\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>");
 
-		foreach ($tmpFormModifyShows as $columnNames) {
-			foreach ($columnNames as $columnName) {
-				$formModifyShows[] = $columnName;
-			}
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
+
+		// 创建 Modify View
+		$tmpFileName = $schema->ctrlName . '_' . $schema->actModifyName;
+		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
+		$stream = $fileManager->fopen($filePath);
+
+		fwrite($stream, "<?php\n");
+		fwrite($stream, "\$this->widget('views\\bootstrap\\widgets\\FormBuilder',\n");
+		fwrite($stream, "\tarray(\n");
+		fwrite($stream, "\t\t'name' => 'modify',\n");
+		fwrite($stream, "\t\t'action' => \$this->getUrlManager()->getUrl(\$this->action, '', '', array('id' => \$this->id)),\n");
+		fwrite($stream, "\t\t'errors' => \$this->errors,\n");
+		fwrite($stream, "\t\t'values' => \$this->data,\n");
+		fwrite($stream, "\t\t'elements_object' => \$this->elements,\n");
+		fwrite($stream, "\t\t'elements' => array(\n");
+		fwrite($stream, "\t\t),\n");
+		fwrite($stream, "\t\t'columns' => array(\n");
+		foreach ($schema->formModifyColumns as $columnName) {
+			fwrite($stream, "\t\t\t'{$columnName}',\n");
 		}
+		fwrite($stream, "\t\t\t'_button_save_',\n");
+		fwrite($stream, "\t\t\t'_button_saveclose_',\n");
+		fwrite($stream, "\t\t\t'_button_savenew_',\n");
+		fwrite($stream, "\t\t\t'_button_cancel_'\n");
+		fwrite($stream, "\t\t)\n");
+		fwrite($stream, "\t)\n");
+		fwrite($stream, ");\n");
+		fwrite($stream, "?>");
 
-		
+		fclose($stream);
+		Log::echoTrace('Generate App View ' .$tmpFileName . ' Successfully');
 
 		Log::echoTrace('Generate Views End');
-
-		echo '<pre>';
-
-		print_r($listIndexShows);
-		print_r($formCreateShows);
-		print_r($formModifyShows);
-
-		print_r($fileManager);
-		print_r($schema);
-
-		echo '</pre>';
 	}
 
 	/**
@@ -181,14 +354,11 @@ class GcBuilder
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
 		if ($schema->fkColumn) {
-			$funcName = $this->column2Name($schema->fkColumn);
-			$varName = '$' . strtolower(substr($funcName, 0, 1)) . substr($funcName, 1);
-
-			fwrite($stream, "\t\t{$varName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
-			fwrite($stream, "\t\tif ({$varName} <= 0) {\n");
+			fwrite($stream, "\t\t{$schema->fkVarName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
+			fwrite($stream, "\t\tif ({$schema->fkVarName} <= 0) {\n");
 			fwrite($stream, "\t\t\t\$this->err404();\n");
 			fwrite($stream, "\t\t}\n\n");
-			fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$varName});\n\n");
+			fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$schema->fkVarName});\n\n");
 		}
 		if ($schema->hasTrash) {
 			fwrite($stream, "\t\tAp::getRequest()->setParam('trash', 'n');\n");
@@ -222,14 +392,11 @@ class GcBuilder
 			fwrite($stream, "\tpublic function run()\n");
 			fwrite($stream, "\t{\n");
 			if ($schema->fkColumn) {
-				$funcName = $this->column2Name($schema->fkColumn);
-				$varName = '$' . strtolower(substr($funcName, 0, 1)) . substr($funcName, 1);
-
-				fwrite($stream, "\t\t{$varName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
-				fwrite($stream, "\t\tif ({$varName} <= 0) {\n");
+				fwrite($stream, "\t\t{$schema->fkVarName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
+				fwrite($stream, "\t\tif ({$schema->fkVarName} <= 0) {\n");
 				fwrite($stream, "\t\t\t\$this->err404();\n");
 				fwrite($stream, "\t\t}\n\n");
-				fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$varName});\n\n");
+				fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$schema->fkVarName});\n\n");
 			}
 			fwrite($stream, "\t\tAp::getRequest()->setParam('trash', 'y');\n");
 			if ($schema->hasSort) {
@@ -265,15 +432,12 @@ class GcBuilder
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
 		if ($schema->fkColumn) {
-			$funcName = $this->column2Name($schema->fkColumn);
-			$varName = '$' . strtolower(substr($funcName, 0, 1)) . substr($funcName, 1);
-
 			fwrite($stream, "\t\t\$mod = Model::getInstance('{$schema->ucClsName}');\n");
-			fwrite($stream, "\t\t{$varName} = \$mod->get{$funcName}();\n");
-			fwrite($stream, "\t\tif ({$varName} <= 0) {\n");
+			fwrite($stream, "\t\t{$schema->fkVarName} = \$mod->{$schema->fkFuncName}();\n");
+			fwrite($stream, "\t\tif ({$schema->fkVarName} <= 0) {\n");
 			fwrite($stream, "\t\t\t\$this->err404();\n");
 			fwrite($stream, "\t\t}\n\n");
-			fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$varName});\n");
+			fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$schema->fkVarName});\n");
 		}
 		fwrite($stream, "\t\t\$this->execute('{$schema->ucClsName}');\n");
 		fwrite($stream, "\t}\n");
@@ -304,15 +468,12 @@ class GcBuilder
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
 		if ($schema->fkColumn) {
-			$funcName = $this->column2Name($schema->fkColumn);
-			$varName = '$' . strtolower(substr($funcName, 0, 1)) . substr($funcName, 1);
-
 			fwrite($stream, "\t\t\$mod = Model::getInstance('{$schema->ucClsName}');\n");
-			fwrite($stream, "\t\t{$varName} = \$mod->get{$funcName}();\n");
-			fwrite($stream, "\t\tif ({$varName} <= 0) {\n");
+			fwrite($stream, "\t\t{$schema->fkVarName} = \$mod->{$schema->fkFuncName}();\n");
+			fwrite($stream, "\t\tif ({$schema->fkVarName} <= 0) {\n");
 			fwrite($stream, "\t\t\t\$this->err404();\n");
 			fwrite($stream, "\t\t}\n\n");
-			fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$varName});\n");
+			fwrite($stream, "\t\t\$this->assign('{$schema->fkColumn}', {$schema->fkVarName});\n");
 		}
 		fwrite($stream, "\t\t\$this->execute('{$schema->ucClsName}');\n");
 		fwrite($stream, "\t}\n");
@@ -539,21 +700,18 @@ class GcBuilder
 		fwrite($stream, "\t}\n\n");
 
 		if ($schema->fkColumn) {
-			$funcName = $this->column2Name($schema->fkColumn);
-			$varName = '$' . strtolower(substr($funcName, 0, 1)) . substr($funcName, 1);
-
 			fwrite($stream, "\t/**\n");
 			fwrite($stream, "\t * 获取{$schema->fkColumn}值\n");
 			fwrite($stream, "\t * @return integer\n");
 			fwrite($stream, "\t */\n");
-			fwrite($stream, "\tpublic function get{$funcName}()\n");
+			fwrite($stream, "\tpublic function {$schema->fkFuncName}()\n");
 			fwrite($stream, "\t{\n");
-			fwrite($stream, "\t\t{$varName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
-			fwrite($stream, "\t\tif ({$varName} <= 0) {\n");
+			fwrite($stream, "\t\t{$schema->fkVarName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
+			fwrite($stream, "\t\tif ({$schema->fkVarName} <= 0) {\n");
 			fwrite($stream, "\t\t\t\$id = Ap::getRequest()->getInteger('id');\n");
-			fwrite($stream, "\t\t\t{$varName} = \$this->getService()->getByPk('{$schema->fkColumn}', \$id);\n");
+			fwrite($stream, "\t\t\t{$schema->fkVarName} = \$this->getService()->getByPk('{$schema->fkColumn}', \$id);\n");
 			fwrite($stream, "\t\t}\n\n");
-			fwrite($stream, "\t\treturn {$varName};\n");
+			fwrite($stream, "\t\treturn {$schema->fkVarName};\n");
 			fwrite($stream, "\t}\n\n");
 		}
 
@@ -623,7 +781,7 @@ class GcBuilder
 		foreach ($schema->fields as $rows) {
 			if (isset($rows['enums'])) {
 				foreach ($rows['enums'] as $enums) {
-					if ($enums['lang_key'] !== 'CFG_SYSTEM_GLOBAL_YES' && $enums['lang_key'] !== 'CFG_SYSTEM_GLOBAL_NO') {
+					if ($enums['lang_key'] !== 'SRV_ENUM_GLOBAL_YES' && $enums['lang_key'] !== 'SRV_ENUM_GLOBAL_NO') {
 						fwrite($stream, "{$enums['lang_key']}=\"{$enums['value']}\"\n");
 					}
 				}
@@ -881,15 +1039,5 @@ class GcBuilder
 
 		fclose($stream);
 		Log::echoTrace('Generate Db End');
-	}
-
-	/**
-	 * 将字段名格式转换为函数名格式
-	 * @param string $name
-	 * @return string
-	 */
-	public function column2Name($name)
-	{
-		return str_replace(' ', '', ucwords(str_replace('_', ' ', strtolower($name))));
 	}
 }

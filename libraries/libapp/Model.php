@@ -40,7 +40,7 @@ class Model
 		}
 
 		if (!self::has($className, $moduleName)) {
-			$className = 'modules\\' . $moduleName . '\\models\\' . $className;
+			$className = 'modules\\' . $moduleName . '\\model\\' . $className;
 			self::set($className, $moduleName, new $className());
 		}
 
