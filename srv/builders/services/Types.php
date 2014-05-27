@@ -14,7 +14,7 @@ use libsrv\DynamicService;
 
 /**
  * Types class file
- * 业务层：模型类
+ * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Types.php 1 2014-05-26 19:27:28Z Code Generator $
  * @package builders.services
@@ -26,4 +26,14 @@ class Types extends DynamicService
 	 * @var string 表名
 	 */
 	protected $_tableName = 'builder_types';
+
+	/**
+	 * 获取所有的TypeName
+	 * @return array
+	 */
+	public function getTypeNames()
+	{
+		$rows = (array) $this->findPairsByAttributes(array('type_id', 'type_name'), array(), 'sort');
+		return $rows;
+	}
 }

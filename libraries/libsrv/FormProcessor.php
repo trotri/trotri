@@ -68,7 +68,7 @@ abstract class FormProcessor
 	 * 构造方法：初始化模型类
 	 * @param libsrv\AbstractService $object
 	 */
-	public function __construct(AbstractModel $object)
+	public function __construct(AbstractService $object)
 	{
 		$this->_object = $object;
 	}
@@ -163,7 +163,7 @@ abstract class FormProcessor
 			}
 
 			if (!isset($params[$columnName])) {
-				$this->addError($columnName, 'the column name "%s" of attributes is undefined');
+				$this->addError($columnName, sprintf('the column name "%s" of attributes is undefined', $columnName));
 				$result = false;
 			}
 		}

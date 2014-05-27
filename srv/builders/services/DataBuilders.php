@@ -78,6 +78,21 @@ class DataBuilders
 	const TRASH_N = 'n';
 
 	/**
+	 * @var string 数据列表每行操作Btn：pencil
+	 */
+	const INDEX_ROW_BTNS_PENCIL = 'pencil';
+
+	/**
+	 * @var string 数据列表每行操作Btn：trash
+	 */
+	const INDEX_ROW_BTNS_TRASH = 'trash';
+
+	/**
+	 * @var string 数据列表每行操作Btn：remove
+	 */
+	const INDEX_ROW_BTNS_REMOVE = 'remove';
+
+	/**
 	 * 获取“是否生成扩展表”所有选项
 	 * @return array
 	 */
@@ -168,4 +183,22 @@ class DataBuilders
 		return $enum;
 	}
 
+	/**
+	 * 获取“数据列表每行操作Btn”所有选项
+	 * @return array
+	 */
+	public static function getIndexRowBtnsEnum()
+	{
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::INDEX_ROW_BTNS_PENCIL => Lang::_('SRV_ENUM_BUILDERS_INDEX_ROW_BTNS_PENCIL'),
+				self::INDEX_ROW_BTNS_TRASH => Lang::_('SRV_ENUM_BUILDERS_INDEX_ROW_BTNS_TRASH'),
+				self::INDEX_ROW_BTNS_REMOVE => Lang::_('SRV_ENUM_BUILDERS_INDEX_ROW_BTNS_REMOVE'),
+			);
+		}
+
+		return $enum;
+	}
 }

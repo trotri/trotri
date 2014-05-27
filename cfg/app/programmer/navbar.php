@@ -11,28 +11,28 @@
 return array(
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX',
-			'm' => 'ucenter', 'c' => 'users', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
+			'm' => 'builder', 'c' => 'builders', 'a' => 'index'
 		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_INDEX',
-			'm' => 'ucenter', 'c' => 'users', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
+			'm' => 'builder', 'c' => 'builders', 'a' => 'index',
 			'icon' => array(
-				'label' => 'CFG_SYSTEM_URLS_UCENTER_USERS_CREATE',
-				'm' => 'ucenter', 'c' => 'users', 'a' => 'create'
+				'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE',
+				'm' => 'builder', 'c' => 'builders', 'a' => 'create'
 			)
 		),
 		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_INDEX',
-			'm' => 'ucenter', 'c' => 'groups', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_INDEX',
+			'm' => 'builder', 'c' => 'types', 'a' => 'index',
 			'icon' => array(
-				'label' => 'CFG_SYSTEM_URLS_UCENTER_GROUPS_CREATE',
-				'm' => 'ucenter', 'c' => 'groups', 'a' => 'create',
+				'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_CREATE',
+				'm' => 'builder', 'c' => 'types', 'a' => 'create',
 			)
 		),
 		3 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER_AMCAS_INDEX',
-			'm' => 'user', 'c' => 'amcas', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_TBLNAMES_INDEX',
+			'm' => 'builder', 'c' => 'tblnames', 'a' => 'index',
 		),
 	),
 	array(
@@ -43,8 +43,8 @@ return array(
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_RDTOOL',
-			'm' => 'rdtool', 'c' => 'site', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_UCENTER',
+			'm' => 'ucenter', 'c' => 'site', 'a' => 'index'
 		)
 	),
 );

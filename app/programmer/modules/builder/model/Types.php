@@ -113,6 +113,25 @@ class Types extends BaseModel
 	}
 
 	/**
+	 * 通过“类型ID”获取“类型名”
+	 * @param integer $typeId
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($typeId)
+	{
+		return $this->getService()->getByPk('type_name', $typeId);
+	}
+
+	/**
+	 * 获取所有的TypeName
+	 * @return array
+	 */
+	public function getTypeNames()
+	{
+		return $this->getService()->getTypeNames();
+	}
+
+	/**
 	 * 查询数据列表
 	 * @param array $params
 	 * @param string $order

@@ -71,6 +71,10 @@ abstract class Index extends ShowAction
 			$attributes['order'] = $order;
 		}
 
+		if ($listRows <= 0) {
+			return $attributes;
+		}
+
 		if ($listRows !== (int) Cfg::getApp('list_rows', 'paginator')) {
 			$attributes[PageHelper::getListRowsVar()] = $listRows;
 		}

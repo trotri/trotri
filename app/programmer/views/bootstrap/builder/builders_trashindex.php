@@ -4,8 +4,24 @@ use views\bootstrap\components\ComponentsBuilder;
 
 class TableRender extends views\bootstrap\components\TableRender
 {
+	public function getBuilderNameLink($data)
+	{
+		return $this->elements_object->getBuilderNameLink($data);
+	}
+
+	public function getTblProfile($data)
+	{
+		return $this->elements_object->getTblProfileLangByTblProfile($data['tbl_profile']);
+	}
+
 	public function getOperate($data)
 	{
+		$params = array('id' => $data['builder_id']);
+		$removeIcon = $this->getRemoveIcon($params);
+		$restoreIcon = $this->getRestoreIcon($params);
+
+		$output = $restoreIcon . $removeIcon;
+		return $output;
 	}
 }
 
@@ -21,6 +37,9 @@ $this->widget(
 		'data' => $this->data,
 		'table_render' => $tblRender,
 		'elements' => array(
+			'tbl_profile' => array(
+				'callback' => 'getTblProfile'
+			),
 		),
 		'columns' => array(
 			'builder_name',

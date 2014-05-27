@@ -243,9 +243,7 @@ class FpBuilders extends FormProcessor
 	 */
 	public function getFkColumnRule($value)
 	{
-		if ($value === '') {
-			return array();
-		}
+		if ($value === '') { return array(); }
 
 		return array(
 			'AlphaNum' => new AlphaNumValidator($value, true, Lang::_('MOD_FILTER_BUILDERS_FK_COLUMN_ALPHANUM')),

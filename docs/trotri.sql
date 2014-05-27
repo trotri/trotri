@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50141
 File Encoding         : 65001
 
-Date: 2014-05-26 19:39:52
+Date: 2014-05-27 19:48:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,7 +29,7 @@ CREATE TABLE `tr_builder_field_groups` (
   KEY `group_name` (`group_name`),
   KEY `builder_id` (`builder_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
 -- ----------------------------
 -- Records of tr_builder_field_groups
@@ -37,6 +37,7 @@ CREATE TABLE `tr_builder_field_groups` (
 INSERT INTO `tr_builder_field_groups` VALUES ('1', 'main', '主要信息', '0', '1', '默认');
 INSERT INTO `tr_builder_field_groups` VALUES ('2', 'act', '行动名', '2', '1', '');
 INSERT INTO `tr_builder_field_groups` VALUES ('3', 'system', '系统信息', '2', '2', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('4', 'view', '展示信息', '4', '1', '');
 
 -- ----------------------------
 -- Table structure for `tr_builder_field_validators`
@@ -55,7 +56,7 @@ CREATE TABLE `tr_builder_field_validators` (
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
 
 -- ----------------------------
 -- Records of tr_builder_field_validators
@@ -117,6 +118,34 @@ INSERT INTO `tr_builder_field_validators` VALUES ('54', 'InArray', '14', '', 'ar
 INSERT INTO `tr_builder_field_validators` VALUES ('55', 'Alpha', '15', '', 'boolean', '业务名只能由英文字母组成.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('56', 'MinLength', '15', '2', 'integer', '业务名长度不能小于%option%个字符.', '2', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('57', 'MaxLength', '15', '50', 'integer', '业务名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('58', 'Alpha', '34', '', 'boolean', '组名只能由英文字母组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('59', 'MinLength', '34', '2', 'integer', '组名长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('60', 'MaxLength', '34', '12', 'integer', '组名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('61', 'MinLength', '35', '2', 'integer', '提示长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('62', 'MaxLength', '35', '12', 'integer', '提示长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('63', 'Integer', '36', '', 'boolean', '生成代码ID只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('64', 'Numeric', '37', '', 'boolean', '排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('65', 'AlphaNum', '40', '', 'boolean', '字段名只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('66', 'MinLength', '40', '2', 'integer', '字段名长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('67', 'MaxLength', '40', '50', 'integer', '字段名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('68', 'InArray', '42', '', 'array', '必须选择是否自动递增，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('69', 'InArray', '43', '', 'array', '必须选择是否无符号，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('70', 'NotEmpty', '44', '', 'boolean', '必须填写DB字段描述.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('71', 'Integer', '45', '', 'boolean', '生成代码ID只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('72', 'InArray', '46', '', 'array', '您选择的表单字段组不存在或已被删除.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('73', 'InArray', '47', '', 'integer', '您选择的字段类型不存在或已被删除.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('74', 'Numeric', '48', '', 'boolean', '排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('75', 'NotEmpty', '49', '', 'boolean', '必须填写Table和Form显示名.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('76', 'InArray', '51', '', 'array', '必须选择表单是否必填，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('77', 'InArray', '52', '', 'array', '必须选择编辑表单中是否允许输入，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('78', 'InArray', '53', '', 'array', '必须选择是否在列表中展示，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('79', 'Numeric', '54', '', 'boolean', '在列表中排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('80', 'InArray', '55', '', 'array', '必须选择是否在新增表单中展示，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('81', 'Numeric', '56', '', 'boolean', '在新增表单中排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('82', 'InArray', '57', '', 'array', '必须选择是否在编辑表单中展示，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('83', 'Numeric', '58', '', 'boolean', '在编辑表单中排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('84', 'InArray', '59', '', 'array', '必须选择是否在查询表单中展示，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('85', 'Numeric', '60', '', 'boolean', '在查询表单中排序只能是数字.', '1', 'all');
 
 -- ----------------------------
 -- Table structure for `tr_builder_fields`
@@ -155,7 +184,7 @@ CREATE TABLE `tr_builder_fields` (
   KEY `form_create_sort` (`form_create_sort`),
   KEY `form_modify_sort` (`form_modify_sort`),
   KEY `form_search_sort` (`form_search_sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
 -- ----------------------------
 -- Records of tr_builder_fields
@@ -179,25 +208,55 @@ INSERT INTO `tr_builder_fields` VALUES ('16', 'app_name', '100', 'n', 'n', '应�
 INSERT INTO `tr_builder_fields` VALUES ('17', 'mod_name', '100', 'n', 'n', '模块名', '2', '1', '1', '11', '模块名', '模块名由2~50个英文字母组成.', 'y', 'n', 'y', '11', 'y', '11', 'y', '11', 'y', '11');
 INSERT INTO `tr_builder_fields` VALUES ('18', 'cls_name', '100', 'n', 'n', '类名', '2', '1', '1', '12', '类名', '类名由2~12个英文字母组成.', 'y', 'n', 'y', '12', 'y', '12', 'y', '12', 'y', '12');
 INSERT INTO `tr_builder_fields` VALUES ('19', 'ctrl_name', '100', 'n', 'n', '控制器名', '2', '1', '1', '13', '控制器名', '控制器名由2~12个英文字母组成.', 'y', 'n', 'y', '13', 'y', '13', 'y', '13', 'y', '13');
-INSERT INTO `tr_builder_fields` VALUES ('20', 'fk_column', '100', 'n', 'n', '外联其他表的字段名', '2', '1', '1', '14', '外联其他表的字段名', '外联其他表的字段名由2~50个英文字母、数字或下划线组成.', 'y', 'n', 'n', '14', 'y', '14', 'y', '14', 'y', '14');
-INSERT INTO `tr_builder_fields` VALUES ('21', 'act_index_name', '100', 'n', 'n', '行动名-数据列表', '2', '1', '1', '15', '数据列表行动名', '数据列表行动名由2~12个英文字母组成.', 'y', 'n', 'n', '15', 'y', '15', 'y', '15', 'y', '15');
-INSERT INTO `tr_builder_fields` VALUES ('22', 'act_view_name', '100', 'n', 'n', '行动名-数据详情', '2', '1', '1', '16', '数据详情行动名', '数据详情行动名由2~12个英文字母组成.', 'y', 'n', 'n', '16', 'y', '16', 'y', '16', 'y', '16');
-INSERT INTO `tr_builder_fields` VALUES ('23', 'act_create_name', '100', 'n', 'n', '行动名-新增数据', '2', '1', '1', '17', '新增数据行动名', '新增数据行动名由2~12个英文字母组成.', 'y', 'n', 'n', '17', 'y', '17', 'y', '17', 'y', '17');
-INSERT INTO `tr_builder_fields` VALUES ('24', 'act_modify_name', '100', 'n', 'n', '行动名-编辑数据', '2', '1', '1', '18', '编辑数据行动名', '编辑数据行动名由2~12个英文字母组成.', 'y', 'n', 'n', '18', 'y', '18', 'y', '18', 'y', '18');
-INSERT INTO `tr_builder_fields` VALUES ('25', 'act_remove_name', '100', 'n', 'n', '行动名-删除数据', '2', '1', '1', '19', '删除数据行动名', '删除数据行动名由2~12个英文字母组成.', 'y', 'n', 'n', '19', 'y', '19', 'y', '19', 'y', '19');
-INSERT INTO `tr_builder_fields` VALUES ('26', 'index_row_btns', '100', 'n', 'n', '数据列表每行操作Btn，编辑：pencil、移至回收站：trash、彻底删除：remove', '2', '1', '1', '20', '数据列表每行操作Btn', '', 'y', 'n', 'n', '20', 'y', '20', 'y', '20', 'y', '20');
-INSERT INTO `tr_builder_fields` VALUES ('27', 'description', '', 'n', 'n', '描述', '2', '1', '1', '21', '描述', '', 'y', 'n', 'n', '21', 'y', '21', 'y', '21', 'y', '21');
+INSERT INTO `tr_builder_fields` VALUES ('20', 'fk_column', '100', 'n', 'n', '外联其他表的字段名', '2', '1', '1', '14', '外联其他表的字段名', '外联其他表的字段名由2~50个英文字母、数字或下划线组成.', 'n', 'n', 'n', '14', 'y', '14', 'y', '14', 'y', '14');
+INSERT INTO `tr_builder_fields` VALUES ('21', 'act_index_name', '100', 'n', 'n', '行动名-数据列表', '2', '2', '1', '15', '数据列表行动名', '数据列表行动名由2~12个英文字母组成.', 'y', 'n', 'n', '15', 'y', '15', 'y', '15', 'y', '15');
+INSERT INTO `tr_builder_fields` VALUES ('22', 'act_view_name', '100', 'n', 'n', '行动名-数据详情', '2', '2', '1', '16', '数据详情行动名', '数据详情行动名由2~12个英文字母组成.', 'y', 'n', 'n', '16', 'y', '16', 'y', '16', 'y', '16');
+INSERT INTO `tr_builder_fields` VALUES ('23', 'act_create_name', '100', 'n', 'n', '行动名-新增数据', '2', '2', '1', '17', '新增数据行动名', '新增数据行动名由2~12个英文字母组成.', 'y', 'n', 'n', '17', 'y', '17', 'y', '17', 'y', '17');
+INSERT INTO `tr_builder_fields` VALUES ('24', 'act_modify_name', '100', 'n', 'n', '行动名-编辑数据', '2', '2', '1', '18', '编辑数据行动名', '编辑数据行动名由2~12个英文字母组成.', 'y', 'n', 'n', '18', 'y', '18', 'y', '18', 'y', '18');
+INSERT INTO `tr_builder_fields` VALUES ('25', 'act_remove_name', '100', 'n', 'n', '行动名-删除数据', '2', '2', '1', '19', '删除数据行动名', '删除数据行动名由2~12个英文字母组成.', 'y', 'n', 'n', '19', 'y', '19', 'y', '19', 'y', '19');
+INSERT INTO `tr_builder_fields` VALUES ('26', 'index_row_btns', '100', 'n', 'n', '数据列表每行操作Btn，编辑：pencil、移至回收站：trash、彻底删除：remove', '2', '1', '6', '20', '数据列表每行操作Btn', '', 'n', 'n', 'n', '20', 'y', '20', 'y', '20', 'y', '20');
+INSERT INTO `tr_builder_fields` VALUES ('27', 'description', '', 'n', 'n', '描述', '2', '1', '10', '21', '描述', '', 'n', 'n', 'n', '21', 'y', '21', 'y', '21', 'y', '21');
 INSERT INTO `tr_builder_fields` VALUES ('28', 'author_name', '100', 'n', 'n', '作者姓名，代码注释用', '2', '1', '1', '22', '作者姓名，代码注释用', '作者姓名，代码注释用由2~50个字符组成.', 'y', 'n', 'n', '22', 'y', '22', 'y', '22', 'y', '22');
 INSERT INTO `tr_builder_fields` VALUES ('29', 'author_mail', '100', 'n', 'n', '作者邮箱，代码注释用', '2', '1', '1', '23', '作者邮箱，代码注释用', '作者邮箱，代码注释用由2~50个字符组成.', 'y', 'n', 'n', '23', 'y', '23', 'y', '23', 'y', '23');
-INSERT INTO `tr_builder_fields` VALUES ('30', 'dt_created', '', 'n', 'n', '创建时间', '2', '1', '1', '24', '创建时间', '', 'y', 'n', 'n', '24', 'y', '24', 'y', '24', 'y', '24');
-INSERT INTO `tr_builder_fields` VALUES ('31', 'dt_modified', '', 'n', 'n', '上次编辑时间', '2', '1', '1', '25', '上次编辑时间', '', 'y', 'n', 'n', '25', 'y', '25', 'y', '25', 'y', '25');
+INSERT INTO `tr_builder_fields` VALUES ('30', 'dt_created', '', 'n', 'n', '创建时间', '2', '3', '1', '24', '创建时间', '', 'n', 'y', 'n', '24', 'y', '24', 'y', '24', 'y', '24');
+INSERT INTO `tr_builder_fields` VALUES ('31', 'dt_modified', '', 'n', 'n', '上次编辑时间', '2', '3', '1', '25', '上次编辑时间', '', 'n', 'y', 'n', '25', 'y', '25', 'y', '25', 'y', '25');
 INSERT INTO `tr_builder_fields` VALUES ('32', 'trash', 'y|n', 'n', 'n', '是否删除', '2', '1', '4', '26', '移至回收站', '', 'n', 'n', 'n', '26', 'n', '26', 'n', '26', 'y', '26');
-INSERT INTO `tr_builder_fields` VALUES ('33', 'group_id', '5', 'y', 'y', '主键ID', '3', '1', '9', '1', '主键ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
-INSERT INTO `tr_builder_fields` VALUES ('34', 'group_name', '100', 'n', 'n', '组名', '3', '1', '1', '2', '组名', '', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
-INSERT INTO `tr_builder_fields` VALUES ('35', 'prompt', '100', 'n', 'n', '提示', '3', '1', '1', '3', '提示', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('33', 'group_id', '5', 'y', 'y', '主键ID', '3', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('34', 'group_name', '100', 'n', 'n', '组名', '3', '1', '1', '2', '组名', '组名由2~12个英文字母组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('35', 'prompt', '100', 'n', 'n', '提示', '3', '1', '1', '3', '提示', '提示由2~12个字符组成.', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
 INSERT INTO `tr_builder_fields` VALUES ('36', 'builder_id', '5', 'n', 'y', '生成代码ID', '3', '1', '2', '4', '生成代码ID', '', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
-INSERT INTO `tr_builder_fields` VALUES ('37', 'sort', '5', 'n', 'y', '排序', '3', '1', '2', '5', '排序', '', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
-INSERT INTO `tr_builder_fields` VALUES ('38', 'description', '', 'n', 'n', '描述', '3', '1', '1', '6', '描述', '', 'y', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('37', 'sort', '5', 'n', 'y', '排序', '3', '1', '2', '5', '排序', '排序由数字组成且数字越小位置越靠前.', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('38', 'description', '', 'n', 'n', '描述', '3', '1', '10', '6', '描述', '', 'n', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('39', 'field_id', '10', 'y', 'y', '主键ID', '4', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('40', 'field_name', '100', 'n', 'n', '字段名', '4', '1', '1', '2', '字段名', '字段名由2~50个英文字母、数字或下划线组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('41', 'column_length', '200', 'n', 'n', 'DB字段长度或用|分隔开的Enum值', '4', '1', '1', '3', 'DB字段长度或用|分隔开的Enum值', '', 'n', 'n', 'n', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('42', 'column_auto_increment', 'y|n', 'n', 'n', '是否自动递增', '4', '1', '4', '4', '是否自动递增', '', 'n', 'n', 'n', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('43', 'column_unsigned', 'y|n', 'n', 'n', '是否无符号', '4', '1', '4', '5', '是否无符号', '', 'n', 'n', 'n', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('44', 'column_comment', '200', 'n', 'n', 'DB字段描述', '4', '1', '1', '6', 'DB字段描述', '', 'y', 'n', 'n', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('45', 'builder_id', '5', 'n', 'y', '生成代码ID', '4', '1', '9', '7', '生成代码ID', '', 'n', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('46', 'group_id', '10', 'n', 'y', '表单字段组ID', '4', '1', '7', '8', '表单字段组ID', '', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
+INSERT INTO `tr_builder_fields` VALUES ('47', 'type_id', '5', 'n', 'y', '字段类型ID', '4', '1', '7', '9', '字段类型ID', '', 'n', 'n', 'y', '9', 'y', '9', 'y', '9', 'y', '9');
+INSERT INTO `tr_builder_fields` VALUES ('48', 'sort', '5', 'n', 'y', '排序', '4', '1', '2', '10', '排序', '排序由数字组成且数字越小位置越靠前.', 'y', 'n', 'y', '10', 'y', '10', 'y', '10', 'y', '10');
+INSERT INTO `tr_builder_fields` VALUES ('49', 'html_label', '100', 'n', 'n', 'HTML：Table和Form显示名', '4', '4', '1', '11', 'Table和Form显示名', '', 'y', 'n', 'y', '11', 'y', '11', 'y', '11', 'y', '11');
+INSERT INTO `tr_builder_fields` VALUES ('50', 'form_prompt', '200', 'n', 'n', '表单提示', '4', '4', '1', '12', '表单提示', '', 'y', 'n', 'n', '12', 'y', '12', 'y', '12', 'y', '12');
+INSERT INTO `tr_builder_fields` VALUES ('51', 'form_required', 'y|n', 'n', 'n', '表单是否必填', '4', '1', '4', '13', '表单是否必填', '', 'n', 'n', 'n', '13', 'y', '13', 'y', '13', 'y', '13');
+INSERT INTO `tr_builder_fields` VALUES ('52', 'form_modifiable', 'y|n', 'n', 'n', '编辑表单中允许输入', '4', '4', '4', '14', '编辑表单是否中允许输入', '', 'n', 'n', 'n', '14', 'y', '14', 'y', '14', 'y', '14');
+INSERT INTO `tr_builder_fields` VALUES ('53', 'index_show', 'y|n', 'n', 'n', '是否在列表中展示', '4', '4', '4', '15', '是否在列表中展示', '', 'n', 'n', 'n', '15', 'y', '15', 'y', '15', 'y', '15');
+INSERT INTO `tr_builder_fields` VALUES ('54', 'index_sort', '5', 'n', 'y', '在列表中排序', '4', '4', '2', '16', '在列表中排序', '', 'y', 'n', 'n', '16', 'y', '16', 'y', '16', 'y', '16');
+INSERT INTO `tr_builder_fields` VALUES ('55', 'form_create_show', 'y|n', 'n', 'n', '是否在新增表单中展示', '4', '4', '4', '17', '是否在新增表单中展示', '', 'n', 'n', 'n', '17', 'y', '17', 'y', '17', 'y', '17');
+INSERT INTO `tr_builder_fields` VALUES ('56', 'form_create_sort', '5', 'n', 'y', '在新增表单中排序', '4', '4', '2', '18', '在新增表单中排序', '', 'y', 'n', 'n', '18', 'y', '18', 'y', '18', 'y', '18');
+INSERT INTO `tr_builder_fields` VALUES ('57', 'form_modify_show', 'y|n', 'n', 'n', '是否在编辑表单中展示', '4', '1', '4', '19', '是否在编辑表单中展示', '', 'n', 'n', 'n', '19', 'y', '19', 'y', '19', 'y', '19');
+INSERT INTO `tr_builder_fields` VALUES ('58', 'form_modify_sort', '5', 'n', 'y', '在编辑表单中排序', '4', '4', '2', '20', '在编辑表单中排序', '', 'y', 'n', 'n', '20', 'y', '20', 'y', '20', 'y', '20');
+INSERT INTO `tr_builder_fields` VALUES ('59', 'form_search_show', 'y|n', 'n', 'n', '是否在查询表单中展示', '4', '1', '4', '21', '是否在查询表单中展示', '', 'n', 'n', 'n', '21', 'y', '21', 'y', '21', 'y', '21');
+INSERT INTO `tr_builder_fields` VALUES ('60', 'form_search_sort', '5', 'n', 'y', '在查询表单中排序', '4', '4', '2', '22', '在查询表单中排序', '', 'n', 'n', 'y', '22', 'y', '22', 'y', '22', 'y', '22');
+INSERT INTO `tr_builder_fields` VALUES ('61', 'validator_id', '10', 'y', 'y', '主键ID', '5', '1', '9', '1', '主键ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('62', 'validator_name', '100', 'n', 'n', '验证类名', '5', '1', '1', '2', '验证类名', '', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('63', 'field_id', '10', 'n', 'y', '表单字段ID', '5', '1', '2', '3', '表单字段ID', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('64', 'options', '100', 'n', 'n', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '5', '1', '1', '4', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('65', 'option_category', '0', 'n', 'n', '验证时对比值类型', '5', '1', '5', '5', '验证时对比值类型', '', 'n', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('66', 'message', '100', 'n', 'n', '出错提示消息', '5', '1', '1', '6', '出错提示消息', '', 'y', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('67', 'sort', '5', 'n', 'y', '排序', '5', '1', '2', '7', '排序', '', 'y', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('68', 'when', 'all|create|modify', 'n', 'n', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '5', '1', '5', '8', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
 
 -- ----------------------------
 -- Table structure for `tr_builder_types`
@@ -274,14 +333,16 @@ CREATE TABLE `tr_builders` (
   KEY `srv_name` (`srv_name`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
 -- ----------------------------
 -- Records of tr_builders
 -- ----------------------------
 INSERT INTO `tr_builders` VALUES ('1', '表单字段类型', 'builder_types', 'n', 'InnoDB', 'utf8', '表单字段类型表', 'dynamic', 'builders', 'programmer', 'builder', 'types', 'types', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-23 13:31:46', '2014-05-26 15:23:37', 'n');
 INSERT INTO `tr_builders` VALUES ('2', '生成代码', 'builders', 'n', 'InnoDB', 'utf8', '生成代码表', 'dynamic', 'builders', 'programmer', 'builder', 'builders', 'builders', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-26 15:23:50', '0000-00-00 00:00:00', 'n');
-INSERT INTO `tr_builders` VALUES ('3', '表单字段组', 'builder_field_groups', 'n', 'InnoDB', 'utf8', '表单字段组表', 'dynamic', 'builders', 'programmer', 'builder', 'groups', 'groups', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-26 15:57:26', '0000-00-00 00:00:00', 'n');
+INSERT INTO `tr_builders` VALUES ('3', '字段组', 'builder_field_groups', 'n', 'InnoDB', 'utf8', '表单字段组表', 'dynamic', 'builders', 'programmer', 'builder', 'groups', 'groups', 'builder_id', 'index', 'view', 'create', 'modify', 'remove', '', '', '宋欢', 'trotri@yeah.net', '2014-05-26 15:57:26', '2014-05-27 17:51:04', 'n');
+INSERT INTO `tr_builders` VALUES ('4', '表单字段', 'builder_fields', 'n', 'InnoDB', 'utf8', '表单字段表', 'dynamic', 'builders', 'programmer', 'builder', 'fields', 'fields', 'builder_id', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-27 13:06:21', '0000-00-00 00:00:00', 'n');
+INSERT INTO `tr_builders` VALUES ('5', '表单字段验证', 'builder_field_validators', 'n', 'InnoDB', 'utf8', '表单字段验证表', 'dynamic', 'builders', 'programmer', 'builder', 'validators', 'validators', 'field_id', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-27 13:06:30', '0000-00-00 00:00:00', 'n');
 
 -- ----------------------------
 -- Table structure for `tr_system_log_ymd`

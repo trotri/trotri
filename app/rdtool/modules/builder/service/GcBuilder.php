@@ -870,6 +870,10 @@ class GcBuilder
 			fwrite($stream, "\t */\n");
 			fwrite($stream, "\tpublic function get{$rows['func_name']}Rule(\$value)\n");
 			fwrite($stream, "\t{\n");
+			if (!$rows['form_required']) {
+				fwrite($stream, "\t\tif (\$value === '') { return array(); }\n\n");
+			}
+
 			if (isset($rows['enums'])) {
 				fwrite($stream, "\t\t\$enum = Data{$schema->ucClsName}::get{$rows['func_name']}Enum();\n");
 			}

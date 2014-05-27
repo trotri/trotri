@@ -4,8 +4,16 @@ use views\bootstrap\components\ComponentsBuilder;
 
 class TableRender extends views\bootstrap\components\TableRender
 {
+	public function getTypeNameLink($data)
+	{
+		return $this->elements_object->getTypeNameLink($data);
+	}
+
 	public function getOperate($data)
 	{
+		$params = array('id' => $data['type_id']);
+		$output = $this->getModifyIcon($params) . $this->getRemoveIcon($params);
+		return $output;
 	}
 }
 
@@ -21,6 +29,9 @@ $this->widget(
 		'data' => $this->data,
 		'table_render' => $tblRender,
 		'elements' => array(
+			'type_name' => array(
+				'callback' => 'getTypeNameLink'
+			),
 		),
 		'columns' => array(
 			'type_name',
@@ -31,7 +42,6 @@ $this->widget(
 			'type_id',
 			'_operate_',
 		),
-		'checkedToggle' => 'type_id',
 	)
 );
 ?>
