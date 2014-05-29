@@ -1,1 +1,0 @@
-<?php $this->display('builder/fields_sidebar'); ?>

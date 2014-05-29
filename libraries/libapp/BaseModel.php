@@ -24,39 +24,6 @@ use libsrv\AbstractService;
 abstract class BaseModel extends Elements
 {
 	/**
-	 * 查询数据列表
-	 * @param libsrv\AbstractService $object
-	 * @param array $params
-	 * @param string $order
-	 * @param integer $limit
-	 * @param integer $offset
-	 * @return array
-	 */
-	public function search(AbstractService $object, array $params = array(), $order = '', $limit = null, $offset = null)
-	{
-		if ($limit === null) {
-			$limit = PageHelper::getListRows();
-		}
-
-		if ($offset === null) {
-			$offset = PageHelper::getFirstRow();
-		}
-
-		$ret = $this->callFetchMethod($object, 'findAllByAttributes', array($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS'));
-		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
-			return $ret;
-		}
-
-		$data = $ret['data']['rows'];
-		unset($ret['data']['rows']);
-
-		$ret['paginator'] = $ret['data'];
-		$ret['data'] = $data;
-
-		return $ret;
-	}
-
-	/**
 	 * 调用查询类方法
 	 * @param libsrv\AbstractService $object
 	 * @param string $method

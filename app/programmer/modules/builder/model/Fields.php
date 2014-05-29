@@ -227,6 +227,9 @@ class Fields extends BaseModel
 				'value' => 0,
 				'required' => true,
 			),
+			'builder_field_validators' => array(
+				'label' => Text::_('MOD_BUILDER_URLS_VALIDATORS_INDEX'),
+			)
 		);
 
 		return $output;
@@ -284,6 +287,16 @@ class Fields extends BaseModel
 	}
 
 	/**
+	 * 通过“字段组ID”获取“字段组提示”
+	 * @param integer $groupId
+	 * @return string
+	 */
+	public function getPromptByGroupId($groupId)
+	{
+		return Model::getInstance('Groups')->getPromptByGroupId($groupId);
+	}
+
+	/**
 	 * 通过“类型ID”获取“类型名”
 	 * @param integer $typeId
 	 * @return string
@@ -314,6 +327,36 @@ class Fields extends BaseModel
 	}
 
 	/**
+	 * 通过“字段ID”获取“字段名”
+	 * @param integer $fieldId
+	 * @return string
+	 */
+	public function getFieldNameByFieldId($fieldId)
+	{
+		return $this->getService()->getFieldNameByFieldId($fieldId);
+	}
+
+	/**
+	 * 通过“字段ID”获取“生成代码ID”
+	 * @param integer $fieldId
+	 * @return integer
+	 */
+	public function getBuilderIdByFieldId($fieldId)
+	{
+		return $this->getService()->getBuilderIdByFieldId($fieldId);
+	}
+
+	/**
+	 * 通过“字段ID”获取“Table和Form显示名”
+	 * @param integer $fieldId
+	 * @return string
+	 */
+	public function getHtmlLabelByFieldId($fieldId)
+	{
+		return $this->getService()->getHtmlLabelByFieldId($fieldId);
+	}
+
+	/**
 	 * 查询数据列表
 	 * @param array $params
 	 * @param string $order
@@ -329,7 +372,7 @@ class Fields extends BaseModel
 			$params['builder_id'] = $builderId;
 		}
 
-		$ret = parent::search($this->getService(), $params, '', $limit, $offset);
+		$ret = parent::search($this->getService(), $params, $order, $limit, $offset);
 		return $ret;
 	}
 }

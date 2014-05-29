@@ -47,4 +47,26 @@ class Groups extends DynamicService
 		$ret = $default + $groups;
 		return $ret;
 	}
+
+	/**
+	 * 通过“字段组ID”获取“字段组名”
+	 * @param integer $groupId
+	 * @return string
+	 */
+	public function getGroupNameByGroupId($groupId)
+	{
+		$groupName = $this->getByPk('group_name', $groupId);
+		return $groupName ? $groupName : '';
+	}
+
+	/**
+	 * 通过“字段组ID”获取“字段组提示”
+	 * @param integer $groupId
+	 * @return string
+	 */
+	public function getPromptByGroupId($groupId)
+	{
+		$prompt = $this->getByPk('prompt', $groupId);
+		return $prompt ? $prompt : '';
+	}
 }

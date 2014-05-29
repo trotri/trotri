@@ -38,13 +38,13 @@ return array(
 	array(
 		0 => array(
 			'label' => 'CFG_SYSTEM_URLS_ADMINISTRATOR',
-			'm' => 'administrator', 'c' => 'site', 'a' => 'index'
+			'url' => 'administrator.php'
 		),
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER',
-			'm' => 'ucenter', 'c' => 'site', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_PASSPORT',
+			'url' => 'passport.php?r=users/amcas/index'
 		)
 	),
 );

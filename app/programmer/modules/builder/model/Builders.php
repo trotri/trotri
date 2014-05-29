@@ -275,7 +275,8 @@ class Builders extends BaseModel
 	 */
 	public function getBuilderNameByBuilderId($builderId)
 	{
-		return $this->getService()->getByPk('builder_name', $builderId);
+		$ret = $this->getService()->getBuilderNameByBuilderId($builderId);
+		return $ret;
 	}
 
 	/**
@@ -285,8 +286,8 @@ class Builders extends BaseModel
 	 */
 	public function getTblProfileLangByTblProfile($tblProfile)
 	{
-		$enum = DataBuilders::getTblProfileEnum();
-		return isset($enum[$tblProfile]) ? $enum[$tblProfile] : '';
+		$ret = $this->getService()->getTblProfileLangByTblProfile($tblProfile);
+		return $ret;
 	}
 
 	/**

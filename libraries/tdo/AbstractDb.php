@@ -50,6 +50,31 @@ abstract class AbstractDb extends Cache
     protected $_commandBuilder = null;
 
     /**
+     * 获取多个结果集，不存缓存
+     * @param string $sql
+     * @param mixed $params
+     * @param boolean $foundRows
+     * @return array|false
+     */
+    public function fetchAllNoCache($sql, $params = null, $foundRows = true)
+    {
+        $result = $this->getDbProxy()->fetchAll($sql, $params);
+        if (is_array($result)) {
+            if ($foundRows) {
+                $total = $this->getFoundRows();
+                $result = array(
+                    'rows' => $result,
+                    'total' => $total
+                );
+            }
+
+            return $result;
+        }
+
+        return false;
+    }
+
+    /**
      * 获取多个结果集
      * @param string $sql
      * @param mixed $params

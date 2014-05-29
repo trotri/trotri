@@ -17,7 +17,7 @@ use builders\library\Constant;
  * Validators class file
  * 业务层：数据库操作类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Validators.php 1 2014-05-27 13:20:09Z Code Generator $
+ * @version $Id: Validators.php 1 2014-05-28 11:06:31Z Code Generator $
  * @package builders.db
  * @since 1.0
  */

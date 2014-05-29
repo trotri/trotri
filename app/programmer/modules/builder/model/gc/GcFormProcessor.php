@@ -73,6 +73,42 @@ class GcFormProcessor extends AbstractGc
 		fwrite($stream, "\t\treturn !\$this->hasError();\n");
 		fwrite($stream, "\t}\n\n");
 
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * (non-PHPdoc)\n");
+		fwrite($stream, "\t * @see libsrv.FormProcessor::_cleanPreProcess()\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tprotected function _cleanPreProcess(array \$params)\n");
+		fwrite($stream, "\t{\n");
+		if ($schema->hasTrash) {
+			fwrite($stream, "\t\tif (isset(\$params['trash'])) {\n");
+			fwrite($stream, "\t\t\tunset(\$params['trash']);\n");
+			fwrite($stream, "\t\t}\n\n");
+		}
+
+		fwrite($stream, "\t\t\$rules = array(\n");
+		fwrite($stream, "\t\t\t'builder_name' => 'trim',\n");
+		foreach ($schema->fields as $rows) {
+			if ($rows['column_auto_increment']) {
+				continue;
+			}
+
+			$comment = ($rows['field_name'] === 'sort') ? '// ' : '';
+			if ($rows['field_type'] === 'INT') {
+				fwrite($stream, "\t\t\t$comment'{$rows['field_name']}' => 'intval',\n");
+			}
+			elseif ($rows['form_type'] === 'checkbox') {
+				fwrite($stream, "\t\t\t$comment'{$rows['field_name']}' => '\\libsrv\\Clean::trims',\n");
+			}
+			else {
+				fwrite($stream, "\t\t\t$comment'{$rows['field_name']}' => 'trim',\n");
+			}
+		}
+
+		fwrite($stream, "\t\t);\n\n");
+		fwrite($stream, "\t\t\$ret = \$this->clean(\$rules, \$params);\n");
+		fwrite($stream, "\t\treturn \$ret;\n");
+		fwrite($stream, "\t}\n\n");
+
 		foreach ($schema->fields as $rows) {
 			if (!isset($rows['validators']) || !is_array($rows['validators']) || $rows['validators'] === array()) {
 				continue;

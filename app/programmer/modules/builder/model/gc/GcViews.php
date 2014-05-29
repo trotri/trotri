@@ -59,8 +59,39 @@ class GcViews extends AbstractGc
 		fwrite($stream, "use views\\bootstrap\\components\\ComponentsBuilder;\n\n");
 		fwrite($stream, "class TableRender extends views\\bootstrap\\components\\TableRender\n");
 		fwrite($stream, "{\n");
+		fwrite($stream, "\tpublic function get{$schema->fields[1]['func_name']}Link(\$data)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\treturn \$this->elements_object->get{$schema->fields[1]['func_name']}Link(\$data);\n");
+		fwrite($stream, "\t}\n\n");
 		fwrite($stream, "\tpublic function getOperate(\$data)\n");
 		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$params = array(\n");
+		fwrite($stream, "\t\t\t'id' => \$data['{$schema->pkColumn}'],\n");
+		if ($schema->fkColumn) {
+			fwrite($stream, "\t\t\t'{$schema->fkColumn}' => \$data['{$schema->fkColumn}']\n");
+		}
+
+		fwrite($stream, "\t\t);\n\n");
+
+		$outputs = array();
+		if (in_array('pencil', $schema->indexRowBtns)) {
+			fwrite($stream, "\t\t\$modifyIcon = \$this->getModifyIcon(\$params);\n");
+			$outputs[] = '$modifyIcon';
+		}
+
+		if (in_array('trash', $schema->indexRowBtns)) {
+			fwrite($stream, "\t\t\$trashIcon = \$this->getTrashIcon(\$params);\n");
+			$outputs[] = '$trashIcon';
+		}
+		elseif (in_array('remove', $schema->indexRowBtns)) {
+			fwrite($stream, "\t\t\$removeIcon = \$this->getRemoveIcon(\$params);\n");
+			$outputs[] = '$removeIcon';
+		}
+
+		$output = implode(' . ', $outputs);
+		fwrite($stream, "\n");
+		fwrite($stream, "\t\t\$output = {$output};\n");
+		fwrite($stream, "\t\treturn \$output;\n");
 		fwrite($stream, "\t}\n");
 		fwrite($stream, "}\n\n");
 		fwrite($stream, "\$tblRender = new TableRender(\$this->elements);\n");
@@ -75,6 +106,9 @@ class GcViews extends AbstractGc
 		fwrite($stream, "\t\t'data' => \$this->data,\n");
 		fwrite($stream, "\t\t'table_render' => \$tblRender,\n");
 		fwrite($stream, "\t\t'elements' => array(\n");
+		fwrite($stream, "\t\t\t'{$schema->fields[1]['field_name']}' => array(\n");
+		fwrite($stream, "\t\t\t\t'callback' => 'get{$schema->fields[1]['func_name']}Link'\n");
+		fwrite($stream, "\t\t\t),\n");
 		fwrite($stream, "\t\t),\n");
 		fwrite($stream, "\t\t'columns' => array(\n");
 		foreach ($schema->listIndexColumns as $columnName) {
@@ -119,6 +153,25 @@ class GcViews extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\tpublic function getOperate(\$data)\n");
 		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$params = array(\n");
+		fwrite($stream, "\t\t\t'id' => \$data['{$schema->pkColumn}'],\n");
+		if ($schema->fkColumn) {
+			fwrite($stream, "\t\t\t'{$schema->fkColumn}' => \$data['{$schema->fkColumn}']\n");
+		}
+
+		fwrite($stream, "\t\t);\n\n");
+
+		fwrite($stream, "\t\t\$restoreIcon = \$this->getRestoreIcon(\$params);\n");
+		$output = '$restoreIcon';
+
+		if (in_array('remove', $schema->indexRowBtns)) {
+			fwrite($stream, "\t\t\$removeIcon = \$this->getRemoveIcon(\$params);\n");
+			$output .= ' . $removeIcon';
+		}
+
+		fwrite($stream, "\n");
+		fwrite($stream, "\t\t\$output = {$output};\n");
+		fwrite($stream, "\t\treturn \$output;\n");
 		fwrite($stream, "\t}\n");
 		fwrite($stream, "}\n\n");
 		fwrite($stream, "\$tblRender = new TableRender(\$this->elements);\n");

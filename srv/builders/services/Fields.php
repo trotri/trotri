@@ -26,4 +26,37 @@ class Fields extends DynamicService
 	 * @var string 表名
 	 */
 	protected $_tableName = 'builder_fields';
+
+	/**
+	 * 通过“字段ID”获取“字段名”
+	 * @param integer $fieldId
+	 * @return string
+	 */
+	public function getFieldNameByFieldId($fieldId)
+	{
+		$fieldName = $this->getByPk('field_name', $fieldId);
+		return $fieldName ? $fieldName : '';
+	}
+
+	/**
+	 * 通过“字段ID”获取“生成代码ID”
+	 * @param integer $fieldId
+	 * @return integer
+	 */
+	public function getBuilderIdByFieldId($fieldId)
+	{
+		$builderId = (int) $this->getByPk('builder_id', $fieldId);
+		return $builderId > 0 ? $builderId : 0;
+	}
+
+	/**
+	 * 通过“字段ID”获取“Table和Form显示名”
+	 * @param integer $fieldId
+	 * @return string
+	 */
+	public function getHtmlLabelByFieldId($fieldId)
+	{
+		$htmlLabel = $this->getByPk('html_label', $fieldId);
+		return $htmlLabel ? $htmlLabel : '';
+	}
 }

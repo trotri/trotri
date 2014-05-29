@@ -10,9 +10,9 @@
 
 namespace library;
 
-use libsrv\Service;
-
 use libapp;
+use libsrv\Service;
+use libsrv\AbstractService;
 use libsrv\Clean;
 
 /**
@@ -54,6 +54,39 @@ abstract class BaseModel extends libapp\BaseModel
 		if ($this->_className === '') {
 			$this->_className = $className;
 		}
+	}
+
+	/**
+	 * 查询数据列表
+	 * @param libsrv\AbstractService $object
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function search(AbstractService $object, array $params = array(), $order = '', $limit = null, $offset = null)
+	{
+		if ($limit === null) {
+			$limit = libapp\PageHelper::getListRows();
+		}
+
+		if ($offset === null) {
+			$offset = libapp\PageHelper::getFirstRow();
+		}
+
+		$ret = $this->callFetchMethod($object, 'findAllByAttributes', array($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS'));
+		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		$data = $ret['data']['rows'];
+		unset($ret['data']['rows']);
+
+		$ret['paginator'] = $ret['data'];
+		$ret['data'] = $data;
+
+		return $ret;
 	}
 
 	/**

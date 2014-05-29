@@ -16,10 +16,12 @@ use tfc\saf\Text;
 use tfc\saf\DbProxy;
 use tfc\saf\Log;
 use tdo\Metadata;
+use libsrv\Service;
 use libapp\Model;
-use builders\library\Constant;
 use builders\services\DataBuilders;
+use builders\services\DataFields;
 use library\ErrorNo;
+use library\Constant;
 
 /**
  * Tblnames class file
@@ -31,6 +33,11 @@ use library\ErrorNo;
  */
 class Tblnames extends BaseModel
 {
+	/**
+	 * @var string 业务层名
+	 */
+	protected $_srvName = Constant::SRV_NAME_BUILDERS;
+
 	/**
 	 * @var instance of tdo\Metadata
 	 */
@@ -137,48 +144,47 @@ class Tblnames extends BaseModel
 		$tblPrefix = $this->getDbProxy()->getTblprefix();
 		$tblPreLen = strlen($tblPrefix);
 
-		Log::echoTrace('Import to tr_builders Begin ...');
-		$modBuilders = Model::getInstance('Builders');
-		$dataBuilders = $modBuilders->getData();
+		Log::echoTrace('Import to builders Begin ...');
 		$params = array(
 			'builder_name' => isset($comments['__table__']) ? $comments['__table__'] : $tableSchema->name,
 			'tbl_name' => substr($tableSchema->name, $tblPreLen),
-			'tbl_profile' => $dataBuilders::TBL_PROFILE_N,
-			'tbl_engine' => $dataBuilders::TBL_ENGINE_INNODB,
-			'tbl_charset' => $dataBuilders::TBL_CHARSET_UTF8,
+			'tbl_profile' => DataBuilders::TBL_PROFILE_N,
+			'tbl_engine' => DataBuilders::TBL_ENGINE_INNODB,
+			'tbl_charset' => DataBuilders::TBL_CHARSET_UTF8,
 			'tbl_comment' => isset($comments['__table__']) ? $comments['__table__'] : '',
+			'srv_type' => DataBuilders::SRV_TYPE_NORMAL,
+			'srv_name' => 'undefined',
 			'app_name' => 'undefined',
 			'mod_name' => 'undefined',
 			'ctrl_name' => substr($tableSchema->name, strrpos($tableSchema->name, '_') + 1),
 			'cls_name' => substr($tableSchema->name, strrpos($tableSchema->name, '_') + 1),
+			'fk_column' => '',
 			'act_index_name' => 'index',
 			'act_view_name' => 'view',
 			'act_create_name' => 'create',
 			'act_modify_name' => 'modify',
 			'act_remove_name' => 'remove',
 			'index_row_btns' => array(
-				$dataBuilders::INDEX_ROW_BTNS_PENCIL,
-				$dataBuilders::INDEX_ROW_BTNS_REMOVE,
+				DataBuilders::INDEX_ROW_BTNS_PENCIL,
+				DataBuilders::INDEX_ROW_BTNS_REMOVE,
 			),
 			'description' => '',
 			'author_name' => 'undefined',
-			'author_mail' => 'undefined@undefined.com'
+			'author_mail' => 'undefined@undefined.undefined'
 		);
-	
-		$ret = $modBuilders->create($params);
-		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-			Log::echoTrace('Import to tr_builders Successfully ...');
+
+		$mod = Service::getInstance('Builders', $this->_srvName);
+		$builderId = $mod->create($params);
+		if ($builderId > 0) {
+			Log::echoTrace('Import to builders Successfully ...');
 		}
 		else {
-			Log::errExit(__LINE__, 'Import to tr_builders Failed!');
+			Log::errExit(__LINE__, 'Import to builders Failed!');
 		}
-	
-		Log::echoTrace('Import to tr_builder_fields Begin ...');
-		$modFields = Model::getInstance('Fields');
-		$dataFields = $modFields->getData();
-		$builderId = $ret['id'];
+
+		Log::echoTrace('Import to builder_fields Begin ...');
 		$sort = 0;
-	
+
 		foreach ($tableSchema->columns as $columnSchema) {
 			$sort++;
 			if ($columnSchema->type === 'integer') {
@@ -193,17 +199,17 @@ class Tblnames extends BaseModel
 			else {
 				$columnLength = '';
 			}
-	
+
 			if ($columnSchema->isPrimaryKey) {
-				$formRequired = $dataFields::FORM_REQUIRED_N;
+				$formRequired = DataFields::FORM_REQUIRED_N;
 			}
 			elseif (stripos($columnSchema->dbType, 'enum') !== false) {
-				$formRequired = $dataFields::FORM_REQUIRED_N;
+				$formRequired = DataFields::FORM_REQUIRED_N;
 			}
 			else {
-				$formRequired = $dataFields::FORM_REQUIRED_Y;
+				$formRequired = DataFields::FORM_REQUIRED_Y;
 			}
-	
+
 			if ($columnLength === 'y|n') {
 				$typeId = 4;
 			}
@@ -219,41 +225,42 @@ class Tblnames extends BaseModel
 			else {
 				$typeId = 1;
 			}
-	
+
 			$params = array(
-					'field_name' => $columnSchema->name,
-					'column_length' => $columnLength,
-					'column_auto_increment' => $columnSchema->isAutoIncrement ? $dataFields::COLUMN_AUTO_INCREMENT_Y : $dataFields::COLUMN_AUTO_INCREMENT_N,
-					'column_unsigned' => (stripos($columnSchema->dbType, 'unsigned') !== false) ? $dataFields::COLUMN_UNSIGNED_Y : $dataFields::COLUMN_UNSIGNED_N,
-					'column_comment' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : '',
-					'builder_id' => $builderId,
-					'group_id' => 1,
-					'type_id' => $typeId,
-					'sort' => $sort,
-					'html_label' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : $columnSchema->name,
-					'form_prompt' => '',
-					'form_required' => $formRequired,
-					'form_modifiable' => $dataFields::FORM_MODIFIABLE_N,
-					'index_show' => $dataFields::INDEX_SHOW_Y,
-					'index_sort' => $columnSchema->isPrimaryKey ? 1000 : $sort,
-					'form_create_show' => $columnSchema->isPrimaryKey ? $dataFields::FORM_CREATE_SHOW_N : $dataFields::FORM_CREATE_SHOW_Y,
-					'form_create_sort' => $sort,
-					'form_modify_show' => $columnSchema->isPrimaryKey ? $dataFields::FORM_CREATE_SHOW_N : $dataFields::FORM_MODIFY_SHOW_Y,
-					'form_modify_sort' => $sort,
-					'form_search_show' => $dataFields::FORM_SEARCH_SHOW_Y,
-					'form_search_sort' => $sort,
+				'field_name' => $columnSchema->name,
+				'column_length' => $columnLength,
+				'column_auto_increment' => $columnSchema->isAutoIncrement ? DataFields::COLUMN_AUTO_INCREMENT_Y : DataFields::COLUMN_AUTO_INCREMENT_N,
+				'column_unsigned' => (stripos($columnSchema->dbType, 'unsigned') !== false) ? DataFields::COLUMN_UNSIGNED_Y : DataFields::COLUMN_UNSIGNED_N,
+				'column_comment' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : '',
+				'builder_id' => $builderId,
+				'group_id' => 1,
+				'type_id' => $typeId,
+				'sort' => $sort,
+				'html_label' => isset($comments[$columnSchema->name]) ? $comments[$columnSchema->name] : $columnSchema->name,
+				'form_prompt' => '',
+				'form_required' => $formRequired,
+				'form_modifiable' => DataFields::FORM_MODIFIABLE_N,
+				'index_show' => DataFields::INDEX_SHOW_Y,
+				'index_sort' => $columnSchema->isPrimaryKey ? 1000 : $sort,
+				'form_create_show' => $columnSchema->isPrimaryKey ? DataFields::FORM_CREATE_SHOW_N : DataFields::FORM_CREATE_SHOW_Y,
+				'form_create_sort' => $sort,
+				'form_modify_show' => $columnSchema->isPrimaryKey ? DataFields::FORM_MODIFY_SHOW_N : DataFields::FORM_MODIFY_SHOW_Y,
+				'form_modify_sort' => $sort,
+				'form_search_show' => DataFields::FORM_SEARCH_SHOW_Y,
+				'form_search_sort' => $sort,
 			);
-	
-			$ret = $modFields->create($params);
-			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
-				Log::echoTrace('Import to tr_builder_fields "' . $columnSchema->name . '" Successfully ...');
+
+			$mod = Service::getInstance('Fields', $this->_srvName);
+			$fieldId = $mod->create($params);
+			if ($fieldId > 0) {
+				Log::echoTrace('Import to builder_fields "' . $columnSchema->name . '" Successfully ...');
 			}
 			else {
-				Log::errExit(__LINE__, 'Import to tr_builders "' . $columnSchema->name . '" Failed!');
+				Log::errExit(__LINE__, 'Import to builder_fields "' . $columnSchema->name . '" Failed!');
 			}
 		}
 
-		Log::echoTrace('Import to tr_builder_fields Successfully ...');
+		Log::echoTrace('Import to builder_fields Successfully ...');
 		Log::echoTrace('Generate End, Table Name "' . $tblName . '"');
 		exit;
 	}
@@ -276,7 +283,7 @@ class Tblnames extends BaseModel
 	 */
 	public function getDbProxy()
 	{
-		$clusterName = Constant::DB_CLUSTER;
+		$clusterName = \builders\library\Constant::DB_CLUSTER;
 		$className = 'tfc\\saf\\DbProxy::' . $clusterName;
 		if (($dbProxy = Singleton::get($className)) === null) {
 			$dbProxy = new DbProxy($clusterName);

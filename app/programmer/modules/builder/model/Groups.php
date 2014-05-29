@@ -148,7 +148,17 @@ class Groups extends BaseModel
 	 */
 	public function getGroupNameByGroupId($groupId)
 	{
-		return $this->getService()->getByPk('group_name', $groupId);
+		return $this->getService()->getGroupNameByGroupId($groupId);
+	}
+
+	/**
+	 * 通过“字段组ID”获取“字段组提示”
+	 * @param integer $groupId
+	 * @return string
+	 */
+	public function getPromptByGroupId($groupId)
+	{
+		return $this->getService()->getPromptByGroupId($groupId);
 	}
 
 	/**

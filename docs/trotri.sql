@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50141
 File Encoding         : 65001
 
-Date: 2014-05-27 19:48:08
+Date: 2014-05-29 20:38:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -56,7 +56,7 @@ CREATE TABLE `tr_builder_field_validators` (
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
 
 -- ----------------------------
 -- Records of tr_builder_field_validators
@@ -146,6 +146,23 @@ INSERT INTO `tr_builder_field_validators` VALUES ('82', 'InArray', '57', '', 'ar
 INSERT INTO `tr_builder_field_validators` VALUES ('83', 'Numeric', '58', '', 'boolean', '在编辑表单中排序只能是数字.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('84', 'InArray', '59', '', 'array', '必须选择是否在查询表单中展示，值只能是%s.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('85', 'Numeric', '60', '', 'boolean', '在查询表单中排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('86', 'InArray', '62', '', 'array', '必须选择验证类名，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('87', 'Integer', '63', '', 'boolean', '表单字段ID只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('88', 'InArray', '65', '', 'array', '必须选择验证时对比值类型，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('89', 'Numeric', '67', '', 'boolean', '排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('90', 'InArray', '68', '', 'array', '必须选择验证环境，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('91', 'Alpha', '71', '', 'boolean', '事件名只能由英文字母组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('92', 'MinLength', '71', '2', 'integer', '事件名长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('94', 'MaxLength', '71', '16', 'integer', '事件名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('95', 'MinLength', '72', '2', 'integer', '提示长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('96', 'MaxLength', '72', '50', 'integer', '提示长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('97', 'InArray', '74', '', 'array', '必须选择类型，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('98', 'Equal', '74', 'mod', 'string', '只能新增或编辑“模块”类型事件.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('99', 'Numeric', '73', '', 'boolean', '排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('100', 'MinLength', '76', '2', 'integer', '组名长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('101', 'MaxLength', '76', '50', 'integer', '组名长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('102', 'NotEmpty', '77', '', 'boolean', '您选择的父组名不存在或已被删除.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('103', 'Numeric', '78', '', 'boolean', '排序只能是数字.', '1', 'all');
 
 -- ----------------------------
 -- Table structure for `tr_builder_fields`
@@ -184,7 +201,7 @@ CREATE TABLE `tr_builder_fields` (
   KEY `form_create_sort` (`form_create_sort`),
   KEY `form_modify_sort` (`form_modify_sort`),
   KEY `form_search_sort` (`form_search_sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
 -- ----------------------------
 -- Records of tr_builder_fields
@@ -239,24 +256,36 @@ INSERT INTO `tr_builder_fields` VALUES ('47', 'type_id', '5', 'n', 'y', '字段�
 INSERT INTO `tr_builder_fields` VALUES ('48', 'sort', '5', 'n', 'y', '排序', '4', '1', '2', '10', '排序', '排序由数字组成且数字越小位置越靠前.', 'y', 'n', 'y', '10', 'y', '10', 'y', '10', 'y', '10');
 INSERT INTO `tr_builder_fields` VALUES ('49', 'html_label', '100', 'n', 'n', 'HTML：Table和Form显示名', '4', '4', '1', '11', 'Table和Form显示名', '', 'y', 'n', 'y', '11', 'y', '11', 'y', '11', 'y', '11');
 INSERT INTO `tr_builder_fields` VALUES ('50', 'form_prompt', '200', 'n', 'n', '表单提示', '4', '4', '1', '12', '表单提示', '', 'y', 'n', 'n', '12', 'y', '12', 'y', '12', 'y', '12');
-INSERT INTO `tr_builder_fields` VALUES ('51', 'form_required', 'y|n', 'n', 'n', '表单是否必填', '4', '1', '4', '13', '表单是否必填', '', 'n', 'n', 'n', '13', 'y', '13', 'y', '13', 'y', '13');
+INSERT INTO `tr_builder_fields` VALUES ('51', 'form_required', 'y|n', 'n', 'n', '表单是否必填', '4', '4', '4', '13', '表单是否必填', '', 'n', 'n', 'n', '13', 'y', '13', 'y', '13', 'y', '13');
 INSERT INTO `tr_builder_fields` VALUES ('52', 'form_modifiable', 'y|n', 'n', 'n', '编辑表单中允许输入', '4', '4', '4', '14', '编辑表单是否中允许输入', '', 'n', 'n', 'n', '14', 'y', '14', 'y', '14', 'y', '14');
 INSERT INTO `tr_builder_fields` VALUES ('53', 'index_show', 'y|n', 'n', 'n', '是否在列表中展示', '4', '4', '4', '15', '是否在列表中展示', '', 'n', 'n', 'n', '15', 'y', '15', 'y', '15', 'y', '15');
 INSERT INTO `tr_builder_fields` VALUES ('54', 'index_sort', '5', 'n', 'y', '在列表中排序', '4', '4', '2', '16', '在列表中排序', '', 'y', 'n', 'n', '16', 'y', '16', 'y', '16', 'y', '16');
 INSERT INTO `tr_builder_fields` VALUES ('55', 'form_create_show', 'y|n', 'n', 'n', '是否在新增表单中展示', '4', '4', '4', '17', '是否在新增表单中展示', '', 'n', 'n', 'n', '17', 'y', '17', 'y', '17', 'y', '17');
 INSERT INTO `tr_builder_fields` VALUES ('56', 'form_create_sort', '5', 'n', 'y', '在新增表单中排序', '4', '4', '2', '18', '在新增表单中排序', '', 'y', 'n', 'n', '18', 'y', '18', 'y', '18', 'y', '18');
-INSERT INTO `tr_builder_fields` VALUES ('57', 'form_modify_show', 'y|n', 'n', 'n', '是否在编辑表单中展示', '4', '1', '4', '19', '是否在编辑表单中展示', '', 'n', 'n', 'n', '19', 'y', '19', 'y', '19', 'y', '19');
+INSERT INTO `tr_builder_fields` VALUES ('57', 'form_modify_show', 'y|n', 'n', 'n', '是否在编辑表单中展示', '4', '4', '4', '19', '是否在编辑表单中展示', '', 'n', 'n', 'n', '19', 'y', '19', 'y', '19', 'y', '19');
 INSERT INTO `tr_builder_fields` VALUES ('58', 'form_modify_sort', '5', 'n', 'y', '在编辑表单中排序', '4', '4', '2', '20', '在编辑表单中排序', '', 'y', 'n', 'n', '20', 'y', '20', 'y', '20', 'y', '20');
-INSERT INTO `tr_builder_fields` VALUES ('59', 'form_search_show', 'y|n', 'n', 'n', '是否在查询表单中展示', '4', '1', '4', '21', '是否在查询表单中展示', '', 'n', 'n', 'n', '21', 'y', '21', 'y', '21', 'y', '21');
+INSERT INTO `tr_builder_fields` VALUES ('59', 'form_search_show', 'y|n', 'n', 'n', '是否在查询表单中展示', '4', '4', '4', '21', '是否在查询表单中展示', '', 'n', 'n', 'n', '21', 'y', '21', 'y', '21', 'y', '21');
 INSERT INTO `tr_builder_fields` VALUES ('60', 'form_search_sort', '5', 'n', 'y', '在查询表单中排序', '4', '4', '2', '22', '在查询表单中排序', '', 'n', 'n', 'y', '22', 'y', '22', 'y', '22', 'y', '22');
-INSERT INTO `tr_builder_fields` VALUES ('61', 'validator_id', '10', 'y', 'y', '主键ID', '5', '1', '9', '1', '主键ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
-INSERT INTO `tr_builder_fields` VALUES ('62', 'validator_name', '100', 'n', 'n', '验证类名', '5', '1', '1', '2', '验证类名', '', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
-INSERT INTO `tr_builder_fields` VALUES ('63', 'field_id', '10', 'n', 'y', '表单字段ID', '5', '1', '2', '3', '表单字段ID', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
-INSERT INTO `tr_builder_fields` VALUES ('64', 'options', '100', 'n', 'n', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '5', '1', '1', '4', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
-INSERT INTO `tr_builder_fields` VALUES ('65', 'option_category', '0', 'n', 'n', '验证时对比值类型', '5', '1', '5', '5', '验证时对比值类型', '', 'n', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
-INSERT INTO `tr_builder_fields` VALUES ('66', 'message', '100', 'n', 'n', '出错提示消息', '5', '1', '1', '6', '出错提示消息', '', 'y', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
-INSERT INTO `tr_builder_fields` VALUES ('67', 'sort', '5', 'n', 'y', '排序', '5', '1', '2', '7', '排序', '', 'y', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
-INSERT INTO `tr_builder_fields` VALUES ('68', 'when', 'all|create|modify', 'n', 'n', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '5', '1', '5', '8', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
+INSERT INTO `tr_builder_fields` VALUES ('61', 'validator_id', '10', 'y', 'y', '主键ID', '5', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('62', 'validator_name', '100', 'n', 'n', '验证类名', '5', '1', '7', '2', '验证类名', '验证类名由2~50个字符组成.', 'n', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('63', 'field_id', '10', 'n', 'y', '表单字段ID', '5', '1', '9', '3', '表单字段ID', '', 'n', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('64', 'options', '100', 'n', 'n', '验证时对比值，可以是布尔类型、整型、字符型、数组序列化', '5', '1', '1', '4', '验证时对比值', '', 'n', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('65', 'option_category', 'boolean|integer|string|array', 'n', 'n', '验证时对比值类型', '5', '1', '5', '5', '验证时对比值类型', '', 'n', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('66', 'message', '100', 'n', 'n', '出错提示消息', '5', '1', '1', '6', '出错提示消息', '', 'n', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('67', 'sort', '5', 'n', 'y', '排序', '5', '1', '2', '7', '排序', '排序由数字组成且数字越小位置越靠前.', 'y', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('68', 'when', 'all|create|modify', 'n', 'n', '验证环境，任意时候验证、只在新增数据时验证、只在编辑数据时验证', '5', '1', '5', '8', '验证环境', '', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
+INSERT INTO `tr_builder_fields` VALUES ('69', 'amca_id', '5', 'y', 'y', '主键ID', '6', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('70', 'amca_pid', '5', 'n', 'y', '父ID', '6', '1', '2', '3', '父ID', '', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('71', 'amca_name', '100', 'n', 'n', '事件名', '6', '1', '1', '2', '事件名', '事件名由2~16个英文字母组成.', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('72', 'prompt', '100', 'n', 'n', '提示', '6', '1', '1', '4', '提示', '提示由2~50个字符组成.', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('73', 'sort', '5', 'n', 'y', '排序', '6', '1', '2', '5', '排序', '排序由数字组成且数字越小位置越靠前.', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('74', 'category', 'app|mod|ctrl|act', 'n', 'n', '类型，app：应用、mod：模块、ctrl：控制器、act：行动', '6', '1', '5', '6', '类型', '', 'n', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('75', 'group_id', '5', 'y', 'y', '主键ID', '7', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('76', 'group_name', '100', 'n', 'n', '组名', '7', '1', '1', '2', '组名', '组名由2~50个字符组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('77', 'group_pid', '5', 'n', 'y', '父ID', '7', '1', '9', '3', '父ID', '', 'n', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('78', 'sort', '5', 'n', 'y', '排序', '7', '1', '2', '4', '排序', '排序由数字组成且数字越小位置越靠前.', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('79', 'permission', '', 'n', 'n', '权限设置，可访问的事件，由应用-模块-控制器-行动组合', '7', '1', '6', '5', '权限设置', '', 'n', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('80', 'description', '', 'n', 'n', '描述', '7', '1', '10', '6', '描述', '', 'n', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
 
 -- ----------------------------
 -- Table structure for `tr_builder_types`
@@ -333,7 +362,7 @@ CREATE TABLE `tr_builders` (
   KEY `srv_name` (`srv_name`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
 -- ----------------------------
 -- Records of tr_builders
@@ -343,6 +372,8 @@ INSERT INTO `tr_builders` VALUES ('2', '生成代码', 'builders', 'n', 'InnoDB'
 INSERT INTO `tr_builders` VALUES ('3', '字段组', 'builder_field_groups', 'n', 'InnoDB', 'utf8', '表单字段组表', 'dynamic', 'builders', 'programmer', 'builder', 'groups', 'groups', 'builder_id', 'index', 'view', 'create', 'modify', 'remove', '', '', '宋欢', 'trotri@yeah.net', '2014-05-26 15:57:26', '2014-05-27 17:51:04', 'n');
 INSERT INTO `tr_builders` VALUES ('4', '表单字段', 'builder_fields', 'n', 'InnoDB', 'utf8', '表单字段表', 'dynamic', 'builders', 'programmer', 'builder', 'fields', 'fields', 'builder_id', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-27 13:06:21', '0000-00-00 00:00:00', 'n');
 INSERT INTO `tr_builders` VALUES ('5', '表单字段验证', 'builder_field_validators', 'n', 'InnoDB', 'utf8', '表单字段验证表', 'dynamic', 'builders', 'programmer', 'builder', 'validators', 'validators', 'field_id', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-27 13:06:30', '0000-00-00 00:00:00', 'n');
+INSERT INTO `tr_builders` VALUES ('6', '用户可访问的事件', 'user_amcas', 'n', 'InnoDB', 'utf8', '用户可访问的事件表', 'normal', 'users', 'passport', 'users', 'amcas', 'amcas', 'amca_pid', 'index', 'view', 'create', 'modify', 'remove', 'pencil,trash,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-28 16:28:14', '2014-05-29 13:30:25', 'n');
+INSERT INTO `tr_builders` VALUES ('7', '用户组', 'user_groups', 'n', 'InnoDB', 'utf8', '用户分组表', 'normal', 'users', 'passport', 'users', 'groups', 'groups', 'group_pid', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-29 17:33:12', '2014-05-29 17:37:54', 'n');
 
 -- ----------------------------
 -- Table structure for `tr_system_log_ymd`
@@ -399,8 +430,8 @@ CREATE TABLE `tr_system_options` (
 DROP TABLE IF EXISTS `tr_user_amcas`;
 CREATE TABLE `tr_user_amcas` (
   `amca_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `amca_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `amca_name` varchar(100) NOT NULL DEFAULT '' COMMENT '事件名',
+  `amca_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `prompt` varchar(100) NOT NULL DEFAULT '' COMMENT '提示',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `category` enum('app','mod','ctrl','act') NOT NULL DEFAULT 'act' COMMENT '类型，app：应用、mod：模块、ctrl：控制器、act：行动',
@@ -409,36 +440,26 @@ CREATE TABLE `tr_user_amcas` (
   KEY `amca_name` (`amca_name`),
   KEY `sort` (`sort`),
   KEY `category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COMMENT='用户可访问的事件表';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='用户可访问的事件表';
 
 -- ----------------------------
 -- Records of tr_user_amcas
 -- ----------------------------
-INSERT INTO `tr_user_amcas` VALUES ('1', '0', 'administrator', 'administrator', '0', 'app');
-INSERT INTO `tr_user_amcas` VALUES ('2', '1', 'system', '系统管理', '1', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('4', '1', 'ucenter', '用户中心', '4', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('5', '2', 'site', '系统管理', '0', 'ctrl');
-INSERT INTO `tr_user_amcas` VALUES ('6', '2', 'tools', '系统工具', '1', 'ctrl');
-INSERT INTO `tr_user_amcas` VALUES ('13', '4', 'amcas', '用户可访问的事件', '0', 'ctrl');
-INSERT INTO `tr_user_amcas` VALUES ('14', '4', 'groups', '用户组', '1', 'ctrl');
-INSERT INTO `tr_user_amcas` VALUES ('15', '0', 'test', '测试', '0', 'app');
-INSERT INTO `tr_user_amcas` VALUES ('20', '1', '\'system\'', '\'\'', '0', '');
-INSERT INTO `tr_user_amcas` VALUES ('21', '1', '\'systemaaa\'', '\'\'', '0', '');
-INSERT INTO `tr_user_amcas` VALUES ('22', '1', '\'syste\'', '\'\'', '0', '');
-INSERT INTO `tr_user_amcas` VALUES ('23', '1', '\'aa\'', '\'\'', '0', '');
-INSERT INTO `tr_user_amcas` VALUES ('24', '1', '\'aaa\'', '\'\'', '0', '');
-INSERT INTO `tr_user_amcas` VALUES ('35', '1', 'aaa', 'aaa', '4', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('36', '1', 'aaab', 'aaa', '4', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('37', '1', 'aaabc', 'aaa', '4', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('38', '1', 'aaaa', 'af', '4', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('40', '15', 'aabb', 'abb', '4', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('44', '15', 'systemab', 'aa', '3', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('45', '0', 'ucenter', '用户中心', '0', 'app');
-INSERT INTO `tr_user_amcas` VALUES ('46', '1', 'afad', 'f33', '3', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('47', '45', 'user', '用户管理', '1', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('48', '45', 'system', '系统设置', '2', 'mod');
-INSERT INTO `tr_user_amcas` VALUES ('53', '47', 'amcas', '用户可访问的事件', '0', 'ctrl');
-INSERT INTO `tr_user_amcas` VALUES ('54', '48', 'site', '系统管理', '0', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('1', 'programmer', '0', '开发工具', '0', 'app');
+INSERT INTO `tr_user_amcas` VALUES ('2', 'passport', '0', '用户中心', '1', 'app');
+INSERT INTO `tr_user_amcas` VALUES ('3', 'system', '1', '系统信息', '1', 'mod');
+INSERT INTO `tr_user_amcas` VALUES ('4', 'builder', '1', '生成代码', '2', 'mod');
+INSERT INTO `tr_user_amcas` VALUES ('5', 'site', '3', '系统管理', '0', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('6', 'builders', '4', '生成代码', '0', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('7', 'fields', '4', '表单字段', '1', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('8', 'groups', '4', '字段组', '2', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('9', 'tblnames', '4', '数据库表管理', '3', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('10', 'types', '4', '表单字段类型', '4', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('11', 'validators', '4', '表单字段验证', '5', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('12', 'system', '2', '系统信息', '1', 'mod');
+INSERT INTO `tr_user_amcas` VALUES ('13', 'users', '2', '用户中心', '2', 'mod');
+INSERT INTO `tr_user_amcas` VALUES ('14', 'site', '12', '系统管理', '0', 'ctrl');
+INSERT INTO `tr_user_amcas` VALUES ('15', 'amcas', '13', '用户可访问的事件', '0', 'ctrl');
 
 -- ----------------------------
 -- Table structure for `tr_user_groups`
@@ -446,8 +467,8 @@ INSERT INTO `tr_user_amcas` VALUES ('54', '48', 'site', '系统管理', '0', 'ct
 DROP TABLE IF EXISTS `tr_user_groups`;
 CREATE TABLE `tr_user_groups` (
   `group_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `group_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `group_name` varchar(100) NOT NULL DEFAULT '' COMMENT '组名',
+  `group_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `permission` text COMMENT '权限设置，可访问的事件，由应用-模块-控制器-行动组合',
   `description` text COMMENT '描述',
@@ -460,15 +481,15 @@ CREATE TABLE `tr_user_groups` (
 -- ----------------------------
 -- Records of tr_user_groups
 -- ----------------------------
-INSERT INTO `tr_user_groups` VALUES ('1', '0', 'Public', '0', 'a:2:{s:13:\"administrator\";a:1:{s:7:\"builder\";a:3:{s:6:\"schema\";a:2:{i:0;i:2;i:1;i:4;}s:5:\"types\";a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}s:10:\"validators\";a:2:{i:0;i:2;i:1;i:4;}}}s:4:\"test\";a:1:{s:6:\"system\";a:1:{s:5:\"index\";a:2:{i:0;i:1;i:1;i:2;}}}}', '公开组，未登录用户拥有该权限');
-INSERT INTO `tr_user_groups` VALUES ('2', '1', 'Guest', '1', 'a:1:{s:13:\"administrator\";a:2:{s:6:\"system\";a:2:{s:4:\"site\";a:1:{i:0;i:1;}s:5:\"tools\";a:1:{i:0;i:1;}}s:7:\"builder\";a:3:{s:6:\"fields\";a:1:{i:0;i:2;}s:6:\"groups\";a:1:{i:0;i:2;}s:5:\"index\";a:1:{i:0;i:2;}}}}', '普通会员');
-INSERT INTO `tr_user_groups` VALUES ('3', '1', 'Manager', '2', null, '普通管理员');
-INSERT INTO `tr_user_groups` VALUES ('4', '1', 'Registered', '3', 'a:2:{s:13:\"administrator\";a:3:{s:6:\"system\";a:2:{s:4:\"site\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:8;}s:5:\"tools\";a:3:{i:0;i:2;i:1;i:4;i:2;i:8;}}s:7:\"builder\";a:3:{s:6:\"schema\";a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}s:5:\"types\";a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}s:10:\"validators\";a:2:{i:0;i:2;i:1;i:4;}}s:7:\"ucenter\";a:2:{s:5:\"amcas\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:8;}s:6:\"groups\";a:4:{i:0;i:1;i:1;i:2;i:2;i:4;i:3;i:8;}}}s:4:\"test\";a:1:{s:6:\"system\";a:1:{s:5:\"index\";a:2:{i:0;i:1;i:1;i:2;}}}}', '记名作者');
-INSERT INTO `tr_user_groups` VALUES ('5', '1', 'Super Users', '4', null, '超级会员');
-INSERT INTO `tr_user_groups` VALUES ('6', '3', 'Administrator', '1', null, '超级管理员');
-INSERT INTO `tr_user_groups` VALUES ('7', '4', 'Author', '1', 'a:2:{s:13:\"administrator\";a:2:{s:7:\"builder\";a:6:{s:6:\"fields\";a:1:{i:0;i:2;}s:6:\"groups\";a:1:{i:0;i:2;}s:5:\"index\";a:1:{i:0;i:2;}s:6:\"schema\";a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}s:5:\"types\";a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}s:10:\"validators\";a:2:{i:0;i:2;i:1;i:4;}}s:7:\"ucenter\";a:2:{s:5:\"amcas\";a:2:{i:0;i:2;i:1;i:4;}s:6:\"groups\";a:3:{i:0;i:1;i:1;i:2;i:2;i:4;}}}s:4:\"test\";a:1:{s:6:\"system\";a:1:{s:5:\"index\";a:1:{i:0;i:2;}}}}', '普通作者');
-INSERT INTO `tr_user_groups` VALUES ('8', '7', 'Editor', '1', null, '高级作者');
-INSERT INTO `tr_user_groups` VALUES ('9', '8', 'Publisher', '1', null, '出版者');
+INSERT INTO `tr_user_groups` VALUES ('1', 'Public', '0', '0', '', '公开组，未登录用户拥有该权限');
+INSERT INTO `tr_user_groups` VALUES ('2', 'Guest', '1', '1', null, '普通会员');
+INSERT INTO `tr_user_groups` VALUES ('3', 'Manager', '1', '2', null, '普通管理员');
+INSERT INTO `tr_user_groups` VALUES ('4', 'Registered', '1', '3', null, '记名作者');
+INSERT INTO `tr_user_groups` VALUES ('5', 'Super Users', '1', '4', null, '超级会员');
+INSERT INTO `tr_user_groups` VALUES ('6', 'Administrator', '3', '1', null, '超级管理员');
+INSERT INTO `tr_user_groups` VALUES ('7', 'Author', '4', '1', null, '普通作者');
+INSERT INTO `tr_user_groups` VALUES ('8', 'Editor', '7', '1', null, '高级作者');
+INSERT INTO `tr_user_groups` VALUES ('9', 'Publisher', '8', '1', null, '出版者');
 
 -- ----------------------------
 -- Table structure for `tr_user_profile`
@@ -536,20 +557,8 @@ CREATE TABLE `tr_users` (
   KEY `valid_phone` (`valid_phone`),
   KEY `forbidden` (`forbidden`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='用户主表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户主表';
 
 -- ----------------------------
 -- Records of tr_users
 -- ----------------------------
-INSERT INTO `tr_users` VALUES ('1', 'aaaaaaa', 'name', '05a515fba1665791642e3fc92ef33c25', 'n43MsZ', 'aasdff', '', '', '2014-04-15 18:29:39', '2014-04-15 18:29:39', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('2', 'songhuan', 'name', 'ad81d58e6df1858b06ea4aa8925e98d3', 'xewIbR', 'songhuan', '', '', '2014-04-15 18:30:47', '2014-04-15 18:30:47', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('3', '15001329893', 'phone', 'c41507e8279f17f5ac3fe559419d7200', 'Gyn8AL', '', '', '15001329893', '2014-04-15 18:31:16', '2014-04-15 18:31:16', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('4', 'iphper@yeah.net', 'mail', '02dae8851b3360c627622c905a14ecd3', 'bMztzE', '', 'iphper@yeah.net', '', '2014-04-15 18:31:47', '2014-04-15 18:31:47', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('5', 'aaafdsasdf', 'name', '7026d47026290ce5ff8fe0be051f70d6', 'dgWePS', 'asdfsdf', '', '', '2014-04-15 18:32:05', '2014-04-15 18:32:05', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'y', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('6', '15001329891', 'phone', 'c1937ba17c6cec73293b273969ca6ec4', '8U7gbA', '', '', '15001329892', '2014-04-15 18:32:33', '2014-04-15 18:32:33', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('7', 'af@adf.com', 'mail', '440bfa5220b7aee6e65d68bcbe76ebd7', 'XQi46M', '', 'aaa@aaa.ccu', '', '2014-04-15 18:32:56', '2014-04-15 18:32:56', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('8', 'adfefee', 'name', 'ff1ae9ee2e1d840c75e7756ec1589390', '9QSiRm', 'aaaaaa', 'aaa@aaa.ccurrr', '15001329892', '2014-04-15 18:33:24', '2014-04-15 18:33:24', '2014-04-15 18:40:35', '0', '0', '0', '1', '2', 'n', 'y', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('9', 'aafffeeee', 'name', '12c53bd1a0cd64422ba13ca2d7c4b44f', 'XsLzcc', 'aafffeeeeee', '', '', '2014-04-16 10:50:11', '2014-04-16 10:50:11', '2014-04-16 10:52:49', '0', '0', '0', '1', '3', 'y', 'y', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('10', 'attyyy', 'name', 'c37a178a3555313bd60b048e52ca703d', 'SLCaQM', 'attyyy', '', '', '2014-04-16 15:05:52', '2014-04-16 15:05:52', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('11', 'wewewewe', 'name', '1ed58e3d1f6bd604339033c8d2610483', 'YYxSvC', 'wewewewe', '', '', '2014-04-16 15:08:07', '2014-04-16 15:08:07', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('12', 'iiiiiiiiiii', 'name', '670e9fa9a8e29625d58375d3348dda9c', 'IkMMC7', 'iiiiiiiiiii', '', '', '2014-04-16 15:11:35', '2014-04-16 15:11:35', '0000-00-00 00:00:00', '0', '0', '0', '1', '0', 'n', 'n', 'n', 'n');

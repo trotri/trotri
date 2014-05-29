@@ -58,4 +58,26 @@ class Builders extends DynamicService
 
 		return $data;
 	}
+
+	/**
+	 * 通过“生成代码ID”获取“生成代码名”
+	 * @param integer $builderId
+	 * @return string
+	 */
+	public function getBuilderNameByBuilderId($builderId)
+	{
+		$builderName = $this->getByPk('builder_name', $builderId);
+		return $builderName ? $builderName : '';
+	}
+
+	/**
+	 * 获取“是否生成扩展表”
+	 * @param string $tblProfile
+	 * @return string
+	 */
+	public function getTblProfileLangByTblProfile($tblProfile)
+	{
+		$enum = DataBuilders::getTblProfileEnum();
+		return isset($enum[$tblProfile]) ? $enum[$tblProfile] : '';
+	}
 }

@@ -61,6 +61,7 @@ class Schema
 		$hasTrash          = false,
 		$hasSort           = false,
 		$pkColumn          = '', // 将自增类型当主键
+		$pkVarColumn       = '',
 		$fkFuncName        = '',
 		$fkVarName         = '';
 
@@ -68,10 +69,10 @@ class Schema
 		$types             = array(),  // 表单字段类型
 		$groups            = array(),  // 表单字段组数据
 		$fields            = array(),  // 表单字段数据
-		$listIndexColumns  = array(), // 列表模板字段顺序
-		$formViewColumns   = array(), // 详情表单字段顺序
-		$formCreateColumns = array(), // 新增表单字段顺序
-		$formModifyColumns = array(); // 编辑表单字段顺序
+		$listIndexColumns  = array(),  // 列表模板字段顺序
+		$formViewColumns   = array(),  // 详情表单字段顺序
+		$formCreateColumns = array(),  // 新增表单字段顺序
+		$formModifyColumns = array();  // 编辑表单字段顺序
 
 	/**
 	 * 构造方法：初始化所有的全局变量
@@ -270,6 +271,7 @@ class Schema
 			$temp['form_search_sort']      = (int) $rows['form_search_sort'];
 
 			$temp['func_name']             = $this->column2Name(strtolower($temp['field_name']));
+			$temp['var_name']              = '$' . strtolower(substr($temp['func_name'], 0, 1)) . substr($temp['func_name'], 1);
 			$temp['up_field_name']         = strtoupper($temp['field_name']);
 			$temp['lang_label']            = $this->langPrev . '_' . $temp['up_field_name'] . '_LABEL';
 			$temp['lang_hint']             = $this->langPrev . '_' . $temp['up_field_name'] . '_HINT';
@@ -314,6 +316,7 @@ class Schema
 
 			if ($temp['column_auto_increment']) {
 				$this->pkColumn = $temp['field_name'];
+				$this->pkVarColumn = ($pkVarColumn = $this->column2Name($this->pkColumn)) ? '$' . strtolower(substr($pkVarColumn, 0, 1)) . substr($pkVarColumn, 1) : '';
 			}
 
 			$this->fields[] = $temp;

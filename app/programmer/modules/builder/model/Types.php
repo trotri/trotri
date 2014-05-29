@@ -119,7 +119,7 @@ class Types extends BaseModel
 	 */
 	public function getTypeNameByTypeId($typeId)
 	{
-		return $this->getService()->getByPk('type_name', $typeId);
+		return $this->getService()->getTypeNameByTypeId($typeId);
 	}
 
 	/**

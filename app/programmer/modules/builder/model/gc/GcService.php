@@ -32,9 +32,122 @@ class GcService extends AbstractGc
 	{
 		Log::echoTrace('SRV Type "' . $this->schema->srvType . '" ...');
 
+		if ($this->schema->srvType === 'normal') {
+			$this->normal();
+		}
+
 		if ($this->schema->srvType === 'dynamic') {
 			$this->dynamic();
 		}
+	}
+
+	/**
+	 * 创建AbstractService类
+	 * @return void
+	 */
+	public function normal()
+	{
+		$fileManager = $this->fileManager;
+		$schema = $this->schema;
+
+		$filePath = $fileManager->services . DS . $schema->ucClsName . '.php';
+		$stream = $fileManager->fopen($filePath);
+		$fileManager->writeCopyrightComment($stream);
+
+		fwrite($stream, "namespace {$schema->srvName}\\services;\n\n");
+		fwrite($stream, "use libsrv\\AbstractService;\n");
+		fwrite($stream, "use {$schema->srvName}\\db\\{$schema->ucClsName} AS Db{$schema->ucClsName};\n\n");
+
+		$fileManager->writeClassComment($stream, $schema->ucClsName, self::CLASS_COMMENT, "{$schema->srvName}.services");
+
+		fwrite($stream, "class {$schema->ucClsName} extends AbstractService\n");
+		fwrite($stream, "{\n");
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * @var instance of {$schema->srvName}\\db\\{$schema->ucClsName}\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tprotected \$_db{$schema->ucClsName} = null;\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 构造方法：初始化数据库操作类\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function __construct()\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$this->_db{$schema->ucClsName} = new Db{$schema->ucClsName}();\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 通过多个字段名和值，查询多条记录\n");
+		fwrite($stream, "\t * @param array \$attributes\n");
+		fwrite($stream, "\t * @param string \$order\n");
+		fwrite($stream, "\t * @param integer \$limit\n");
+		fwrite($stream, "\t * @param integer \$offset\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function findAll(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0)\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$order = trim(\$order);\n");
+		fwrite($stream, "\t\t\$limit = max((int) \$limit, 1);\n");
+		fwrite($stream, "\t\t\$offset = max((int) \$offset, 1);\n\n");
+		fwrite($stream, "\t\t\$rows = \$this->_db{$schema->ucClsName}->findAll(\$params, \$order, \$limit, \$offset);\n");
+		fwrite($stream, "\t\treturn \$rows;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 通过主键，查询一条记录\n");
+		fwrite($stream, "\t * @param integer {$schema->pkVarColumn}\n");
+		fwrite($stream, "\t * @return array\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function findByPk({$schema->pkVarColumn})\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$row = \$this->_db{$schema->ucClsName}->findByPk({$schema->pkVarColumn});\n");
+		fwrite($stream, "\t\treturn \$row;\n");
+		fwrite($stream, "\t}\n\n");
+
+		fwrite($stream, "\t/**\n");
+		fwrite($stream, "\t * 通过主键，获取某个列的值\n");
+		fwrite($stream, "\t * @param string \$columnName\n");
+		fwrite($stream, "\t * @param integer {$schema->pkVarColumn}\n");
+		fwrite($stream, "\t * @return mixed\n");
+		fwrite($stream, "\t */\n");
+		fwrite($stream, "\tpublic function getByPk(\$columnName, {$schema->pkVarColumn})\n");
+		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\t\$value = \$this->_db{$schema->ucClsName}->getByPk(\$columnName, {$schema->pkVarColumn});\n");
+		fwrite($stream, "\t\treturn \$value;\n");
+		fwrite($stream, "\t}\n\n");
+
+		$pkFuncColumn = $schema->column2Name($schema->pkColumn);
+		foreach ($schema->fields as $rows) {
+			if ($rows['field_name'] === $schema->pkColumn) {
+				continue;
+			}
+
+			$funcName = 'get' . $schema->column2Name($rows['field_name']) . 'By' . $pkFuncColumn;
+			fwrite($stream, "\t/**\n");
+			fwrite($stream, "\t * 通过“主键ID”，获取“{$rows['html_label']}”\n");
+			fwrite($stream, "\t * @param integer {$schema->pkVarColumn}\n");
+			if ($rows['field_type'] === 'INT') {
+				fwrite($stream, "\t * @return integer\n");
+			}
+			else {
+				fwrite($stream, "\t * @return string\n");
+			}
+
+			fwrite($stream, "\t */\n");
+			fwrite($stream, "\tpublic function {$funcName}({$schema->pkVarColumn})\n");
+			fwrite($stream, "\t{\n");
+			fwrite($stream, "\t\t\$value = \$this->getByPk('{$rows['field_name']}', {$schema->pkVarColumn});\n");
+			if ($rows['field_type'] === 'INT') {
+				fwrite($stream, "\t\treturn \$value ? (int) \$value : 0;\n");
+			}
+			else {
+				fwrite($stream, "\t\treturn \$value ? \$value : '';\n");
+			}
+
+			fwrite($stream, "\t}\n\n");
+		}
+
+		fwrite($stream, "}\n");
+		fclose($stream);
 	}
 
 	/**
@@ -60,7 +173,39 @@ class GcService extends AbstractGc
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * @var string 表名\n");
 		fwrite($stream, "\t */\n");
-		fwrite($stream, "\tprotected \$_tableName = '{$schema->tblName}';\n");
+		fwrite($stream, "\tprotected \$_tableName = '{$schema->tblName}';\n\n");
+
+		$pkFuncColumn = $schema->column2Name($schema->pkColumn);
+		foreach ($schema->fields as $rows) {
+			if ($rows['field_name'] === $schema->pkColumn) {
+				continue;
+			}
+
+			$funcName = 'get' . $schema->column2Name($rows['field_name']) . 'By' . $pkFuncColumn;
+			fwrite($stream, "\t/**\n");
+			fwrite($stream, "\t * 通过“主键ID”，获取“{$rows['html_label']}”\n");
+			fwrite($stream, "\t * @param integer {$schema->pkVarColumn}\n");
+			if ($rows['field_type'] === 'INT') {
+				fwrite($stream, "\t * @return integer\n");
+			}
+			else {
+				fwrite($stream, "\t * @return string\n");
+			}
+
+			fwrite($stream, "\t */\n");
+			fwrite($stream, "\tpublic function {$funcName}({$schema->pkVarColumn})\n");
+			fwrite($stream, "\t{\n");
+			fwrite($stream, "\t\t\$value = \$this->getByPk('{$rows['field_name']}', {$schema->pkVarColumn});\n");
+			if ($rows['field_type'] === 'INT') {
+				fwrite($stream, "\t\treturn \$value ? (int) \$value : 0;\n");
+			}
+			else {
+				fwrite($stream, "\t\treturn \$value ? \$value : '';\n");
+			}
+
+			fwrite($stream, "\t}\n\n");
+		}
+
 		fwrite($stream, "}\n");
 
 		fclose($stream);

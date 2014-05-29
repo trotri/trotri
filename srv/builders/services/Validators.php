@@ -14,9 +14,9 @@ use libsrv\DynamicService;
 
 /**
  * Validators class file
- * 业务层：模型类
+ * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Validators.php 1 2014-05-27 13:20:09Z Code Generator $
+ * @version $Id: Validators.php 1 2014-05-28 11:06:31Z Code Generator $
  * @package builders.services
  * @since 1.0
  */
@@ -26,4 +26,26 @@ class Validators extends DynamicService
 	 * @var string 表名
 	 */
 	protected $_tableName = 'builder_field_validators';
+
+	/**
+	 * 获取验证时对比值类型
+	 * @param string $optionCategory
+	 * @return string
+	 */
+	public function getOptionCategoryLangByOptionCategory($optionCategory)
+	{
+		$enum = DataValidators::getOptionCategoryEnum();
+		return isset($enum[$optionCategory]) ? $enum[$optionCategory] : '';
+	}
+
+	/**
+	 * 获取验证时对比值类型
+	 * @param string $when
+	 * @return string
+	 */
+	public function getWhenLangByWhen($when)
+	{
+		$enum = DataValidators::getWhenEnum();
+		return isset($enum[$when]) ? $enum[$when] : '';
+	}
 }

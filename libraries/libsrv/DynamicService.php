@@ -187,26 +187,14 @@ abstract class DynamicService extends AbstractService
 	 */
 	public function findColumnsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		$db = $this->getDb();
-		$isCached = $db->isCached; // 记录原始数据
-		if ($option === 'SQL_CALC_FOUND_ROWS' && $db->isCached) {
-			$db->isCached = false; // 不记缓存
-		}
-
-		$rows = $db->findColumnsByCondition($columnNames, $condition, $params, $order, $limit, $offset, $option);
+		$rows = $this->getDb()->findColumnsByCondition($columnNames, $condition, $params, $order, $limit, $offset, $option);
 		if (is_array($rows) && $option === 'SQL_CALC_FOUND_ROWS') {
-			$total = $db->getFoundRows();
-			$rows = array(
-				'rows' => $rows,
-				'total' => $total,
-				'attributes' => $params,
-				'order' => $order,
-				'limit' => $limit,
-				'offset' => $offset,
-			);
+			$rows['attributes'] = $params;
+			$rows['order'] = $order;
+			$rows['limit'] = $limit;
+			$rows['offset'] = $offset;
 		}
 
-		$db->isCached = $isCached; // 还原原始数据
 		return $rows;
 	}
 
@@ -222,26 +210,14 @@ abstract class DynamicService extends AbstractService
 	 */
 	public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		$db = $this->getDb();
-		$isCached = $db->isCached; // 记录原始数据
-		if ($option === 'SQL_CALC_FOUND_ROWS' && $db->isCached) {
-			$db->isCached = false; // 不记缓存
-		}
-
-		$rows = $db->findAllByCondition($condition, $params, $order, $limit, $offset, $option);
+		$rows = $this->getDb()->findAllByCondition($condition, $params, $order, $limit, $offset, $option);
 		if (is_array($rows) && $option === 'SQL_CALC_FOUND_ROWS') {
-			$total = $db->getFoundRows();
-			$rows = array(
-				'rows' => $rows,
-				'total' => $total,
-				'attributes' => $params,
-				'order' => $order,
-				'limit' => $limit,
-				'offset' => $offset,
-			);
+			$rows['attributes'] = $params;
+			$rows['order'] = $order;
+			$rows['limit'] = $limit;
+			$rows['offset'] = $offset;
 		}
 
-		$db->isCached = $isCached; // 还原原始数据
 		return $rows;
 	}
 

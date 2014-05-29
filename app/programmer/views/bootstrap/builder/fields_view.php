@@ -5,6 +5,18 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'values' => $this->data,
 		'elements_object' => $this->elements,
 		'elements' => array(
+			'builder_id' => array(
+				'value' => $this->builder_id
+			),
+			'builder_name' => array(
+				'value' => $this->elements->getBuilderNameByBuilderId($this->builder_id),
+			),
+			'group_id' => array(
+				'options' => $this->elements->getGroupsByBuilderId($this->builder_id, true)
+			),
+			'type_id' => array(
+				'options' => $this->elements->getTypeNames()
+			)
 		),
 		'columns' => array(
 			'field_id',
@@ -13,7 +25,7 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 			'column_auto_increment',
 			'column_unsigned',
 			'column_comment',
-			'builder_id',
+			'builder_name',
 			'group_id',
 			'type_id',
 			'sort',

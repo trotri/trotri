@@ -13,6 +13,7 @@ namespace builders\services;
 use libsrv\FormProcessor;
 use tfc\validator;
 use builders\library\Lang;
+use libsrv\Service;
 
 /**
  * FpFields class file
@@ -156,8 +157,9 @@ class FpFields extends FormProcessor
 	 */
 	public function getGroupIdRule($value)
 	{
+		$enum = Service::getInstance('Groups', 'builders')->getPromptsByBuilderId($this->builder_id, true);
 		return array(
-			'InArray' => new validator\InArrayValidator($value, array(), Lang::_('SRV_FILTER_BUILDER_FIELDS_GROUP_ID_INARRAY')),
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), Lang::_('SRV_FILTER_BUILDER_FIELDS_GROUP_ID_INARRAY')),
 		);
 	}
 
@@ -168,8 +170,9 @@ class FpFields extends FormProcessor
 	 */
 	public function getTypeIdRule($value)
 	{
+		$enum = Service::getInstance('Types', 'builders')->getTypeNames();
 		return array(
-			'InArray' => new validator\InArrayValidator($value, 0, Lang::_('SRV_FILTER_BUILDER_FIELDS_TYPE_ID_INARRAY')),
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), Lang::_('SRV_FILTER_BUILDER_FIELDS_TYPE_ID_INARRAY')),
 		);
 	}
 

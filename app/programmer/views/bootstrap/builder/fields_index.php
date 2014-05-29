@@ -16,7 +16,7 @@ class TableRender extends views\bootstrap\components\TableRender
 
 	public function getGroupId($data)
 	{
-		return $this->elements_object->getGroupNameByGroupId($data['group_id']);
+		return $this->elements_object->getPromptByGroupId($data['group_id']);
 	}
 
 	public function getTypeId($data)

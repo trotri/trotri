@@ -1,0 +1,11 @@
+$(document).ready(function() {
+  
+});
+
+/**
+ * Users
+ * @author songhuan <trotri@yeah.net>
+ * @version $Id: users.js 1 2013-10-16 18:38:00Z $
+ */
+Users = {
+}

@@ -216,7 +216,8 @@ abstract class DynamicDb extends AbstractDb
     public function findAllByCondition($condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
     {
         $sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $this->getTableSchema()->columnNames, $condition, $order, $limit, $offset, $option);
-        return $this->fetchAll($sql, $params);
+        $funcName = ($option === 'SQL_CALC_FOUND_ROWS') ? 'fetchAllNoCache' : 'fetchAll';
+        return $this->$funcName($sql, $params);
     }
 
     /**
@@ -249,7 +250,8 @@ abstract class DynamicDb extends AbstractDb
     public function findColumnsByCondition(array $columnNames, $condition, $params = null, $order = '', $limit = 0, $offset = 0, $option = '')
     {
         $sql = $this->getCommandBuilder()->createFind($this->getTableSchema()->name, $columnNames, $condition, $order, $limit, $offset, $option);
-        return $this->fetchAll($sql, $params);
+        $funcName = ($option === 'SQL_CALC_FOUND_ROWS') ? 'fetchAllNoCache' : 'fetchAll';
+        return $this->$funcName($sql, $params);
     }
 
     /**

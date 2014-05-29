@@ -36,4 +36,15 @@ class Types extends DynamicService
 		$rows = (array) $this->findPairsByAttributes(array('type_id', 'type_name'), array(), 'sort');
 		return $rows;
 	}
+
+	/**
+	 * 通过“类型ID”获取“类型名”
+	 * @param integer $typeId
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($typeId)
+	{
+		$typeName = $this->getByPk('type_name', $typeId);
+		return $typeName ? $typeName : '';
+	}
 }

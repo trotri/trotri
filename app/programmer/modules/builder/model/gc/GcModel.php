@@ -119,6 +119,7 @@ class GcModel extends AbstractGc
 		fwrite($stream, "\t}\n\n");
 
 		if ($schema->fkColumn) {
+			$pkFuncColumn = $schema->column2Name($schema->pkColumn);
 			fwrite($stream, "\t/**\n");
 			fwrite($stream, "\t * 获取{$schema->fkColumn}值\n");
 			fwrite($stream, "\t * @return integer\n");
@@ -128,7 +129,7 @@ class GcModel extends AbstractGc
 			fwrite($stream, "\t\t{$schema->fkVarName} = Ap::getRequest()->getInteger('{$schema->fkColumn}');\n");
 			fwrite($stream, "\t\tif ({$schema->fkVarName} <= 0) {\n");
 			fwrite($stream, "\t\t\t\$id = Ap::getRequest()->getInteger('id');\n");
-			fwrite($stream, "\t\t\t{$schema->fkVarName} = \$this->getService()->getByPk('{$schema->fkColumn}', \$id);\n");
+			fwrite($stream, "\t\t\t{$schema->fkVarName} = \$this->getService()->{$schema->fkFuncName}By{$pkFuncColumn}(\$id);\n");
 			fwrite($stream, "\t\t}\n\n");
 			fwrite($stream, "\t\treturn {$schema->fkVarName};\n");
 			fwrite($stream, "\t}\n\n");
