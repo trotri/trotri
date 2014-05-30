@@ -72,6 +72,7 @@ class GcService extends AbstractGc
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function __construct()\n");
 		fwrite($stream, "\t{\n");
+		fwrite($stream, "\t\tparent::__construct();\n\n");
 		fwrite($stream, "\t\t\$this->_db{$schema->ucClsName} = new Db{$schema->ucClsName}();\n");
 		fwrite($stream, "\t}\n\n");
 

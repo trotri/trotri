@@ -47,16 +47,16 @@ class DataGroups
 	 * 获取“权限”所有选项
 	 * @return array
 	 */
-	public function getPowerEnum()
+	public static function getPowerEnum()
 	{
 		static $enum = null;
 
 		if ($enum === null) {
 			$enum = array(
-				self::POWER_SELECT => $this->_('SRV_ENUM_USER_GROUPS_POWER_SELECT'),
-				self::POWER_INSERT => $this->_('SRV_ENUM_USER_GROUPS_POWER_INSERT'),
-				self::POWER_UPDATE => $this->_('SRV_ENUM_USER_GROUPS_POWER_UPDATE'),
-				self::POWER_DELETE => $this->_('SRV_ENUM_USER_GROUPS_POWER_DELETE'),
+				self::POWER_SELECT => Lang::_('SRV_ENUM_USER_GROUPS_POWER_SELECT'),
+				self::POWER_INSERT => Lang::_('SRV_ENUM_USER_GROUPS_POWER_INSERT'),
+				self::POWER_UPDATE => Lang::_('SRV_ENUM_USER_GROUPS_POWER_UPDATE'),
+				self::POWER_DELETE => Lang::_('SRV_ENUM_USER_GROUPS_POWER_DELETE'),
 			);
 		}
 

@@ -33,6 +33,8 @@ class Groups extends AbstractService
 	 */
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->_dbGroups = new DbGroups();
 	}
 
@@ -93,7 +95,7 @@ class Groups extends AbstractService
 	 * @param string $rightPad
 	 * @return array
 	 */
-	public function getGroupNames($groupPid = 0, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
+	public function getOptions($groupPid = 0, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
 	{
 		$data = array();
 
@@ -109,6 +111,30 @@ class Groups extends AbstractService
 			}
 		}
 
+		return $data;
+	}
+
+	/**
+	 * 通过主键，获取组名，并依次获取上级组名，用于Breadcrumbs
+	 * @param integer $groupId
+	 * @return array
+	 */
+	public function getGroupNames($groupId)
+	{
+		$data = array();
+
+		$groupId = (int) $groupId;
+		while ($groupId > 0) {
+			$row = $this->findByPk($groupId);
+			if (!$row || !is_array($row) || !isset($row['group_name']) || !isset($row['group_pid'])) {
+				return $data;
+			}
+
+			$data[$groupId] = $row['group_name'];
+			$groupId = (int) $row['group_pid'];
+		}
+
+		$data = array_reverse($data, true);
 		return $data;
 	}
 
@@ -170,7 +196,7 @@ class Groups extends AbstractService
 	{
 		$row = $this->_dbGroups->findByPk($groupId);
 		if (is_array($row) && isset($row['permission'])) {
-			$row['permission'] = unserialize($row['permission']);
+			$row['permission'] = unserialize(base64_decode($row['permission']));
 			if (!is_array($row['permission'])) {
 				$row['permission'] = array();
 			}
@@ -227,7 +253,7 @@ class Groups extends AbstractService
 	/**
 	 * 通过“主键ID”，获取“权限设置”
 	 * @param integer $groupId
-	 * @return string
+	 * @return array
 	 */
 	public function getPermissionByGroupId($groupId)
 	{
@@ -250,4 +276,14 @@ class Groups extends AbstractService
 		return $value ? $value : '';
 	}
 
+	/**
+	 * 通过主键，编辑“权限设置”
+	 * @param integer $groupId
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyPermissionByPk($groupId, array $params)
+	{
+		\tfc\saf\debug_print_r($params);
+	}
 }
