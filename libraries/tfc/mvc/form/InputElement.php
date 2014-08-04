@@ -10,8 +10,6 @@
 
 namespace tfc\mvc\form;
 
-use tfc\ap\ErrorException;
-
 /**
  * InputElement class file
  * 输入框类表单元素

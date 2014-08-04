@@ -10,8 +10,6 @@
 
 namespace builders\services;
 
-use builders\library\Lang;
-
 /**
  * DataGroups class file
  * 业务层：数据管理类，寄存常量、选项

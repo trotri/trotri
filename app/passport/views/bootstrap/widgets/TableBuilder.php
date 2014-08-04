@@ -124,10 +124,10 @@ class TableBuilder extends Widget
 			foreach ($this->_elements as $columnName => $element) {
 				if ($element['callback'] !== null) {
 					if (is_string($element['callback'])) {
-						$value = @call_user_func(array($this->table_render, $element['callback']), &$row);
+						$value = @call_user_func(array($this->table_render, $element['callback']), $row);
 					}
 					elseif (is_array($element['callback'])) {
-						$value = @call_user_func($element['callback'], &$row);
+						$value = @call_user_func($element['callback'], $row);
 					}
 				}
 				elseif (isset($row[$columnName])) {

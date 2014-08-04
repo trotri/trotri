@@ -13,7 +13,6 @@ namespace views\bootstrap\components\bar;
 use tfc\mvc\Widget;
 use tfc\saf\Text;
 use views\bootstrap\components\ComponentsConstant;
-use views\bootstrap\components\ComponentsBuilder;
 
 /**
  * SideBar class file

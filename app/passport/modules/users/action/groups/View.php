@@ -11,8 +11,6 @@
 namespace modules\users\action\groups;
 
 use library\actions;
-use tfc\ap\Ap;
-use libapp\Model;
 
 /**
  * View class file

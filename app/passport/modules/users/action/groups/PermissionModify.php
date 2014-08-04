@@ -44,7 +44,7 @@ class PermissionModify extends actions\Modify
 		$mod = Model::getInstance('Groups');
 		$submitType = new SubmitType();
 		if ($submitType->isPost()) {
-			$ret = $mod->modifyPermissionByPk($id, $req->getPost());
+			$ret = $mod->modifyPermissionByPk($id, $req->getPost('amcas', array()));
 			if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
 				if ($submitType->isTypeSave()) {
 					$this->forward('permissionmodify', Mvc::$controller, Mvc::$module, $ret);

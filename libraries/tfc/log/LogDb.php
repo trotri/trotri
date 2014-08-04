@@ -10,7 +10,6 @@
 
 namespace tfc\log;
 
-use tfc\ap\ErrorException;
 use tfc\db\Driver;
 
 /**

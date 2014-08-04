@@ -1,7 +1,4 @@
 <?php
-use views\bootstrap\components\ComponentsConstant;
-use views\bootstrap\components\ComponentsBuilder;
-
 class TableRender extends views\bootstrap\components\TableRender
 {
 	public function getValidatorNameLink($data)

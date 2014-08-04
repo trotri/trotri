@@ -11,7 +11,6 @@
 namespace modules\users\action\groups;
 
 use library\actions;
-use tfc\ap\Ap;
 
 /**
  * Modify class file

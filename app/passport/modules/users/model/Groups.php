@@ -11,7 +11,6 @@
 namespace modules\users\model;
 
 use library\BaseModel;
-use tfc\ap\Ap;
 use tfc\saf\Text;
 use users\services\DataGroups;
 use libapp\Model;

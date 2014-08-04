@@ -10,7 +10,6 @@
 
 namespace views\bootstrap\widgets;
 
-use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
 
 /**

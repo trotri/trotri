@@ -11,6 +11,7 @@
 namespace users\services;
 
 use libsrv\AbstractService;
+use libsrv\Service;
 use users\db\Groups AS DbGroups;
 
 /**
@@ -284,6 +285,9 @@ class Groups extends AbstractService
 	 */
 	public function modifyPermissionByPk($groupId, array $params)
 	{
-		\tfc\saf\debug_print_r($params);
+		$amcas = Service::getInstance('Amcas', $this->_srvName)->findAllByRecur();
+		$powers = DataGroups::getPowerEnum();
+
+		\tfc\saf\debug_print_r($powers);
 	}
 }

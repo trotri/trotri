@@ -48,7 +48,7 @@ abstract class Event extends Application
      * @param tfc\ap\EventDispatcher $owner
      * @return void
      */
-    public function attach(EventDispatcher $owner)
+    public function detach(EventDispatcher $owner)
     {
         $owner->detach($this);
 
