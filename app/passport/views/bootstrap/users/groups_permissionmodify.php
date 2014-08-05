@@ -20,8 +20,8 @@ $eleName = 'amcas';
 
 $extendParentPermissionIcon = $html->tag('span', array(
 	'class' => 'glyphicon glyphicon-share-alt',
-	'data-original-title' => $this->MOD_UCENTER_USER_GROUPS_EXTEND_PARENT_PERMISSION_LABEL,
-	'title' => $this->MOD_UCENTER_USER_GROUPS_EXTEND_PARENT_PERMISSION_LABEL
+	'data-original-title' => $this->MOD_USERS_USER_GROUPS_EXTEND_PARENT_PERMISSION_LABEL,
+	'title' => $this->MOD_USERS_USER_GROUPS_EXTEND_PARENT_PERMISSION_LABEL
 ), '');
 ?>
 

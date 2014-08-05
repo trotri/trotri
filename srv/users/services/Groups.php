@@ -11,6 +11,7 @@
 namespace users\services;
 
 use libsrv\AbstractService;
+use tfc\saf\Log;
 use libsrv\Service;
 use users\db\Groups AS DbGroups;
 
@@ -278,7 +279,7 @@ class Groups extends AbstractService
 	}
 
 	/**
-	 * 通过主键，编辑“权限设置”
+	 * 通过“主键ID”，编辑“权限设置”
 	 * @param integer $groupId
 	 * @param array $params
 	 * @return array
@@ -286,8 +287,66 @@ class Groups extends AbstractService
 	public function modifyPermissionByPk($groupId, array $params)
 	{
 		$amcas = Service::getInstance('Amcas', $this->_srvName)->findAllByRecur();
-		$powers = DataGroups::getPowerEnum();
+		$powerEnum = DataGroups::getPowerEnum();
 
-		\tfc\saf\debug_print_r($powers);
+		$data = array();
+		foreach ($params as $appName => $mods) {
+			if (!isset($amcas[$appName])) {
+				Log::warning(sprintf(
+					'Groups is unable to find the app name "%s".', $appName
+				));
+
+				return false;
+			}
+
+			if (!is_array($mods)) {
+				continue;
+			}
+
+			foreach ($mods as $modName => $ctrls) {
+				if (!isset($amcas[$appName]['rows'][$modName])) {
+					Log::warning(sprintf(
+						'Groups is unable to find the mod name "%s-%s".', $appName, $modName
+					));
+
+					return false;
+				}
+
+				if (!is_array($ctrls)) {
+					continue;
+				}
+
+				foreach ($ctrls as $ctrlName => $powers) {
+					if (!isset($amcas[$appName]['rows'][$modName]['rows'][$ctrlName])) {
+						Log::warning(sprintf(
+							'Groups is unable to find the ctrl name "%s-%s-%s".', $appName, $modName, $ctrlName
+						));
+
+						return false;
+					}
+
+					if (!is_array($powers)) {
+						continue;
+					}
+
+					foreach ($powers as $power) {
+						$power = (int) $power;
+						if (!isset($powerEnum[$power])) {
+							Log::warning(sprintf(
+								'Groups is unable to find the power "%s-%s-%s-%d".', $appName, $modName, $ctrlName, $power
+							));
+
+							return false;
+						}
+
+						$data[$appName][$modName][$ctrlName][] = $power;
+					}
+				}
+			}
+		}
+
+		$data = base64_encode(serialize($data));
+		$rowCount = $this->_dbGroups->modifyPermissionByPk($groupId, $data);
+		return $rowCount;
 	}
 }
