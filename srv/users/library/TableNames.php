@@ -39,6 +39,15 @@ class TableNames
 	}
 
 	/**
+	 * 获取“用户分组表”表名
+	 * @return string
+	 */
+	public static function getUsergroups()
+	{
+		return 'user_usergroups_map';
+	}
+
+	/**
 	 * 获取“用户主表”表名
 	 * @return string
 	 */

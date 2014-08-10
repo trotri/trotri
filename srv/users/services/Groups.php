@@ -41,7 +41,7 @@ class Groups extends AbstractService
 	}
 
 	/**
-	 * 获取所有的组Id
+	 * 获取所有的组ID
 	 * @return array
 	 */
 	public function getGroupIds()
@@ -279,13 +279,21 @@ class Groups extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，编辑“权限设置”
+	 * 通过主键，编辑“权限设置”
 	 * @param integer $groupId
 	 * @param array $params
 	 * @return array
 	 */
 	public function modifyPermissionByPk($groupId, array $params)
 	{
+		if (($groupId = (int) $groupId) <= 0) {
+			Log::warning(sprintf(
+				'Groups group_id "%d" must be greater than 0', $groupId
+			), 0,  __METHOD__);
+
+			return false;
+		}
+
 		$amcas = Service::getInstance('Amcas', $this->_srvName)->findAllByRecur();
 		$powerEnum = DataGroups::getPowerEnum();
 
@@ -294,7 +302,7 @@ class Groups extends AbstractService
 			if (!isset($amcas[$appName])) {
 				Log::warning(sprintf(
 					'Groups is unable to find the app name "%s".', $appName
-				));
+				), 0,  __METHOD__);
 
 				return false;
 			}
@@ -307,7 +315,7 @@ class Groups extends AbstractService
 				if (!isset($amcas[$appName]['rows'][$modName])) {
 					Log::warning(sprintf(
 						'Groups is unable to find the mod name "%s-%s".', $appName, $modName
-					));
+					), 0,  __METHOD__);
 
 					return false;
 				}
@@ -320,7 +328,7 @@ class Groups extends AbstractService
 					if (!isset($amcas[$appName]['rows'][$modName]['rows'][$ctrlName])) {
 						Log::warning(sprintf(
 							'Groups is unable to find the ctrl name "%s-%s-%s".', $appName, $modName, $ctrlName
-						));
+						), 0,  __METHOD__);
 
 						return false;
 					}
@@ -334,7 +342,7 @@ class Groups extends AbstractService
 						if (!isset($powerEnum[$power])) {
 							Log::warning(sprintf(
 								'Groups is unable to find the power "%s-%s-%s-%d".', $appName, $modName, $ctrlName, $power
-							));
+							), 0,  __METHOD__);
 
 							return false;
 						}

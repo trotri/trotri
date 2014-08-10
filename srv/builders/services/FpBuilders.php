@@ -109,6 +109,7 @@ class FpBuilders extends FormProcessor
 	protected function _cleanPostProcess()
 	{
 		$this->index_row_btns = Clean::join($this->index_row_btns);
+		return true;
 	}
 
 	/**

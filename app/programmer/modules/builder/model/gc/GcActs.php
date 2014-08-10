@@ -13,14 +13,14 @@ namespace modules\builder\model\gc;
 use tfc\saf\Log;
 
 /**
- * GcActions class file
+ * GcActs class file
  * 生成“项目层Action方法类”
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: GcActions.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: GcActs.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.builder.model.gc
  * @since 1.0
  */
-class GcActions extends AbstractGc
+class GcActs extends AbstractGc
 {
 	/**
 	 * (non-PHPdoc)

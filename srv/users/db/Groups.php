@@ -81,7 +81,7 @@ class Groups extends AbstractDb
 	public function getByPk($columnName, $groupId)
 	{
 		$row = $this->findByPk($groupId);
-		if (is_array($row) && isset($row[$columnName])) {
+		if ($row && is_array($row) && isset($row[$columnName])) {
 			return $row[$columnName];
 		}
 

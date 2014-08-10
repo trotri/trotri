@@ -106,9 +106,12 @@ abstract class FormProcessor
 		}
 
 		$params = $this->_cleanPreProcess($params);
+		if ($params === false) {
+			return false;
+		}
+
 		if ($this->_process($params)) {
-			$this->_cleanPostProcess();
-			return true;
+			return $this->_cleanPostProcess();
 		}
 
 		return false;
@@ -134,10 +137,11 @@ abstract class FormProcessor
 
 	/**
 	 * 验证后清理数据，需要子类重写此方法
-	 * @return void
+	 * @return boolean
 	 */
 	protected function _cleanPostProcess()
 	{
+		return true;
 	}
 
 	/**

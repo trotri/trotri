@@ -132,7 +132,7 @@ class GcDb extends AbstractGc
 		fwrite($stream, "\tpublic function getByPk(\$columnName, {$schema->pkVarColumn})\n");
 		fwrite($stream, "\t{\n");
 		fwrite($stream, "\t\t\$row = \$this->findByPk({$schema->pkVarColumn});\n");
-		fwrite($stream, "\t\tif (is_array(\$row) && isset(\$row[\$columnName])) {\n");
+		fwrite($stream, "\t\tif (\$row && is_array(\$row) && isset(\$row[\$columnName])) {\n");
 		fwrite($stream, "\t\t\treturn \$row[\$columnName];\n");
 		fwrite($stream, "\t\t}\n\n");
 		fwrite($stream, "\t\treturn false;\n");

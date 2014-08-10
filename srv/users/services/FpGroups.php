@@ -77,7 +77,7 @@ class FpGroups extends FormProcessor
 		return array(
 			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_USER_GROUPS_GROUP_NAME_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_USER_GROUPS_GROUP_NAME_MAXLENGTH')),
-			'DbExistsValidator' => new validator\DbExistsValidator($value, false, Lang::_('SRV_FILTER_USER_GROUPS_GROUP_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getGroups(), 'group_name')
+			'DbExists' => new validator\DbExistsValidator($value, false, Lang::_('SRV_FILTER_USER_GROUPS_GROUP_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getGroups(), 'group_name')
 		);
 	}
 
@@ -89,7 +89,7 @@ class FpGroups extends FormProcessor
 	public function getGroupPidRule($value)
 	{
 		return array(
-			'DbExistsValidator' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_USER_GROUPS_GROUP_PID_EXISTS'), $this->getDbProxy(), TableNames::getGroups(), 'group_id'),
+			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_USER_GROUPS_GROUP_PID_EXISTS'), $this->getDbProxy(), TableNames::getGroups(), 'group_id'),
 		);
 	}
 

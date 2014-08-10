@@ -87,7 +87,7 @@ class FpAmcas extends FormProcessor
 	public function getAmcaPidRule($value)
 	{
 		return array(
-			'DbExistsValidator' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_id')
+			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_PID_EXISTS'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_id')
 		);
 	}
 
@@ -108,7 +108,7 @@ class FpAmcas extends FormProcessor
 			'Alpha' => new validator\AlphaValidator($value, true, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_NAME_ALPHA')),
 			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_NAME_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 16, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_NAME_MAXLENGTH')),
-			'DbExists2Validator' => new validator\DbExists2Validator($value, false, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_name', 'amca_pid', $this->amca_pid)
+			'DbExists2' => new validator\DbExists2Validator($value, false, Lang::_('SRV_FILTER_USER_AMCAS_AMCA_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getAmcas(), 'amca_name', 'amca_pid', $this->amca_pid)
 		);
 	}
 

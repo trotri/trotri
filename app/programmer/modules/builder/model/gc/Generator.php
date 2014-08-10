@@ -81,8 +81,8 @@ class Generator
 		$GcController = new GcController($this->schema, $this->fileManager);
 		$GcController->run();
 
-		$GcActions = new GcActions($this->schema, $this->fileManager);
-		$GcActions->run();
+		$GcActs = new GcActs($this->schema, $this->fileManager);
+		$GcActs->run();
 
 		$GcViews = new GcViews($this->schema, $this->fileManager);
 		$GcViews->run();

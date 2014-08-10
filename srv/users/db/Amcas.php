@@ -81,7 +81,7 @@ class Amcas extends AbstractDb
 	public function getByPk($columnName, $amcaId)
 	{
 		$row = $this->findByPk($amcaId);
-		if (is_array($row) && isset($row[$columnName])) {
+		if ($row && is_array($row) && isset($row[$columnName])) {
 			return $row[$columnName];
 		}
 

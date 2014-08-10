@@ -78,7 +78,7 @@ class GcService extends AbstractGc
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * 通过多个字段名和值，查询多条记录\n");
-		fwrite($stream, "\t * @param array \$attributes\n");
+		fwrite($stream, "\t * @param array \$params\n");
 		fwrite($stream, "\t * @param string \$order\n");
 		fwrite($stream, "\t * @param integer \$limit\n");
 		fwrite($stream, "\t * @param integer \$offset\n");
