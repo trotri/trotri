@@ -101,13 +101,13 @@ class Users extends AbstractService
 	public function modifyByPk($value, array $params = array())
 	{
 		$rowCount = parent::modifyByPk($value, $params);
-		if (($rowCount = (int) $rowCount) <= 0) {
+		if ($rowCount === false) {
 			return false;
 		}
 
 		$groupIds = $this->getFormProcessor()->group_ids;
 		if (is_array($groupIds)) {
-			$this->_userGroups->modify($value, $groupIds);
+			return $this->_userGroups->modify($value, $groupIds);
 		}
 
 		return $rowCount;
@@ -332,6 +332,39 @@ class Users extends AbstractService
 	{
 		$value = $this->getByPk('trash', $userId);
 		return $value ? $value : '';
+	}
+
+	/**
+	 * 获取“是否已验证邮箱”
+	 * @param string $validMail
+	 * @return string
+	 */
+	public function getValidMailLangByValidMail($validMail)
+	{
+		$enum = DataUsers::getValidMailEnum();
+		return isset($enum[$validMail]) ? $enum[$validMail] : '';
+	}
+
+	/**
+	 * 获取“是否已验证手机号”
+	 * @param string $validPhone
+	 * @return string
+	 */
+	public function getValidPhoneLangByValidPhone($validPhone)
+	{
+		$enum = DataUsers::getValidPhoneEnum();
+		return isset($enum[$validPhone]) ? $enum[$validPhone] : '';
+	}
+
+	/**
+	 * 获取“是否禁用”
+	 * @param string $forbidden
+	 * @return string
+	 */
+	public function getForbiddenLangByForbidden($forbidden)
+	{
+		$enum = DataUsers::getForbiddenEnum();
+		return isset($enum[$forbidden]) ? $enum[$forbidden] : '';
 	}
 
 	/**

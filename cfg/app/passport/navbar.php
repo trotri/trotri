@@ -11,40 +11,34 @@
 return array(
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
-			'm' => 'builder', 'c' => 'builders', 'a' => 'index'
+			'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_INDEX',
+			'm' => 'users', 'c' => 'users', 'a' => 'index'
 		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
-			'm' => 'builder', 'c' => 'builders', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_INDEX',
+			'm' => 'users', 'c' => 'users', 'a' => 'index',
 			'icon' => array(
-				'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE',
-				'm' => 'builder', 'c' => 'builders', 'a' => 'create'
+				'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_CREATE',
+				'm' => 'users', 'c' => 'users', 'a' => 'create'
 			)
 		),
 		2 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_INDEX',
-			'm' => 'builder', 'c' => 'types', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_USERS_GROUPS_INDEX',
+			'm' => 'users', 'c' => 'groups', 'a' => 'index',
 			'icon' => array(
-				'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_CREATE',
-				'm' => 'builder', 'c' => 'types', 'a' => 'create',
+				'label' => 'CFG_SYSTEM_URLS_USERS_GROUPS_CREATE',
+				'm' => 'users', 'c' => 'groups', 'a' => 'create',
 			)
 		),
 		3 => array(
-			'label' => 'CFG_SYSTEM_URLS_BUILDER_TBLNAMES_INDEX',
-			'm' => 'builder', 'c' => 'tblnames', 'a' => 'index',
+			'label' => 'CFG_SYSTEM_URLS_USERS_AMCAS_INDEX',
+			'm' => 'users', 'c' => 'amcas', 'a' => 'index',
 		),
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_ADMINISTRATOR',
-			'url' => 'administrator.php'
-		),
-	),
-	array(
-		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_UCENTER',
-			'url' => 'ucenter.php'
+			'label' => 'CFG_SYSTEM_URLS_PROGRAMMER',
+			'url' => 'programmer.php?r=builder/builders/index'
 		)
 	),
 );

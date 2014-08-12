@@ -114,7 +114,7 @@ class Groups extends BaseModel
 	}
 
 	/**
-	 * 递归方式获取所有的组，默认用空格填充子类别左边用于和父类别错位（可用于Table列表）
+	 * 递归方式获取所有的组，默认用|—填充子类别左边用于和父类别错位（可用于Table列表）
 	 * @param integer $groupPid
 	 * @param string $padStr
 	 * @param string $leftPad

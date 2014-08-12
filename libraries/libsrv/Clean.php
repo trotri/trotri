@@ -97,6 +97,22 @@ class Clean
 	}
 
 	/**
+	 * 处理SQL中用','拼接的查询条件
+	 * @param string $value
+	 * @return string
+	 */
+	public static function sqlPositiveInteger($value)
+	{
+		$value = self::positiveInteger(explode(',', $value));
+		if ($value) {
+			$value = implode(',', array_unique($value));
+			return $value;
+		}
+
+		return false;
+	}
+
+	/**
 	 * 清理字段，除去左右空格，并且escapeXss
 	 * @param string $value
 	 * @return string

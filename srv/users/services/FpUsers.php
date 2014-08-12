@@ -124,7 +124,7 @@ class FpUsers extends FormProcessor
 			if ($password !== '') {
 				if (!isset($params['repassword'])) { $params['repassword'] = ''; }
 
-				$params['salt'] = $this->getSalt();
+				$params['salt'] = $this->_object->getSalt();
 				$params['dt_last_repwd'] = date('Y-m-d H:i:s');
 				$params['ip_last_repwd'] = ip2long(Ap::getRequest()->getClientIp());
 				$params['repwd_count'] = (int) $row['repwd_count'] + 1;
@@ -181,7 +181,7 @@ class FpUsers extends FormProcessor
 		}
 
 		if (isset($this->repassword)) {
-			unset($this->repassword); 
+			unset($this->repassword);
 		}
 
 		return true;
@@ -233,8 +233,6 @@ class FpUsers extends FormProcessor
 	 */
 	public function getRepasswordRule($value)
 	{
-		if (!isset($this->password)) { return array(); }
-
 		return array(
 			'Equal' => new validator\EqualValidator($value, $this->password, Lang::_('SRV_FILTER_USERS_REPASSWORD_EQUAL')),
 		);

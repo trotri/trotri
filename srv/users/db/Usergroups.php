@@ -85,7 +85,7 @@ class Usergroups extends AbstractDb
 
 		$groupIds = (array) $groupIds;
 		foreach ($groupIds as $groupId) {
-			if ($this->create($userId, $groupId, $ignore)) {
+			if (($value = $this->create($userId, $groupId, $ignore)) !== false) {
 				$rowCount++;
 			}
 		}

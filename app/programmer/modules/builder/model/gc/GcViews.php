@@ -142,7 +142,7 @@ class GcViews extends AbstractGc
 		$fileManager = $this->fileManager;
 		$schema = $this->schema;
 
-		$tmpFileName = $schema->ctrlName . '_' . $schema->actTrashIndexName;
+		$tmpFileName = $schema->ctrlName . '_' . strtolower($schema->actTrashIndexName);
 		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
 		$stream = $fileManager->fopen($filePath);
 
@@ -413,7 +413,7 @@ class GcViews extends AbstractGc
 		$fileManager = $this->fileManager;
 		$schema = $this->schema;
 
-		$tmpFileName = $schema->ctrlName . '_' . $schema->actTrashIndexName . '_btns';
+		$tmpFileName = $schema->ctrlName . '_' . strtolower($schema->actTrashIndexName) . '_btns';
 		$filePath = $fileManager->view . DS . $tmpFileName . '.php';
 		$stream = $fileManager->fopen($filePath);
 		fclose($stream);

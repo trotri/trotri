@@ -11,6 +11,7 @@
 namespace users\db;
 
 use tdo\AbstractDb;
+use libsrv\Clean;
 use users\library\Constant;
 use users\library\TableNames;
 
@@ -43,8 +44,10 @@ class Users extends AbstractDb
 		$usersTblName = $this->getTblprefix() . TableNames::getUsers();
 		$userGroupsTblName = $this->getTblprefix() . TableNames::getUsergroups();
 
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `u`.`user_id`, `u`.`login_name`, `u`.`login_type`, `u`.`user_name`, `u`.`user_mail`, `u`.`user_phone`, `u`.`dt_registered`, `u`.`dt_last_login`, `u`.`dt_last_repwd`, `u`.`ip_registered`, `u`.`ip_last_login`, `u`.`ip_last_repwd`, `u`.`login_count`, `u`.`repwd_count`, `u`.`valid_mail`, `u`.`valid_phone`, `u`.`forbidden`, `u`.`trash`, `g`.`group_id` ';
-		$sql .= 'FROM `' . $usersTblName . '` AS `u` LEFT JOIN `' . $userGroupsTblName . '` AS `g` ON `u`.`user_id` = `g`.`user_id`';
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS `u`.`user_id`, `u`.`login_name`, `u`.`login_type`, `u`.`user_name`, `u`.`user_mail`, `u`.`user_phone`, `u`.`dt_registered`, `u`.`dt_last_login`, `u`.`dt_last_repwd`, `u`.`ip_registered`, `u`.`ip_last_login`, `u`.`ip_last_repwd`, `u`.`login_count`, `u`.`repwd_count`, `u`.`valid_mail`, `u`.`valid_phone`, `u`.`forbidden`, `u`.`trash` FROM `' . $usersTblName . '` AS `u`';
+		if (isset($attributes['group_id'])) {
+			$sql .= ' LEFT JOIN `' . $userGroupsTblName . '` AS `g` ON `u`.`user_id` = `g`.`user_id`';
+		}
 
 		$condition = '1';
 		foreach ($attributes as $columnName => $value) {
@@ -260,6 +263,13 @@ class Users extends AbstractDb
 			}
 		}
 
+		if (isset($params['trash'])) {
+			$trash = trim($params['trash']);
+			if ($trash !== '') {
+				$attributes['trash'] = $trash;
+			}
+		}
+
 		if ($attributes === array()) {
 			return false;
 		}
@@ -268,6 +278,59 @@ class Users extends AbstractDb
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`user_id` = ?');
 		$attributes['user_id'] = $userId;
 		return $this->update($sql, $attributes);
+	}
+
+	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param string $userIds
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk($userIds, array $params = array())
+	{
+		$userIds = Clean::sqlPositiveInteger($userIds);
+		if ($userIds === false) {
+			return false;
+		}
+
+		$attributes = array();
+
+		if (isset($params['valid_mail'])) {
+			$validMail = trim($params['valid_mail']);
+			if ($validMail !== '') {
+				$attributes['valid_mail'] = $validMail;
+			}
+		}
+
+		if (isset($params['valid_phone'])) {
+			$validPhone = trim($params['valid_phone']);
+			if ($validPhone !== '') {
+				$attributes['valid_phone'] = $validPhone;
+			}
+		}
+
+		if (isset($params['forbidden'])) {
+			$forbidden = trim($params['forbidden']);
+			if ($forbidden !== '') {
+				$attributes['forbidden'] = $forbidden;
+			}
+		}
+
+		if (isset($params['trash'])) {
+			$trash = trim($params['trash']);
+			if ($trash !== '') {
+				$attributes['trash'] = $trash;
+			}
+		}
+
+		if ($attributes === array()) {
+			return false;
+		}
+
+		$tableName = $this->getTblprefix() . TableNames::getUsers();
+        $condition = '`user_id` IN (' . $userIds . ')';
+        $sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), $condition);
+        return $this->update($sql, $attributes);
 	}
 
 	/**

@@ -11,6 +11,42 @@ $(document).ready(function() {
  */
 Users = {
   /**
+   * 批量禁用
+   * @param string url
+   * @return void
+   */
+  batchForbidden: function(url) {
+    var n = $(":checkbox[name='checked_toggle']").val();
+    var ids = Trotri.getCheckedValues(n);
+    if (ids == "") {
+      $("#dialog_alert_view_body").html("请选中禁用项！");
+      $("#dialog_alert").modal("show");
+      return ;
+    }
+
+    url += "&ids=" + ids + "&column_name=forbidden&value=y";
+    Trotri.href(url);
+  },
+
+  /**
+   * 批量解除禁用
+   * @param string url
+   * @return void
+   */
+  batchUnforbidden: function(url) {
+    var n = $(":checkbox[name='checked_toggle']").val();
+    var ids = Trotri.getCheckedValues(n);
+    if (ids == "") {
+      $("#dialog_alert_view_body").html("请选中解除禁用项！");
+      $("#dialog_alert").modal("show");
+      return ;
+    }
+
+    url += "&ids=" + ids + "&column_name=forbidden&value=n";
+    Trotri.href(url);
+  },
+
+  /**
    * CheckBox全选|全不选
    * @return void
    */

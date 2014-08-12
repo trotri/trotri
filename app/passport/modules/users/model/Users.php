@@ -64,7 +64,6 @@ class Users extends BaseModel
 				'label' => Text::_('MOD_USERS_USERS_LOGIN_NAME_LABEL'),
 				'hint' => Text::_('MOD_USERS_USERS_LOGIN_NAME_HINT'),
 				'required' => true,
-				'disabled' => true,
 			),
 			'login_type' => array(
 				'__tid__' => 'main',
@@ -200,7 +199,11 @@ class Users extends BaseModel
 				'type' => 'checkbox',
 				'label' => '',
 				'hint' => '',
-				'options' => Model::getInstance('Groups')->getOptions(0, ''),
+			),
+			'group_id' => array(
+				'__tid__' => 'main',
+				'type' => 'select',
+				'label' => Text::_('MOD_USERS_USERS_GROUP_ID_LABEL'),
 			),
 		);
 
@@ -224,6 +227,39 @@ class Users extends BaseModel
 	}
 
 	/**
+	 * 获取“是否已验证邮箱”
+	 * @param string $validMail
+	 * @return string
+	 */
+	public function getValidMailLangByValidMail($validMail)
+	{
+		$ret = $this->getService()->getValidMailLangByValidMail($validMail);
+		return $ret;
+	}
+
+	/**
+	 * 获取“是否已验证手机号”
+	 * @param string $validPhone
+	 * @return string
+	 */
+	public function getValidPhoneLangByValidPhone($validPhone)
+	{
+		$ret = $this->getService()->getValidPhoneLangByValidPhone($validPhone);
+		return $ret;
+	}
+
+	/**
+	 * 获取“是否禁用”
+	 * @param string $forbidden
+	 * @return string
+	 */
+	public function getForbiddenLangByForbidden($forbidden)
+	{
+		$ret = $this->getService()->getForbiddenLangByForbidden($forbidden);
+		return $ret;
+	}
+
+	/**
 	 * 查询数据列表
 	 * @param array $params
 	 * @param string $order
@@ -233,13 +269,9 @@ class Users extends BaseModel
 	 */
 	public function search(array $params = array(), $order = '', $limit = null, $offset = null)
 	{
-		$groupId = isset($params['group_ids']) ? (int) $params['group_ids'] : 0;
-		if ($groupId > 0) {
-			$params['group_id'] = $groupId;
-		}
-
 		$rules = array(
 			'login_name' => 'trim',
+			'user_id' => 'intval',
 			'login_type' => 'trim',
 			'user_name' => 'trim',
 			'user_mail' => 'trim',
@@ -248,11 +280,49 @@ class Users extends BaseModel
 			'valid_phone' => 'trim',
 			'forbidden' => 'trim',
 			'trash' => 'trim',
+			'group_id' => 'intval'
 		);
 
 		$this->filterCleanEmpty($params, $rules);
 		$ret = parent::search($this->getService(), $params, $order, $limit, $offset);
 		return $ret;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see library.BaseModel::findByPk()
+	 */
+	public function findByPk($value)
+	{
+		$ret = parent::findByPk($value);
+		if (isset($ret['data']) && is_array($ret['data'])) {
+			if (isset($ret['data']['ip_registered'])) {
+				$ret['data']['ip_registered'] = long2ip($ret['data']['ip_registered']);
+			}
+
+			if (isset($ret['data']['ip_last_login'])) {
+				$ret['data']['ip_last_login'] = long2ip($ret['data']['ip_last_login']);
+			}
+
+			if (isset($ret['data']['ip_last_repwd'])) {
+				$ret['data']['ip_last_repwd'] = long2ip($ret['data']['ip_last_repwd']);
+			}
+
+			if (isset($ret['data']['password'])) {
+				$ret['data']['password'] = '';
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * 递归方式获取所有的组名，用|—填充子类别左边用于和父类别错位
+	 * @return array
+	 */
+	public function getGroupIds()
+	{
+		return Model::getInstance('Groups')->getOptions(0, '|—');
 	}
 
 }

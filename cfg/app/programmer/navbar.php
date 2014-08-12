@@ -37,14 +37,8 @@ return array(
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_ADMINISTRATOR',
-			'url' => 'administrator.php'
-		),
-	),
-	array(
-		0 => array(
 			'label' => 'CFG_SYSTEM_URLS_PASSPORT',
-			'url' => 'passport.php?r=users/amcas/index'
+			'url' => 'passport.php?r=users/users/index'
 		)
 	),
 );

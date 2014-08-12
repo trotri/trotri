@@ -147,6 +147,18 @@ abstract class BaseModel extends libapp\BaseModel
 	}
 
 	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param array $values
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk(array $values, array $params = array())
+	{
+		$ret = $this->callModifyMethod($this->getService(), 'batchModifyByPk', $values, $params);
+		return $ret;
+	}
+
+	/**
 	 * 通过主键，删除多条记录。不支持联合主键
 	 * @param array $ids
 	 * @return array
