@@ -72,7 +72,7 @@ abstract class FormBuilder extends Widget
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc.Widget::_init()
+     * @see \tfc\mvc\Widget::_init()
      */
     protected function _init()
     {
@@ -89,7 +89,7 @@ abstract class FormBuilder extends Widget
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc.Widget::run()
+     * @see \tfc\mvc\Widget::run()
      */
     public function run()
     {

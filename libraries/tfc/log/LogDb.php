@@ -57,7 +57,7 @@ class LogDb extends Log
 
     /**
      * (non-PHPdoc)
-     * @see tfc\log.Log::shutdown()
+     * @see \tfc\log\Log::shutdown()
      */
     public function shutdown()
     {
@@ -65,7 +65,7 @@ class LogDb extends Log
 
     /**
      * (non-PHPdoc)
-     * @see tfc\log.Log::_write()
+     * @see \tfc\log\Log::_write()
      */
     protected function _write(array $logs)
     {

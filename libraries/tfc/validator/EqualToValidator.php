@@ -29,7 +29,7 @@ class EqualToValidator extends Validator
 
     /**
      * (non-PHPdoc)
-     * @see tfc\validator.Validator::isValid()
+     * @see \tfc\validator\Validator::isValid()
      */
     public function isValid()
     {

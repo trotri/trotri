@@ -62,7 +62,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.SessionSaveHandler::open()
+     * @see \tfc\ap\interfaces\SessionSaveHandler::open()
      */
     public function open($path, $name)
     {
@@ -78,7 +78,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.SessionSaveHandler::close()
+     * @see \tfc\ap\interfaces\SessionSaveHandler::close()
      */
     public function close()
     {
@@ -87,7 +87,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.SessionSaveHandler::read()
+     * @see \tfc\ap\interfaces\SessionSaveHandler::read()
      */
     public function read($sessId)
     {
@@ -101,7 +101,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.SessionSaveHandler::write()
+     * @see \tfc\ap\interfaces\SessionSaveHandler::write()
      */
     public function write($sessId, $data)
     {
@@ -117,7 +117,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.SessionSaveHandler::destroy()
+     * @see \tfc\ap\interfaces\SessionSaveHandler::destroy()
      */
     public function destroy($sessId)
     {
@@ -130,7 +130,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.SessionSaveHandler::gc()
+     * @see \tfc\ap\interfaces\SessionSaveHandler::gc()
      */
     public function gc($maxLifeTime)
     {

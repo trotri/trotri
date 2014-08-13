@@ -72,7 +72,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::getEngine()
+     * @see \tfc\mvc\interfaces\View::getEngine()
      */
     public function getEngine()
     {
@@ -81,7 +81,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::__get()
+     * @see \tfc\mvc\interfaces\View::__get()
      */
     public function __get($key)
     {
@@ -94,7 +94,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::__set()
+     * @see \tfc\mvc\interfaces\View::__set()
      */
     public function __set($key, $value)
     {
@@ -105,7 +105,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::__isset()
+     * @see \tfc\mvc\interfaces\View::__isset()
      */
     public function __isset($key)
     {
@@ -114,7 +114,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::__unset()
+     * @see \tfc\mvc\interfaces\View::__unset()
      */
     public function __unset($key)
     {
@@ -125,7 +125,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::assign()
+     * @see \tfc\mvc\interfaces\View::assign()
      */
     public function assign($key, $value = null)
     {
@@ -154,7 +154,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::fetch()
+     * @see \tfc\mvc\interfaces\View::fetch()
      */
     public function fetch($tplName = null, $display = false)
     {
@@ -182,7 +182,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.View::display()
+     * @see \tfc\mvc\interfaces\View::display()
      */
     public function display($tplName = null)
     {

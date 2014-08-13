@@ -78,7 +78,7 @@ class DbProxy extends Statement
 
     /**
      * (non-PHPdoc)
-     * @see tfc\db.Statement::query()
+     * @see \tfc\db\Statement::query()
      */
     public function query($sql = null, $params = null)
     {
@@ -115,7 +115,7 @@ class DbProxy extends Statement
 
     /**
      * (non-PHPdoc)
-     * @see tfc\db.Statement::getDriver()
+     * @see \tfc\db\Statement::getDriver()
      */
     public function getDriver($autoOpen = true)
     {
@@ -181,7 +181,7 @@ class DbProxy extends Statement
 
     /**
      * (non-PHPdoc)
-     * @see tfc\db.Statement::getRowCount()
+     * @see \tfc\db\Statement::getRowCount()
      */
     public function getRowCount()
     {
@@ -197,7 +197,7 @@ class DbProxy extends Statement
 
     /**
      * (non-PHPdoc)
-     * @see tfc\db.Statement::getColumnCount()
+     * @see \tfc\db\Statement::getColumnCount()
      */
     public function getColumnCount()
     {

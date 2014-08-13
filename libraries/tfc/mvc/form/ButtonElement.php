@@ -22,7 +22,7 @@ class ButtonElement extends Element
 {
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\form.Element::fetch()
+     * @see \tfc\mvc\form\Element::fetch()
      */
     public function fetch()
     {
@@ -31,7 +31,7 @@ class ButtonElement extends Element
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\form.Element::getInput()
+     * @see \tfc\mvc\form\Element::getInput()
      */
     public function getInput()
     {

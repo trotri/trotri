@@ -54,7 +54,7 @@ abstract class Action extends Application implements interfaces\Action
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.Action::getController()
+     * @see \tfc\mvc\interfaces\Action::getController()
      */
     public function getController()
     {
@@ -63,7 +63,7 @@ abstract class Action extends Application implements interfaces\Action
 
     /**
      * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.Action::getId()
+     * @see \tfc\mvc\interfaces\Action::getId()
      */
     public function getId()
     {

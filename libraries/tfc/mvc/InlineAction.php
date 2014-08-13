@@ -20,10 +20,10 @@ namespace tfc\mvc;
  */
 class InlineAction extends Action
 {
-    /**
-     * (non-PHPdoc)
-     * @see tfc\mvc\interfaces.Action::run()
-     */
+	/**
+	 * (non-PHPdoc)
+	 * @see \tfc\mvc\interfaces\Action::run()
+	 */
     public function run()
     {
         $method = $this->getId() . 'Action';

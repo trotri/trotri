@@ -29,7 +29,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::get()
+     * @see \tfc\ap\interfaces\Cache::get()
      */
     public function get($key)
     {
@@ -42,7 +42,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::mget()
+     * @see \tfc\ap\interfaces\Cache::mget()
      */
     public function mget($keys = null)
     {
@@ -51,7 +51,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::set()
+     * @see \tfc\ap\interfaces\Cache::set()
      */
     public function set($key, $value, $expire = 0, $flag = 0)
     {
@@ -61,7 +61,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::add()
+     * @see \tfc\ap\interfaces\Cache::add()
      */
     public function add($key, $value, $expire = 0, $flag = 0)
     {
@@ -74,7 +74,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::delete()
+     * @see \tfc\ap\interfaces\Cache::delete()
      */
     public function delete($key)
     {
@@ -87,7 +87,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::has()
+     * @see \tfc\ap\interfaces\Cache::has()
      */
     public function has($key)
     {
@@ -96,7 +96,7 @@ abstract class Cache implements interfaces\Cache
 
     /**
      * (non-PHPdoc)
-     * @see tfc\ap\interfaces.Cache::flush()
+     * @see \tfc\ap\interfaces\Cache::flush()
      */
     public function flush()
     {
