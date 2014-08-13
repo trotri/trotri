@@ -86,6 +86,22 @@ class Users extends AbstractDb
 	}
 
 	/**
+	 * 通过登录名，查询一条记录
+	 * @param string $loginName
+	 * @return array
+	 */
+	public function findByLoginName($loginName)
+	{
+		if (($loginName = trim($loginName)) === '') {
+			return false;
+		}
+
+		$tableName = $this->getTblprefix() . TableNames::getUsers();
+		$sql = 'SELECT `user_id`, `login_name`, `login_type`, `password`, `salt`, `user_name`, `user_mail`, `user_phone`, `dt_registered`, `dt_last_login`, `dt_last_repwd`, `ip_registered`, `ip_last_login`, `ip_last_repwd`, `login_count`, `repwd_count`, `valid_mail`, `valid_phone`, `forbidden`, `trash` FROM ' . $tableName . ' WHERE `login_name` = ?';
+		return $this->fetchAssoc($sql, $loginName);
+	}
+
+	/**
 	 * 通过主键，获取某个列的值
 	 * @param string $columnName
 	 * @param integer $userId

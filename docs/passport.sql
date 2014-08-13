@@ -78,6 +78,8 @@ CREATE TABLE `tr_users` (
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户主表';
 
+INSERT INTO `tr_users` (`login_name`, `login_type`, `password`, `salt`, `user_name`) VALUES ('administrator', 'name', '6d3f4f0d7f7ef593061de299599dcf17', 'UUeGTJ', 'administrator');
+
 DROP TABLE IF EXISTS `tr_user_profile`;
 CREATE TABLE `tr_user_profile` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',

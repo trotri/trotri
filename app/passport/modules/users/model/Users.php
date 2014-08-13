@@ -12,6 +12,7 @@ namespace modules\users\model;
 
 use library\BaseModel;
 use tfc\saf\Text;
+use tid\Authentication;
 use users\services\DataUsers;
 use libapp\Model;
 
@@ -325,4 +326,47 @@ class Users extends BaseModel
 		return Model::getInstance('Groups')->getOptions(0, '|—');
 	}
 
+	/**
+	 * 用户登录
+	 * @param string $loginName
+	 * @param string $password
+	 * @param boolean $rememberMe
+	 * @param string $history
+	 * @return array
+	 */
+	public function login($loginName, $password, $rememberMe = false, $history = '')
+	{
+		$ret = $this->getService()->login($loginName, $password);
+
+		$userId = 0;
+		$loginName = $password = '';
+
+		if (isset($ret['user_id'])) {
+			$userId = (int) $ret['user_id'];
+			unset($ret['user_id']);
+		}
+
+		if (isset($ret['login_name'])) {
+			$loginName = $ret['login_name'];
+			unset($ret['login_name']);
+		}
+
+		if (isset($ret['password'])) {
+			$password = $ret['password'];
+			unset($ret['password']);
+		}
+
+		$ret['data'] = array(
+			'user_id' => $userId,
+			'login_name' => $loginName,
+			'password' => $password
+		);
+
+		if ($ret['err_no'] !== DataUsers::SUCCESS_LOGIN_NUM) {
+			return $ret;
+		}
+
+		$authentication = new Authentication('authentication');
+		$authentication->setIdentity($userId, $loginName, $password);
+	}
 }

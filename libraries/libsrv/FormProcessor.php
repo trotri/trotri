@@ -424,6 +424,16 @@ abstract class FormProcessor
 	}
 
 	/**
+	 * 魔术方法：判断一个表单元素是否已经存在
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function __isset($name)
+	{
+		return isset($this->_values[$name]);
+	}
+
+	/**
 	 * 验证是否是“新增记录”操作类型
 	 * @return boolean
 	 */

@@ -528,9 +528,15 @@ class Html
 
         $html = '';
         foreach ($attributes as $name => $value) {
+            if (is_numeric($name)) {
+                $html .= ' ' . $value;
+                continue;
+            }
+
             if ($name == 'value' && $encode) {
                 $value = $this->encode($value);
             }
+
             $html .= ' ' . $name . '="' . $value . '"';
         }
 
