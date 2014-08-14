@@ -49,7 +49,7 @@ class SwitchElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::_init()
+	 * @see \views\bootstrap\components\form\InputElement::_init()
 	 */
 	protected function _init()
 	{
@@ -60,7 +60,7 @@ class SwitchElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::getInput()
+	 * @see \tfc\mvc\form\InputElement::getInput()
 	 */
 	public function getInput()
 	{

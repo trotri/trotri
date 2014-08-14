@@ -47,7 +47,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::_init()
+	 * @see \tfc\mvc\form\FormBuilder::_init()
 	 */
 	protected function _init()
 	{
@@ -130,7 +130,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::initValues()
+	 * @see \tfc\mvc\form\FormBuilder::initValues()
 	 */
 	public function initValues()
 	{
@@ -152,7 +152,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::run()
+	 * @see \tfc\mvc\form\FormBuilder::run()
 	 */
 	public function run()
 	{
@@ -190,7 +190,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Widget::getWidgetDirectory()
+	 * @see \tfc\mvc\Widget::getWidgetDirectory()
 	 */
 	public function getWidgetDirectory()
 	{

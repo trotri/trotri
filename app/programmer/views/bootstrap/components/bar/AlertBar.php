@@ -24,7 +24,7 @@ class AlertBar extends Widget
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Widget::run()
+	 * @see \tfc\mvc\Widget::run()
 	 */
 	public function run()
 	{

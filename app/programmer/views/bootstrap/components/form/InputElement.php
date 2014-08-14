@@ -39,7 +39,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.Element::_init()
+	 * @see \tfc\mvc\form\Element::_init()
 	 */
 	protected function _init()
 	{
@@ -50,7 +50,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::openWrap()
+	 * @see \tfc\mvc\form\InputElement::openWrap()
 	 */
 	public function openWrap()
 	{
@@ -68,7 +68,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::closeWrap()
+	 * @see \tfc\mvc\form\InputElement::closeWrap()
 	 */
 	public function closeWrap()
 	{
@@ -77,7 +77,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::openLabel()
+	 * @see \tfc\mvc\form\InputElement::openLabel()
 	 */
 	public function openLabel()
 	{
@@ -86,7 +86,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::closeLabel()
+	 * @see \tfc\mvc\form\InputElement::closeLabel()
 	 */
 	public function closeLabel()
 	{
@@ -95,7 +95,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::openInput()
+	 * @see \tfc\mvc\form\InputElement::openInput()
 	 */
 	public function openInput()
 	{
@@ -104,7 +104,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::closeInput()
+	 * @see \tfc\mvc\form\InputElement::closeInput()
 	 */
 	public function closeInput()
 	{
@@ -113,7 +113,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::openPrompt()
+	 * @see \tfc\mvc\form\InputElement::openPrompt()
 	 */
 	public function openPrompt()
 	{
@@ -122,7 +122,7 @@ class InputElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::closePrompt()
+	 * @see \tfc\mvc\form\InputElement::closePrompt()
 	 */
 	public function closePrompt()
 	{

@@ -42,7 +42,7 @@ abstract class BaseModel extends libapp\BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::_init()
+	 * @see \libapp\Elements::_init()
 	 */
 	protected function _init()
 	{
@@ -101,6 +101,17 @@ abstract class BaseModel extends libapp\BaseModel
 	}
 
 	/**
+	 * 通过主键，获取某个列的值
+	 * @param string $columnName
+	 * @param integer $amcaId
+	 * @return mixed
+	 */
+	public function getByPk($columnName, $amcaId)
+	{
+		return $this->getService()->getByPk($columnName, $amcaId);
+	}
+
+	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @param boolean $ignore
@@ -132,6 +143,18 @@ abstract class BaseModel extends libapp\BaseModel
 	public function removeByPk($id)
 	{
 		$ret = $this->callRemoveMethod($this->getService(), 'removeByPk', $id);
+		return $ret;
+	}
+
+	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param array $values
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk(array $values, array $params = array())
+	{
+		$ret = $this->callModifyMethod($this->getService(), 'batchModifyByPk', $values, $params);
 		return $ret;
 	}
 

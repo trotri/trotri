@@ -67,7 +67,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::_init()
+	 * @see \tfc\mvc\form\FormBuilder::_init()
 	 */
 	protected function _init()
 	{
@@ -89,7 +89,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::run()
+	 * @see \tfc\mvc\form\FormBuilder::run()
 	 */
 	public function run()
 	{
@@ -187,7 +187,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::getInputs()
+	 * @see \tfc\mvc\form\FormBuilder::getInputs()
 	 */
 	public function getInputs()
 	{
@@ -202,7 +202,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::initElements()
+	 * @see \tfc\mvc\form\FormBuilder::initElements()
 	 */
 	public function initElements()
 	{
@@ -263,7 +263,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.FormBuilder::createElement()
+	 * @see \tfc\mvc\form\FormBuilder::createElement()
 	 */
 	public function createElement($className, array $config = array())
 	{
@@ -294,7 +294,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Widget::getWidgetDirectory()
+	 * @see \tfc\mvc\Widget::getWidgetDirectory()
 	 */
 	public function getWidgetDirectory()
 	{
