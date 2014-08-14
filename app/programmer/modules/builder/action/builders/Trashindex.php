@@ -25,7 +25,7 @@ class Trashindex extends actions\Index
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{

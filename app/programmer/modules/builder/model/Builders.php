@@ -33,7 +33,7 @@ class Builders extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::getViewTabsRender()
+	 * @see \libapp\Elements::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
 	{
@@ -53,7 +53,7 @@ class Builders extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::getElementsRender()
+	 * @see \libapp\Elements::getElementsRender()
 	 */
 	public function getElementsRender()
 	{

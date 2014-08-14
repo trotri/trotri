@@ -25,7 +25,7 @@ class Modify extends actions\Modify
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{

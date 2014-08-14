@@ -22,7 +22,7 @@ class GcSlang extends AbstractGc
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see modules\builder\model\gc.AbstractGc::_exec()
+	 * @see \modules\builder\model\gc\AbstractGc::_exec()
 	 */
 	protected function _exec()
 	{

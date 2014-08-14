@@ -53,7 +53,7 @@ class Tblnames extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::getElementsRender()
+	 * @see \libapp\Elements::getElementsRender()
 	 */
 	public function getElementsRender()
 	{
