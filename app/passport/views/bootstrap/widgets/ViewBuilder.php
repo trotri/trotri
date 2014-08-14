@@ -22,7 +22,7 @@ class ViewBuilder extends FormBuilder
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\widgets.FormBuilder::initElements()
+	 * @see \views\bootstrap\widgets\FormBuilder::initElements()
 	 */
 	public function initElements()
 	{

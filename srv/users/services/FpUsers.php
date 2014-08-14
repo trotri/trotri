@@ -29,7 +29,7 @@ class FpUsers extends FormProcessor
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see libsrv.FormProcessor::_process()
+	 * @see \libsrv\FormProcessor::_process()
 	 */
 	protected function _process(array $params = array())
 	{
@@ -51,7 +51,7 @@ class FpUsers extends FormProcessor
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libsrv.FormProcessor::_cleanPreProcess()
+	 * @see \libsrv\FormProcessor::_cleanPreProcess()
 	 */
 	protected function _cleanPreProcess(array $params)
 	{
@@ -167,7 +167,7 @@ class FpUsers extends FormProcessor
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libsrv.FormProcessor::_cleanPostProcess()
+	 * @see \libsrv\FormProcessor::_cleanPostProcess()
 	 */
 	protected function _cleanPostProcess()
 	{

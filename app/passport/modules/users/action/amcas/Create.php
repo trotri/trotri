@@ -25,7 +25,7 @@ class Create extends actions\Create
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{

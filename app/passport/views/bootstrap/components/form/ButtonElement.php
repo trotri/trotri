@@ -39,7 +39,7 @@ class ButtonElement extends form\ButtonElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.ButtonElement::fetch()
+	 * @see \tfc\mvc\form\ButtonElement::fetch()
 	 */
 	public function fetch()
 	{

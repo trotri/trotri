@@ -26,7 +26,7 @@ abstract class BaseController extends Controller
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Controller::getActionByMap()
+	 * @see \tfc\mvc\Controller::getActionByMap()
 	 */
 	public function getActionByMap(array $maps, $id)
 	{

@@ -80,7 +80,7 @@ class Users extends AbstractService
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libsrv.AbstractService::create()
+	 * @see \libsrv\AbstractService::create()
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
@@ -99,7 +99,7 @@ class Users extends AbstractService
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libsrv.AbstractService::modifyByPk()
+	 * @see \libsrv\AbstractService::modifyByPk()
 	 */
 	public function modifyByPk($value, array $params = array())
 	{

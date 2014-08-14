@@ -37,7 +37,7 @@ class TextareaElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::getInput()
+	 * @see \tfc\mvc\form\InputElement::getInput()
 	 */
 	public function getInput()
 	{

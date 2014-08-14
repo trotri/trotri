@@ -24,7 +24,7 @@ class HiddenElement extends form\InputElement
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::fetch()
+	 * @see \tfc\mvc\form\InputElement::fetch()
 	 */
 	public function fetch()
 	{
@@ -33,7 +33,7 @@ class HiddenElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::getInput()
+	 * @see \tfc\mvc\form\InputElement::getInput()
 	 */
 	public function getInput()
 	{

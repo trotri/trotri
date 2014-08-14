@@ -28,7 +28,7 @@ class NavBar extends Widget
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Widget::run()
+	 * @see \tfc\mvc\Widget::run()
 	 */
 	public function run()
 	{
@@ -168,7 +168,7 @@ class NavBar extends Widget
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Widget::getWidgetDirectory()
+	 * @see \tfc\mvc\Widget::getWidgetDirectory()
 	 */
 	public function getWidgetDirectory()
 	{

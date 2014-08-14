@@ -29,7 +29,7 @@ class UserGroupsCheckboxElement extends form\ICheckboxElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.ICheckboxElement::getInput()
+	 * @see \views\bootstrap\components\form\ICheckboxElement::getInput()
 	 */
 	public function getInput()
 	{
@@ -63,7 +63,7 @@ class UserGroupsCheckboxElement extends form\ICheckboxElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::openLabel()
+	 * @see \views\bootstrap\components\form\InputElement::openLabel()
 	 */
 	public function openLabel()
 	{
@@ -72,7 +72,7 @@ class UserGroupsCheckboxElement extends form\ICheckboxElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::closeLabel()
+	 * @see \views\bootstrap\components\form\InputElement::closeLabel()
 	 */
 	public function closeLabel()
 	{
@@ -81,7 +81,7 @@ class UserGroupsCheckboxElement extends form\ICheckboxElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::openPrompt()
+	 * @see \views\bootstrap\components\form\InputElement::openPrompt()
 	 */
 	public function openPrompt()
 	{
@@ -90,7 +90,7 @@ class UserGroupsCheckboxElement extends form\ICheckboxElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::closePrompt()
+	 * @see \views\bootstrap\components\form\InputElement::closePrompt()
 	 */
 	public function closePrompt()
 	{

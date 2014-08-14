@@ -42,7 +42,7 @@ abstract class BaseModel extends libapp\BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::_init()
+	 * @see \libapp\Elements::_init()
 	 */
 	protected function _init()
 	{

@@ -36,7 +36,7 @@ abstract class ShowAction extends BaseAction
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.BaseAction::_init()
+	 * @see \libapp\BaseAction::_init()
 	 */
 	protected function _init()
 	{

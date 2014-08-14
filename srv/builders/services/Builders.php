@@ -29,7 +29,7 @@ class Builders extends DynamicService
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libsrv.DynamicService::findByPk()
+	 * @see \libsrv\DynamicService::findByPk()
 	 */
 	public function findByPk($value)
 	{

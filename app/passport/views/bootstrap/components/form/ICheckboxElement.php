@@ -27,7 +27,7 @@ class ICheckboxElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::getInput()
+	 * @see \tfc\mvc\form\InputElement::getInput()
 	 */
 	public function getInput()
 	{
@@ -59,7 +59,7 @@ class ICheckboxElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::openInput()
+	 * @see \views\bootstrap\components\form\InputElement::openInput()
 	 */
 	public function openInput()
 	{
@@ -68,7 +68,7 @@ class ICheckboxElement extends InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see views\bootstrap\components\form.InputElement::closeInput()
+	 * @see \views\bootstrap\components\form\InputElement::closeInput()
 	 */
 	public function closeInput()
 	{

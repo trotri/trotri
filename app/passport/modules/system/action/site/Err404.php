@@ -25,7 +25,7 @@ class Err404 extends actions\View
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{

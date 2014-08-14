@@ -28,7 +28,7 @@ class Users extends BaseModel
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::getViewTabsRender()
+	 * @see \libapp\Elements::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
 	{
@@ -48,7 +48,7 @@ class Users extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see libapp.Elements::getElementsRender()
+	 * @see \libapp\Elements::getElementsRender()
 	 */
 	public function getElementsRender()
 	{
@@ -291,7 +291,7 @@ class Users extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see library.BaseModel::findByPk()
+	 * @see \library\BaseModel::findByPk()
 	 */
 	public function findByPk($value)
 	{

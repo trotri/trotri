@@ -29,7 +29,7 @@ class SearchElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.Element::_init()
+	 * @see \tfc\mvc\form\Element::_init()
 	 */
 	protected function _init()
 	{
@@ -40,7 +40,7 @@ class SearchElement extends form\InputElement
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\form.InputElement::fetch()
+	 * @see \tfc\mvc\form\InputElement::fetch()
 	 */
 	public function fetch()
 	{

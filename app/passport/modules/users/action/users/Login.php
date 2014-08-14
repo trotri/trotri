@@ -22,10 +22,10 @@ use tfc\mvc\Mvc;
  * @since 1.0
  */
 class Login extends library\ShowAction
-{	
+{
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc\interfaces.Action::run()
+	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{

@@ -48,7 +48,7 @@ abstract class BaseAction extends Action
 
 	/**
 	 * (non-PHPdoc)
-	 * @see tfc\mvc.Action::_init()
+	 * @see \tfc\mvc\Action::_init()
 	 */
 	protected function _init()
 	{
