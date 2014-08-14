@@ -49,7 +49,7 @@ class GcModel extends AbstractGc
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see libapp.Elements::getViewTabsRender()\n");
+		fwrite($stream, "\t * @see \\libapp\\Elements::getViewTabsRender()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function getViewTabsRender()\n");
 		fwrite($stream, "\t{\n");
@@ -69,7 +69,7 @@ class GcModel extends AbstractGc
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see libapp.Elements::getElementsRender()\n");
+		fwrite($stream, "\t * @see \\libapp\\Elements::getElementsRender()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function getElementsRender()\n");
 		fwrite($stream, "\t{\n");

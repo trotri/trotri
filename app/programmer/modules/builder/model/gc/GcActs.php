@@ -63,7 +63,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -113,7 +113,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -165,7 +165,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -213,7 +213,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -261,7 +261,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -303,7 +303,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -336,7 +336,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");
@@ -369,7 +369,7 @@ class GcActs extends AbstractGc
 		fwrite($stream, "{\n");
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see tfc\\mvc\\interfaces.Action::run()\n");
+		fwrite($stream, "\t * @see \\tfc\\mvc\\interfaces\\Action::run()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function run()\n");
 		fwrite($stream, "\t{\n");

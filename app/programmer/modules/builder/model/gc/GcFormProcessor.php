@@ -60,7 +60,7 @@ class GcFormProcessor extends AbstractGc
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see libsrv.FormProcessor::_process()\n");
+		fwrite($stream, "\t * @see \\libsrv\\FormProcessor::_process()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tprotected function _process(array \$params = array())\n");
 		fwrite($stream, "\t{\n");
@@ -75,7 +75,7 @@ class GcFormProcessor extends AbstractGc
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * (non-PHPdoc)\n");
-		fwrite($stream, "\t * @see libsrv.FormProcessor::_cleanPreProcess()\n");
+		fwrite($stream, "\t * @see \\libsrv\\FormProcessor::_cleanPreProcess()\n");
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tprotected function _cleanPreProcess(array \$params)\n");
 		fwrite($stream, "\t{\n");
