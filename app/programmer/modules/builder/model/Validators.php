@@ -225,7 +225,7 @@ class Validators extends BaseModel
 			$params['field_id'] = $fieldId;
 		}
 
-		$ret = parent::search($this->getService(), $params, '', $limit, $offset);
+		$ret = parent::search($this->getService(), $params, 'sort', $limit, $offset);
 		return $ret;
 	}
 }

@@ -11,7 +11,9 @@
 namespace modules\users\action\users;
 
 use library;
+use tfc\ap\Ap;
 use tfc\mvc\Mvc;
+use libapp\Model;
 
 /**
  * Login class file
@@ -29,13 +31,26 @@ class Login extends library\ShowAction
 	 */
 	public function run()
 	{
+		$ret = array();
+
 		$this->assignSystem();
 		$this->assignUrl();
 		$this->assignLanguage();
 
+		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$tplName = $this->getDefaultTplName();
+		$mod = Model::getInstance('Users');
+		if ($req->isPost()) {
+			$loginName = $req->getTrim('login_name');
+			$password = $req->getTrim('password');
+			$rememberMe = (boolean) $req->getInteger('remember_me');
+			$history = $req->getTrim('history');
 
+			$ret = $mod->login($loginName, $password, $rememberMe, $history);
+		}
+
+		$viw->assign($ret);
+		$tplName = $this->getDefaultTplName();
 		$viw->display($tplName);
 	}
 }

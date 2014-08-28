@@ -37,6 +37,16 @@ return array(
 	),
 	array(
 		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_SYSTEM_OPTIONS_MODIFY',
+			'm' => 'system', 'c' => 'options', 'a' => 'modify'
+		),
+		1 => array(
+			'label' => 'CFG_SYSTEM_URLS_SYSTEM_OPTIONS_MODIFY',
+			'm' => 'system', 'c' => 'options', 'a' => 'modify'
+		),
+	),
+	array(
+		0 => array(
 			'label' => 'CFG_SYSTEM_URLS_PROGRAMMER',
 			'url' => 'programmer.php?r=builder/builders/index'
 		)

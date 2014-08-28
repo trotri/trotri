@@ -517,10 +517,14 @@ class Users extends AbstractService
 			);
 		}
 
+		$dtLastLogin = date('Y-m-d H:i:s');
+		$ipLastLogin = ip2long(Ap::getRequest()->getClientIp());
+		$loginCount = (int) $row['login_count'] + 1;
+		$salt = $row['salt'];
 		$params = array(
-			'dt_last_login' => date('Y-m-d H:i:s'),
-			'ip_last_login' => ip2long(Ap::getRequest()->getClientIp()),
-			'login_count' => (int) $row['login_count'] + 1,
+			'dt_last_login' => $dtLastLogin,
+			'ip_last_login' => $ipLastLogin,
+			'login_count' => $loginCount,
 		);
 
 		$rowCount = $this->_dbUsers->modifyByPk($userId, $params);
@@ -538,6 +542,10 @@ class Users extends AbstractService
 			'user_id' => $userId,
 			'login_name' => $loginName,
 			'password' => $password,
+			'salt' => $salt,
+			'dt_last_login' => $dtLastLogin,
+			'ip_last_login' => $ipLastLogin,
+			'login_count' => $loginCount,
 		);
 	}
 }

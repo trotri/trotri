@@ -58,6 +58,11 @@ class DataUsers
 	const ERROR_LOGIN_PASSWORD_WRONG = 3006;
 
 	/**
+	 * @var integer 登录失败：未知错误
+	 */
+	const ERROR_LOGIN_UNKNOWN_WRONG  = 3007;
+
+	/**
 	 * @var string 登录方式：mail
 	 */
 	const LOGIN_TYPE_MAIL = 'mail';

@@ -12,8 +12,11 @@ namespace modules\users\model;
 
 use library\BaseModel;
 use tfc\saf\Text;
+use tfc\saf\Cfg;
 use tid\Authentication;
+use users\library\Lang;
 use users\services\DataUsers;
+use libsrv\Service;
 use libapp\Model;
 
 /**
@@ -338,35 +341,56 @@ class Users extends BaseModel
 	{
 		$ret = $this->getService()->login($loginName, $password);
 
+		$errNo = DataUsers::ERROR_LOGIN_UNKNOWN_WRONG;
+		$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_UNKNOWN_WRONG');
+
 		$userId = 0;
 		$loginName = $password = '';
 
+		if (isset($ret['err_no'])) {
+			$errNo = (int) $ret['err_no'];
+		}
+
+		if (isset($ret['err_msg'])) {
+			$errMsg = $ret['err_msg'];
+		}
+
 		if (isset($ret['user_id'])) {
 			$userId = (int) $ret['user_id'];
-			unset($ret['user_id']);
 		}
 
 		if (isset($ret['login_name'])) {
 			$loginName = $ret['login_name'];
-			unset($ret['login_name']);
 		}
 
 		if (isset($ret['password'])) {
 			$password = $ret['password'];
-			unset($ret['password']);
 		}
 
-		$ret['data'] = array(
-			'user_id' => $userId,
-			'login_name' => $loginName,
-			'password' => $password
+		if (($history = trim($history)) === '') {
+			$history = Service::getInstance('Options', 'system')->getSiteUrl();
+		}
+
+		if ($errNo === DataUsers::SUCCESS_LOGIN_NUM) {
+			$passwordExpiry = $rememberMe ? Cfg::getApp('password_expiry', 'login') : 0;
+			$loginNameExpiry = Cfg::getApp('login_name_expiry', 'login') + mktime();
+
+			$auth = new Authentication('login');
+			$auth->setIdentity($userId, $loginName, $password, $passwordExpiry);
+			$auth->getCookie()->add('unick', $loginName, $loginNameExpiry);
+		}
+
+		$ret = array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'data' => array(
+				'user_id' => $userId,
+				'login_name' => $loginName,
+				'remember_me' => $rememberMe,
+				'history' => $history
+			)
 		);
 
-		if ($ret['err_no'] !== DataUsers::SUCCESS_LOGIN_NUM) {
-			return $ret;
-		}
-
-		$authentication = new Authentication('authentication');
-		$authentication->setIdentity($userId, $loginName, $password);
+		return $ret;
 	}
 }
