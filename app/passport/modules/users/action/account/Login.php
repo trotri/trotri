@@ -8,19 +8,19 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\users\action\users;
+namespace modules\users\action\account;
 
 use library;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use libapp\Model;
+use modules\users\model\Account;
 
 /**
  * Login class file
  * 用户登录
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Login.php 1 2014-08-08 15:49:14Z huan.song $
- * @package modules.users.action.users
+ * @package modules.users.action.account
  * @since 1.0
  */
 class Login extends library\ShowAction
@@ -39,14 +39,14 @@ class Login extends library\ShowAction
 
 		$req = Ap::getRequest();
 		$viw = Mvc::getView();
-		$mod = Model::getInstance('Users');
+		$mod = new Account();
 		if ($req->isPost()) {
 			$loginName = $req->getTrim('login_name');
 			$password = $req->getTrim('password');
 			$rememberMe = (boolean) $req->getInteger('remember_me');
 			$history = $req->getTrim('history');
 
-			$ret = $mod->login($loginName, $password, $rememberMe, $history);
+			$ret = $mod->login($loginName, $password, $rememberMe);
 		}
 
 		$viw->assign($ret);

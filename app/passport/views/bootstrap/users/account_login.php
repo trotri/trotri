@@ -13,12 +13,12 @@
 
 <?php echo $this->getHtml()->openForm($this->getUrlManager()->getUrl($this->action), 'post', array('class' => 'form-signin')); ?>
   <h2 class="form-signin-heading"><?php echo $this->CFG_SYSTEM_URLS_ADMINISTRATOR; ?></h2>
-  <?php echo $this->getHtml()->text('login_name', $this->data['login_name'], array('class' => 'form-control', 'placeholder' => $this->CFG_SYSTEM_GLOBAL_LOGIN_NAME, 'required1', 'autofocus')); ?>
-  <?php echo $this->getHtml()->password('password', '', array('class' => 'form-control', 'placeholder' => $this->CFG_SYSTEM_GLOBAL_LOGIN_PASSWORD, 'required1')); ?>
+  <?php echo $this->getHtml()->text('login_name', $this->data['login_name'], array('class' => 'form-control', 'placeholder' => $this->CFG_SYSTEM_GLOBAL_LOGIN_NAME, 'required', 'autofocus')); ?>
+  <?php echo $this->getHtml()->password('password', '', array('class' => 'form-control', 'placeholder' => $this->CFG_SYSTEM_GLOBAL_LOGIN_PASSWORD, 'required')); ?>
   <div class="checkbox"><label>
     <?php echo $this->getHtml()->checkbox('remember_me', 1, $this->data['remember_me']); ?> <?php echo $this->CFG_SYSTEM_GLOBAL_REMEMBER_ME; ?>
   </label></div>
-  <?php echo $this->getHtml()->hidden('history', $this->data['history']); ?>
+  <?php echo $this->getHtml()->hidden('history', ''); ?>
   <?php echo $this->getHtml()->submit($this->CFG_SYSTEM_GLOBAL_LOGIN, '', array('class' => 'btn btn-lg btn-primary btn-block')); ?>
 <?php echo $this->getHtml()->closeForm(); ?>
 

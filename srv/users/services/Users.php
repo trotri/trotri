@@ -11,10 +11,7 @@
 namespace users\services;
 
 use libsrv\AbstractService;
-use tfc\ap\Ap;
 use tfc\util\String;
-use tfc\saf\Log;
-use users\library\Lang;
 use users\db\Users AS DbUsers;
 
 /**
@@ -70,6 +67,22 @@ class Users extends AbstractService
 	public function findByPk($userId)
 	{
 		$row = $this->_dbUsers->findByPk($userId);
+		if ($row && is_array($row) && isset($row['user_id'])) {
+			$groupIds = $this->_userGroups->findGroupIdsByUserId($row['user_id']);
+			$row['group_ids'] = is_array($groupIds) ? $groupIds : array();
+		}
+
+		return $row;
+	}
+
+	/**
+	 * 通过登录名，查询一条记录
+	 * @param string $loginName
+	 * @return array
+	 */
+	public function findByLoginName($loginName)
+	{
+		$row = $this->_dbUsers->findByLoginName($loginName);
 		if ($row && is_array($row) && isset($row['user_id'])) {
 			$groupIds = $this->_userGroups->findGroupIdsByUserId($row['user_id']);
 			$row['group_ids'] = is_array($groupIds) ? $groupIds : array();
@@ -443,109 +456,4 @@ class Users extends AbstractService
 		return $loginType === DataUsers::LOGIN_TYPE_PHONE;
 	}
 
-	/**
-	 * 用户登录
-	 * @param string $loginName
-	 * @param string $password
-	 * @return array
-	 */
-	public function login($loginName, $password)
-	{
-		if (($loginName = trim($loginName)) === '') {
-			$errNo = DataUsers::ERROR_LOGIN_NAME_EMPTY;
-			$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_NAME_EMPTY');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg
-			);
-		}
-
-		if (($password = trim($password)) === '') {
-			$errNo = DataUsers::ERROR_LOGIN_PASSWORD_EMPTY;
-			$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_PASSWORD_EMPTY');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName
-			);
-		}
-
-		$row = $this->_dbUsers->findByLoginName($loginName);
-		if (!$row || !is_array($row) || !isset($row['user_id'], $row['login_name'], $row['password'], $row['salt'], $row['trash'], $row['forbidden'], $row['login_count'])) {
-			$errNo = DataUsers::ERROR_LOGIN_NAME_UNDEFINED;
-			$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_NAME_UNDEFINED');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName
-			);
-		}
-
-		$userId = (int) $row['user_id'];
-		$loginName = $row['login_name'];
-		if ($row['trash'] !== DataUsers::TRASH_N) {
-			$errNo = DataUsers::ERROR_LOGIN_USER_TRASH;
-			$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_USER_TRASH');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'user_id' => $userId,
-				'login_name' => $loginName,
-			);
-		}
-
-		if ($row['forbidden'] !== DataUsers::FORBIDDEN_N) {
-			$errNo = DataUsers::ERROR_LOGIN_USER_FORBIDDEN;
-			$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_USER_FORBIDDEN');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'user_id' => $userId,
-				'login_name' => $loginName,
-			);
-		}
-
-		$password = $this->encrypt($password, $row['salt']);
-		if ($password !== $row['password']) {
-			$errNo = DataUsers::ERROR_LOGIN_PASSWORD_WRONG;
-			$errMsg = Lang::_('SRV_FILTER_USERS_LOGIN_PASSWORD_WRONG');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'user_id' => $userId,
-				'login_name' => $loginName,
-			);
-		}
-
-		$dtLastLogin = date('Y-m-d H:i:s');
-		$ipLastLogin = ip2long(Ap::getRequest()->getClientIp());
-		$loginCount = (int) $row['login_count'] + 1;
-		$salt = $row['salt'];
-		$params = array(
-			'dt_last_login' => $dtLastLogin,
-			'ip_last_login' => $ipLastLogin,
-			'login_count' => $loginCount,
-		);
-
-		$rowCount = $this->_dbUsers->modifyByPk($userId, $params);
-		if (!$rowCount) {
-			Log::warning(sprintf(
-				'Users update dt_last_login|ip_last_login|login_count Failed, user_id "%d", login_name "%s"', $userId, $loginName
-			), 0,  __METHOD__);
-		}
-
-		$errNo = DataUsers::SUCCESS_LOGIN_NUM;
-		$errMsg = '';
-		return array(
-			'err_no' => $errNo,
-			'err_msg' => $errMsg,
-			'user_id' => $userId,
-			'login_name' => $loginName,
-			'password' => $password,
-			'salt' => $salt,
-			'dt_last_login' => $dtLastLogin,
-			'ip_last_login' => $ipLastLogin,
-			'login_count' => $loginCount,
-		);
-	}
 }
