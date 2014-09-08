@@ -11,8 +11,12 @@
 namespace users\services;
 
 use tfc\ap\Ap;
+use tfc\saf\Cfg;
 use tfc\saf\Log;
-use users\library\Lang;
+use tid\Authentication;
+use tid\Authorization;
+use tid\Role;
+use users\library\Identity;
 
 /**
  * Account class file
@@ -25,9 +29,19 @@ use users\library\Lang;
 class Account
 {
 	/**
+	 * @var string Cookie配置名
+	 */
+	const COOKIE_CLUSTER_NAME = 'authentication';
+
+	/**
 	 * @var instance of users\services\Users
 	 */
 	protected $_users = null;
+
+	/**
+	 * @var instance of users\services\Groups
+	 */
+	protected $_groups = null;
 
 	/**
 	 * 构造方法：初始化数据库操作类
@@ -35,136 +49,458 @@ class Account
 	public function __construct()
 	{
 		$this->_users = new Users();
+		$this->_groups = new Groups();
 	}
 
 	/**
-	 * 用户登录
-	 * @param string $loginName
-	 * @param string $password
+	 * 获取用户身份授权类
+	 * @param array $groupIds
+	 * @return tid\Authorization
+	 */
+	public function getAuthorization($groupIds)
+	{
+		$groupIds = (array) $groupIds;
+
+		$temp = array();
+		foreach ($groupIds as $groupId) {
+			if (($groupId = (int) $groupId) > 0) {
+				$temp[] = $groupId;
+			}
+		}
+
+		$groupIds = array_unique($temp);
+
+		$auth = new Authorization();
+		foreach ($groupIds as $groupId) {
+			$role = new Role($groupId);
+			if (!$role->fileExists()) {
+				$permission = $this->_groups->getPermissions($groupId);
+				if (is_array($permission)) {
+					foreach ($permission as $appName => $mods) {
+						if (is_array($mods)) {
+							foreach ($mods as $modName => $ctrls) {
+								if (is_array($ctrls)) {
+									foreach ($ctrls as $ctrlName => $powers) {
+										if (is_array($powers)) {
+											foreach ($powers as $powerName) {
+												$role->allow($appName, $modName, $ctrlName, $powerName);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				$role->writeResources()->loadResources();
+			}
+
+			$auth->addRole($role);
+		}
+
+		return $auth;
+	}
+
+	/**
+	 * 获取用户拥有权限的项目名
+	 * @param array $groupIds
 	 * @return array
 	 */
-	public function login($loginName, $password)
+	public function getAppNames($groupIds)
+	{
+		return $this->_groups->getAppNames($groupIds);
+	}
+
+	/**
+	 * 验证登录名
+	 * @param string $loginName
+	 * @return array
+	 */
+	public function checkName($loginName)
 	{
 		if (($loginName = trim($loginName)) === '') {
 			$errNo = DataAccount::ERROR_LOGIN_NAME_EMPTY;
-			$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_NAME_EMPTY');
 			return array(
 				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName
-			);
-		}
-
-		if (($password = trim($password)) === '') {
-			$errNo = DataAccount::ERROR_LOGIN_PASSWORD_EMPTY;
-			$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_PASSWORD_EMPTY');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName
+				'data' => array()
 			);
 		}
 
 		$row = $this->_users->findByLoginName($loginName);
-		if (!$row || !is_array($row) || !isset($row['user_id'], $row['login_name'], $row['password'], $row['salt'], $row['trash'], $row['forbidden'], $row['login_count'])) {
-			$errNo = DataAccount::ERROR_LOGIN_NAME_UNDEFINED;
-			$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_NAME_UNDEFINED');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName
-			);
-		}
-
-		$loginName = $row['login_name'];
-		if ($row['trash'] !== DataUsers::TRASH_N) {
-			$errNo = DataAccount::ERROR_LOGIN_USER_TRASH;
-			$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_USER_TRASH');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName,
-			);
-		}
-
-		if ($row['forbidden'] !== DataUsers::FORBIDDEN_N) {
-			$errNo = DataAccount::ERROR_LOGIN_USER_FORBIDDEN;
-			$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_USER_FORBIDDEN');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName,
-			);
-		}
-
-		$password = $this->_users->encrypt($password, $row['salt']);
-		if ($password !== $row['password']) {
-			$errNo = DataAccount::ERROR_LOGIN_PASSWORD_WRONG;
-			$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_PASSWORD_WRONG');
-			return array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'login_name' => $loginName,
-			);
-		}
-
-		$userId = (int) $row['user_id'];
-		$dtLastLogin = date('Y-m-d H:i:s');
-		$ipLastLogin = ip2long(Ap::getRequest()->getClientIp());
-		$loginCount = (int) $row['login_count'] + 1;
-		$params = array(
-			'dt_last_login' => $dtLastLogin,
-			'ip_last_login' => $ipLastLogin,
-			'login_count' => $loginCount,
-		);
-
-		$rowCount = $this->_users->modifyByPk($userId, $params);
-		if (!$rowCount) {
+		if (!$row || !is_array($row) || !isset($row['user_id'], $row['login_name'], $row['password'], $row['salt'], $row['valid_mail'], $row['valid_phone'], $row['trash'], $row['forbidden'], $row['login_count'])) {
+			$errNo = DataAccount::ERROR_LOGIN_NAME_NOT_EXISTS;
 			Log::warning(sprintf(
-				'Users update dt_last_login|ip_last_login|login_count Failed, user_id "%d", login_name "%s"', $userId, $loginName
-			), 0,  __METHOD__);
+				'Account login_name not exists, login_name "%s"', $loginName
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => array()
+			);
 		}
 
-		$loginType = isset($row['login_type']) ? $row['login_type'] : '';
-		$salt = $row['salt'];
-		$userName = isset($row['user_name']) ? $row['user_name'] : '';
-		$userMail = isset($row['user_mail']) ? $row['user_mail'] : '';
-		$userPhone = isset($row['user_phone']) ? $row['user_phone'] : '';
-		$dtRegistered = isset($row['dt_registered']) ? $row['dt_registered'] : '';
-		$dtLastRepwd = isset($row['dt_last_repwd']) ? $row['dt_last_repwd'] : '';
-		$ipRegistered = isset($row['ip_registered']) ? (int) $row['ip_registered'] : 0;
-		$ipLastRepwd = isset($row['ip_last_repwd']) ? (int) $row['ip_last_repwd'] : 0;
-		$repwdCount = isset($row['repwd_count']) ? (int) $row['repwd_count'] : 0;
-		$validMail = (isset($row['valid_mail']) && $row['valid_mail'] === DataUsers::VALID_MAIL_Y) ? true : false;
-		$validPhone = (isset($row['valid_phone']) && $row['valid_phone'] === DataUsers::VALID_PHONE_Y) ? true : false;
+		$errNo = DataAccount::SUCCESS_LOGIN_NUM;
+		return array(
+			'err_no' => $errNo,
+			'data' => $row
+		);
+	}
+
+	/**
+	 * 验证登录名和密码
+	 * @param string $loginName
+	 * @param string $password
+	 * @return integer
+	 */
+	public function checkNamePwd($loginName, $password)
+	{
+		$data = array();
+
+		if (($loginName = trim($loginName)) === '') {
+			$errNo = DataAccount::ERROR_LOGIN_NAME_EMPTY;
+			return array(
+				'err_no' => $errNo,
+				'data' => $data
+			);
+		}
+
+		if (($password = trim($password)) === '') {
+			$errNo = DataAccount::ERROR_PASSWORD_EMPTY;
+			return array(
+				'err_no' => $errNo,
+				'data' => $data
+			);
+		}
+
+		$ret = $this->checkName($loginName);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			return $ret;
+		}
+
+		$data = $ret['data'];
+		$password = $this->_users->encrypt($password, $data['salt']);
+		if ($password !== $data['password']) {
+			$errNo = DataAccount::ERROR_PASSWORD_WRONG;
+			Log::warning(sprintf(
+				'Account password wrong, user_id "%d", login_name "%s"', $data['user_id'], $data['login_name']
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => array()
+			);
+		}
+
+		$errNo = DataAccount::SUCCESS_LOGIN_NUM;
+		return array(
+			'err_no' => $errNo,
+			'data' => $data
+		);
+	}
+
+	/**
+	 * 验证用户登录
+	 * @param array $users
+	 * @param boolean $update
+	 * @return array
+	 */
+	public function checkLogin(array $users, $update = true)
+	{
+		$userId       = isset($users['user_id'])       ? (int) $users['user_id']       : 0;
+		$loginName    = isset($users['login_name'])    ? $users['login_name']          : '';
+		$loginType    = isset($users['login_type'])    ? $users['login_type']          : '';
+		$password     = isset($users['password'])      ? $users['password']            : '';
+		$salt         = isset($users['salt'])          ? $users['salt']                : '';
+		$userName     = isset($users['user_name'])     ? $users['user_name']           : '';
+		$userMail     = isset($users['user_mail'])     ? $users['user_mail']           : '';
+		$userPhone    = isset($users['user_phone'])    ? $users['user_phone']          : '';
+		$dtRegistered = isset($users['dt_registered']) ? $users['dt_registered']       : '';
+		$dtLastLogin  = isset($users['dt_last_login']) ? $users['dt_last_login']       : '';
+		$dtLastRepwd  = isset($users['dt_last_repwd']) ? $users['dt_last_repwd']       : '';
+		$ipRegistered = isset($users['ip_registered']) ? (int) $users['ip_registered'] : 0;
+		$ipLastLogin  = isset($users['ip_last_login']) ? (int) $users['ip_last_login'] : 0;
+		$ipLastRepwd  = isset($users['ip_last_repwd']) ? (int) $users['ip_last_repwd'] : 0;
+		$loginCount   = isset($users['login_count'])   ? (int) $users['login_count']   : 0;
+		$repwdCount   = isset($users['repwd_count'])   ? (int) $users['repwd_count']   : 0;
+		$groupIds     = isset($users['group_ids'])     ? (array) $users['group_ids']   : array();
+		$validMail    = ($users['valid_mail']  === DataUsers::VALID_MAIL_Y)  ? true  : false;
+		$validPhone   = ($users['valid_phone'] === DataUsers::VALID_PHONE_Y) ? true  : false;
+		$trash        = ($users['trash']       === DataUsers::TRASH_N)       ? false : true;
+		$forbidden    = ($users['forbidden']   === DataUsers::FORBIDDEN_N)   ? false : true;
 
 		$data = array(
-			'user_id' => $userId,
-			'login_name' => $loginName,
-			'login_type' => $loginType,
-			'password' => $password,
-			'salt' => $salt,
-			'user_name' => $userName,
-			'user_mail' => $userMail,
-			'user_phone' => $userPhone,
+			'user_id'       => $userId,
+			'login_name'    => $loginName,
+			'login_type'    => $loginType,
+			'password'      => $password,
+			'salt'          => $salt,
+			'user_name'     => $userName,
+			'user_mail'     => $userMail,
+			'user_phone'    => $userPhone,
 			'dt_registered' => $dtRegistered,
 			'dt_last_login' => $dtLastLogin,
 			'dt_last_repwd' => $dtLastRepwd,
 			'ip_registered' => $ipRegistered,
 			'ip_last_login' => $ipLastLogin,
 			'ip_last_repwd' => $ipLastRepwd,
-			'login_count' => $loginCount,
-			'repwd_count' => $repwdCount,
-			'valid_mail' => $validMail,
-			'valid_phone' => $validPhone
+			'login_count'   => $loginCount,
+			'repwd_count'   => $repwdCount,
+			'group_ids'     => $groupIds,
+			'valid_mail'    => $validMail,
+			'valid_phone'   => $validPhone,
+			'trash'         => $trash,
+			'forbidden'     => $forbidden
 		);
 
+		if ($userId <= 0 || $loginName === '') {
+			$errNo = DataAccount::ERROR_LOGIN_FAILED;
+			Log::warning(sprintf(
+				'Account user_id and login_name must be not empty, user_id "%d", login_name "%s"', $userId, $loginName
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => array()
+			);
+		}
+
+		if ($trash) {
+			$errNo = DataAccount::ERROR_USER_TRASH;
+			Log::warning(sprintf(
+				'Account user has been trashed, user_id "%d", login_name "%s"', $userId, $loginName
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => $data,
+			);
+		}
+
+		if ($forbidden) {
+			$errNo = DataAccount::ERROR_USER_FORBIDDEN;
+			Log::warning(sprintf(
+				'Account user has been forbidden, user_id "%d", login_name "%s"', $userId, $loginName
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => $data,
+			);
+		}
+
+		if ($update) {
+			$dtLastLogin = date('Y-m-d H:i:s');
+			$ipLastLogin = ip2long(Ap::getRequest()->getClientIp());
+			$loginCount += 1;
+			$params = array(
+				'dt_last_login' => $dtLastLogin,
+				'ip_last_login' => $ipLastLogin,
+				'login_count' => $loginCount,
+			);
+
+			$rowCount = $this->_users->modifyByPk($userId, $params);
+			if ($rowCount) {
+				$data['dt_last_login'] = $dtLastLogin;
+				$data['ip_last_login'] = $ipLastLogin;
+				$data['login_count'] = $loginCount;
+			}
+			else {
+				Log::warning(sprintf(
+					'Account update dt_last_login|ip_last_login|login_count Failed, user_id "%d", login_name "%s"', $userId, $loginName
+				), DataAccount::ERROR_MODIFY_LAST_LOGIN,  __METHOD__);
+			}
+		}
+
 		$errNo = DataAccount::SUCCESS_LOGIN_NUM;
-		$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_SUCCESS');
 		return array(
 			'err_no' => $errNo,
-			'err_msg' => $errMsg,
 			'data' => $data
 		);
 	}
+
+	/**
+	 * 将用户身份信息设置到Cookie中
+	 * @param array $users
+	 * @param boolean $rememberMe
+	 * @return array
+	 */
+	public function setIdentity(array $users, $rememberMe = false)
+	{
+		$cookieClusterName = self::COOKIE_CLUSTER_NAME;
+
+		$config = Cfg::getApp($cookieClusterName);
+		$expiry          = isset($config['expiry'])           ? (int) $config['expiry']               : 0;
+		$cookieName      = isset($config['cookie_name'])      ? trim($config['cookie_name'])          : '';
+		$cooksetPassword = isset($config['cookset_password']) ? (boolean) $config['cookset_password'] : false;
+		$cooksetGroupIds = isset($config['cookset_groupids']) ? (boolean) $config['cookset_groupids'] : false;
+		$cooksetAppNames = isset($config['cookset_appnames']) ? (boolean) $config['cookset_appnames'] : false;
+
+		if ($cookieName === '') {
+			$errNo = DataAccount::ERROR_LOGIN_FAILED;
+			Log::warning(sprintf(
+				'Account cookie name must be string and not empty, cookie_cluster_name "%s"', $cookieClusterName
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => array()
+			);
+		}
+
+		$userId    = isset($users['user_id'])    ? (int) $users['user_id']        : 0;
+		$loginName = isset($users['login_name']) ? $users['login_name']           : '';
+		$userName  = isset($users['user_name'])  ? $users['user_name']            : '';
+		$password  = isset($users['password'])   ? $users['password']             : '';
+		$nickname  = isset($users['user_name'])  ? $users['user_name']            : '';
+		$groupIds  = isset($users['group_ids'])  ? (array) $users['group_ids']    : array();
+		$appNames  = $cooksetAppNames            ? $this->getAppNames($groupIds)  : array();
+
+		if ($userId <= 0 || $loginName === '') {
+			$errNo = DataAccount::ERROR_LOGIN_FAILED;
+			Log::warning(sprintf(
+				'Account user_id and login_name must be not empty, cookie_cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', $cookieClusterName, $cookieName, $userId, $loginName
+			), $errNo,  __METHOD__);
+			return array(
+				'err_no' => $errNo,
+				'data' => array()
+			);
+		}
+
+		$rememberMe      || $expiry = 0;
+		$cooksetPassword || $password = '';
+		$cooksetGroupIds || $groupIds = array();
+
+		$auth = new Authentication($cookieClusterName, $cookieName);
+		$ret = $auth->setIdentity($userId, $loginName, $password, $expiry, $nickname, $groupIds, $appNames);
+		if ($ret) {
+			$errNo = DataAccount::SUCCESS_LOGIN_NUM;
+			return array(
+				'err_no' => $errNo,
+				'data' => $users
+			);
+		}
+
+		$errNo = DataAccount::ERROR_LOGIN_FAILED;
+		Log::warning(sprintf(
+			'Account set identity Failed, cookie_cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', $cookieClusterName, $cookieName, $userId, $loginName
+		), $errNo,  __METHOD__);
+		return array(
+			'err_no' => $errNo,
+			'data' => array()
+		);
+	}
+
+	/**
+	 * 从Cookie中获取用户身份信息并设置到用户身份管理类
+	 * @return boolean
+	 */
+	public function initIdentity()
+	{
+		$cookieClusterName = self::COOKIE_CLUSTER_NAME;
+
+		$config = Cfg::getApp($cookieClusterName);
+		$expiry          = isset($config['expiry'])           ? (int) $config['expiry']               : 0;
+		$cookieName      = isset($config['cookie_name'])      ? trim($config['cookie_name'])          : '';
+		$cooksetPassword = isset($config['cookset_password']) ? (boolean) $config['cookset_password'] : false;
+		$cooksetGroupIds = isset($config['cookset_groupids']) ? (boolean) $config['cookset_groupids'] : false;
+		$cooksetAppNames = isset($config['cookset_appnames']) ? (boolean) $config['cookset_appnames'] : false;
+
+		if ($cookieName === '') {
+			Log::warning(sprintf(
+				'Account cookie name must be string and not empty, cookie_cluster_name "%s"', $cookieClusterName
+			), 0,  __METHOD__);
+
+			return false;
+		}
+
+		$auth = new Authentication($cookieClusterName, $cookieName);
+		$data = $auth->getIdentity();
+		if (!$data || !is_array($data) || !isset($data['user_id'])) {
+			Log::warning(sprintf(
+				'Account cookie data must be array and not empty, cookie_cluster_name "%s", cookie_name "%s"', $cookieClusterName, $cookieName
+			), 0,  __METHOD__);
+
+			return false;
+		}
+
+		$userId    = isset($data['user_id'])   ? (int) $data['user_id']     : 0;
+		$loginName = isset($data['user_name']) ? trim($data['user_name'])   : '';
+		$password  = isset($data['password'])  ? $data['password']          : '';
+		$ip        = isset($data['ip'])        ? (int) $data['ip']          : 0;
+		$expiry    = isset($data['expiry'])    ? (int) $data['expiry']      : 0;
+		$time      = isset($data['time'])      ? (int) $data['time']        : 0;
+		$userName  = isset($data['nickname'])  ? trim($data['nickname'])    : '';
+		$groupIds  = isset($data['group_ids']) ? (array) $data['group_ids'] : array();
+		$appNames  = isset($data['app_names']) ? (array) $data['app_names'] : array();
+
+		if ($userId <= 0 || $loginName === '') {
+			Log::warning(sprintf(
+				'Account cookie user_id and login_name must be not empty, cookie_cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', $cookieClusterName, $cookieName, $userId, $loginName
+			), 0,  __METHOD__);
+
+			return false;
+		}
+
+		$clientIp = ip2long(Ap::getRequest()->getClientIp());
+		if ($ip !== $clientIp) {
+			Log::warning(sprintf(
+				'Account cookie ip "%s" is not equal to client ip "%s", cookie_cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', 
+				long2ip($ip), long2ip($clientIp), $cookieClusterName, $cookieName, $userId, $loginName
+			), 0,  __METHOD__);
+
+			return false;
+		}
+
+		if ($cooksetPassword) {
+			if ($password === '') {
+				Log::warning(sprintf(
+					'Account config cookset_password and cookie password must be not empty, cookie_cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', $cookieClusterName, $cookieName, $userId, $loginName
+				), 0,  __METHOD__);
+
+				return false;
+			}
+
+			$pwd = $this->_users->getPasswordByUserId($userId);
+			if ($password !== $pwd) {
+				Log::warning(sprintf(
+					'Account cookie password "%s" is not equal to db password "%s", cookie_cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', $cookieClusterName, $cookieName, $userId, $loginName
+				), 0,  __METHOD__);
+
+				return false;
+			}
+		}
+
+		$authorization = $this->getAuthorization($groupIds);
+
+		Identity::setUserId($userId);
+		Identity::setLoginName($loginName);
+		Identity::setUserName($userName);
+		Identity::setGroupIds($groupIds);
+		Identity::setAppNames($appNames);
+		Identity::setAuthorization($authorization);
+
+		return true;
+	}
+
+	/**
+	 * 通过登录名和密码登录
+	 * @param string $loginName
+	 * @param string $password
+	 * @param boolean $rememberMe
+	 * @return array
+	 */
+	public function loginByNamePwd($loginName, $password, $rememberMe = false)
+	{
+		$ret = $this->checkNamePwd($loginName, $password);
+		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			return $ret;
+		}
+
+		$ret = $this->checkLogin($ret['data'], true);
+		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			return $ret;
+		}
+
+		$ret = $this->setIdentity($ret['data'], $rememberMe);
+		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
+		return $ret;
+	}
+
 }

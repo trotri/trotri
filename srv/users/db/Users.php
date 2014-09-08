@@ -102,6 +102,27 @@ class Users extends AbstractDb
 	}
 
 	/**
+	 * 通过登录名，验证值是否在数据库表中是否存在
+	 * @param string $loginName
+	 * @return boolean
+	 */
+	public function loginNameExists($loginName)
+	{
+		if (($loginName = trim($loginName)) === '') {
+			return false;
+		}
+
+		$tableName = $this->getTblprefix() . TableNames::getUsers();
+		$sql = 'SELECT COUNT(*) FROM `' . $tableName . '` WHERE `login_name` = ?';
+		$total = $this->fetchColumn($sql, $loginName);
+		if ($total === false) {
+			return false;
+		}
+
+		return ($total > 0);
+	}
+
+	/**
 	 * 通过主键，获取某个列的值
 	 * @param string $columnName
 	 * @param integer $userId

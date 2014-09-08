@@ -80,8 +80,12 @@ class FpUsers extends FormProcessor
 					$params['user_phone'] = $loginName;
 				}
 			}
-			else {
-				if (!isset($params['user_name']) || trim($params['user_name']) === '') {
+
+			if (!isset($params['user_name']) || trim($params['user_name']) === '') {
+				if ($this->_object->isMailLogin($loginType)) {
+					$params['user_name'] = strstr($loginName, '@', true);
+				}
+				else {
 					$params['user_name'] = $loginName;
 				}
 			}

@@ -108,15 +108,18 @@ class Authentication
     {
         if ($this->_identity === null) {
             $value = $this->getCookie()->get($this->getCookieName());
-            if ($value && substr_count($value, "\t") === 5) {
-                list($userId, $userName, $password, $ip, $expiry, $time) = explode("\t", $value);
+            if ($value && substr_count($value, "\t") === 8) {
+                list($userId, $userName, $password, $ip, $expiry, $time, $nickname, $groupIds, $appNames) = explode("\t", $value);
                 $this->_identity = array(
                     'user_id'   => (int) $userId,
                     'user_name' => trim($userName),
                     'password'  => $password,
-                    'ip'        => $ip,
+                    'ip'        => (int) $ip,
                     'expiry'    => (int) $expiry,
-                    'time'      => (int) $time
+                    'time'      => (int) $time,
+                	'nickname'  => $nickname,
+                    'group_ids' => explode(',', $groupIds),
+                    'app_names' => explode(',', $appNames)
                 );
             }
         }
@@ -130,9 +133,12 @@ class Authentication
      * @param string $userName
      * @param string $password
      * @param integer $expiry
+     * @param string $nickname
+     * @param array $groupIds
+     * @param array $appNames
      * @return boolean
      */
-    public function setIdentity($userId, $userName, $password, $expiry = 0)
+    public function setIdentity($userId, $userName, $password, $expiry = 0, $nickname = '', array $groupIds = array(), array $appNames = array())
     {
         if (($userId = (int) $userId) <= 0) {
             throw new ErrorException(sprintf(
@@ -156,8 +162,26 @@ class Authentication
             $expiry += mktime();
         }
 
-        $ip = Ap::getRequest()->getClientIp();
-        $value = $userId . "\t" . $userName . "\t" . $password . "\t" . $ip . "\t" . $expiry . "\t" . mktime();
+        $temp = array();
+        foreach ($groupIds as $groupId) {
+            if (($groupId = (int) $groupId) > 0) {
+                $temp[] = $groupId;
+            }
+        }
+
+        $groupIds = implode(',', array_unique($temp));
+
+        $temp = array();
+        foreach ($appNames as $appName) {
+            if (($appName = trim($appName)) !== '') {
+                $temp[] = $appName;
+            }
+        }
+
+        $appNames = implode(',', array_unique($temp));
+
+        $ip = ip2long(Ap::getRequest()->getClientIp());
+        $value = $userId . "\t" . $userName . "\t" . $password . "\t" . $ip . "\t" . $expiry . "\t" . mktime() . "\t" . $nickname . "\t" . $groupIds . "\t" . $appNames;
         return $this->getCookie()->add($this->getCookieName(), $value, $expiry);
     }
 

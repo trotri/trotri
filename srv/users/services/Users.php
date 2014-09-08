@@ -92,6 +92,16 @@ class Users extends AbstractService
 	}
 
 	/**
+	 * 验证值登录名是否存在
+	 * @param string $loginName
+	 * @return boolean
+	 */
+	public function loginNameExists($loginName)
+	{
+		return $this->_dbUsers->loginNameExists($loginName);
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 * @see \libsrv\AbstractService::create()
 	 */

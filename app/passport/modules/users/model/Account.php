@@ -10,9 +10,6 @@
 
 namespace modules\users\model;
 
-use tfc\saf\Cfg;
-use tid\Authentication;
-use users\library\Lang;
 use users\services\DataAccount;
 use users\services\Account AS SrvAccount;
 
@@ -48,53 +45,24 @@ class Account
 	 */
 	public function login($loginName, $password, $rememberMe = false)
 	{
-		$ret = $this->_service->login($loginName, $password);
-
-		$errNo = DataAccount::ERROR_LOGIN_UNKNOWN_WRONG;
-		$errMsg = Lang::_('SRV_FILTER_ACCOUNT_LOGIN_UNKNOWN_WRONG');
-
-		if (isset($ret['err_no'])) {
-			$errNo = (int) $ret['err_no'];
-		}
-
-		if (isset($ret['err_msg'])) {
-			$errMsg = $ret['err_msg'];
-		}
-
-		if ($errNo !== DataAccount::SUCCESS_LOGIN_NUM) {
-			$ret = array(
-				'err_no' => $errNo,
-				'err_msg' => $errMsg,
-				'data' => array(
-					'login_name' => $loginName,
-					'remember_me' => $rememberMe
-				)
+		$ret = $this->_service->loginByNamePwd($loginName, $password, $rememberMe);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			$ret['data'] = array(
+				'login_name' => $loginName,
+				'password' => $password,
+				'remember_me' => $rememberMe
 			);
 
 			return $ret;
 		}
 
-		$data = isset($ret['data']) ? (array) $ret['data'] : array();
-
-		$userId = isset($data['user_id']) ? (int) $data['user_id'] : 0;
-		$loginName = isset($data['login_name']) ? $data['login_name'] : '';
-		$password = isset($data['password']) ? $data['password'] : '';
-
-		$loginNameExpiry = Cfg::getApp('login_name_expiry', 'login');
-		$passwordExpiry = $rememberMe ? Cfg::getApp('password_expiry', 'login') : 0;
-
-		$auth = new Authentication('login');
-		$auth->setIdentity($userId, $loginName, $password, $passwordExpiry);
-		$auth->getCookie()->add('unick', $loginName, $loginNameExpiry + mktime());
-
-		$ret = array(
-			'err_no' => $errNo,
-			'err_msg' => $errMsg,
-			'data' => array(
-				'user_id' => $userId,
-				'login_name' => $loginName,
-				'remember_me' => $rememberMe
-			)
+		$userId = isset($ret['data']['user_id']) ? (int) $ret['data']['user_id'] : 0;
+		$loginName = isset($ret['data']['login_name']) ? $ret['data']['login_name'] : '';
+		$ret['data'] = array(
+			'user_id' => $userId,
+			'login_name' => $loginName,
+			'password' => $password,
+			'remember_me' => $rememberMe
 		);
 
 		return $ret;

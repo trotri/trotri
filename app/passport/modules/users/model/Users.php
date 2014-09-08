@@ -12,11 +12,7 @@ namespace modules\users\model;
 
 use library\BaseModel;
 use tfc\saf\Text;
-use tfc\saf\Cfg;
-use tid\Authentication;
-use users\library\Lang;
 use users\services\DataUsers;
-use libsrv\Service;
 use libapp\Model;
 
 /**

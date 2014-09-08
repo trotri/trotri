@@ -11,6 +11,7 @@
 use tfc\ap;
 use tfc\mvc\Mvc;
 use tfc\util\String;
+use users\services\Account;
 
 /**
  * Bootstrap class file
@@ -65,6 +66,16 @@ class Bootstrap extends ap\Bootstrap
 		$router->setDefaultModule('system')
 			   ->setDefaultController('site')
 			   ->setDefaultAction('index');
+	}
+
+	/**
+	 * 初始化用户账户信息
+	 * @return void
+	 */
+	public function _initAccount()
+	{
+		$account = new Account();
+		$account->initIdentity();
 	}
 
 	/**

@@ -11,6 +11,8 @@
 namespace modules\system\action\site;
 
 use library\actions;
+use tfc\ap\UserIdentity;
+use users\library\Identity;
 
 /**
  * Test class file
@@ -28,5 +30,19 @@ class Test extends actions\View
 	 */
 	public function run()
 	{
+		echo 'ID: ', UserIdentity::getId(), '<br/>';
+		echo 'Name: ', UserIdentity::getName(), '<br/>';
+		echo 'Nick: ', UserIdentity::getNick(), '<br/><br/>';
+
+		echo 'UserId: ', Identity::getUserId(), '<br/>';
+		echo 'LoginName: ', Identity::getLoginName(), '<br/>';
+		echo 'UserName: ', Identity::getUserName(), '<br/>';
+		echo 'GroupIds: ';
+		var_dump(Identity::getGroupIds());
+		echo '<br/>';
+		echo 'AppNames: ';
+		var_dump(Identity::getAppNames());
+		echo '<br/>';
+		var_dump(Identity::getAuthorization());
 	}
 }

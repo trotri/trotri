@@ -13,6 +13,7 @@ namespace users\services;
 use libsrv\AbstractService;
 use tfc\saf\Log;
 use libsrv\Service;
+use tid\Authorization;
 use users\db\Groups AS DbGroups;
 
 /**
@@ -31,6 +32,11 @@ class Groups extends AbstractService
 	protected $_dbGroups = null;
 
 	/**
+	 * @var instance of tid\Authorization
+	 */
+	protected $_authorization = null;
+
+	/**
 	 * 构造方法：初始化数据库操作类
 	 */
 	public function __construct()
@@ -38,6 +44,7 @@ class Groups extends AbstractService
 		parent::__construct();
 
 		$this->_dbGroups = new DbGroups();
+		$this->_authorization = new Authorization();
 	}
 
 	/**
@@ -141,6 +148,64 @@ class Groups extends AbstractService
 	}
 
 	/**
+	 * 获取用户拥有权限的项目名
+	 * @param array $groupIds
+	 * @return array
+	 */
+	public function getAppNames($groupIds)
+	{
+		$permission = $this->batchPermissions($groupIds);
+		$appNames = array_keys($permission);
+		return $appNames;
+	}
+
+	/**
+	 * 通过多个主键，批量获取权限
+	 * @param array $groupIds
+	 * @return array
+	 */
+	public function batchPermissions($groupIds)
+	{
+		$data = array();
+
+		$groupIds = (array) $groupIds;
+
+		$temp = array();
+		foreach ($groupIds as $groupId) {
+			if (($groupId = (int) $groupId) > 0) {
+				$temp[] = $groupId;
+			}
+		}
+
+		$groupIds = array_unique($temp);
+		foreach ($groupIds as $groupId) {
+			$permission = $this->getPermissions($groupId);
+			if ($permission && is_array($permission)) {
+				foreach ($permission as $appName => $mods) {
+					if (is_array($mods)) {
+						foreach ($mods as $modName => $ctrls) {
+							if (is_array($ctrls)) {
+								foreach ($ctrls as $ctrlName => $powers) {
+									if (is_array($powers)) {
+										foreach ($powers as $powerName) {
+											if (!isset($data[$appName][$modName][$ctrlName])
+												|| !in_array($powerName, $data[$appName][$modName][$ctrlName])) {
+												$data[$appName][$modName][$ctrlName][] = $powerName;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * 通过主键，获取权限，并递归获取父级权限、父父级权限等
 	 * @param integer $groupId
 	 * @return array
@@ -164,7 +229,7 @@ class Groups extends AbstractService
 
 		// 将获取的权限去重
 		foreach ($permissions as $permission) {
-			if (is_array($permission)) {
+			if ($permission && is_array($permission)) {
 				foreach ($permission as $appName => $mods) {
 					if (is_array($mods)) {
 						foreach ($mods as $modName => $ctrls) {
@@ -355,6 +420,13 @@ class Groups extends AbstractService
 
 		$data = base64_encode(serialize($data));
 		$rowCount = $this->_dbGroups->modifyPermissionByPk($groupId, $data);
+		if ($rowCount > 0) {
+			if (!$this->_authorization->flush()) {
+				Log::warning('Groups Authorization flush roles cache Failed.', 0,  __METHOD__);
+			}
+		}
+
 		return $rowCount;
 	}
+
 }

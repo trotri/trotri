@@ -251,13 +251,10 @@ class Role
      */
     public function loadResources()
     {
-        $file = $this->getFile();
-        if (!is_file($file)) {
-            $this->writeResources();
-            return $this;
+        if ($this->fileExists()) {
+            $this->_resources = $this->readResources();
         }
 
-        $this->_resources = $this->readResources();
         return $this;
     }
 
@@ -303,6 +300,16 @@ class Role
         }
 
         return $this;
+    }
+
+    /**
+     * 判断缓存文件是否存在
+     * @return boolean
+     */
+    public function fileExists()
+    {
+        $file = $this->getFile();
+        return is_file($file);
     }
 
     /**

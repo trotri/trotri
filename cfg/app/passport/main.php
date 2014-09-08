@@ -24,14 +24,17 @@ return array (
 		'list_rows' => 10,          // 每页展示的行数
 		'list_pages' => 4,          // 每页展示的页码数
 	),
-	'login' => array (
-		'key_name' => 'login',                   // 密钥配置名
+	'authentication' => array (
+		'key_name' => 'auth_passport',           // 密钥配置名
 		'domain' => '',                          // Cookie的有效域名，缺省：当前域名
 		'path' => '/',                           // Cookie的有效服务器路径，缺省：/
 		'secure' => false,                       // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
 		'httponly' => true,                      // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
-		'login_name_expiry' => YEAR_IN_SECONDS,  // 记住登录名时间
-		'password_expiry' => WEEK_IN_SECONDS,    // 记住密码时间
+		'expiry' => WEEK_IN_SECONDS,             // 记住密码时间
+		'cookie_name' => 'pptid',                // Cookie名
+		'cookset_password' => true,              // Cookie中设置密码
+		'cookset_groupids' => true,              // Cookie中设置所属分组ID
+		'cookset_appnames' => true,              // Cookie中设置用户拥有权限的项目名
 	),
 	'cookie' => array (
 		'key_name' => 'cookie',         // 密钥配置名

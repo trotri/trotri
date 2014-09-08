@@ -31,6 +31,11 @@ class UserIdentity
     protected static $_name = '';
 
     /**
+     * @var string 用户昵称
+     */
+    protected static $_nick = '';
+
+    /**
      * 判断用户是否已登录
      * @return boolean
      */
@@ -55,7 +60,7 @@ class UserIdentity
      */
     public static function setId($id)
     {
-    	self::$_id = (int) $id;
+        self::$_id = (int) $id;
     }
 
     /**
@@ -64,7 +69,7 @@ class UserIdentity
      */
     public static function getName()
     {
-    	return self::$_name;
+        return self::$_name;
     }
 
     /**
@@ -74,6 +79,25 @@ class UserIdentity
      */
     public static function setName($name)
     {
-    	self::$_name = trim($name);
+        self::$_name = trim($name);
+    }
+
+    /**
+     * 获取用户昵称
+     * @return string
+     */
+    public static function getNick()
+    {
+        return self::$_nick;
+    }
+
+    /**
+     * 设置用户昵称
+     * @param string $nick
+     * @return void
+     */
+    public static function setNick($nick)
+    {
+        self::$_nick = trim($nick);
     }
 }

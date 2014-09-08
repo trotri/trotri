@@ -9,7 +9,13 @@
  */
 
 return array (
-  'login' => array (
+  'auth_programmer' => array (
+    'crypt' => 'IjfY309L6D0fF7leUr3HJ983',
+    'sign' => 'kup30Lp9Ll20kIrTy4Lp35ek',
+    'expiry' => MONTH_IN_SECONDS,
+    'rnd_len' => 4
+  ),
+  'auth_passport' => array (
     'crypt' => 'IjfY309L6D0fF7leUr3HJ983',
     'sign' => 'kup30Lp9Ll20kIrTy4Lp35ek',
     'expiry' => MONTH_IN_SECONDS,
