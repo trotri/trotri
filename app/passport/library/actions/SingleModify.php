@@ -11,6 +11,7 @@
 namespace library\actions;
 
 use tfc\ap\Ap;
+use tid\Role;
 use libapp\Model;
 
 /**
@@ -23,6 +24,11 @@ use libapp\Model;
  */
 abstract class SingleModify extends Modify
 {
+	/**
+	 * @var integer 允许的权限
+	 */
+	protected $_power = Role::UPDATE;
+
 	/**
 	 * 执行操作：编辑单个字段和批量编辑单个字段
 	 * @param string $className

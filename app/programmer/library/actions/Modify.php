@@ -13,6 +13,7 @@ namespace library\actions;
 use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
+use tid\Role;
 use libapp\Model;
 use libapp\SubmitType;
 use library\ErrorNo;
@@ -27,6 +28,11 @@ use library\ErrorNo;
  */
 abstract class Modify extends ShowAction
 {
+	/**
+	 * @var integer 允许的权限
+	 */
+	protected $_power = Role::UPDATE;
+
 	/**
 	 * 执行操作：编辑数据
 	 * @param string $className

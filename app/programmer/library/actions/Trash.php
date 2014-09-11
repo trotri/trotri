@@ -12,6 +12,7 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
+use tid\Role;
 use libapp\Model;
 
 /**
@@ -24,6 +25,11 @@ use libapp\Model;
  */
 abstract class Trash extends ShowAction
 {
+	/**
+	 * @var integer 允许的权限
+	 */
+	protected $_power = Role::DELETE;
+
 	/**
 	 * 执行操作：移至回收站、从回收站还原数据、批量移至回收站、批量从回收站还原数据
 	 * @param string $className

@@ -25,11 +25,16 @@ return array (
 		'list_pages' => 4,          // 每页展示的页码数
 	),
 	'authentication' => array (
-		'key_name' => 'authentication', // 密钥配置名
-		'domain' => '',                 // Cookie的有效域名，缺省：当前域名
-		'path' => '/',                  // Cookie的有效服务器路径，缺省：/
-		'secure' => false,              // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
-		'httponly' => true,             // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
+		'key_name' => 'auth_passport',           // 密钥配置名
+		'domain' => '',                          // Cookie的有效域名，缺省：当前域名
+		'path' => '/',                           // Cookie的有效服务器路径，缺省：/
+		'secure' => false,                       // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
+		'httponly' => true,                      // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
+		'expiry' => WEEK_IN_SECONDS,             // 记住密码时间
+		'cookie_name' => 'pgrid',                // Cookie名
+		'cookset_password' => false,             // Cookie中设置密码
+		'cookset_groupids' => true,              // Cookie中设置所属分组ID
+		'cookset_appnames' => true,              // Cookie中设置用户拥有权限的项目名
 	),
 	'cookie' => array (
 		'key_name' => 'cookie',         // 密钥配置名

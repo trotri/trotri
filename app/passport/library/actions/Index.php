@@ -13,6 +13,7 @@ namespace library\actions;
 use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\saf\Cfg;
+use tid\Role;
 use libapp\Model;
 use libapp\PageHelper;
 use library\ErrorNo;
@@ -27,6 +28,11 @@ use library\ErrorNo;
  */
 abstract class Index extends ShowAction
 {
+	/**
+	 * @var integer 允许的权限
+	 */
+	protected $_power = Role::SELECT;
+
 	/**
 	 * 执行操作：查询数据列表
 	 * @param string $className

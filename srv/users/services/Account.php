@@ -386,6 +386,38 @@ class Account
 	}
 
 	/**
+	 * 移除Cookie中的用户身份
+	 * @return boolean
+	 */
+	public function clearIdentity()
+	{
+		$cookieClusterName = self::COOKIE_CLUSTER_NAME;
+
+		$config = Cfg::getApp($cookieClusterName);
+		$cookieName = isset($config['cookie_name']) ? trim($config['cookie_name']) : '';
+
+		if ($cookieName === '') {
+			$errNo = DataAccount::ERROR_LOGOUT_FAILED;
+			Log::warning(sprintf(
+				'Account cookie name must be string and not empty, cookie_cluster_name "%s"', $cookieClusterName
+			), $errNo,  __METHOD__);
+			return false;
+		}
+
+		$auth = new Authentication($cookieClusterName, $cookieName);
+		$ret = $auth->clearIdentity();
+		if ($ret) {
+			return true;
+		}
+
+		$errNo = DataAccount::ERROR_LOGOUT_FAILED;
+		Log::warning(sprintf(
+			'Account clear identity Failed, cookie_cluster_name "%s", cookie_name "%s"', $cookieClusterName, $cookieName
+		), $errNo,  __METHOD__);
+		return false;
+	}
+
+	/**
 	 * 从Cookie中获取用户身份信息并设置到用户身份管理类
 	 * @return boolean
 	 */
@@ -411,7 +443,7 @@ class Account
 		$auth = new Authentication($cookieClusterName, $cookieName);
 		$data = $auth->getIdentity();
 		if (!$data || !is_array($data) || !isset($data['user_id'])) {
-			Log::warning(sprintf(
+			Log::debug(sprintf(
 				'Account cookie data must be array and not empty, cookie_cluster_name "%s", cookie_name "%s"', $cookieClusterName, $cookieName
 			), 0,  __METHOD__);
 
@@ -503,4 +535,12 @@ class Account
 		return $ret;
 	}
 
+	/**
+	 * 注销账户
+	 * @return boolean
+	 */
+	public function logout()
+	{
+		return $this->clearIdentity();
+	}
 }

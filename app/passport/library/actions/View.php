@@ -12,6 +12,7 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
+use tid\Role;
 use libapp\Model;
 
 /**
@@ -24,6 +25,11 @@ use libapp\Model;
  */
 abstract class View extends ShowAction
 {
+	/**
+	 * @var integer 允许的权限
+	 */
+	protected $_power = Role::SELECT;
+
 	/**
 	 * 执行操作：查询数据详情
 	 * @param string $className

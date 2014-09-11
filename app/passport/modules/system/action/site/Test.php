@@ -10,7 +10,7 @@
 
 namespace modules\system\action\site;
 
-use library\actions;
+use library\DataAction;
 use tfc\ap\UserIdentity;
 use users\library\Identity;
 
@@ -22,8 +22,13 @@ use users\library\Identity;
  * @package modules.system.action.site
  * @since 1.0
  */
-class Test extends actions\View
+class Test extends DataAction
 {
+	/**
+	 * @var boolean 是否验证登录
+	 */
+	protected $_validLogin = true;
+
 	/**
 	 * (non-PHPdoc)
 	 * @see \tfc\mvc\interfaces\Action::run()

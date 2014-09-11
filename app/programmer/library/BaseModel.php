@@ -26,7 +26,7 @@ use libsrv\Clean;
 abstract class BaseModel extends libapp\BaseModel
 {
 	/**
-	 * @var srv\srvname\services\classname 业务处理类
+	 * @var srv\srvname\services\Types 业务处理类
 	 */
 	protected $_service = null;
 
@@ -215,7 +215,7 @@ abstract class BaseModel extends libapp\BaseModel
 
 	/**
 	 * 获取业务处理类
-	 * @return instance of srv\srvname\services\classname
+	 * @return instance of srv\srvname\services\Types
 	 */
 	public function getService()
 	{

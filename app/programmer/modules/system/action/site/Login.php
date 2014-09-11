@@ -8,12 +8,12 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\users\action\account;
+namespace modules\system\action\site;
 
 use library;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use modules\users\model\Account;
+use modules\system\model\Account;
 
 /**
  * Login class file
@@ -53,7 +53,7 @@ class Login extends library\ShowAction
 			$ret = $mod->login($loginName, $password, $rememberMe);
 		}
 
-		$history = $req->getTrim('history', 'passport.php?r=users/users/index');
+		$history = $req->getTrim('history', 'programmer.php?r=builder/builders/index');
 		$viw->assign('history', $history);
 
 		$viw->assign($ret);

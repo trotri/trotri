@@ -15,6 +15,7 @@ use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
 use views\bootstrap\components\ComponentsConstant;
+use users\library\Identity;
 
 /**
  * NavBar class file
@@ -71,6 +72,12 @@ class NavBar extends Widget
 			// 主菜单外结束标签
 			$output .= $html->closeTag('li') . "\n";
 		}
+
+		$this->assign('is_login',   Identity::isLogin());
+		$this->assign('user_id',    Identity::getUserId());
+		$this->assign('login_name', Identity::getLoginName());
+		$this->assign('user_name',  Identity::getUserName());
+		$this->assign('app_names',  Identity::getAppNames());
 
 		$this->assign('menus', $output);
 		$this->display();

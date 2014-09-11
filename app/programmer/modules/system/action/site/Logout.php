@@ -4,24 +4,24 @@
  *
  * @author    Huan Song <trotri@yeah.net>
  * @link      http://github.com/trotri/trotri for the canonical source repository
- * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.
+ * @copyright Copyright &copy; 2011-2014 http://www.trotri.com/ All rights reserved.
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
 namespace modules\system\action\site;
 
-use library\actions;
-use libapp\PageHelper;
+use library;
+use modules\system\model\Account;
 
 /**
- * Err404 class file
- * 404错误页
+ * Logout class file
+ * 注销账户
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Err404.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.system.action.site
+ * @version $Id: Logout.php 1 2014-08-08 15:49:14Z huan.song $
+ * @package modules.users.action.account
  * @since 1.0
  */
-class Err404 extends actions\View
+class Logout extends library\ShowAction
 {
 	/**
 	 * @var boolean 是否验证登录
@@ -29,14 +29,18 @@ class Err404 extends actions\View
 	protected $_validLogin = false;
 
 	/**
+	 * @var boolean 是否验证身份授权
+	 */
+	protected $_validAuth = false;
+
+	/**
 	 * (non-PHPdoc)
 	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{
-		$httpReferer = PageHelper::getHttpReferer();
-
-		$this->assign('http_referer', $httpReferer);
-		$this->render();
+		$mod = new Account();
+		$mod->logout();
+		$this->forward('login');
 	}
 }

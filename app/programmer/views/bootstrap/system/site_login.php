@@ -24,7 +24,7 @@
 
 </div><!-- /.container -->
 
-<?php echo $this->getHtml()->jsFile($this->js_url . '/mods/users.js?v=' . $this->version); ?>
+<?php echo $this->getHtml()->jsFile($this->js_url . '/mods/system.js?v=' . $this->version); ?>
 <?php $this->display('scripts'); ?>
 
   </body>

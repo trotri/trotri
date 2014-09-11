@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\users\model;
+namespace modules\system\model;
 
 use users\services\DataAccount;
 use users\services\Account AS SrvAccount;

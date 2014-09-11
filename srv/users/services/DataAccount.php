@@ -33,9 +33,14 @@ class DataAccount
 	const ERROR_LOGIN_FAILED          = 3000;
 
 	/**
+	 * @var integer 注销账户失败
+	 */
+	const ERROR_LOGOUT_FAILED         = 3001;
+
+	/**
 	 * @var integer 更新用户信息失败
 	 */
-	const ERROR_MODIFY_LAST_LOGIN     = 3001;
+	const ERROR_MODIFY_LAST_LOGIN     = 3002;
 
 	/**
 	 * @var integer 登录名为空

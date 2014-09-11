@@ -12,6 +12,7 @@ namespace library\actions;
 
 use library\ShowAction;
 use tfc\ap\Ap;
+use tid\Role;
 use libapp\Model;
 
 /**
@@ -24,6 +25,11 @@ use libapp\Model;
  */
 abstract class Remove extends ShowAction
 {
+	/**
+	 * @var integer 允许的权限
+	 */
+	protected $_power = Role::DELETE;
+
 	/**
 	 * 执行操作：删除数据和批量删除数据
 	 * @param string $className

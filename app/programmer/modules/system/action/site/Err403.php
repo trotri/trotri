@@ -14,14 +14,14 @@ use library\actions;
 use libapp\PageHelper;
 
 /**
- * Err404 class file
- * 404错误页
+ * Err403 class file
+ * 403错误页
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Err404.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: Err403.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.system.action.site
  * @since 1.0
  */
-class Err404 extends actions\View
+class Err403 extends actions\View
 {
 	/**
 	 * @var boolean 是否验证登录
