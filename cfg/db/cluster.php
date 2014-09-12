@@ -25,7 +25,7 @@ return array (
     'retry' => 3,
     'tblprefix' => 'tr_'
   ),
-  'service' => array (
+  'trotri' => array (
     'dsn' => 'mysql:host=localhost;dbname=trotri',
     'username' => 'root',
     'password' => '123456',

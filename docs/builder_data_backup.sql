@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50617
 Source Host           : localhost:3306
-Source Database       : trotri
+Source Database       : builder_data_backup
 
 Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-08-12 13:48:36
+Date: 2014-09-11 16:19:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -56,7 +56,7 @@ CREATE TABLE `tr_builders` (
   KEY `srv_name` (`srv_name`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
 -- ----------------------------
 -- Records of tr_builders
@@ -70,6 +70,8 @@ INSERT INTO `tr_builders` VALUES ('6', '用户可访问的事件', 'user_amcas',
 INSERT INTO `tr_builders` VALUES ('7', '用户组', 'user_groups', 'n', 'InnoDB', 'utf8', '用户分组表', 'normal', 'users', 'passport', 'users', 'groups', 'groups', 'group_pid', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-05-29 17:33:12', '2014-05-29 17:37:54', 'n');
 INSERT INTO `tr_builders` VALUES ('8', '用户和用户组关联表', 'user_usergroups_map', 'n', 'InnoDB', 'utf8', '用户和用户组关联表', 'normal', 'users', 'passport', 'users', 'usergroups', 'usergroups', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-08-06 15:28:31', '2014-08-06 17:51:18', 'n');
 INSERT INTO `tr_builders` VALUES ('9', '用户管理', 'users', 'n', 'InnoDB', 'utf8', '用户主表', 'normal', 'users', 'passport', 'users', 'users', 'users', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-08-06 17:48:57', '2014-08-06 17:50:51', 'n');
+INSERT INTO `tr_builders` VALUES ('10', '站点配置', 'system_options', 'n', 'InnoDB', 'utf8', '站点配置表', 'normal', 'system', 'passport', 'system', 'options', 'options', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil', '', '宋欢', 'trotri@yeah.net', '2014-08-14 23:25:14', '2014-08-16 22:34:05', 'n');
+INSERT INTO `tr_builders` VALUES ('12', '文档类别模型', 'post_modules', 'n', 'InnoDB', 'utf8', '文档类别模型表', 'normal', 'posts', 'administrator', 'posts', 'modules', 'modules', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-09-11 15:28:08', '2014-09-11 15:49:29', 'n');
 
 -- ----------------------------
 -- Table structure for `tr_builder_fields`
@@ -108,7 +110,7 @@ CREATE TABLE `tr_builder_fields` (
   KEY `form_create_sort` (`form_create_sort`),
   KEY `form_modify_sort` (`form_modify_sort`),
   KEY `form_search_sort` (`form_search_sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
 -- ----------------------------
 -- Records of tr_builder_fields
@@ -215,6 +217,49 @@ INSERT INTO `tr_builder_fields` VALUES ('99', 'valid_mail', 'y|n', 'n', 'n', '�
 INSERT INTO `tr_builder_fields` VALUES ('100', 'valid_phone', 'y|n', 'n', 'n', '是否已验证手机号', '9', '1', '4', '18', '是否已验证手机号', '', 'n', 'n', 'y', '13', 'y', '18', 'y', '18', 'y', '18');
 INSERT INTO `tr_builder_fields` VALUES ('101', 'forbidden', 'y|n', 'n', 'n', '是否禁用', '9', '1', '4', '19', '是否禁用', '', 'n', 'n', 'y', '19', 'y', '19', 'y', '19', 'y', '19');
 INSERT INTO `tr_builder_fields` VALUES ('102', 'trash', 'y|n', 'n', 'n', '是否删除', '9', '1', '4', '20', '是否删除', '', 'n', 'n', 'n', '20', 'n', '20', 'n', '20', 'n', '20');
+INSERT INTO `tr_builder_fields` VALUES ('103', 'option_id', '5', 'y', 'y', '配置ID', '10', '1', '9', '1', '配置ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('104', 'site_name', '100', 'n', 'n', '网站名称', '10', '1', '1', '2', '网站名称', '网站名称由2~100个字符组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('105', 'site_url', '1024', 'n', 'n', '网站URL', '10', '1', '1', '3', '网站URL', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('106', 'tpl_dir', '100', 'n', 'n', '模板名称', '10', '1', '1', '4', '模板名称', '模板名称由2~20个英文字母、数字或下划线组成.', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('107', 'html_dir', '200', 'n', 'n', '生成静态页面存放目录名称', '10', '1', '1', '5', '生成静态页面存放目录名称', '目录名称由2~20个英文字母、数字或下划线组成.', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('108', 'meta_title', '100', 'n', 'n', 'SEO Title', '10', '1', '1', '6', 'SEO Title', '网站标题-在html-meta中展示', 'n', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('109', 'meta_keywords', '200', 'n', 'n', 'SEO Keywords', '10', '1', '1', '7', 'SEO Keywords', '网站关键词-在html-meta中展示', 'n', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('110', 'meta_description', '500', 'n', 'n', 'SEO Description', '10', '1', '10', '8', 'SEO Description', '网站关键词-在html-meta中展示', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
+INSERT INTO `tr_builder_fields` VALUES ('111', 'powerby', '200', 'n', 'n', '网站版权信息', '10', '1', '1', '9', '网站版权信息', '网站版权信息由2~100个英文字母、数字或下划线组成.', 'n', 'n', 'y', '9', 'y', '9', 'y', '9', 'y', '9');
+INSERT INTO `tr_builder_fields` VALUES ('112', 'stat_code', '', 'n', 'n', '网站第三方统计代码', '10', '1', '10', '10', '网站第三方统计代码', '', 'n', 'n', 'y', '10', 'y', '10', 'y', '10', 'y', '10');
+INSERT INTO `tr_builder_fields` VALUES ('113', 'url_rewrite', 'y|n', 'n', 'n', '是否使用重写模式获取URLS，在Apache上使用前先将文件“htaccess.txt”更名为“.htaccess”', '10', '1', '4', '11', '使用重写模式获取URLS', '在Apache上使用前先将文件“htaccess.txt”更名为“.htaccess”', 'n', 'n', 'y', '11', 'y', '11', 'y', '11', 'y', '11');
+INSERT INTO `tr_builder_fields` VALUES ('114', 'close_register', 'y|n', 'n', 'n', '是否关闭新用户注册', '10', '7', '4', '12', '是否关闭新用户注册', '', 'n', 'n', 'y', '12', 'y', '12', 'y', '12', 'y', '12');
+INSERT INTO `tr_builder_fields` VALUES ('115', 'close_register_reason', '', 'n', 'n', '关闭注册原因', '10', '7', '10', '13', '关闭注册原因', '', 'n', 'n', 'y', '13', 'y', '13', 'y', '13', 'y', '13');
+INSERT INTO `tr_builder_fields` VALUES ('116', 'show_register_service_item', 'y|n', 'n', 'n', '是否显示用户注册协议', '10', '7', '4', '14', '是否显示用户注册协议', '', 'n', 'n', 'y', '14', 'y', '14', 'y', '14', 'y', '14');
+INSERT INTO `tr_builder_fields` VALUES ('117', 'register_service_item', '', 'n', 'n', '用户注册协议', '10', '7', '10', '15', '用户注册协议', '', 'n', 'n', 'y', '15', 'y', '15', 'y', '15', 'y', '15');
+INSERT INTO `tr_builder_fields` VALUES ('128', 'thumb_width', '5', 'n', 'y', '缩略图宽(单位:px)', '10', '8', '2', '26', '缩略图宽', '单位：px', 'n', 'n', 'y', '26', 'y', '26', 'y', '26', 'y', '26');
+INSERT INTO `tr_builder_fields` VALUES ('129', 'thumb_height', '5', 'n', 'y', '缩略图高(单位:px)', '10', '8', '2', '27', '缩略图高', '单位：px', 'n', 'n', 'y', '27', 'y', '27', 'y', '27', 'y', '27');
+INSERT INTO `tr_builder_fields` VALUES ('130', 'water_mark_type', 'imgdir|text|none', 'n', 'n', '水印类型，imgdir：只添加图片水印、text：只添加文字水印、none：不添加', '10', '8', '5', '28', '水印类型', '', 'n', 'n', 'y', '28', 'y', '28', 'y', '28', 'y', '28');
+INSERT INTO `tr_builder_fields` VALUES ('131', 'water_mark_imgdir', '500', 'n', 'n', '水印图片文件地址', '10', '8', '1', '29', '水印图片文件地址', '', 'n', 'n', 'y', '29', 'y', '29', 'y', '29', 'y', '29');
+INSERT INTO `tr_builder_fields` VALUES ('132', 'water_mark_text', '500', 'n', 'n', '水印文字信息', '10', '8', '1', '30', '水印文字信息', '', 'n', 'n', 'y', '30', 'y', '30', 'y', '30', 'y', '30');
+INSERT INTO `tr_builder_fields` VALUES ('133', 'water_mark_position', '1|2|3|4|5|6|7|8|9', 'n', 'y', '水印放置位置', '10', '8', '5', '31', '水印放置位置', '', 'n', 'n', 'y', '31', 'y', '31', 'y', '31', 'y', '31');
+INSERT INTO `tr_builder_fields` VALUES ('134', 'water_mark_pct', '5', 'n', 'y', '水印融合度', '10', '8', '2', '32', '水印融合度', '取值 0~100，当=0时，水印完全透明，实际上什么都没做；当=100时，水印完全不透明。', 'n', 'n', 'y', '32', 'y', '32', 'y', '32', 'y', '32');
+INSERT INTO `tr_builder_fields` VALUES ('135', 'smtp_host', '200', 'n', 'n', 'SMTP服务器', '10', '9', '1', '33', 'SMTP服务器', '', 'n', 'n', 'y', '33', 'y', '33', 'y', '33', 'y', '33');
+INSERT INTO `tr_builder_fields` VALUES ('136', 'smtp_port', '5', 'n', 'y', 'SMTP服务器端口', '10', '9', '2', '34', 'SMTP服务器端口', 'SMTP服务器端口由数字组成（默认：25）.', 'n', 'n', 'y', '34', 'y', '34', 'y', '34', 'y', '34');
+INSERT INTO `tr_builder_fields` VALUES ('137', 'smtp_username', '100', 'n', 'n', 'SMTP服务器的账号', '10', '9', '1', '35', 'SMTP服务器的账号', '', 'n', 'n', 'y', '35', 'y', '35', 'y', '35', 'y', '35');
+INSERT INTO `tr_builder_fields` VALUES ('138', 'smtp_password', '100', 'n', 'n', 'SMTP服务器的密码', '10', '9', '1', '36', 'SMTP服务器的密码', '', 'n', 'n', 'y', '36', 'y', '36', 'y', '36', 'y', '36');
+INSERT INTO `tr_builder_fields` VALUES ('139', 'smtp_frommail', '100', 'n', 'n', '管理员邮箱', '10', '9', '1', '37', '管理员邮箱', '', 'n', 'n', 'y', '37', 'y', '37', 'y', '37', 'y', '37');
+INSERT INTO `tr_builder_fields` VALUES ('140', 'page_var', '100', 'n', 'n', '从$_GET或$_POST中获取当前页的键名', '10', '10', '1', '38', '从$_GET或$_POST中获取当前页的键名', '', 'n', 'n', 'y', '38', 'y', '38', 'y', '38', 'y', '38');
+INSERT INTO `tr_builder_fields` VALUES ('141', 'list_rows_var', '100', 'n', 'n', '从$_GET或$_POST中获取每页展示的行数的键名', '10', '10', '1', '39', '从$_GET或$_POST中获取每页展示的行数的键名', '', 'n', 'n', 'y', '39', 'y', '39', 'y', '39', 'y', '39');
+INSERT INTO `tr_builder_fields` VALUES ('142', 'list_rows', '5', 'n', 'y', '每页展示的行数', '10', '10', '2', '41', '每页展示的行数', '', 'n', 'n', 'y', '40', 'y', '40', 'y', '40', 'y', '40');
+INSERT INTO `tr_builder_fields` VALUES ('143', 'list_pages', '5', 'n', 'y', '每页展示的页码数', '10', '10', '2', '40', '每页展示的页码数', '', 'n', 'n', 'y', '41', 'y', '41', 'y', '41', 'y', '41');
+INSERT INTO `tr_builder_fields` VALUES ('144', 'list_rows_posts', '5', 'n', 'y', '文档列表每页展示条数', '10', '10', '2', '42', '文档列表每页展示条数', '', 'n', 'n', 'y', '42', 'y', '42', 'y', '42', 'y', '42');
+INSERT INTO `tr_builder_fields` VALUES ('145', 'list_rows_users', '5', 'n', 'y', '用户列表每页展示条数', '10', '10', '2', '43', '用户列表每页展示条数', '', 'n', 'n', 'y', '43', 'y', '43', 'y', '43', 'y', '43');
+INSERT INTO `tr_builder_fields` VALUES ('146', 'module_id', '5', 'y', 'y', '主键ID', '11', '1', '9', '1', '主键ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('147', 'module_name', '50', 'n', 'n', '模型名称', '11', '1', '1', '2', '模型名称', '', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('148', 'module_tblname', '50', 'n', 'n', '类别表名', '11', '1', '1', '3', '类别表名', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('149', 'forbidden', 'y|n', 'n', 'n', '是否禁用', '11', '1', '4', '4', '是否禁用', '', 'n', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('150', 'description', '', 'n', 'n', '描述', '11', '1', '1', '5', '描述', '', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('151', 'module_id', '5', 'y', 'y', '主键ID', '12', '1', '9', '1', '主键ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'y', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('152', 'module_name', '50', 'n', 'n', '模型名称', '12', '1', '1', '2', '模型名称', '模型名称由2~50个字符组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('153', 'module_tblname', '50', 'n', 'n', '类别表名', '12', '1', '1', '3', '类别表名', '类别表名由2~30个英文字母、数字或下划线组成.', 'y', 'y', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('154', 'forbidden', 'y|n', 'n', 'n', '是否禁用', '12', '1', '4', '4', '是否禁用', '', 'n', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('155', 'description', '', 'n', 'n', '描述', '12', '1', '10', '5', '描述', '', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
 
 -- ----------------------------
 -- Table structure for `tr_builder_field_groups`
@@ -231,7 +276,7 @@ CREATE TABLE `tr_builder_field_groups` (
   KEY `group_name` (`group_name`),
   KEY `builder_id` (`builder_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
 -- ----------------------------
 -- Records of tr_builder_field_groups
@@ -242,6 +287,10 @@ INSERT INTO `tr_builder_field_groups` VALUES ('3', 'system', '系统信息', '2'
 INSERT INTO `tr_builder_field_groups` VALUES ('4', 'view', '展示信息', '4', '1', '');
 INSERT INTO `tr_builder_field_groups` VALUES ('5', 'groups', '所属分组', '9', '2', '');
 INSERT INTO `tr_builder_field_groups` VALUES ('6', 'system', '系统信息', '9', '3', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('7', 'register', '注册设置', '10', '2', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('8', 'picture', '图片管理', '10', '3', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('9', 'smtp', '邮件设置', '10', '4', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('10', 'paginator', '分页配置', '10', '5', '');
 
 -- ----------------------------
 -- Table structure for `tr_builder_field_validators`
@@ -260,7 +309,7 @@ CREATE TABLE `tr_builder_field_validators` (
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
 
 -- ----------------------------
 -- Records of tr_builder_field_validators
@@ -377,6 +426,30 @@ INSERT INTO `tr_builder_field_validators` VALUES ('110', 'MaxLength', '88', '50'
 INSERT INTO `tr_builder_field_validators` VALUES ('111', 'Mail', '89', '', 'boolean', '邮箱格式不正确.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('112', 'InArray', '101', '', 'array', '必须选择是否禁用，值只能是%s.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('113', 'InArray', '102', '', 'array', '必须选择是否删除，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('114', 'MinLength', '104', '2', 'integer', '网站名称长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('115', 'MaxLength', '104', '100', 'integer', '网站名称长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('116', 'Url', '105', '', 'boolean', 'URL格式不正确.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('117', 'NotEmpty', '105', '', 'boolean', '必须填写网站URL.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('118', 'InArray', '113', '', 'array', '必须选择使用重写模式获取URLS，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('119', 'InArray', '114', '', 'array', '必须选择是否关闭新用户注册，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('120', 'InArray', '116', '', 'array', '必须选择是否显示用户注册协议，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('121', 'Integer', '128', '', 'boolean', '缩略图宽只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('122', 'Integer', '129', '', 'boolean', '缩略图高只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('123', 'InArray', '130', '', 'array', '必须选择水印类型，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('126', 'Min', '134', '0', 'integer', '水印融合度不能小于%option%.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('127', 'Max', '134', '100', 'integer', '水印融合度不能大于%option%.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('128', 'Integer', '136', '', 'boolean', 'SMTP服务器端口只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('129', 'AlphaNum', '140', '', 'boolean', '从$_GET或$_POST中获取当前页的键名只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('130', 'AlphaNum', '141', '', 'boolean', '从$_GET或$_POST中获取每页展示的行数的键名只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('131', 'Integer', '143', '', 'boolean', '每页展示的页码数只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('132', 'Integer', '142', '', 'boolean', '每页展示的行数只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('133', 'Integer', '144', '', 'boolean', '文档列表每页展示条数只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('134', 'Integer', '145', '', 'boolean', '用户列表每页展示条数只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('136', 'Numeric', '134', '', 'boolean', '水印融合度只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('137', 'InArray', '133', '', 'array', '必须选择水印放置位置，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('138', 'AlphaNum', '106', '', 'boolean', '模板名称只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('139', 'AlphaNum', '107', '', 'boolean', '生成静态页面存放目录名称只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('140', 'NotEmpty', '104', '', 'boolean', '必须填写网站名称.', '1', 'all');
 
 -- ----------------------------
 -- Table structure for `tr_builder_types`

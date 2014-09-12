@@ -20,7 +20,7 @@ use modules\system\model\Account;
  * 用户登录
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Login.php 1 2014-08-08 15:49:14Z huan.song $
- * @package modules.users.action.account
+ * @package modules.system.action.site
  * @since 1.0
  */
 class Login extends library\ShowAction

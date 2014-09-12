@@ -15,7 +15,6 @@ use tfc\ap\UserIdentity;
 use tfc\mvc\Mvc;
 use tid\Role;
 use users\library\Identity;
-use libapp\PageHelper;
 
 /**
  * ShowAction abstract class file

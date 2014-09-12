@@ -378,11 +378,11 @@ class Amcas extends BaseModel
 			$amcaName = strtolower(substr($ctrlName,0, -10));
 			$prompt = preg_replace('/.+class\s+file\s+\*\s+(\S+)\s+\*\s+\@author.+/is', '\\1', $reflector->getDocComment());
 			$ctrls[$amcaName] = array(
-					'amca_pid' => $modId,
-					'amca_name' => $amcaName,
-					'prompt' => $prompt,
-					'sort' => $sort++,
-					'category' => DataAmcas::CATEGORY_CTRL
+				'amca_pid' => $modId,
+				'amca_name' => $amcaName,
+				'prompt' => $prompt,
+				'sort' => $sort++,
+				'category' => DataAmcas::CATEGORY_CTRL
 			);
 		}
 

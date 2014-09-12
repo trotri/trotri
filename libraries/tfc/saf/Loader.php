@@ -243,6 +243,11 @@ is_dir(DIR_DATA_RUNTIME_ROLES) || exit('Request Error, Create RunTime Roles Dir 
 is_dir(DIR_DATA_RUNTIME_ENTITIES) || mkdir(DIR_DATA_RUNTIME_ENTITIES, 0664, true);
 is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entities Dir Failed');
 
+is_file(DIR_LOG_APP               . DS . 'index.html') || file_put_contents(DIR_LOG_APP               . DS . 'index.html', '<!DOCTYPE html><title></title>');
+is_file(DIR_DATA_RUNTIME          . DS . 'index.html') || file_put_contents(DIR_DATA_RUNTIME          . DS . 'index.html', '<!DOCTYPE html><title></title>');
+is_file(DIR_DATA_RUNTIME_ROLES    . DS . 'index.html') || file_put_contents(DIR_DATA_RUNTIME_ROLES    . DS . 'index.html', '<!DOCTYPE html><title></title>');
+is_file(DIR_DATA_RUNTIME_ENTITIES . DS . 'index.html') || file_put_contents(DIR_DATA_RUNTIME_ENTITIES . DS . 'index.html', '<!DOCTYPE html><title></title>');
+
 /**
  * 设置公共框架和代码库目录、当前项目的公共代码库目录、当前项目的所有模块存放目录到PHP INI自动加载目录
  */

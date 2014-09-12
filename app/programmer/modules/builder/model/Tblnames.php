@@ -22,6 +22,7 @@ use builders\services\DataBuilders;
 use builders\services\DataFields;
 use library\ErrorNo;
 use library\Constant;
+use tfc\ap\UserIdentity;
 
 /**
  * Tblnames class file
@@ -169,8 +170,8 @@ class Tblnames extends BaseModel
 				DataBuilders::INDEX_ROW_BTNS_REMOVE,
 			),
 			'description' => '',
-			'author_name' => 'undefined',
-			'author_mail' => 'undefined@undefined.undefined'
+			'author_name' => UserIdentity::getNick(),
+			'author_mail' => UserIdentity::getName()
 		);
 
 		$mod = Service::getInstance('Builders', $this->_srvName);
@@ -221,6 +222,9 @@ class Tblnames extends BaseModel
 			}
 			elseif ($columnSchema->type === 'integer') {
 				$typeId = 2;
+			}
+			elseif ($columnSchema->dbType === 'text') {
+				$typeId = 10;
 			}
 			else {
 				$typeId = 1;

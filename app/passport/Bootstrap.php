@@ -18,7 +18,7 @@ use users\services\Account;
  * 程序引导类，在项目入口处执行，会依次执行类中以_init开头的方法，初始化项目参数
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Bootstrap.php 1 2013-04-11 12:06:30Z huan.song $
- * @package administrator
+ * @package passport
  * @since 1.0
  */
 class Bootstrap extends ap\Bootstrap

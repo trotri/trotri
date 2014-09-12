@@ -20,7 +20,6 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->user_name; ?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="<?php echo $this->getUrlManager()->getUrl('cacheclear', 'tools', 'system'); ?>">清理缓存</a></li>
-            <li><a href="#">编辑账号</a></li>
             <li class="divider"></li>
             <li><a href="<?php echo $this->getUrlManager()->getUrl('logout', 'account', 'users'); ?>">退出登录</a></li>
           </ul>
