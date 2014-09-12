@@ -249,8 +249,6 @@ class FpUsers extends FormProcessor
 	 */
 	public function getUserNameRule($value)
 	{
-		if ($value === '') { return array(); }
-
 		return array(
 			'MinLength' => new validator\MinLengthValidator($value, 4, Lang::_('SRV_FILTER_USERS_USER_NAME_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_USERS_USER_NAME_MAXLENGTH')),

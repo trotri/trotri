@@ -41,7 +41,7 @@ class Modules extends AbstractDb
 		$tableName = $this->getTblprefix() . TableNames::getModules();
 		$attributes = array();
 
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `module_id`, `module_name`, `module_tblname`, `forbidden`, `description` FROM ' . $tableName;
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS `module_id`, `module_name`, `module_tblname`, `forbidden`, `description` FROM `' . $tableName . '`';
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
 		$ret = $this->fetchAllNoCache($sql, $attributes);
 		if (is_array($ret)) {
@@ -52,6 +52,17 @@ class Modules extends AbstractDb
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * 获取所有的ModuleName
+	 * @return array
+	 */
+	public function getModuleNames()
+	{
+		$tableName = $this->getTblprefix() . TableNames::getModules();
+		$sql = 'SELECT `module_id`, `module_name` FROM `' . $tableName . '` WHERE `forbidden` = ?';;
+		return $this->fetchPairs($sql, 'n');
 	}
 
 	/**
@@ -66,7 +77,7 @@ class Modules extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getModules();
-		$sql = 'SELECT `module_id`, `module_name`, `module_tblname`, `forbidden`, `description` FROM ' . $tableName . ' WHERE `module_id` = ?';
+		$sql = 'SELECT `module_id`, `module_name`, `module_tblname`, `forbidden`, `description` FROM `' . $tableName . '` WHERE `module_id` = ?';
 		return $this->fetchAssoc($sql, $moduleId);
 	}
 

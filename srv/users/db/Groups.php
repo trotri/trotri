@@ -68,7 +68,7 @@ class Groups extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getGroups();
-		$sql = 'SELECT `group_id`, `group_name`, `group_pid`, `sort`, `permission`, `description` FROM ' . $tableName . ' WHERE `group_id` = ?';
+		$sql = 'SELECT `group_id`, `group_name`, `group_pid`, `sort`, `permission`, `description` FROM `' . $tableName . '` WHERE `group_id` = ?';
 		return $this->fetchAssoc($sql, $groupId);
 	}
 

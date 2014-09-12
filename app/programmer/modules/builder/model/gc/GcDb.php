@@ -92,7 +92,7 @@ class GcDb extends AbstractGc
 		fwrite($stream, "\t\t{$tableName}\n");
 		fwrite($stream, "\t\t// \$condition = \$commandBuilder->createAndCondition(array_keys(\$params)); // 需重新开发 \n");
 		fwrite($stream, "\t\t// \$attributes = array(); // 需重新开发 \n\n");
-		$command = '\'' . str_replace($commandBuilder->quoteTableName('$tableName'), '\' . $tableName', $commandBuilder->createFind('$tableName', $fieldNames, '', '', 0, 0, 'SQL_CALC_FOUND_ROWS'));
+		$command = '\'' . str_replace($commandBuilder->quoteTableName('$tableName'), $commandBuilder->quoteTableName('\' . $tableName . \''), $commandBuilder->createFind('$tableName', $fieldNames, '', '', 0, 0, 'SQL_CALC_FOUND_ROWS')) . '\'';
 		fwrite($stream, "\t\t\$sql = {$command};\n");
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyCondition(\$sql, \$condition);\n");
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyOrder(\$sql, \$order);\n");
@@ -118,7 +118,7 @@ class GcDb extends AbstractGc
 		fwrite($stream, "\t\t\treturn false;\n");
 		fwrite($stream, "\t\t}\n\n");
 		fwrite($stream, "\t\t{$tableName}\n");
-		$command = str_replace($commandBuilder->quoteTableName('$tableName'), '\' . $tableName . \'', $commandBuilder->createFind('$tableName', $fieldNames, "{$quotePkColumn} = {$placeHolders}"));
+		$command = str_replace($commandBuilder->quoteTableName('$tableName'), $commandBuilder->quoteTableName('\' . $tableName . \''), $commandBuilder->createFind('$tableName', $fieldNames, "{$quotePkColumn} = {$placeHolders}"));
 		fwrite($stream, "\t\t\$sql = '{$command}';\n");
 		fwrite($stream, "\t\treturn \$this->fetchAssoc(\$sql, {$schema->pkVarColumn});\n");
 		fwrite($stream, "\t}\n\n");

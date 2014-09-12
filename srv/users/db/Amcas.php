@@ -68,7 +68,7 @@ class Amcas extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
-		$sql = 'SELECT `amca_id`, `amca_name`, `amca_pid`, `prompt`, `sort`, `category` FROM ' . $tableName . ' WHERE `amca_id` = ?';
+		$sql = 'SELECT `amca_id`, `amca_name`, `amca_pid`, `prompt`, `sort`, `category` FROM `' . $tableName . '` WHERE `amca_id` = ?';
 		return $this->fetchAssoc($sql, $amcaId);
 	}
 

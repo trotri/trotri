@@ -59,7 +59,8 @@ class TableRender extends views\bootstrap\components\TableRender
 			'title' => $this->view->MOD_BUILDER_URLS_VALIDATORS_CREATE,
 		));
 
-		$output = $indexIcon . $createIcon;
+		// $output = $indexIcon . $createIcon;
+		$output = $indexIcon;
 		return $output;
 	}
 

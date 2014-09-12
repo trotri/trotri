@@ -16,7 +16,7 @@ use posts\services\DataModules;
 
 /**
  * Modules class file
- * 文档类别模型
+ * 模型管理
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Modules.php 1 2014-09-11 18:41:37Z Code Generator $
  * @package modules.posts.model
@@ -111,4 +111,14 @@ class Modules extends BaseModel
 		$ret = parent::search($this->getService(), array(), '', $limit, $offset);
 		return $ret;
 	}
+
+	/**
+	 * 获取所有的ModuleName
+	 * @return array
+	 */
+	public function getModuleNames()
+	{
+		return $this->getService()->getModuleNames();
+	}
+
 }

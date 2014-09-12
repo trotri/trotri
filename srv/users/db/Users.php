@@ -163,13 +163,9 @@ class Users extends AbstractDb
 		$forbidden = isset($params['forbidden']) ? trim($params['forbidden']) : '';
 		$trash = 'n';
 
-		if ($loginName === '' || $loginType === '' || $password === '' || $salt === ''
+		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $userName === ''
 			|| $dtRegistered === '' || $dtLastLogin === '' || $ipRegistered < 0 || $ipLastLogin < 0 
 			|| $loginCount < 0 || $validMail === '' || $validPhone === '' || $forbidden === '') {
-			return false;
-		}
-
-		if ($userName === '' && $userMail === '' && $userPhone === '') {
 			return false;
 		}
 
@@ -232,7 +228,13 @@ class Users extends AbstractDb
 		}
 
 		if (isset($params['user_name'])) {
-			$attributes['user_name'] = trim($params['user_name']);
+			$userName = trim($params['user_name']);
+			if ($userName !== '') {
+				$attributes['user_name'] = $userName;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['user_mail'])) {

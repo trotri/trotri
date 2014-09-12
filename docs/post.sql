@@ -34,7 +34,7 @@ CREATE TABLE `tr_post_categories` (
   `html_dir` varchar(100) NOT NULL DEFAULT '' COMMENT '生成静态页面存放目录',
   `tpl_home` varchar(100) NOT NULL DEFAULT '' COMMENT '封页模板名',
   `tpl_list` varchar(100) NOT NULL DEFAULT '' COMMENT '列表模板名',
-  `tpl_view` varchar(100) NOT NULL DEFAULT '' COMMENT '文章模板名',
+  `tpl_view` varchar(100) NOT NULL DEFAULT '' COMMENT '文档模板名',
   `rule_list` varchar(100) NOT NULL DEFAULT 'list_{id}.html' COMMENT '列表静态页面链接规则',
   `rule_view` varchar(100) NOT NULL DEFAULT '{y}/{m}/{d}/{id}.html' COMMENT '文档静态页面链接规则',
   PRIMARY KEY (`category_id`),

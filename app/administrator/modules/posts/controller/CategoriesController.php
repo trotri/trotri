@@ -13,13 +13,13 @@ namespace modules\posts\controller;
 use libapp\BaseController;
 
 /**
- * ModulesController class file
- * 模型管理
+ * CategoriesController class file
+ * 类别管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModulesController.php 1 2014-09-11 18:41:37Z Code Generator $
+ * @version $Id: CategoriesController.php 1 2014-09-12 17:33:45Z Code Generator $
  * @package modules.posts.controller
  * @since 1.0
  */
-class ModulesController extends BaseController
+class CategoriesController extends BaseController
 {
 }

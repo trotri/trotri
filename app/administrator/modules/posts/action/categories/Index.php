@@ -8,18 +8,17 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\builder\action\groups;
+namespace modules\posts\action\categories;
 
 use library\actions;
-use tfc\ap\Ap;
 use libapp\Model;
 
 /**
  * Index class file
  * 查询数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Index.php 1 2014-05-27 16:15:35Z Code Generator $
- * @package modules.builder.action.groups
+ * @version $Id: Index.php 1 2014-09-12 17:33:45Z Code Generator $
+ * @package modules.posts.action.categories
  * @since 1.0
  */
 class Index extends actions\Index
@@ -30,15 +29,12 @@ class Index extends actions\Index
 	 */
 	public function run()
 	{
-		$mod = Model::getInstance('Groups');
-		$builderId = $mod->getBuilderId();
-		if ($builderId <= 0) {
-			$this->err404();
-		}
+		$ret = array();
 
-		$this->assign('builder_id', $builderId);
+		$mod = Model::getInstance('Categories');
+		$ret = $mod->findLists();
 
-		Ap::getRequest()->setParam('order', 'sort');
-		$this->execute('Groups');
+		$this->assign('elements', $mod);
+		$this->render($ret);
 	}
 }

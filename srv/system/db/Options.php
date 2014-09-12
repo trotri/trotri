@@ -37,7 +37,7 @@ class Options extends AbstractDb
 	{
 		$tableName = $this->getTblprefix() . TableNames::getOptions();
 
-		$sql = 'SELECT `option_key`, `option_value` FROM ' . $tableName;
+		$sql = 'SELECT `option_key`, `option_value` FROM `' . $tableName . '`';
 		return $this->fetchPairs($sql);
 	}
 
@@ -49,7 +49,7 @@ class Options extends AbstractDb
 	{
 		$tableName = $this->getTblprefix() . TableNames::getOptions();
 
-		$sql = 'SELECT `option_id`, `option_key`, `option_value` FROM ' . $tableName;
+		$sql = 'SELECT `option_id`, `option_key`, `option_value` FROM `' . $tableName . '`';
 		return $this->fetchAll($sql);
 	}
 
@@ -139,7 +139,7 @@ class Options extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getOptions();
-		$sql = 'SELECT `option_id`, `option_key`, `option_value` FROM ' . $tableName . ' WHERE `option_id` = ?';
+		$sql = 'SELECT `option_id`, `option_key`, `option_value` FROM `' . $tableName . '` WHERE `option_id` = ?';
 		return $this->fetchAssoc($sql, $optId);
 	}
 
@@ -155,7 +155,7 @@ class Options extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getOptions();
-		$sql = 'SELECT `option_id`, `option_key`, `option_value` FROM ' . $tableName . ' WHERE `option_key` = ?';
+		$sql = 'SELECT `option_id`, `option_key`, `option_value` FROM `' . $tableName . '` WHERE `option_key` = ?';
 		return $this->fetchAssoc($sql, $optKey);
 	}
 

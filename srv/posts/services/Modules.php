@@ -53,6 +53,16 @@ class Modules extends AbstractService
 	}
 
 	/**
+	 * 获取所有的ModuleName
+	 * @return array
+	 */
+	public function getModuleNames()
+	{
+		$rows = $this->_dbModules->getModuleNames();
+		return $rows;
+	}
+
+	/**
 	 * 通过主键，查询一条记录
 	 * @param integer $moduleId
 	 * @return array

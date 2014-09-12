@@ -101,7 +101,7 @@ class FpGroups extends FormProcessor
 	public function getSortRule($value)
 	{
 		return array(
-			'Numeric' => new validator\NumericValidator($value, true, Lang::_('SRV_FILTER_USER_GROUPS_SORT_NUMERIC')),
+			'Integer' => new validator\NumericValidator($value, true, Lang::_('SRV_FILTER_USER_GROUPS_SORT_INTEGER')),
 		);
 	}
 
