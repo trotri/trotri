@@ -11,7 +11,7 @@
 namespace posts\services;
 
 use libsrv\AbstractService;
-use posts\db\Categories AS DbCategories;
+use posts\library\Lang;
 
 /**
  * Categories class file
@@ -24,21 +24,6 @@ use posts\db\Categories AS DbCategories;
 class Categories extends AbstractService
 {
 	/**
-	 * @var instance of posts\db\Categories
-	 */
-	protected $_dbCategories = null;
-
-	/**
-	 * 构造方法：初始化数据库操作类
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->_dbCategories = new DbCategories();
-	}
-
-	/**
 	 * 递归方式获取所有的类别，默认用空格填充子类别左边用于和父类别错位（可用于Table列表）
 	 * @param integer $categoryPid
 	 * @param string $padStr
@@ -48,7 +33,7 @@ class Categories extends AbstractService
 	 */
 	public function findLists($categoryPid = 0, $padStr = '|—', $leftPad = '', $rightPad = null)
 	{
-		$rows = $this->_dbCategories->findAllByCategoryPid($categoryPid);
+		$rows = $this->getDb()->findAllByCategoryPid($categoryPid);
 		if (!$rows || !is_array($rows)) {
 			return array();
 		}
@@ -77,8 +62,17 @@ class Categories extends AbstractService
 	 * @param string $rightPad
 	 * @return array
 	 */
-	public function getOptions($categoryPid = 0, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
+	public function getOptions($categoryPid = -1, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
 	{
+		if ($categoryPid === -1) {
+			$tmpLeftPad = is_string($leftPad) ? $leftPad . $padStr : null;
+			$tmpRightPad = is_string($rightPad) ? $rightPad . $padStr : null;
+
+			$data = array(0 => Lang::_('SRV_ENUM_POST_CATEGORIES_CATEGORY_TOP'));
+			$data += $this->getOptions(0, $padStr, $tmpLeftPad, $tmpRightPad);
+			return $data;
+		}
+
 		$data = array();
 
 		$rows = $this->findLists($categoryPid, $padStr, $leftPad, $rightPad);
@@ -103,8 +97,25 @@ class Categories extends AbstractService
 	 */
 	public function findByPk($categoryId)
 	{
-		$row = $this->_dbCategories->findByPk($categoryId);
+		$row = $this->getDb()->findByPk($categoryId);
 		return $row;
+	}
+
+	/**
+	 * 批量编辑排序
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifySort(array $params = array())
+	{
+		$rowCount = 0;
+		$columnName = 'menu_sort';
+
+		foreach ($params as $pk => $value) {
+			$rowCount += $this->singleModifyByPk($pk, $columnName, $value);
+		}
+
+		return $rowCount;
 	}
 
 	/**
@@ -115,7 +126,7 @@ class Categories extends AbstractService
 	 */
 	public function getByPk($columnName, $categoryId)
 	{
-		$value = $this->_dbCategories->getByPk($columnName, $categoryId);
+		$value = $this->getDb()->getByPk($columnName, $categoryId);
 		return $value;
 	}
 

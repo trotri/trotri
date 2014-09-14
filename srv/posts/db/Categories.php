@@ -103,9 +103,13 @@ class Categories extends AbstractDb
 		$ruleList = isset($params['rule_list']) ? trim($params['rule_list']) : '';
 		$ruleView = isset($params['rule_view']) ? trim($params['rule_view']) : '';
 
-		if ($categoryName === '' || $categoryPid <= 0 || $moduleId <= 0 || $metaTitle === '' || $metaKeywords === '' || $metaDescription === ''
-			|| $isHide === '' || $menuSort <= 0 || $isJump === '' || $jumpUrl === '' || $isHtml === '' || $htmlDir === ''
+		if ($categoryName === '' || $categoryPid < 0 || $moduleId <= 0 || $metaTitle === '' || $metaKeywords === '' || $metaDescription === ''
+			|| $isHide === '' || $menuSort <= 0 || $isJump === '' || $isHtml === '' || $htmlDir === ''
 			|| $tplHome === '' || $tplList === '' || $tplView === '' || $ruleList === '' || $ruleView === '') {
+			return false;
+		}
+
+		if ($isJump === 'y' && $jumpUrl === '') {
 			return false;
 		}
 

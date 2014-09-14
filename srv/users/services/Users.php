@@ -12,7 +12,6 @@ namespace users\services;
 
 use libsrv\AbstractService;
 use tfc\util\String;
-use users\db\Users AS DbUsers;
 
 /**
  * Users class file
@@ -25,11 +24,6 @@ use users\db\Users AS DbUsers;
 class Users extends AbstractService
 {
 	/**
-	 * @var instance of users\db\Users
-	 */
-	protected $_dbUsers = null;
-
-	/**
 	 * @var instance of users\services\Usergroups
 	 */
 	protected $_userGroups = null;
@@ -41,7 +35,6 @@ class Users extends AbstractService
 	{
 		parent::__construct();
 
-		$this->_dbUsers = new DbUsers();
 		$this->_userGroups = new Usergroups();
 	}
 
@@ -55,7 +48,7 @@ class Users extends AbstractService
 	 */
 	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$rows = $this->_dbUsers->findAllByAttributes($attributes, $order, $limit, $offset);
+		$rows = $this->getDb()->findAllByAttributes($attributes, $order, $limit, $offset);
 		return $rows;
 	}
 
@@ -66,7 +59,7 @@ class Users extends AbstractService
 	 */
 	public function findByPk($userId)
 	{
-		$row = $this->_dbUsers->findByPk($userId);
+		$row = $this->getDb()->findByPk($userId);
 		if ($row && is_array($row) && isset($row['user_id'])) {
 			$groupIds = $this->_userGroups->findGroupIdsByUserId($row['user_id']);
 			$row['group_ids'] = is_array($groupIds) ? $groupIds : array();
@@ -82,7 +75,7 @@ class Users extends AbstractService
 	 */
 	public function findByLoginName($loginName)
 	{
-		$row = $this->_dbUsers->findByLoginName($loginName);
+		$row = $this->getDb()->findByLoginName($loginName);
 		if ($row && is_array($row) && isset($row['user_id'])) {
 			$groupIds = $this->_userGroups->findGroupIdsByUserId($row['user_id']);
 			$row['group_ids'] = is_array($groupIds) ? $groupIds : array();
@@ -98,7 +91,7 @@ class Users extends AbstractService
 	 */
 	public function loginNameExists($loginName)
 	{
-		return $this->_dbUsers->loginNameExists($loginName);
+		return $this->getDb()->loginNameExists($loginName);
 	}
 
 	/**
@@ -147,7 +140,7 @@ class Users extends AbstractService
 	 */
 	public function getByPk($columnName, $userId)
 	{
-		$value = $this->_dbUsers->getByPk($columnName, $userId);
+		$value = $this->getDb()->getByPk($columnName, $userId);
 		return $value;
 	}
 

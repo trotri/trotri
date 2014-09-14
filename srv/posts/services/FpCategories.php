@@ -98,6 +98,10 @@ class FpCategories extends FormProcessor
 	 */
 	public function getCategoryPidRule($value)
 	{
+		if ($value === 0) {
+			return array();
+		}
+
 		return array(
 			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_PID_INARRAY'), $this->getDbProxy(), TableNames::getCategories(), 'category_id')
 		);
@@ -199,6 +203,8 @@ class FpCategories extends FormProcessor
 	 */
 	public function getJumpUrlRule($value)
 	{
+		if ($this->is_jump === DataCategories::IS_JUMP_N) { return array(); }
+
 		return array(
 			'Url' => new validator\UrlValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_JUMP_URL_URL')),
 		);
@@ -239,7 +245,7 @@ class FpCategories extends FormProcessor
 	public function getTplHomeRule($value)
 	{
 		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_HOME_ALPHANUM')),
+			'Regex' => new validator\RegexValidator($value, '/^[\w\.\/]+$/i', Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_HOME_REGEX')),
 			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_HOME_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_HOME_MAXLENGTH')),
 		);
@@ -253,7 +259,7 @@ class FpCategories extends FormProcessor
 	public function getTplListRule($value)
 	{
 		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_LIST_ALPHANUM')),
+			'Regex' => new validator\RegexValidator($value, '/^[\w\.\/]+$/i', Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_LIST_REGEX')),
 			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_LIST_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_LIST_MAXLENGTH')),
 		);
@@ -267,7 +273,7 @@ class FpCategories extends FormProcessor
 	public function getTplViewRule($value)
 	{
 		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_VIEW_ALPHANUM')),
+			'Regex' => new validator\RegexValidator($value, '/^[\w\.\/]+$/i', Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_VIEW_REGEX')),
 			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_VIEW_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POST_CATEGORIES_TPL_VIEW_MAXLENGTH')),
 		);

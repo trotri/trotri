@@ -12,7 +12,6 @@ namespace users\services;
 
 use libsrv\AbstractService;
 use tfc\saf\Log;
-use users\db\Usergroups AS DbUsergroups;
 
 /**
  * Usergroups class file
@@ -25,21 +24,6 @@ use users\db\Usergroups AS DbUsergroups;
 class Usergroups extends AbstractService
 {
 	/**
-	 * @var instance of users\db\Usergroups
-	 */
-	protected $_dbUsergroups = null;
-
-	/**
-	 * 构造方法：初始化数据库操作类
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->_dbUsergroups = new DbUsergroups();
-	}
-
-	/**
 	 * 通过用户ID，获取该用户所属的组ID
 	 * @param integer $userId
 	 * @return array
@@ -48,7 +32,7 @@ class Usergroups extends AbstractService
 	{
 		$data = array();
 
-		$rows = $this->_dbUsergroups->findGroupIdsByUserId($userId);
+		$rows = $this->getDb()->findGroupIdsByUserId($userId);
 		if (is_array($rows)) {
 			foreach ($rows as $row) {
 				$data[] = (int) $row['group_id'];
@@ -88,8 +72,8 @@ class Usergroups extends AbstractService
 		$groupIdCreates = array_diff($news, $olds);
 		$groupIdRemoves = array_diff($olds, $news);
 
-		$rowCountCreate = $this->_dbUsergroups->batchCreate($userId, $groupIdCreates);
-		$rowCountRemove = $this->_dbUsergroups->batchRemove($userId, $groupIdRemoves);
+		$rowCountCreate = $this->getDb()->batchCreate($userId, $groupIdCreates);
+		$rowCountRemove = $this->getDb()->batchRemove($userId, $groupIdRemoves);
 
 		$totalCreate = count($groupIdCreates);
 		$totalRemove = count($groupIdRemoves);

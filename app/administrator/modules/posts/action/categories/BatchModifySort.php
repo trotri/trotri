@@ -11,16 +11,18 @@
 namespace modules\posts\action\categories;
 
 use library\actions;
+use tfc\ap\Ap;
+use libapp\Model;
 
 /**
- * Modify class file
- * 编辑数据
+ * BatchModifySort class file
+ * 批量编辑排序
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modify.php 1 2014-09-12 17:33:45Z Code Generator $
+ * @version $Id: BatchModifySort.php 1 2014-09-12 17:33:45Z Code Generator $
  * @package modules.posts.action.categories
  * @since 1.0
  */
-class Modify extends actions\Modify
+class BatchModifySort extends actions\Modify
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +30,15 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		$this->execute('Categories');
+		$ret = array();
+
+		$req = Ap::getRequest();
+		$mod = Model::getInstance('Categories');
+
+		$param = $req->getParam('menu_sort');
+		$ret = $mod->batchModifySort($param);
+
+		$url = $this->applyParams($mod->getLLU(), $ret);
+		$this->redirect($url);
 	}
 }

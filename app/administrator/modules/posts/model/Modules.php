@@ -121,4 +121,14 @@ class Modules extends BaseModel
 		return $this->getService()->getModuleNames();
 	}
 
+	/**
+	 * 通过“主键ID”，获取“模型名称”
+	 * @param integer $moduleId
+	 * @return string
+	 */
+	public function getModuleNameByModuleId($moduleId)
+	{
+		return $this->getService()->getModuleNameByModuleId($moduleId);
+	}
+
 }

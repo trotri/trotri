@@ -12,7 +12,10 @@ namespace modules\posts\model;
 
 use library\BaseModel;
 use tfc\saf\Text;
+use tfc\saf\Log;
 use libapp\Model;
+use libapp\ErrorNo;
+use libapp\Lang;
 use posts\services\DataCategories;
 
 /**
@@ -110,6 +113,7 @@ class Categories extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_MENU_SORT_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_MENU_SORT_HINT'),
 				'required' => true,
+				'value' => 1000
 			),
 			'is_jump' => array(
 				'__tid__' => 'main',
@@ -117,7 +121,7 @@ class Categories extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_JUMP_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_JUMP_HINT'),
 				'options' => DataCategories::getIsJumpEnum(),
-				'value' => DataCategories::IS_JUMP_Y,
+				'value' => DataCategories::IS_JUMP_N,
 			),
 			'jump_url' => array(
 				'__tid__' => 'main',
@@ -222,7 +226,7 @@ class Categories extends BaseModel
 	 * @param string $rightPad
 	 * @return array
 	 */
-	public function getOptions($categoryPid = 0, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
+	public function getOptions($categoryPid = -1, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
 	{
 		return $this->getService()->getOptions($categoryPid, $padStr, $leftPad, $rightPad);
 	}
@@ -236,4 +240,36 @@ class Categories extends BaseModel
 		return Model::getInstance('Modules')->getModuleNames();
 	}
 
+	/**
+	 * 通过“主键ID”，获取“模型名称”
+	 * @param integer $moduleId
+	 * @return string
+	 */
+	public function getModuleNameByModuleId($moduleId)
+	{
+		return Model::getInstance('Modules')->getModuleNameByModuleId($moduleId);
+	}
+
+	/**
+	 * 批量编辑排序
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifySort(array $params = array())
+	{
+		$rowCount = $this->getService()->batchModifySort($params);
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = ($rowCount > 0) ? Lang::_('ERROR_MSG_SUCCESS_UPDATE') : Lang::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+		Log::debug(sprintf(
+			'%s callModifyMethod, service "%s", method "%s", rowCount "%d", params "%s"',
+			$errMsg, get_class($this), 'batchModifySort', $rowCount, serialize($params)
+		), $errNo, __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount
+		);
+	}
 }

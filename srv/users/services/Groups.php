@@ -14,7 +14,6 @@ use libsrv\AbstractService;
 use tfc\saf\Log;
 use libsrv\Service;
 use tid\Authorization;
-use users\db\Groups AS DbGroups;
 
 /**
  * Groups class file
@@ -27,11 +26,6 @@ use users\db\Groups AS DbGroups;
 class Groups extends AbstractService
 {
 	/**
-	 * @var instance of users\db\Groups
-	 */
-	protected $_dbGroups = null;
-
-	/**
 	 * @var instance of tid\Authorization
 	 */
 	protected $_authorization = null;
@@ -43,7 +37,6 @@ class Groups extends AbstractService
 	{
 		parent::__construct();
 
-		$this->_dbGroups = new DbGroups();
 		$this->_authorization = new Authorization();
 	}
 
@@ -55,7 +48,7 @@ class Groups extends AbstractService
 	{
 		$data = array();
 
-		$rows = $this->_dbGroups->getGroupIds();
+		$rows = $this->getDb()->getGroupIds();
 		if (is_array($rows)) {
 			foreach ($rows as $row) {
 				$data[] = (int) $row['group_id'];
@@ -75,7 +68,7 @@ class Groups extends AbstractService
 	 */
 	public function findLists($groupPid = 0, $padStr = '|—', $leftPad = '', $rightPad = null)
 	{
-		$rows = $this->_dbGroups->findAllByGroupPid($groupPid);
+		$rows = $this->getDb()->findAllByGroupPid($groupPid);
 		if (!$rows || !is_array($rows)) {
 			return array();
 		}
@@ -261,7 +254,7 @@ class Groups extends AbstractService
 	 */
 	public function findByPk($groupId)
 	{
-		$row = $this->_dbGroups->findByPk($groupId);
+		$row = $this->getDb()->findByPk($groupId);
 		if (is_array($row) && isset($row['permission'])) {
 			$row['permission'] = unserialize(base64_decode($row['permission']));
 			if (!is_array($row['permission'])) {
@@ -280,7 +273,7 @@ class Groups extends AbstractService
 	 */
 	public function getByPk($columnName, $groupId)
 	{
-		$value = $this->_dbGroups->getByPk($columnName, $groupId);
+		$value = $this->getDb()->getByPk($columnName, $groupId);
 		return $value;
 	}
 
@@ -419,7 +412,7 @@ class Groups extends AbstractService
 		}
 
 		$data = base64_encode(serialize($data));
-		$rowCount = $this->_dbGroups->modifyPermissionByPk($groupId, $data);
+		$rowCount = $this->getDb()->modifyPermissionByPk($groupId, $data);
 		if ($rowCount > 0) {
 			if (!$this->_authorization->flush()) {
 				Log::warning('Groups Authorization flush roles cache Failed.', 0,  __METHOD__);

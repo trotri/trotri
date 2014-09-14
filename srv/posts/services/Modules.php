@@ -11,7 +11,6 @@
 namespace posts\services;
 
 use libsrv\AbstractService;
-use posts\db\Modules AS DbModules;
 
 /**
  * Modules class file
@@ -24,21 +23,6 @@ use posts\db\Modules AS DbModules;
 class Modules extends AbstractService
 {
 	/**
-	 * @var instance of posts\db\Modules
-	 */
-	protected $_dbModules = null;
-
-	/**
-	 * 构造方法：初始化数据库操作类
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->_dbModules = new DbModules();
-	}
-
-	/**
 	 * 查询多条记录
 	 * @param array $attributes
 	 * @param string $order
@@ -48,7 +32,7 @@ class Modules extends AbstractService
 	 */
 	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$rows = $this->_dbModules->findAll($limit, $offset);
+		$rows = $this->getDb()->findAll($limit, $offset);
 		return $rows;
 	}
 
@@ -58,7 +42,7 @@ class Modules extends AbstractService
 	 */
 	public function getModuleNames()
 	{
-		$rows = $this->_dbModules->getModuleNames();
+		$rows = $this->getDb()->getModuleNames();
 		return $rows;
 	}
 
@@ -69,7 +53,7 @@ class Modules extends AbstractService
 	 */
 	public function findByPk($moduleId)
 	{
-		$row = $this->_dbModules->findByPk($moduleId);
+		$row = $this->getDb()->findByPk($moduleId);
 		return $row;
 	}
 
@@ -81,7 +65,7 @@ class Modules extends AbstractService
 	 */
 	public function getByPk($columnName, $moduleId)
 	{
-		$value = $this->_dbModules->getByPk($columnName, $moduleId);
+		$value = $this->getDb()->getByPk($columnName, $moduleId);
 		return $value;
 	}
 

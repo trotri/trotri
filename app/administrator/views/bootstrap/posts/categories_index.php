@@ -1,5 +1,4 @@
 <?php
-use views\bootstrap\components\ComponentsConstant;
 use views\bootstrap\components\ComponentsBuilder;
 
 class TableRender extends views\bootstrap\components\TableRender
@@ -7,6 +6,50 @@ class TableRender extends views\bootstrap\components\TableRender
 	public function getCategoryNameLink($data)
 	{
 		return $this->elements_object->getCategoryNameLink($data);
+	}
+
+	public function getModuleName($data)
+	{
+		return $this->elements_object->getModuleNameByModuleId($data['module_id']);
+	}
+
+	public function getIsHide($data)
+	{
+		$params = array(
+			'id' => $data['category_id'],
+			'column_name' => 'is_hide'
+		);
+
+		$output = ComponentsBuilder::getSwitch(array(
+			'id' => $data['category_id'],
+			'name' => 'is_hide',
+			'value' => $data['is_hide'],
+			'href' => $this->urlManager->getUrl('singlemodify', $this->controller, $this->module, $params)
+		));
+
+		return $output;
+	}
+
+	public function getIsHtml($data)
+	{
+		$params = array(
+			'id' => $data['category_id'],
+			'column_name' => 'is_html'
+		);
+
+		$output = ComponentsBuilder::getSwitch(array(
+			'id' => $data['category_id'],
+			'name' => 'is_html',
+			'value' => $data['is_html'],
+			'href' => $this->urlManager->getUrl('singlemodify', $this->controller, $this->module, $params)
+		));
+
+		return $output;
+	}
+
+	public function getMenuSort($data)
+	{
+		return $this->html->text('menu_sort[' . $data['category_id'] . ']', $data['menu_sort'], array('size' => 6));
 	}
 
 	public function getOperate($data)
@@ -38,19 +81,28 @@ $this->widget(
 			'category_name' => array(
 				'callback' => 'getCategoryNameLink'
 			),
+			'module_id' => array(
+				'callback' => 'getModuleName'
+			),
+			'is_hide' => array(
+				'callback' => 'getIsHide'
+			),
+			'is_html' => array(
+				'callback' => 'getIsHtml'
+			),
+			'menu_sort' => array(
+				'callback' => 'getMenuSort'
+			),
 		),
 		'columns' => array(
 			'category_name',
-			'category_pid',
 			'module_id',
 			'is_hide',
 			'menu_sort',
-			'is_jump',
 			'is_html',
 			'category_id',
 			'_operate_',
 		),
-		'checkedToggle' => 'category_id',
 	)
 );
 ?>

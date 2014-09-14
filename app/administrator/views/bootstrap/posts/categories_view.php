@@ -5,6 +5,12 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'values' => $this->data,
 		'elements_object' => $this->elements,
 		'elements' => array(
+			'category_pid' => array(
+				'options' => $this->elements->getOptions()
+			),
+			'module_id' => array(
+				'options' => $this->elements->getModuleNames()
+			),
 		),
 		'columns' => array(
 			'category_id',

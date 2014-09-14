@@ -11,7 +11,6 @@
 namespace users\services;
 
 use libsrv\AbstractService;
-use users\db\Amcas AS DbAmcas;
 
 /**
  * Amcas class file
@@ -24,27 +23,12 @@ use users\db\Amcas AS DbAmcas;
 class Amcas extends AbstractService
 {
 	/**
-	 * @var instance of users\db\Amcas
-	 */
-	protected $_dbAmcas = null;
-
-	/**
-	 * 构造方法：初始化数据库操作类
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->_dbAmcas = new DbAmcas();
-	}
-
-	/**
 	 * 获取所有的应用提示
 	 * @return array
 	 */
 	public function findAppPrompts()
 	{
-		$rows = $this->_dbAmcas->findAppPrompts();
+		$rows = $this->getDb()->findAppPrompts();
 		return $rows;
 	}
 
@@ -55,7 +39,7 @@ class Amcas extends AbstractService
 	 */
 	public function findAllByAmcaPid($amcaPid)
 	{
-		$rows = $this->_dbAmcas->findAllByAmcaPid($amcaPid);
+		$rows = $this->getDb()->findAllByAmcaPid($amcaPid);
 		return $rows;
 	}
 
@@ -139,7 +123,7 @@ class Amcas extends AbstractService
 	 */
 	public function findByPk($amcaId)
 	{
-		$row = $this->_dbAmcas->findByPk($amcaId);
+		$row = $this->getDb()->findByPk($amcaId);
 		return $row;
 	}
 
@@ -151,7 +135,7 @@ class Amcas extends AbstractService
 	 */
 	public function getByPk($columnName, $amcaId)
 	{
-		$value = $this->_dbAmcas->getByPk($columnName, $amcaId);
+		$value = $this->getDb()->getByPk($columnName, $amcaId);
 		return $value;
 	}
 
