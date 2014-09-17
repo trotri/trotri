@@ -180,7 +180,8 @@ class Tblnames extends BaseModel
 			Log::echoTrace('Import to builders Successfully ...');
 		}
 		else {
-			Log::errExit(__LINE__, 'Import to builders Failed!');
+			$errors = $mod->getErrors();
+			Log::errExit(__LINE__, 'Import to builders Failed! ' . serialize($errors));
 		}
 
 		Log::echoTrace('Import to builder_fields Begin ...');
@@ -260,7 +261,8 @@ class Tblnames extends BaseModel
 				Log::echoTrace('Import to builder_fields "' . $columnSchema->name . '" Successfully ...');
 			}
 			else {
-				Log::errExit(__LINE__, 'Import to builder_fields "' . $columnSchema->name . '" Failed!');
+				$errors = $mod->getErrors();
+				Log::errExit(__LINE__, 'Import to builder_fields "' . $columnSchema->name . '" Failed! ' . serialize($errors));
 			}
 		}
 

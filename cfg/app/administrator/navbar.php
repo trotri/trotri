@@ -10,7 +10,30 @@
 
 return array(
 	array(
-		
+		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_POSTS_INDEX_INDEX',
+			'm' => 'posts', 'c' => 'posts', 'a' => 'index'
+		),
+		1 => array(
+			'label' => 'CFG_SYSTEM_URLS_POSTS_INDEX_INDEX',
+			'm' => 'posts', 'c' => 'posts', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_POSTS_INDEX_CREATE',
+				'm' => 'posts', 'c' => 'posts', 'a' => 'create'
+			)
+		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_POSTS_CATEGORIES_INDEX',
+			'm' => 'posts', 'c' => 'categories', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_POSTS_CATEGORIES_CREATE',
+				'm' => 'posts', 'c' => 'categories', 'a' => 'create',
+			)
+		),
+		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_POSTS_MODULES_INDEX',
+			'm' => 'posts', 'c' => 'modules', 'a' => 'index',
+		),
 	),
 	array(
 		0 => array(
@@ -20,8 +43,8 @@ return array(
 	),
 	array(
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_PASSPORT',
-			'url' => 'passport.php?r=users/users/index'
+			'label' => 'CFG_SYSTEM_URLS_PROGRAMMER',
+			'url' => 'programmer.php?r=builder/builders/index'
 		)
 	),
 );

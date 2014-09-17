@@ -49,7 +49,12 @@ class TableRender extends views\bootstrap\components\TableRender
 
 	public function getMenuSort($data)
 	{
-		return $this->html->text('menu_sort[' . $data['category_id'] . ']', $data['menu_sort'], array('size' => 6));
+		return $this->html->text('menu_sort[' . $data['category_id'] . ']', $data['menu_sort'], array('class' => 'form-control input-listsort', 'size' => '5'));
+	}
+
+	public function getPostsCount($data)
+	{
+		return $this->elements_object->getPostsCount($data['category_id']);
 	}
 
 	public function getOperate($data)
@@ -93,6 +98,9 @@ $this->widget(
 			'menu_sort' => array(
 				'callback' => 'getMenuSort'
 			),
+			'posts_count' => array(
+				'callback' => 'getPostsCount'
+			),
 		),
 		'columns' => array(
 			'category_name',
@@ -100,6 +108,7 @@ $this->widget(
 			'is_hide',
 			'menu_sort',
 			'is_html',
+			'posts_count',
 			'category_id',
 			'_operate_',
 		),

@@ -47,6 +47,12 @@ return array(
 	),
 	array(
 		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_ADMINISTRATOR',
+			'url' => 'administrator.php?r=posts/posts/index'
+		)
+	),
+	array(
+		0 => array(
 			'label' => 'CFG_SYSTEM_URLS_PROGRAMMER',
 			'url' => 'programmer.php?r=builder/builders/index'
 		)

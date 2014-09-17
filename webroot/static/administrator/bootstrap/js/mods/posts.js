@@ -5,6 +5,13 @@ $(document).ready(function() {
       Posts.toggleJumpUrl($(this).val() == "y" ? "n" : "y");
     });
   }
+
+  if (g_ctrl == "posts" && (g_act == "create" || g_act == "modify" || g_act == "view")) {
+    Posts.toggleJumpUrl();
+    $(":checkbox[name='is_jump']").change(function() {
+      Posts.toggleJumpUrl($(this).val() == "y" ? "n" : "y");
+    });
+  }
 });
 
 /**

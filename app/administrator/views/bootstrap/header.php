@@ -13,6 +13,8 @@
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.css'); ?>
 <!-- Jquery-icheck CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/jquery-icheck/skins/square/blue.css'); ?>
+<!-- Bootstrap-datetimepicker CSS -->
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css'); ?>
 <!-- Custom styles for this template -->
 <?php echo $this->getHtml()->cssFile($this->css_url . '/template.css?v=' . $this->version); ?>
 <!-- jQuery JS -->

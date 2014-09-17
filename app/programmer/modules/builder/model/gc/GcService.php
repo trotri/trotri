@@ -55,26 +55,26 @@ class GcService extends AbstractGc
 		$fileManager->writeCopyrightComment($stream);
 
 		fwrite($stream, "namespace {$schema->srvName}\\services;\n\n");
-		fwrite($stream, "use libsrv\\AbstractService;\n");
-		fwrite($stream, "use {$schema->srvName}\\db\\{$schema->ucClsName} AS Db{$schema->ucClsName};\n\n");
+		fwrite($stream, "use libsrv\\AbstractService;\n\n");
+		// fwrite($stream, "use {$schema->srvName}\\db\\{$schema->ucClsName} AS Db{$schema->ucClsName};\n\n");
 
 		$fileManager->writeClassComment($stream, $schema->ucClsName, self::CLASS_COMMENT, "{$schema->srvName}.services");
 
 		fwrite($stream, "class {$schema->ucClsName} extends AbstractService\n");
 		fwrite($stream, "{\n");
-		fwrite($stream, "\t/**\n");
-		fwrite($stream, "\t * @var instance of {$schema->srvName}\\db\\{$schema->ucClsName}\n");
-		fwrite($stream, "\t */\n");
-		fwrite($stream, "\tprotected \$_db{$schema->ucClsName} = null;\n\n");
+		// fwrite($stream, "\t/**\n");
+		// fwrite($stream, "\t * @var instance of {$schema->srvName}\\db\\{$schema->ucClsName}\n");
+		// fwrite($stream, "\t */\n");
+		// fwrite($stream, "\tprotected \$_db{$schema->ucClsName} = null;\n\n");
 
-		fwrite($stream, "\t/**\n");
-		fwrite($stream, "\t * 构造方法：初始化数据库操作类\n");
-		fwrite($stream, "\t */\n");
-		fwrite($stream, "\tpublic function __construct()\n");
-		fwrite($stream, "\t{\n");
-		fwrite($stream, "\t\tparent::__construct();\n\n");
-		fwrite($stream, "\t\t\$this->_db{$schema->ucClsName} = new Db{$schema->ucClsName}();\n");
-		fwrite($stream, "\t}\n\n");
+		// fwrite($stream, "\t/**\n");
+		// fwrite($stream, "\t * 构造方法：初始化数据库操作类\n");
+		// fwrite($stream, "\t */\n");
+		// fwrite($stream, "\tpublic function __construct()\n");
+		// fwrite($stream, "\t{\n");
+		// fwrite($stream, "\t\tparent::__construct();\n\n");
+		// fwrite($stream, "\t\t\$this->_db{$schema->ucClsName} = new Db{$schema->ucClsName}();\n");
+		// fwrite($stream, "\t}\n\n");
 
 		fwrite($stream, "\t/**\n");
 		fwrite($stream, "\t * 通过多个字段名和值，查询多条记录\n");
@@ -89,7 +89,7 @@ class GcService extends AbstractGc
 		fwrite($stream, "\t\t\$order = trim(\$order);\n");
 		fwrite($stream, "\t\t\$limit = max((int) \$limit, 1);\n");
 		fwrite($stream, "\t\t\$offset = max((int) \$offset, 1);\n\n");
-		fwrite($stream, "\t\t\$rows = \$this->_db{$schema->ucClsName}->findAll(\$params, \$order, \$limit, \$offset);\n");
+		fwrite($stream, "\t\t\$rows = \$this->getDb()->findAll(\$params, \$order, \$limit, \$offset);\n");
 		fwrite($stream, "\t\treturn \$rows;\n");
 		fwrite($stream, "\t}\n\n");
 
@@ -100,7 +100,7 @@ class GcService extends AbstractGc
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function findByPk({$schema->pkVarColumn})\n");
 		fwrite($stream, "\t{\n");
-		fwrite($stream, "\t\t\$row = \$this->_db{$schema->ucClsName}->findByPk({$schema->pkVarColumn});\n");
+		fwrite($stream, "\t\t\$row = \$this->getDb()->findByPk({$schema->pkVarColumn});\n");
 		fwrite($stream, "\t\treturn \$row;\n");
 		fwrite($stream, "\t}\n\n");
 
@@ -112,7 +112,7 @@ class GcService extends AbstractGc
 		fwrite($stream, "\t */\n");
 		fwrite($stream, "\tpublic function getByPk(\$columnName, {$schema->pkVarColumn})\n");
 		fwrite($stream, "\t{\n");
-		fwrite($stream, "\t\t\$value = \$this->_db{$schema->ucClsName}->getByPk(\$columnName, {$schema->pkVarColumn});\n");
+		fwrite($stream, "\t\t\$value = \$this->getDb()->getByPk(\$columnName, {$schema->pkVarColumn});\n");
 		fwrite($stream, "\t\treturn \$value;\n");
 		fwrite($stream, "\t}\n\n");
 

@@ -12,6 +12,7 @@ $(document).ready(function() {
   Core.checkedToggle();
   Core.changeSwitchValue();
   Core.tblSingleModify();
+  Core.datetimepicker();
 });
 
 /**
@@ -20,6 +21,47 @@ $(document).ready(function() {
  * @version $Id: template.js 1 2013-10-16 18:38:00Z $
  */
 Core = {
+  ckeditor: {
+    toolbar: {
+      full: [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Scayt' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+        { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+        { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
+        '/',
+        { name: 'styles', items: [ 'Styles', 'Format' ] },
+        { name: 'tools', items: [ 'Maximize' ] },
+        { name: 'others', items: [ '-' ] },
+        { name: 'about', items: [ 'About' ] }
+      ],
+
+      basic: [
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+        { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+        { name: 'about', items: [ 'About' ] }
+      ],
+
+      post: [
+         { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+         { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+         { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Scayt' ] },
+         { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+         { name: 'tools', items: [ 'Maximize' ] },
+         '/',
+         { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+         { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+         { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
+         { name: 'styles', items: [ 'Styles', 'Format' ] },
+         { name: 'others', items: [ '-' ] }
+       ]
+    }
+  },
+
   /**
    * CheckBox全选|全不选，jQuery方式有Bug：全不选后，再全选失败
    * @return void
@@ -244,5 +286,45 @@ Core = {
       }
     }
     return url;
+  },
+
+  /**
+   * 初始化日历控件
+   * @return void
+   */
+  datetimepicker: function() {
+    var settings = {
+      language       : "zh-CN",
+      weekStart      : 0,
+      todayBtn       : 1,
+      autoclose      : 1,
+      todayHighlight : 1,
+      forceParse     : 0
+    };
+
+    var options = {
+      format       : "yyyy-mm-dd hh:ii:ss",
+      startView    : 2,
+      showMeridian : 1
+    };
+    $.extend(options, settings);
+    $(".form_datetime").datetimepicker(options);
+
+    var options = {
+      format    : "yyyy-mm-dd",
+      startView : 2,
+      minView   : 2
+    };
+    $.extend(options, settings);
+    $(".form_date").datetimepicker(options);
+
+    var options = {
+      format    : "hh:ii:ss",
+      startView : 1,
+      minView   : 0,
+      maxView   : 1
+    };
+    $.extend(options, settings);
+    $(".form_time").datetimepicker(options);
   }
 }

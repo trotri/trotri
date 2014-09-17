@@ -66,28 +66,37 @@ CREATE TABLE `tr_posts` (
   `html_url` varchar(250) NOT NULL DEFAULT '' COMMENT '生成静态页面链接',
   `allow_comment` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许评论',
   `is_public` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿或待审核',
+  `allow_other_modify` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许其他人编辑',
   `access_count` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '访问次数',
   `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建人ID',
   `creator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '创建人登录名',
   `last_modifier_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑人ID',
   `last_modifier_name` varchar(100) NOT NULL DEFAULT '' COMMENT '上次编辑人登录名',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_public` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '发布时间',
   `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
   `ip_created` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建IP',
   `ip_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑IP',
   `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
   PRIMARY KEY (`post_id`),
   KEY `title` (`title`),
+  KEY `trash` (`trash`),
+  KEY `sort` (`sort`),
   KEY `category_id` (`category_id`),
+  KEY `is_public` (`is_public`),
+  KEY `is_head` (`is_head`),
+  KEY `is_recommend` (`is_recommend`),
   KEY `creator_id` (`creator_id`),
   KEY `last_modifier_id` (`last_modifier_id`),
-  KEY `sort` (`sort`),
-  KEY `trash_creator_sort` (`trash`,`creator_id`,`sort`),
-  KEY `trash_public_creator_sort` (`trash`,`is_public`,`creator_id`,`sort`),
-  KEY `trash_public_cat_sort` (`trash`,`is_public`,`category_id`,`sort`),
-  KEY `trash_public_head_sort` (`trash`,`is_public`,`is_head`,`sort`),
-  KEY `trash_public_recommend_sort` (`trash`,`is_public`,`is_recommend`,`sort`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统自带的文档管理表，用户可以通过模型添加自己的内容管理表';
+  KEY `dt_created` (`dt_created`),
+  KEY `dt_public` (`dt_public`),
+  KEY `dt_last_modified` (`dt_last_modified`),
+  KEY `trash_creator_sort_dtp` (`trash`,`creator_id`,`sort`,`dt_public`),
+  KEY `trash_public_creator_sort_dtp` (`trash`,`is_public`,`creator_id`,`sort`,`dt_public`),
+  KEY `trash_public_cat_sort_dtp` (`trash`,`is_public`,`category_id`,`sort`,`dt_public`),
+  KEY `trash_public_head_sort_dtp` (`trash`,`is_public`,`is_head`,`sort`,`dt_public`),
+  KEY `trash_public_recommend_sort_dtp` (`trash`,`is_public`,`is_recommend`,`sort`,`dt_public`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统自带的文档管理表';
 
 DROP TABLE IF EXISTS `tr_post_profile`;
 CREATE TABLE `tr_post_profile` (
@@ -122,4 +131,4 @@ CREATE TABLE `tr_post_comments` (
   PRIMARY KEY (`comment_id`),
   KEY `trash_public_post` (`trash`,`is_public`,`post_id`),
   KEY `trash_public_creator` (`trash`,`is_public`,`creator_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统自带评论表-评论系统文档表中文档';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统自带评论表';

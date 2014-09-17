@@ -148,7 +148,7 @@ class HttpSession
      * 设置会话名
      * @param string $value
      * @return tfc\ap\HttpSession
-     * @throws RuntimeException 如果会话已经被打开，则不容许重新设置会话名
+     * @throws RuntimeException 如果会话已经被打开，则不允许重新设置会话名
      * @throws ErrorException 如果会话名中有英文字母和数字之外的字符，抛出异常
      */
     public function setName($value)
@@ -182,7 +182,7 @@ class HttpSession
      * 设置会话保存路径
      * @param string $value
      * @return tfc\ap\HttpSession
-     * @throws RuntimeException 如果会话已经被打开，则不容许重新设置会话保存路径
+     * @throws RuntimeException 如果会话已经被打开，则不允许重新设置会话保存路径
      * @throws ErrorException 如果设置的目录地址不存在，抛出异常
      */
     public function setSavePath($value)

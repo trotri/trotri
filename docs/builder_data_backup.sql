@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2014-09-11 16:19:23
+Date: 2014-09-17 10:37:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -56,7 +56,7 @@ CREATE TABLE `tr_builders` (
   KEY `srv_name` (`srv_name`),
   KEY `app_mod_ctrl` (`app_name`,`mod_name`,`ctrl_name`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='生成代码表';
 
 -- ----------------------------
 -- Records of tr_builders
@@ -71,7 +71,9 @@ INSERT INTO `tr_builders` VALUES ('7', '用户组', 'user_groups', 'n', 'InnoDB'
 INSERT INTO `tr_builders` VALUES ('8', '用户和用户组关联表', 'user_usergroups_map', 'n', 'InnoDB', 'utf8', '用户和用户组关联表', 'normal', 'users', 'passport', 'users', 'usergroups', 'usergroups', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-08-06 15:28:31', '2014-08-06 17:51:18', 'n');
 INSERT INTO `tr_builders` VALUES ('9', '用户管理', 'users', 'n', 'InnoDB', 'utf8', '用户主表', 'normal', 'users', 'passport', 'users', 'users', 'users', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-08-06 17:48:57', '2014-08-06 17:50:51', 'n');
 INSERT INTO `tr_builders` VALUES ('10', '站点配置', 'system_options', 'n', 'InnoDB', 'utf8', '站点配置表', 'normal', 'system', 'passport', 'system', 'options', 'options', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil', '', '宋欢', 'trotri@yeah.net', '2014-08-14 23:25:14', '2014-08-16 22:34:05', 'n');
-INSERT INTO `tr_builders` VALUES ('12', '文档类别模型', 'post_modules', 'n', 'InnoDB', 'utf8', '文档类别模型表', 'normal', 'posts', 'administrator', 'posts', 'modules', 'modules', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-09-11 15:28:08', '2014-09-11 15:49:29', 'n');
+INSERT INTO `tr_builders` VALUES ('12', '模型管理', 'post_modules', 'n', 'InnoDB', 'utf8', '文档类别模型表', 'normal', 'posts', 'administrator', 'posts', 'modules', 'modules', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-09-11 15:28:08', '2014-09-12 13:59:09', 'n');
+INSERT INTO `tr_builders` VALUES ('13', '类别管理', 'post_categories', 'n', 'InnoDB', 'utf8', '文档类别表', 'normal', 'posts', 'administrator', 'posts', 'categories', 'categories', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,remove', '', '宋欢', 'trotri@yeah.net', '2014-09-12 13:59:16', '2014-09-12 15:27:13', 'n');
+INSERT INTO `tr_builders` VALUES ('14', '文档管理', 'posts', 'n', 'InnoDB', 'utf8', '系统自带的文档管理表', 'normal', 'posts', 'administrator', 'posts', 'posts', 'posts', '', 'index', 'view', 'create', 'modify', 'remove', 'pencil,trash,remove', '', '宋欢', 'trotri@yeah.net', '2014-09-15 11:13:14', '2014-09-15 11:20:55', 'n');
 
 -- ----------------------------
 -- Table structure for `tr_builder_fields`
@@ -110,7 +112,7 @@ CREATE TABLE `tr_builder_fields` (
   KEY `form_create_sort` (`form_create_sort`),
   KEY `form_modify_sort` (`form_modify_sort`),
   KEY `form_search_sort` (`form_search_sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
+) ENGINE=InnoDB AUTO_INCREMENT=203 DEFAULT CHARSET=utf8 COMMENT='表单字段表';
 
 -- ----------------------------
 -- Records of tr_builder_fields
@@ -260,6 +262,53 @@ INSERT INTO `tr_builder_fields` VALUES ('152', 'module_name', '50', 'n', 'n', '�
 INSERT INTO `tr_builder_fields` VALUES ('153', 'module_tblname', '50', 'n', 'n', '类别表名', '12', '1', '1', '3', '类别表名', '类别表名由2~30个英文字母、数字或下划线组成.', 'y', 'y', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
 INSERT INTO `tr_builder_fields` VALUES ('154', 'forbidden', 'y|n', 'n', 'n', '是否禁用', '12', '1', '4', '4', '是否禁用', '', 'n', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
 INSERT INTO `tr_builder_fields` VALUES ('155', 'description', '', 'n', 'n', '描述', '12', '1', '10', '5', '描述', '', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('156', 'category_id', '5', 'y', 'y', '主键ID', '13', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('157', 'category_pid', '5', 'n', 'y', '父类别ID', '13', '1', '7', '3', '所属父类别', '', 'y', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('158', 'category_name', '50', 'n', 'n', '类别名', '13', '1', '1', '2', '类别名', '类别名由2~20个字符组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('159', 'module_id', '5', 'n', 'y', '模型ID', '13', '1', '7', '4', '所属模型', '', 'y', 'n', 'y', '4', 'y', '4', 'y', '4', 'y', '4');
+INSERT INTO `tr_builder_fields` VALUES ('160', 'meta_title', '100', 'n', 'n', 'SEO标题', '13', '1', '1', '5', 'SEO标题', 'SEO标题由2~50个字符组成.', 'y', 'n', 'y', '5', 'y', '5', 'y', '5', 'y', '5');
+INSERT INTO `tr_builder_fields` VALUES ('161', 'meta_keywords', '100', 'n', 'n', 'SEO关键字', '13', '1', '1', '6', 'SEO关键字', 'SEO关键字由2~50个字符组成.', 'y', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('162', 'meta_description', '250', 'n', 'n', 'SEO描述', '13', '1', '10', '7', 'SEO描述', 'SEO描述由2~120个字符组成.', 'y', 'n', 'y', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('163', 'is_hide', 'y|n', 'n', 'n', '菜单上是否隐藏', '13', '1', '4', '8', '菜单是否隐藏', '', 'n', 'n', 'y', '8', 'y', '8', 'y', '8', 'y', '8');
+INSERT INTO `tr_builder_fields` VALUES ('164', 'menu_sort', '8', 'n', 'y', '显示菜单的排序', '13', '1', '2', '9', '菜单排序', '排序由非负数组成且数字越小位置越靠前.', 'y', 'n', 'y', '9', 'y', '9', 'y', '9', 'y', '9');
+INSERT INTO `tr_builder_fields` VALUES ('165', 'is_jump', 'y|n', 'n', 'n', '是否跳转', '13', '1', '4', '10', '是否跳转', '', 'n', 'n', 'y', '10', 'y', '10', 'y', '10', 'y', '10');
+INSERT INTO `tr_builder_fields` VALUES ('166', 'jump_url', '100', 'n', 'n', '跳转链接', '13', '1', '1', '11', '跳转链接', '绑定链接，可用来跳转到其他网址.', 'y', 'n', 'y', '11', 'y', '11', 'y', '11', 'y', '11');
+INSERT INTO `tr_builder_fields` VALUES ('167', 'is_html', 'y|n', 'n', 'n', '是否生成静态页面', '13', '11', '4', '12', '是否生成静态页面', '', 'n', 'n', 'y', '12', 'y', '12', 'y', '12', 'y', '12');
+INSERT INTO `tr_builder_fields` VALUES ('168', 'html_dir', '100', 'n', 'n', '生成静态页面存放目录', '13', '11', '1', '13', '生成静态页面存放目录', '生成静态页面存放目录由1~20个英文字母、数字或下划线组成.', 'y', 'n', 'y', '13', 'y', '13', 'y', '13', 'y', '13');
+INSERT INTO `tr_builder_fields` VALUES ('169', 'tpl_home', '100', 'n', 'n', '封页模板名', '13', '11', '1', '14', '封页模板名', '封页模板名由1~50个英文字母、数字或下划线组成.', 'y', 'n', 'y', '14', 'y', '14', 'y', '14', 'y', '14');
+INSERT INTO `tr_builder_fields` VALUES ('170', 'tpl_list', '100', 'n', 'n', '列表模板名', '13', '11', '1', '15', '列表模板名', '列表模板名由1~50个英文字母、数字或下划线组成.', 'y', 'n', 'y', '15', 'y', '15', 'y', '15', 'y', '15');
+INSERT INTO `tr_builder_fields` VALUES ('171', 'tpl_view', '100', 'n', 'n', '文章模板名', '13', '11', '1', '16', '文档模板名', '文档模板名由1~50个英文字母、数字或下划线组成.', 'y', 'n', 'y', '16', 'y', '16', 'y', '16', 'y', '16');
+INSERT INTO `tr_builder_fields` VALUES ('172', 'rule_list', '100', 'n', 'n', '列表静态页面链接规则', '13', '11', '1', '17', '列表静态页面链接规则', '列表静态页面链接规则由1~50个字符组成.', 'y', 'n', 'y', '17', 'y', '17', 'y', '17', 'y', '17');
+INSERT INTO `tr_builder_fields` VALUES ('173', 'rule_view', '100', 'n', 'n', '文档静态页面链接规则', '13', '11', '1', '18', '文档静态页面链接规则', '文档静态页面链接规则由1~50个字符组成.', 'y', 'n', 'y', '18', 'y', '18', 'y', '18', 'y', '18');
+INSERT INTO `tr_builder_fields` VALUES ('174', 'post_id', '10', 'y', 'y', '主键ID', '14', '1', '9', '1', 'ID', '', 'n', 'n', 'y', '1000', 'n', '1', 'n', '1', 'y', '1');
+INSERT INTO `tr_builder_fields` VALUES ('175', 'title', '100', 'n', 'n', '文档标题', '14', '1', '1', '2', '文档标题', '文档标题由1~50个字符组成.', 'y', 'n', 'y', '2', 'y', '2', 'y', '2', 'y', '2');
+INSERT INTO `tr_builder_fields` VALUES ('176', 'category_id', '5', 'n', 'y', '所属类别ID', '14', '1', '7', '4', '所属类别', '', 'n', 'n', 'y', '3', 'y', '3', 'y', '3', 'y', '3');
+INSERT INTO `tr_builder_fields` VALUES ('177', 'category_name', '50', 'n', 'n', '类别名', '14', '1', '8', '5', '类别名', '', 'n', 'n', 'n', '4', 'n', '4', 'n', '4', 'n', '4');
+INSERT INTO `tr_builder_fields` VALUES ('178', 'content', '', 'n', 'n', '文档内容', '14', '1', '10', '6', '内容', '', 'n', 'n', 'n', '5', 'y', '5', 'y', '5', 'n', '5');
+INSERT INTO `tr_builder_fields` VALUES ('179', 'sort', '10', 'n', 'y', '排序', '14', '1', '2', '9', '排序', '排序由正整数组成且数字越小位置越靠前.', 'y', 'n', 'y', '6', 'y', '6', 'y', '6', 'y', '6');
+INSERT INTO `tr_builder_fields` VALUES ('180', 'keywords', '100', 'n', 'n', '内容关键字', '14', '1', '1', '7', '关键字', '关键字由2~50个字符组成.', 'y', 'n', 'n', '7', 'y', '7', 'y', '7', 'y', '7');
+INSERT INTO `tr_builder_fields` VALUES ('181', 'description', '500', 'n', 'n', '内容摘要', '14', '1', '10', '8', '内容摘要', '内容摘要由0~240个字符组成.', 'n', 'n', 'n', '8', 'y', '8', 'y', '8', 'n', '8');
+INSERT INTO `tr_builder_fields` VALUES ('182', 'little_picture', '250', 'n', 'n', '缩略图地址', '14', '1', '8', '3', '缩略图地址', '', 'n', 'n', 'n', '9', 'y', '9', 'y', '9', 'n', '9');
+INSERT INTO `tr_builder_fields` VALUES ('183', 'is_head', 'y|n', 'n', 'n', '是否头条', '14', '12', '4', '12', '是否头条', '', 'n', 'n', 'y', '10', 'y', '10', 'y', '10', 'y', '10');
+INSERT INTO `tr_builder_fields` VALUES ('184', 'is_recommend', 'y|n', 'n', 'n', '是否推荐', '14', '12', '4', '13', '是否推荐', '', 'n', 'n', 'y', '11', 'y', '11', 'y', '11', 'y', '11');
+INSERT INTO `tr_builder_fields` VALUES ('185', 'is_jump', 'y|n', 'n', 'n', '是否跳转', '14', '12', '4', '14', '是否跳转', '', 'n', 'n', 'n', '12', 'y', '12', 'y', '12', 'y', '12');
+INSERT INTO `tr_builder_fields` VALUES ('186', 'jump_url', '250', 'n', 'n', '跳转链接', '14', '12', '1', '15', '跳转链接', '绑定链接，可用来跳转到其他网址.', 'y', 'n', 'n', '13', 'y', '13', 'y', '13', 'n', '13');
+INSERT INTO `tr_builder_fields` VALUES ('187', 'is_html', 'y|n', 'n', 'n', '是否生成静态页面', '14', '12', '4', '16', '生成静态页面', '', 'n', 'n', 'n', '14', 'y', '14', 'y', '14', 'y', '14');
+INSERT INTO `tr_builder_fields` VALUES ('188', 'html_url', '250', 'n', 'n', '生成静态页面链接', '14', '12', '8', '17', '生成静态页面链接', '', 'n', 'n', 'n', '15', 'n', '15', 'n', '15', 'n', '15');
+INSERT INTO `tr_builder_fields` VALUES ('189', 'allow_comment', 'y|n', 'n', 'n', '是否允许评论', '14', '12', '4', '18', '是否允许评论', '', 'n', 'n', 'y', '16', 'y', '16', 'y', '16', 'y', '16');
+INSERT INTO `tr_builder_fields` VALUES ('190', 'is_public', 'y|n', 'n', 'n', '是否发表，y：开放浏览、n：草稿或待审核', '14', '1', '4', '10', '是否发表', '', 'n', 'n', 'y', '17', 'y', '17', 'y', '17', 'y', '17');
+INSERT INTO `tr_builder_fields` VALUES ('191', 'access_count', '20', 'n', 'y', '访问次数', '14', '13', '2', '20', '访问次数', '访问次数由非负数组成.', 'y', 'n', 'y', '18', 'y', '18', 'y', '18', 'y', '18');
+INSERT INTO `tr_builder_fields` VALUES ('192', 'creator_id', '10', 'n', 'y', '创建人ID', '14', '13', '2', '24', '创建人', '', 'n', 'n', 'n', '19', 'n', '19', 'n', '19', 'n', '19');
+INSERT INTO `tr_builder_fields` VALUES ('193', 'creator_name', '100', 'n', 'n', '创建人登录名', '14', '13', '1', '25', '创建人', '', 'n', 'y', 'y', '20', 'y', '20', 'y', '20', 'y', '20');
+INSERT INTO `tr_builder_fields` VALUES ('194', 'last_modifier_id', '10', 'n', 'y', '上次编辑人ID', '14', '13', '2', '26', '上次编辑人', '', 'n', 'n', 'n', '21', 'n', '21', 'n', '21', 'n', '21');
+INSERT INTO `tr_builder_fields` VALUES ('195', 'last_modifier_name', '100', 'n', 'n', '上次编辑人登录名', '14', '13', '1', '27', '上次编辑人', '', 'n', 'y', 'y', '22', 'y', '22', 'y', '22', 'y', '22');
+INSERT INTO `tr_builder_fields` VALUES ('196', 'dt_created', '', 'n', 'n', '创建时间', '14', '13', '1', '21', '创建时间', '', 'y', 'n', 'y', '23', 'y', '23', 'y', '23', 'y', '23');
+INSERT INTO `tr_builder_fields` VALUES ('197', 'dt_last_modified', '', 'n', 'n', '上次编辑时间', '14', '13', '1', '23', '上次编辑时间', '', 'y', 'n', 'y', '24', 'y', '24', 'y', '24', 'n', '24');
+INSERT INTO `tr_builder_fields` VALUES ('198', 'ip_created', '10', 'n', 'y', '创建IP', '14', '13', '2', '28', '创建IP', '', 'n', 'y', 'y', '25', 'y', '25', 'y', '25', 'y', '25');
+INSERT INTO `tr_builder_fields` VALUES ('199', 'ip_last_modified', '10', 'n', 'y', '上次编辑IP', '14', '13', '2', '29', '上次编辑IP', '', 'n', 'y', 'y', '26', 'y', '26', 'y', '26', 'y', '26');
+INSERT INTO `tr_builder_fields` VALUES ('200', 'trash', 'y|n', 'n', 'n', '是否删除', '14', '1', '4', '11', '是否删除', '', 'n', 'n', 'y', '27', 'n', '27', 'n', '27', 'y', '27');
+INSERT INTO `tr_builder_fields` VALUES ('201', 'dt_public', '', 'n', 'n', '发布时间', '14', '13', '1', '22', '发布时间', '', 'y', 'n', 'y', '23', 'y', '23', 'y', '23', 'y', '23');
+INSERT INTO `tr_builder_fields` VALUES ('202', 'allow_other_modify', 'y|n', 'n', 'n', '是否允许其他人编辑', '14', '12', '4', '19', '允许其他人编辑', '', 'y', 'n', 'y', '0', 'y', '0', 'y', '0', 'y', '0');
 
 -- ----------------------------
 -- Table structure for `tr_builder_field_groups`
@@ -276,7 +325,7 @@ CREATE TABLE `tr_builder_field_groups` (
   KEY `group_name` (`group_name`),
   KEY `builder_id` (`builder_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='表单字段组表';
 
 -- ----------------------------
 -- Records of tr_builder_field_groups
@@ -291,6 +340,9 @@ INSERT INTO `tr_builder_field_groups` VALUES ('7', 'register', '注册设置', '
 INSERT INTO `tr_builder_field_groups` VALUES ('8', 'picture', '图片管理', '10', '3', '');
 INSERT INTO `tr_builder_field_groups` VALUES ('9', 'smtp', '邮件设置', '10', '4', '');
 INSERT INTO `tr_builder_field_groups` VALUES ('10', 'paginator', '分页配置', '10', '5', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('11', 'htmlcache', '模板缓存', '13', '2', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('12', 'advanced', '高级参数', '14', '2', '');
+INSERT INTO `tr_builder_field_groups` VALUES ('13', 'system', '系统信息', '14', '3', '');
 
 -- ----------------------------
 -- Table structure for `tr_builder_field_validators`
@@ -309,7 +361,7 @@ CREATE TABLE `tr_builder_field_validators` (
   KEY `validator_name` (`validator_name`),
   KEY `field_id` (`field_id`),
   KEY `sort` (`sort`)
-) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
+) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8 COMMENT='表单字段验证表';
 
 -- ----------------------------
 -- Records of tr_builder_field_validators
@@ -450,6 +502,57 @@ INSERT INTO `tr_builder_field_validators` VALUES ('137', 'InArray', '133', '', '
 INSERT INTO `tr_builder_field_validators` VALUES ('138', 'AlphaNum', '106', '', 'boolean', '模板名称只能由英文字母、数字或下划线组成.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('139', 'AlphaNum', '107', '', 'boolean', '生成静态页面存放目录名称只能由英文字母、数字或下划线组成.', '1', 'all');
 INSERT INTO `tr_builder_field_validators` VALUES ('140', 'NotEmpty', '104', '', 'boolean', '必须填写网站名称.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('141', 'MinLength', '158', '2', 'integer', '类别名长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('142', 'MaxLength', '158', '20', 'integer', '类别名长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('143', 'MinLength', '160', '2', 'integer', 'SEO标题长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('144', 'MaxLength', '160', '50', 'integer', 'SEO标题长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('145', 'MinLength', '161', '2', 'integer', 'SEO关键字长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('146', 'MaxLength', '161', '50', 'integer', 'SEO关键字长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('147', 'MinLength', '162', '2', 'integer', 'SEO描述长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('148', 'MaxLength', '162', '120', 'integer', 'SEO描述长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('149', 'Numeric', '164', '', 'boolean', '排序只能是数字.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('150', 'InArray', '157', '', 'array', '您选择的父类别不存在或已被删除.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('151', 'InArray', '159', '', 'array', '您选择的模型不存在或已被删除.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('152', 'InArray', '163', '', 'array', '必须选择菜单是否隐藏，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('153', 'InArray', '165', '', 'array', '必须选择是否跳转，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('154', 'Url', '166', '', 'boolean', 'URL格式不正确.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('155', 'InArray', '167', '', 'array', '必须选择是否生成静态页面，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('156', 'MinLength', '168', '1', 'integer', '生成静态页面存放目录长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('157', 'MaxLength', '168', '20', 'integer', '生成静态页面存放目录长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('158', 'MinLength', '169', '1', 'integer', '封页模板名长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('159', 'MaxLength', '169', '50', 'integer', '封页模板名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('160', 'MinLength', '170', '1', 'integer', '列表模板名长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('161', 'MaxLength', '170', '50', 'integer', '列表模板名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('162', 'MinLength', '171', '1', 'integer', '文档模板名长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('163', 'MaxLength', '171', '50', 'integer', '文档模板名长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('165', 'MinLength', '172', '1', 'integer', '列表静态页面链接规则长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('166', 'MaxLength', '172', '50', 'integer', '列表静态页面链接规则长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('168', 'MinLength', '173', '1', 'integer', '文档静态页面链接规则长度不能小于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('169', 'MaxLength', '173', '50', 'integer', '文档静态页面链接规则长度不能大于%option%个字符.', '3', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('170', 'AlphaNum', '168', '', 'boolean', '生成静态页面存放目录只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('171', 'AlphaNum', '169', '', 'boolean', '封页模板名只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('172', 'AlphaNum', '170', '', 'boolean', '列表模板名只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('173', 'AlphaNum', '171', '', 'boolean', '文档模板名只能由英文字母、数字或下划线组成.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('174', 'Integer', '164', '', 'boolean', '排序只能是数字并且大于0.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('175', 'MinLength', '175', '1', 'integer', '文档标题长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('176', 'MaxLength', '175', '50', 'integer', '文档标题长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('177', 'MinLength', '180', '2', 'integer', '关键字长度不能小于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('178', 'MaxLength', '180', '50', 'integer', '关键字长度不能大于%option%个字符.', '2', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('179', 'MaxLength', '181', '240', 'integer', '内容摘要长度不能大于%option%个字符.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('180', 'Integer', '179', '', 'boolean', '排序只能是数字并且大于0.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('181', 'InArray', '190', '', 'array', '必须选择是否发表，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('182', 'InArray', '200', '', 'array', '必须选择是否删除，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('183', 'InArray', '183', '', 'array', '必须选择是否头条，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('184', 'InArray', '184', '', 'array', '必须选择是否推荐，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('185', 'InArray', '185', '', 'array', '必须选择是否跳转，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('186', 'Url', '186', '', 'boolean', 'URL格式不正确.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('187', 'InArray', '187', '', 'array', '必须选择生成静态页面，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('188', 'InArray', '189', '', 'array', '必须选择是否允许评论，值只能是%s.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('191', 'DateTime', '196', '', 'boolean', '日期时间格式不正确.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('192', 'DateTime', '197', '', 'boolean', '日期时间格式不正确.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('193', 'DateTime', '201', '', 'boolean', '日期时间格式不正确.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('194', 'NonNegativeInteger', '191', '', 'boolean', '访问次数只能是非负数.', '1', 'all');
+INSERT INTO `tr_builder_field_validators` VALUES ('195', 'InArray', '202', '', 'array', '必须选择允许其他人编辑，值只能是%s.', '1', 'all');
 
 -- ----------------------------
 -- Table structure for `tr_builder_types`

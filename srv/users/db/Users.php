@@ -164,8 +164,7 @@ class Users extends AbstractDb
 		$trash = 'n';
 
 		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $userName === ''
-			|| $dtRegistered === '' || $dtLastLogin === '' || $ipRegistered < 0 || $ipLastLogin < 0 
-			|| $loginCount < 0 || $validMail === '' || $validPhone === '' || $forbidden === '') {
+			|| $dtRegistered === '' || $dtLastLogin === '' || $loginCount < 0 || $validMail === '' || $validPhone === '' || $forbidden === '') {
 			return false;
 		}
 
@@ -254,17 +253,11 @@ class Users extends AbstractDb
 		}
 
 		if (isset($params['ip_last_login'])) {
-			$ipLastLogin = (int) $params['ip_last_login'];
-			if ($ipLastLogin >= 0) {
-				$attributes['ip_last_login'] = $ipLastLogin;
-			}
+			$attributes['ip_last_login'] = (int) $params['ip_last_login'];
 		}
 
 		if (isset($params['ip_last_repwd'])) {
-			$ipLastRepwd = (int) $params['ip_last_repwd'];
-			if ($ipLastRepwd >= 0) {
-				$attributes['ip_last_repwd'] = $ipLastRepwd;
-			}
+			$attributes['ip_last_repwd'] = (int) $params['ip_last_repwd'];
 		}
 
 		if (isset($params['login_count'])) {

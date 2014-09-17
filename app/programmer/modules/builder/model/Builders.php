@@ -314,7 +314,7 @@ class Builders extends BaseModel
 		);
 
 		$this->filterCleanEmpty($params, $rules);
-		$ret = parent::search($this->getService(), $params, '', $limit, $offset);
+		$ret = parent::search($this->getService(), $params, 'builder_id DESC', $limit, $offset);
 		return $ret;
 	}
 

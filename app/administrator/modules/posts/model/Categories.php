@@ -182,6 +182,9 @@ class Categories extends BaseModel
 				'required' => true,
 				'value' => '{y}/{m}/{d}/{id}.html'
 			),
+			'posts_count' => array(
+				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_POSTS_COUNT_LABEL'),
+			),
 		);
 
 		return $output;
@@ -248,6 +251,16 @@ class Categories extends BaseModel
 	public function getModuleNameByModuleId($moduleId)
 	{
 		return Model::getInstance('Modules')->getModuleNameByModuleId($moduleId);
+	}
+
+	/**
+	 * 获取指定类别下的文档数
+	 * @param integer $categoryId
+	 * @return integer
+	 */
+	public function getPostsCount($categoryId)
+	{
+		return 0;
 	}
 
 	/**

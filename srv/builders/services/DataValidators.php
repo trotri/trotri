@@ -123,6 +123,8 @@ class DataValidators
 				'Numeric' => 'Numeric',
 				'Require' => 'Require',
 				'Url' => 'Url',
+				'DateTime' => 'DateTime',
+				'NonNegativeInteger' => 'NonNegativeInteger',
 			);
 		}
 
@@ -206,6 +208,14 @@ class DataValidators
 				'Url' => array(
 					'option_category' => 'boolean',
 					'message' => Lang::_('SRV_ENUM_BUILDER_FIELD_VALIDATORS_MESSAGE_URL'),
+				),
+				'DateTime' => array(
+					'option_category' => 'boolean',
+					'message' => Lang::_('SRV_ENUM_BUILDER_FIELD_VALIDATORS_MESSAGE_DATETIME'),
+				),
+				'NonNegativeInteger' => array(
+					'option_category' => 'boolean',
+					'message' => Lang::_('SRV_ENUM_BUILDER_FIELD_VALIDATORS_MESSAGE_NONNEGATIVEINTEGER'),
 				)
 			);
 		}

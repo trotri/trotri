@@ -62,7 +62,9 @@ class FormBuilder extends form\FormBuilder
 		'switch'   => 'SwitchElement',
 		'textarea' => 'TextareaElement',
 		'select'   => 'SelectElement',
-		'string'   => 'StringElement'
+		'string'   => 'StringElement',
+		'ckeditor' => 'CkeditorElement',
+		'datetimepicker' => 'DatetimepickerElement'
 	);
 
 	/**

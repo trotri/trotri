@@ -31,6 +31,16 @@ footer {
   margin-bottom: 20px;
 }
 
+.input-listsort {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  text-align: center;
+  width: 66.66666666666666%;
+}
+
 /*
  * Off Canvas
  * --------------------------------------------------
