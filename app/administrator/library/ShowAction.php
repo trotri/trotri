@@ -29,12 +29,12 @@ abstract class ShowAction extends libapp\ShowAction
 	/**
 	 * @var boolean 是否验证登录，默认验证
 	 */
-	protected $_validLogin = false;
+	protected $_validLogin = true;
 
 	/**
 	 * @var boolean 是否验证身份授权，默认验证
 	 */
-	protected $_validAuth = false;
+	protected $_validAuth = true;
 
 	/**
 	 * @var integer 允许的权限

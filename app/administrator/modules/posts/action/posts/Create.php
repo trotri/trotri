@@ -11,7 +11,6 @@
 namespace modules\posts\action\posts;
 
 use library\actions;
-use tfc\ap\Ap;
 
 /**
  * Create class file
@@ -29,6 +28,10 @@ class Create extends actions\Create
 	 */
 	public function run()
 	{
+		if (isset($_POST['content'])) {
+			$_POST['content'] = \tfc\util\String::stripslashes($_POST['content']);
+		}
+
 		$this->execute('Posts');
 	}
 }

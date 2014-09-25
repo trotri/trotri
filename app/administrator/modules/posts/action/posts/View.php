@@ -11,7 +11,6 @@
 namespace modules\posts\action\posts;
 
 use library\actions;
-use tfc\ap\Ap;
 
 /**
  * View class file

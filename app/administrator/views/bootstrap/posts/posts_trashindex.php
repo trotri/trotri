@@ -1,9 +1,21 @@
 <?php
-use views\bootstrap\components\ComponentsConstant;
-use views\bootstrap\components\ComponentsBuilder;
-
 class TableRender extends views\bootstrap\components\TableRender
 {
+	public function getIsHead($data)
+	{
+		return $this->elements_object->getIsHeadLangByIsHead($data['is_head']);
+	}
+
+	public function getIsRecommend($data)
+	{
+		return $this->elements_object->getIsRecommendLangByIsRecommend($data['is_recommend']);
+	}
+
+	public function getIsPublic($data)
+	{
+		return $this->elements_object->getIsPublicLangByIsPublic($data['is_public']);
+	}
+
 	public function getOperate($data)
 	{
 		$params = array(
@@ -30,25 +42,27 @@ $this->widget(
 		'data' => $this->data,
 		'table_render' => $tblRender,
 		'elements' => array(
+			'is_head' => array(
+				'callback' => 'getIsHead'
+			),
+			'is_recommend' => array(
+				'callback' => 'getIsRecommend'
+			),
+			'is_public' => array(
+				'callback' => 'getIsPublic'
+			),
 		),
 		'columns' => array(
-			'allow_other_modify',
 			'title',
-			'category_id',
-			'sort',
+			'category_name',
 			'is_head',
 			'is_recommend',
-			'allow_comment',
 			'is_public',
 			'access_count',
 			'creator_name',
 			'last_modifier_name',
-			'dt_created',
 			'dt_public',
-			'dt_last_modified',
-			'ip_created',
-			'ip_last_modified',
-			'trash',
+			'sort',
 			'post_id',
 			'_operate_',
 		),

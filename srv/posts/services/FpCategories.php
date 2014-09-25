@@ -103,7 +103,7 @@ class FpCategories extends FormProcessor
 		}
 
 		return array(
-			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_PID_INARRAY'), $this->getDbProxy(), TableNames::getCategories(), 'category_id')
+			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_PID_EXISTS'), $this->getDbProxy(), TableNames::getCategories(), 'category_id')
 		);
 	}
 
@@ -115,7 +115,7 @@ class FpCategories extends FormProcessor
 	public function getModuleIdRule($value)
 	{
 		return array(
-			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_MODULE_ID_INARRAY'), $this->getDbProxy(), TableNames::getModules(), 'module_id')
+			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_MODULE_ID_EXISTS'), $this->getDbProxy(), TableNames::getModules(), 'module_id')
 		);
 	}
 

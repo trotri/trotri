@@ -106,15 +106,15 @@ class Image
     /**
      * 生成缩略图
      * @param string $source
-     * @param string $toPath
      * @param integer $thumbWidth
      * @param integer $thumbHeight
+     * @param string $toPath
      * @param boolean $scale 是否按比例缩小
      * @param boolean $inflate 如果原始图片比缩略图小，是否放大它们以填充缩略图
      * @return boolean
      * @throws ErrorException 如果原始图片地址错误，抛出异常
      */
-    public static function thumbnail($source, $toPath = null, $thumbWidth, $thumbHeight, $scale = true, $inflate = true)
+    public static function thumbnail($source, $thumbWidth, $thumbHeight, $toPath = null, $scale = true, $inflate = true)
     {
         if (!($size = @getimagesize($source))) {
             throw new ErrorException(sprintf(
@@ -167,7 +167,7 @@ class Image
 
         $textSize = self::getTextSize($text, $fontFile);
         $source = self::create($source, $sourceSize['mime']);
-        $positions = self::getPosition($sourceSize[0], $sourceSize[1], $textSize[0], $textSize[1], $position, $offset);
+        $positions = self::getPosition($sourceSize[0], $sourceSize[1], $textSize['width'], $textSize['height'], $position, $offset);
         $fontColor = imagecolorallocate($source, 255, 0, 0);
         imagettftext($source, 14, 0, $positions['x'], $positions['y'] + $textSize['height'], $fontColor, $fontFile, $text);
         return self::build($source, $sourceSize['mime'], $toPath);

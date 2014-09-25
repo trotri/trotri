@@ -60,6 +60,39 @@ class Posts extends AbstractService
 	}
 
 	/**
+	 * 获取“是否头条”
+	 * @param string $isHead
+	 * @return string
+	 */
+	public function getIsHeadLangByIsHead($isHead)
+	{
+		$enum = DataPosts::getIsHeadEnum();
+		return isset($enum[$isHead]) ? $enum[$isHead] : '';
+	}
+
+	/**
+	 * 获取“是否推荐”
+	 * @param string $isRecommend
+	 * @return string
+	 */
+	public function getIsRecommendLangByIsRecommend($isRecommend)
+	{
+		$enum = DataPosts::getIsRecommendEnum();
+		return isset($enum[$isRecommend]) ? $enum[$isRecommend] : '';
+	}
+
+	/**
+	 * 获取“是否发表”
+	 * @param string $isPublic
+	 * @return string
+	 */
+	public function getIsPublicLangByIsPublic($isPublic)
+	{
+		$enum = DataPosts::getIsPublicEnum();
+		return isset($enum[$isPublic]) ? $enum[$isPublic] : '';
+	}
+
+	/**
 	 * 通过“主键ID”，获取“文档标题”
 	 * @param integer $postId
 	 * @return string

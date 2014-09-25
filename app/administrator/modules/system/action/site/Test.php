@@ -11,6 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
+use modules\posts\model\Posts;
 
 /**
  * Test class file
@@ -28,5 +29,9 @@ class Test extends actions\View
 	 */
 	public function run()
 	{
+		$posts = new Posts();
+		$ret = $posts->findByPk(5);
+		print_r($ret);
+		exit;
 	}
 }

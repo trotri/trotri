@@ -11,7 +11,6 @@
 namespace system\services;
 
 use libsrv\AbstractService;
-use system\db\Options AS DbOptions;
 
 /**
  * Options class file
@@ -24,18 +23,21 @@ use system\db\Options AS DbOptions;
 class Options extends AbstractService
 {
 	/**
-	 * @var instance of system\db\Options
+	 * @var instance of system\services\Options
 	 */
-	protected $_dbOptions = null;
+	protected static $_instance = null;
 
 	/**
-	 * 构造方法：初始化数据库操作类
+	 * 获取本类的实例化对象
+	 * @return system\services\Options
 	 */
-	public function __construct()
+	public static function getInstance()
 	{
-		parent::__construct();
+		if (self::$_instance === null) {
+			self::$_instance = new self();
+		}
 
-		$this->_dbOptions = new DbOptions();
+		return self::$_instance;
 	}
 
 	/**
@@ -44,7 +46,7 @@ class Options extends AbstractService
 	 */
 	public function findPairs()
 	{
-		$rows = $this->_dbOptions->findPairs();
+		$rows = $this->getDb()->findPairs();
 		return $rows;
 	}
 
@@ -81,9 +83,9 @@ class Options extends AbstractService
 	 * @param string $optKey
 	 * @return mixed
 	 */
-	public function getValueByKey($optKey)
+	public static function getValueByKey($optKey)
 	{
-		$optValue = $this->_dbOptions->getValueByKey($optKey);
+		$optValue = self::getInstance()->getDb()->getValueByKey($optKey);
 		return $optValue;
 	}
 
@@ -91,9 +93,9 @@ class Options extends AbstractService
 	 * 获取“网站名称”
 	 * @return string
 	 */
-	public function getSiteName()
+	public static function getSiteName()
 	{
-		$value = $this->getValueByKey('site_name');
+		$value = self::getValueByKey('site_name');
 		return $value ? $value : '';
 	}
 
@@ -101,9 +103,9 @@ class Options extends AbstractService
 	 * 获取“网站URL”
 	 * @return string
 	 */
-	public function getSiteUrl()
+	public static function getSiteUrl()
 	{
-		$value = $this->getValueByKey('site_url');
+		$value = self::getValueByKey('site_url');
 		return $value ? $value : '';
 	}
 
@@ -111,9 +113,9 @@ class Options extends AbstractService
 	 * 获取“模板名称”
 	 * @return string
 	 */
-	public function getTplDir()
+	public static function getTplDir()
 	{
-		$value = $this->getValueByKey('tpl_dir');
+		$value = self::getValueByKey('tpl_dir');
 		return $value ? $value : '';
 	}
 
@@ -121,9 +123,9 @@ class Options extends AbstractService
 	 * 获取“生成静态页面存放目录名称”
 	 * @return string
 	 */
-	public function getHtmlDir()
+	public static function getHtmlDir()
 	{
-		$value = $this->getValueByKey('html_dir');
+		$value = self::getValueByKey('html_dir');
 		return $value ? $value : '';
 	}
 
@@ -131,9 +133,9 @@ class Options extends AbstractService
 	 * 获取“SEO Title”
 	 * @return string
 	 */
-	public function getMetaTitle()
+	public static function getMetaTitle()
 	{
-		$value = $this->getValueByKey('meta_title');
+		$value = self::getValueByKey('meta_title');
 		return $value ? $value : '';
 	}
 
@@ -141,9 +143,9 @@ class Options extends AbstractService
 	 * 获取“SEO Keywords”
 	 * @return string
 	 */
-	public function getMetaKeywords()
+	public static function getMetaKeywords()
 	{
-		$value = $this->getValueByKey('meta_keywords');
+		$value = self::getValueByKey('meta_keywords');
 		return $value ? $value : '';
 	}
 
@@ -151,9 +153,9 @@ class Options extends AbstractService
 	 * 获取“SEO Description”
 	 * @return string
 	 */
-	public function getMetaDescription()
+	public static function getMetaDescription()
 	{
-		$value = $this->getValueByKey('meta_description');
+		$value = self::getValueByKey('meta_description');
 		return $value ? $value : '';
 	}
 
@@ -161,9 +163,9 @@ class Options extends AbstractService
 	 * 获取“网站版权信息”
 	 * @return string
 	 */
-	public function getPowerby()
+	public static function getPowerby()
 	{
-		$value = $this->getValueByKey('powerby');
+		$value = self::getValueByKey('powerby');
 		return $value ? $value : '';
 	}
 
@@ -171,9 +173,9 @@ class Options extends AbstractService
 	 * 获取“网站第三方统计代码”
 	 * @return string
 	 */
-	public function getStatCode()
+	public static function getStatCode()
 	{
-		$value = $this->getValueByKey('stat_code');
+		$value = self::getValueByKey('stat_code');
 		return $value ? $value : '';
 	}
 
@@ -181,9 +183,9 @@ class Options extends AbstractService
 	 * 获取“是否使用重写模式获取URLS”
 	 * @return boolean
 	 */
-	public function isUrlRewrite()
+	public static function isUrlRewrite()
 	{
-		$value = $this->getValueByKey('url_rewrite');
+		$value = self::getValueByKey('url_rewrite');
 		return $value ? ($value === DataOptions::URL_REWRITE_Y ? true : false) : null;
 	}
 
@@ -191,9 +193,9 @@ class Options extends AbstractService
 	 * 获取“是否关闭新用户注册”
 	 * @return boolean
 	 */
-	public function isCloseRegister()
+	public static function isCloseRegister()
 	{
-		$value = $this->getValueByKey('close_register');
+		$value = self::getValueByKey('close_register');
 		return $value ? ($value === DataOptions::CLOSE_REGISTER_Y ? true : false) : null;
 	}
 
@@ -201,9 +203,9 @@ class Options extends AbstractService
 	 * 获取“关闭注册原因”
 	 * @return string
 	 */
-	public function getCloseRegisterReason()
+	public static function getCloseRegisterReason()
 	{
-		$value = $this->getValueByKey('close_register_reason');
+		$value = self::getValueByKey('close_register_reason');
 		return $value ? $value : '';
 	}
 
@@ -211,9 +213,9 @@ class Options extends AbstractService
 	 * 获取“是否显示用户注册协议”
 	 * @return boolean
 	 */
-	public function isShowRegisterServiceItem()
+	public static function isShowRegisterServiceItem()
 	{
-		$value = $this->getValueByKey('show_register_service_item');
+		$value = self::getValueByKey('show_register_service_item');
 		return $value ? ($value === DataOptions::SHOW_REGISTER_SERVICE_ITEM_Y ? true : false) : null;
 	}
 
@@ -221,9 +223,9 @@ class Options extends AbstractService
 	 * 获取“用户注册协议”
 	 * @return string
 	 */
-	public function getRegisterServiceItem()
+	public static function getRegisterServiceItem()
 	{
-		$value = $this->getValueByKey('register_service_item');
+		$value = self::getValueByKey('register_service_item');
 		return $value ? $value : '';
 	}
 
@@ -231,9 +233,9 @@ class Options extends AbstractService
 	 * 获取“缩略图宽”
 	 * @return integer
 	 */
-	public function getThumbWidth()
+	public static function getThumbWidth()
 	{
-		$value = $this->getValueByKey('thumb_width');
+		$value = self::getValueByKey('thumb_width');
 		return $value ? (int) $value : 0;
 	}
 
@@ -241,9 +243,9 @@ class Options extends AbstractService
 	 * 获取“缩略图高”
 	 * @return integer
 	 */
-	public function getThumbHeight()
+	public static function getThumbHeight()
 	{
-		$value = $this->getValueByKey('thumb_height');
+		$value = self::getValueByKey('thumb_height');
 		return $value ? (int) $value : 0;
 	}
 
@@ -251,9 +253,9 @@ class Options extends AbstractService
 	 * 获取“水印类型”
 	 * @return string
 	 */
-	public function getWaterMarkType()
+	public static function getWaterMarkType()
 	{
-		$value = $this->getValueByKey('water_mark_type');
+		$value = self::getValueByKey('water_mark_type');
 		return $value ? $value : '';
 	}
 
@@ -261,9 +263,9 @@ class Options extends AbstractService
 	 * 获取“水印图片文件地址”
 	 * @return string
 	 */
-	public function getWaterMarkImgdir()
+	public static function getWaterMarkImgdir()
 	{
-		$value = $this->getValueByKey('water_mark_imgdir');
+		$value = self::getValueByKey('water_mark_imgdir');
 		return $value ? $value : '';
 	}
 
@@ -271,9 +273,9 @@ class Options extends AbstractService
 	 * 获取“水印文字信息”
 	 * @return string
 	 */
-	public function getWaterMarkText()
+	public static function getWaterMarkText()
 	{
-		$value = $this->getValueByKey('water_mark_text');
+		$value = self::getValueByKey('water_mark_text');
 		return $value ? $value : '';
 	}
 
@@ -281,9 +283,9 @@ class Options extends AbstractService
 	 * 获取“水印放置位置”
 	 * @return integer
 	 */
-	public function getWaterMarkPosition()
+	public static function getWaterMarkPosition()
 	{
-		$value = $this->getValueByKey('water_mark_position');
+		$value = self::getValueByKey('water_mark_position');
 		return $value ? (int) $value : 0;
 	}
 
@@ -291,9 +293,9 @@ class Options extends AbstractService
 	 * 获取“水印融合度”
 	 * @return integer
 	 */
-	public function getWaterMarkPct()
+	public static function getWaterMarkPct()
 	{
-		$value = $this->getValueByKey('water_mark_pct');
+		$value = self::getValueByKey('water_mark_pct');
 		return $value ? (int) $value : 0;
 	}
 
@@ -301,9 +303,9 @@ class Options extends AbstractService
 	 * 获取“SMTP服务器”
 	 * @return string
 	 */
-	public function getSmtpHost()
+	public static function getSmtpHost()
 	{
-		$value = $this->getValueByKey('smtp_host');
+		$value = self::getValueByKey('smtp_host');
 		return $value ? $value : '';
 	}
 
@@ -311,9 +313,9 @@ class Options extends AbstractService
 	 * 获取“SMTP服务器端口”
 	 * @return integer
 	 */
-	public function getSmtpPort()
+	public static function getSmtpPort()
 	{
-		$value = $this->getValueByKey('smtp_port');
+		$value = self::getValueByKey('smtp_port');
 		return $value ? (int) $value : 0;
 	}
 
@@ -321,9 +323,9 @@ class Options extends AbstractService
 	 * 获取“SMTP服务器的账号”
 	 * @return string
 	 */
-	public function getSmtpUsername()
+	public static function getSmtpUsername()
 	{
-		$value = $this->getValueByKey('smtp_username');
+		$value = self::getValueByKey('smtp_username');
 		return $value ? $value : '';
 	}
 
@@ -331,9 +333,9 @@ class Options extends AbstractService
 	 * 获取“SMTP服务器的密码”
 	 * @return string
 	 */
-	public function getSmtpPassword()
+	public static function getSmtpPassword()
 	{
-		$value = $this->getValueByKey('smtp_password');
+		$value = self::getValueByKey('smtp_password');
 		return $value ? $value : '';
 	}
 
@@ -341,9 +343,9 @@ class Options extends AbstractService
 	 * 获取“管理员邮箱”
 	 * @return string
 	 */
-	public function getSmtpFrommail()
+	public static function getSmtpFrommail()
 	{
-		$value = $this->getValueByKey('smtp_frommail');
+		$value = self::getValueByKey('smtp_frommail');
 		return $value ? $value : '';
 	}
 
@@ -351,9 +353,9 @@ class Options extends AbstractService
 	 * 获取“从$_GET或$_POST中获取当前页的键名”
 	 * @return string
 	 */
-	public function getPageVar()
+	public static function getPageVar()
 	{
-		$value = $this->getValueByKey('page_var');
+		$value = self::getValueByKey('page_var');
 		return $value ? $value : '';
 	}
 
@@ -361,9 +363,9 @@ class Options extends AbstractService
 	 * 获取“从$_GET或$_POST中获取每页展示的行数的键名”
 	 * @return string
 	 */
-	public function getListRowsVar()
+	public static function getListRowsVar()
 	{
-		$value = $this->getValueByKey('list_rows_var');
+		$value = self::getValueByKey('list_rows_var');
 		return $value ? $value : '';
 	}
 
@@ -371,9 +373,9 @@ class Options extends AbstractService
 	 * 获取“每页展示的页码数”
 	 * @return integer
 	 */
-	public function getListPages()
+	public static function getListPages()
 	{
-		$value = $this->getValueByKey('list_pages');
+		$value = self::getValueByKey('list_pages');
 		return $value ? (int) $value : 0;
 	}
 
@@ -381,9 +383,9 @@ class Options extends AbstractService
 	 * 获取“每页展示的行数”
 	 * @return integer
 	 */
-	public function getListRows()
+	public static function getListRows()
 	{
-		$value = $this->getValueByKey('list_rows');
+		$value = self::getValueByKey('list_rows');
 		return $value ? (int) $value : 0;
 	}
 
@@ -391,9 +393,9 @@ class Options extends AbstractService
 	 * 获取“文档列表每页展示条数”
 	 * @return integer
 	 */
-	public function getListRowsPosts()
+	public static function getListRowsPosts()
 	{
-		$value = $this->getValueByKey('list_rows_posts');
+		$value = self::getValueByKey('list_rows_posts');
 		return $value ? (int) $value : 0;
 	}
 
@@ -401,9 +403,9 @@ class Options extends AbstractService
 	 * 获取“用户列表每页展示条数”
 	 * @return integer
 	 */
-	public function getListRowsUsers()
+	public static function getListRowsUsers()
 	{
-		$value = $this->getValueByKey('list_rows_users');
+		$value = self::getValueByKey('list_rows_users');
 		return $value ? (int) $value : 0;
 	}
 

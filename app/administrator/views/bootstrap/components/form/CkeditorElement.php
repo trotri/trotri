@@ -47,6 +47,7 @@ class CkeditorElement extends TextareaElement
 		$height = $this->getAttribute('height', null);
 		$width = $this->getAttribute('width', null);
 		$toolbar = $this->getAttribute('toolbar', null);
+		$filebrowserUploadUrl = $this->getAttribute('url', null);
 
 		$html = $this->getHtml();
 		$output = parent::getInput();
@@ -62,6 +63,10 @@ class CkeditorElement extends TextareaElement
 
 		if ($toolbar) {
 			$json[] = 'toolbar: Core.ckeditor.toolbar.' . $toolbar;
+		}
+
+		if ($filebrowserUploadUrl) {
+			$json[] = 'filebrowserUploadUrl: "' . $filebrowserUploadUrl . '"';
 		}
 
 		$script = '$(function() { CKEDITOR.replace( "' . $id . '", { ' . implode(', ', $json) . ' } ); });';

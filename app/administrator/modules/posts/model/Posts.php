@@ -11,9 +11,11 @@
 namespace modules\posts\model;
 
 use library\BaseModel;
+use tfc\mvc\Mvc;
 use tfc\saf\Text;
 use libapp\Model;
 use posts\services\DataPosts;
+use users\library\Identity;
 
 /**
  * Posts class file
@@ -51,6 +53,8 @@ class Posts extends BaseModel
 	 */
 	public function getElementsRender()
 	{
+		$urlManager = Mvc::getView()->getUrlManager();
+		$nowTime = date('Y-m-d H:i:s');
 		$output = array(
 			'post_id' => array(
 				'__tid__' => 'main',
@@ -73,22 +77,28 @@ class Posts extends BaseModel
 			),
 			'category_name' => array(
 				'__tid__' => 'main',
-				'type' => 'hidden',
+				'type' => 'text',
 				'label' => Text::_('MOD_POSTS_POSTS_CATEGORY_NAME_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_CATEGORY_NAME_HINT'),
 			),
 			'little_picture' => array(
 				'__tid__' => 'main',
 				'type' => 'hidden',
+			),
+			'little_picture_file' => array(
+				'__tid__' => 'main',
+				'type' => 'string',
 				'label' => Text::_('MOD_POSTS_POSTS_LITTLE_PICTURE_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_LITTLE_PICTURE_HINT'),
+				'value' => '<div id="little_picture_file" url="' . $urlManager->getUrl('upload', '', '', array('from' => 'little_picture')) . '" name="upload">Upload</div>',
 			),
 			'content' => array(
 				'__tid__' => 'main',
 				'type' => 'ckeditor',
 				'id' => 'content',
 				'height' => '960px',
-				'toolbar' => 'post'
+				'toolbar' => 'post',
+				'url' => $urlManager->getUrl('upload', '', '', array('from' => 'ckeditor'))
 			),
 			'keywords' => array(
 				'__tid__' => 'main',
@@ -186,7 +196,6 @@ class Posts extends BaseModel
 				'type' => 'switch',
 				'label' => Text::_('MOD_POSTS_POSTS_ALLOW_OTHER_MODIFY_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_ALLOW_OTHER_MODIFY_HINT'),
-				'required' => true,
 				'options' => DataPosts::getAllowOtherModifyEnum(),
 				'value' => DataPosts::ALLOW_OTHER_MODIFY_Y,
 			),
@@ -196,6 +205,7 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_ACCESS_COUNT_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_ACCESS_COUNT_HINT'),
 				'required' => true,
+				'value' => mt_rand(100, 999)
 			),
 			'dt_created' => array(
 				'__tid__' => 'system',
@@ -203,6 +213,7 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_DT_CREATED_HINT'),
 				'required' => true,
+				'value' => $nowTime
 			),
 			'dt_public' => array(
 				'__tid__' => 'system',
@@ -210,6 +221,7 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_HINT'),
 				'required' => true,
+				'value' => $nowTime
 			),
 			'dt_last_modified' => array(
 				'__tid__' => 'system',
@@ -217,12 +229,14 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_HINT'),
 				'required' => true,
+				'value' => $nowTime
 			),
 			'creator_id' => array(
 				'__tid__' => 'system',
-				'type' => 'text',
+				'type' => 'hidden',
 				'label' => Text::_('MOD_POSTS_POSTS_CREATOR_ID_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_CREATOR_ID_HINT'),
+				'value' => Identity::getUserId()
 			),
 			'creator_name' => array(
 				'__tid__' => 'system',
@@ -230,12 +244,14 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_CREATOR_NAME_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_CREATOR_NAME_HINT'),
 				'disabled' => true,
+				'value' => Identity::getLoginName()
 			),
 			'last_modifier_id' => array(
 				'__tid__' => 'system',
-				'type' => 'text',
+				'type' => 'hidden',
 				'label' => Text::_('MOD_POSTS_POSTS_LAST_MODIFIER_ID_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_LAST_MODIFIER_ID_HINT'),
+				'value' => Identity::getUserId()
 			),
 			'last_modifier_name' => array(
 				'__tid__' => 'system',
@@ -243,6 +259,7 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_LAST_MODIFIER_NAME_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_LAST_MODIFIER_NAME_HINT'),
 				'disabled' => true,
+				'value' => Identity::getLoginName()
 			),
 			'ip_created' => array(
 				'__tid__' => 'system',
@@ -280,6 +297,39 @@ class Posts extends BaseModel
 	}
 
 	/**
+	 * 获取“是否头条”
+	 * @param string $isHead
+	 * @return string
+	 */
+	public function getIsHeadLangByIsHead($isHead)
+	{
+		$ret = $this->getService()->getIsHeadLangByIsHead($isHead);
+		return $ret;
+	}
+
+	/**
+	 * 获取“是否推荐”
+	 * @param string $isRecommend
+	 * @return string
+	 */
+	public function getIsRecommendLangByIsRecommend($isRecommend)
+	{
+		$ret = $this->getService()->getIsRecommendLangByIsRecommend($isRecommend);
+		return $ret;
+	}
+
+	/**
+	 * 获取“是否发表”
+	 * @param string $isPublic
+	 * @return string
+	 */
+	public function getIsPublicLangByIsPublic($isPublic)
+	{
+		$ret = $this->getService()->getIsPublicLangByIsPublic($isPublic);
+		return $ret;
+	}
+
+	/**
 	 * 查询数据列表
 	 * @param array $params
 	 * @param string $order
@@ -304,11 +354,59 @@ class Posts extends BaseModel
 			'dt_created' => 'trim',
 			'dt_public' => 'trim',
 			'dt_last_modified' => 'trim',
+			'trash' => 'trim',
 		);
 
 		$this->filterCleanEmpty($params, $rules);
 		$ret = parent::search($this->getService(), $params, $order, $limit, $offset);
 		return $ret;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see \library\BaseModel::findByPk()
+	 */
+	public function findByPk($value)
+	{
+		$ret = parent::findByPk($value);
+		if (isset($ret['data']) && is_array($ret['data'])) {
+			if (isset($ret['data']['ip_created'])) {
+				$ret['data']['ip_created'] = long2ip($ret['data']['ip_created']);
+			}
+
+			if (isset($ret['data']['ip_last_modified'])) {
+				$ret['data']['ip_last_modified'] = long2ip($ret['data']['ip_last_modified']);
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @param boolean $ignore
+	 * @return array
+	 */
+	public function create(array $params = array(), $ignore = false)
+	{
+		$params['creator_id'] = $params['last_modifier_id'] = Identity::getUserId();
+		return parent::create($params, $ignore);
+	}
+
+	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $id
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($id, array $params = array())
+	{
+		if (isset($params['last_modifier_id'])) {
+			$params['last_modifier_id'] = Identity::getUserId();
+		}
+
+		return parent::modifyByPk($id, $params);
 	}
 
 	/**

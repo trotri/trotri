@@ -11,8 +11,10 @@
 namespace posts\services;
 
 use libsrv\FormProcessor;
+use tfc\ap\Ap;
 use tfc\validator;
 use posts\library\Lang;
+use users\services\Users;
 
 /**
  * FpPosts class file
@@ -32,17 +34,17 @@ class FpPosts extends FormProcessor
 	{
 		if ($this->isInsert()) {
 			if (!$this->required($params,
-				'title', 'little_picture', 'category_id', 'category_name', 'content', 'keywords', 'description', 'sort',
-				'is_public', 'trash', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_html', 'html_url', 'allow_comment', 'allow_other_modify',
-				'access_count', 'dt_created', 'dt_public', 'dt_last_modified', 'creator_id', 'creator_name', 'last_modifier_id', 'last_modifier_name', 'ip_created', 'ip_last_modified')) {
+				'title', 'little_picture', 'category_id', 'content', 'keywords', 'description', 'sort',
+				'is_public', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_html', 'allow_comment', 'allow_other_modify',
+				'access_count', 'dt_created', 'dt_public', 'dt_last_modified', 'creator_id', 'last_modifier_id')) {
 				return false;
 			}
 		}
 
 		$this->isValids($params,
 			'title', 'little_picture', 'category_id', 'category_name', 'content', 'keywords', 'description', 'sort',
-			'is_public', 'trash', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_html', 'html_url', 'allow_comment', 'allow_other_modify',
-			'access_count', 'dt_created', 'dt_public', 'dt_last_modified', 'creator_id', 'creator_name', 'last_modifier_id', 'last_modifier_name', 'ip_created', 'ip_last_modified');
+			'is_public', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_html', 'allow_comment', 'allow_other_modify',
+			'access_count', 'dt_created', 'dt_public', 'dt_last_modified', 'creator_id', 'creator_name', 'last_modifier_id', 'last_modifier_name');
 		return !$this->hasError();
 	}
 
@@ -54,12 +56,21 @@ class FpPosts extends FormProcessor
 	{
 		if (isset($params['trash'])) { unset($params['trash']); }
 
+		if ($this->isInsert()) {
+			$params['ip_created'] = $params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
+		}
+		else {
+			$params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
+			if (isset($params['creator_id'])) { unset($params['creator_id']); }
+			if (isset($params['ip_created'])) { unset($params['ip_created']); }
+		}
+
+		$params['allow_other_modify'] = DataPosts::ALLOW_OTHER_MODIFY_Y;
+
 		$rules = array(
-			'builder_name' => 'trim',
 			'title' => 'trim',
 			'little_picture' => 'trim',
 			'category_id' => 'intval',
-			'category_name' => 'trim',
 			'keywords' => 'trim',
 			'sort' => 'intval',
 			'is_public' => 'trim',
@@ -69,7 +80,6 @@ class FpPosts extends FormProcessor
 			'is_jump' => 'trim',
 			'jump_url' => 'trim',
 			'is_html' => 'trim',
-			'html_url' => 'trim',
 			'allow_comment' => 'trim',
 			'allow_other_modify' => 'trim',
 			'access_count' => 'intval',
@@ -77,15 +87,44 @@ class FpPosts extends FormProcessor
 			'dt_public' => 'trim',
 			'dt_last_modified' => 'trim',
 			'creator_id' => 'intval',
-			'creator_name' => 'trim',
 			'last_modifier_id' => 'intval',
-			'last_modifier_name' => 'trim',
-			'ip_created' => 'intval',
-			'ip_last_modified' => 'intval',
 		);
 
 		$ret = $this->clean($rules, $params);
 		return $ret;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see \libsrv\FormProcessor::_cleanPostProcess()
+	 */
+	public function _cleanPostProcess()
+	{
+		$categories = new Categories();
+		$users = new Users();
+
+		if ($this->category_id > 0) {
+			$this->category_name = $categories->getCategoryNameByCategoryId($this->category_id);
+			if ($this->category_name === '') {
+				$this->addError('category_name', Lang::_('SRV_FILTER_POSTS_CATEGORY_ID_EXISTS'));
+			}
+		}
+
+		if ($this->creator_id > 0) {
+			$this->creator_name = $users->getLoginNameByUserId($this->creator_id);
+			if ($this->creator_name === '') {
+				$this->addError('creator_name', Lang::_('SRV_FILTER_POSTS_CREATOR_ID_EXISTS'));
+			}	
+		}
+
+		if ($this->last_modifier_id > 0) {
+			$this->last_modifier_name = $users->getLoginNameByUserId($this->last_modifier_id);
+			if ($this->last_modifier_name === '') {
+				$this->addError('last_modifier_name', Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_EXISTS'));
+			}
+		}
+
+		return !$this->hasError();
 	}
 
 	/**
@@ -98,6 +137,18 @@ class FpPosts extends FormProcessor
 		return array(
 			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POSTS_TITLE_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POSTS_TITLE_MAXLENGTH')),
+		);
+	}
+
+	/**
+	 * 获取“所属类别”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getCategoryIdRule($value)
+	{
+		return array(
+			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_CATEGORY_ID_INTEGER')),
 		);
 	}
 
@@ -303,6 +354,30 @@ class FpPosts extends FormProcessor
 	{
 		return array(
 			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_LAST_MODIFIED_DATETIME')),
+		);
+	}
+
+	/**
+	 * 获取“创建人”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getCreatorIdRule($value)
+	{
+		return array(
+			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_CREATOR_ID_INTEGER')),
+		);
+	}
+
+	/**
+	 * 获取“上次编辑人”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getLastModifierIdRule($value)
+	{
+		return array(
+			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_INTEGER')),
 		);
 	}
 

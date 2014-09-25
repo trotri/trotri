@@ -21,6 +21,9 @@ $(document).ready(function() {
  * @version $Id: template.js 1 2013-10-16 18:38:00Z $
  */
 Core = {
+  /**
+   * @param json Ckeditor配置
+   */
   ckeditor: {
     toolbar: {
       full: [
@@ -47,16 +50,17 @@ Core = {
       ],
 
       post: [
-         { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
-         { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
-         { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Scayt' ] },
          { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+         { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+         { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Scayt' ] },
          { name: 'tools', items: [ 'Maximize' ] },
          '/',
          { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
-         { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
          { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
+         { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
+         '/',
          { name: 'styles', items: [ 'Styles', 'Format' ] },
+         { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
          { name: 'others', items: [ '-' ] }
        ]
     }
@@ -326,5 +330,74 @@ Core = {
     };
     $.extend(options, settings);
     $(".form_time").datetimepicker(options);
+  },
+
+  /**
+   * Ajax上传并预览单张图片，基于jquery.uploadfile.js和jquery.form.js开发框架
+   * @param string btnId
+   * @param string name
+   * @param json options
+   * @return void
+   */
+  uploadPreviewImg: function(btnId, name, options) {
+    var button = $("#" + btnId);
+    var hidden = $(":hidden[name='" + name + "']");
+
+    var setError = function(errMsg) {
+      if (errMsg == undefined) { errMsg = ""; }
+      var obj = button.parent().parent();
+      errMsg ? obj.addClass("has-error") : obj.removeClass("has-error");
+      button.parent().next().text(errMsg);
+    }
+
+    var defaults = {
+      url: button.attr("url"),
+      fileName: button.attr("name"),
+      returnType: "JSON",
+      allowedTypes: "jpg,gif,png,bmp",
+      multiple: false,
+      dragDrop: true,
+      showDone: false,
+      showAbort: false,
+      showFileCounter: false,
+      showProgress: true,
+      showQueueDiv: false,
+      showPreview: false,
+      uploadButtonClass: "ajax-file-upload-green",
+      dragDropStr: "<span><b>Drag &amp; Drop Files</b></span>",
+      statusBarWidth: "70%",
+      dragdropWidth: "99.8%",
+      previewHeight: "200px",
+      previewWidth: "200px",
+      onLoad: function (obj) {
+        var url = hidden.val();
+        if (url != "") {
+          var str = '<div class="ajax-file-upload-statusbar" style="width: ' + defaults.statusBarWidth + ';">';
+          str += '<img class="ajax-file-upload-preview" src="' + url + '" style="display: inline-block; height: ' + defaults.previewHeight + '; width: ' + defaults.previewWidth + ';">';
+          str += '</div>';
+          button.next().after(str);
+        }
+      },
+      onSubmit: function(files, xhr) {
+        $(".ajax-file-upload-statusbar").next(".ajax-file-upload-statusbar").remove();
+        setError();
+      },
+      onSuccess: function(files, response, xhr, pd) {
+        if (response.err_no == 0) {
+          hidden.val(response.data.url);
+          $(".ajax-file-upload-preview").show("fast", function() { $(this).attr("src", response.data.url); });
+        }
+        else {
+          $(".ajax-file-upload-bar").text("Upload Failed");
+          setError(response.err_msg);
+        }
+      },
+      onError: function(files, status, message, pd) {},
+      onCancel: function(files, pd) {}
+    };
+
+    $.extend(defaults, options);
+    button.uploadFile(defaults);
   }
+
 }

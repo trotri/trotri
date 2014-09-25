@@ -11,6 +11,8 @@ $(document).ready(function() {
     $(":checkbox[name='is_jump']").change(function() {
       Posts.toggleJumpUrl($(this).val() == "y" ? "n" : "y");
     });
+
+    Core.uploadPreviewImg("little_picture_file", "little_picture");
   }
 });
 
@@ -36,7 +38,7 @@ Posts = {
 
   /**
    * 批量编辑排序
-   * @param url
+   * @param string url
    * @return void
    */
   batchModifySort: function(url) {

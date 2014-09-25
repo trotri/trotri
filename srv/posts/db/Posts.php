@@ -11,6 +11,7 @@
 namespace posts\db;
 
 use tdo\AbstractDb;
+use libsrv\Clean;
 use posts\library\Constant;
 use posts\library\TableNames;
 
@@ -471,6 +472,66 @@ class Posts extends AbstractDb
 		$tableName = $this->getTblprefix() . TableNames::getPosts();
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`post_id` = ?');
 		$attributes['post_id'] = $postId;
+		return $this->update($sql, $attributes);
+	}
+
+	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param string $postIds
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk($postIds, array $params = array())
+	{
+		$postIds = Clean::sqlPositiveInteger($postIds);
+		if ($postIds === false) {
+			return false;
+		}
+
+		$attributes = array();
+
+		if (isset($params['is_head'])) {
+			$isHead = trim($params['is_head']);
+			if ($isHead !== '') {
+				$attributes['is_head'] = $isHead;
+			}
+		}
+
+		if (isset($params['is_recommend'])) {
+			$isRecommend = trim($params['is_recommend']);
+			if ($isRecommend !== '') {
+				$attributes['is_recommend'] = $isRecommend;
+			}
+		}
+
+		if (isset($params['is_public'])) {
+			$isPublic = trim($params['is_public']);
+			if ($isPublic !== '') {
+				$attributes['is_public'] = $isPublic;
+			}
+		}
+
+		if (isset($params['allow_comment'])) {
+			$allowComment = trim($params['allow_comment']);
+			if ($allowComment !== '') {
+				$attributes['allow_comment'] = $allowComment;
+			}
+		}
+
+		if (isset($params['trash'])) {
+			$trash = trim($params['trash']);
+			if ($trash !== '') {
+				$attributes['trash'] = $trash;
+			}
+		}
+
+		if ($attributes === array()) {
+			return false;
+		}
+
+		$tableName = $this->getTblprefix() . TableNames::getPosts();
+		$condition = '`post_id` IN (' . $postIds . ')';
+		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), $condition);
 		return $this->update($sql, $attributes);
 	}
 

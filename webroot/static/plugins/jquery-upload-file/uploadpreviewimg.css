@@ -1,0 +1,23 @@
+@import url("uploadfile.min.css");
+
+.ajax-file-upload-progress {
+  margin: 2px;
+  width: 203px;
+}
+
+.ajax-file-upload-preview {
+  margin: 2px;
+}
+
+.ajax-file-upload-filename {
+  margin: 2px;
+}
+
+.ajax-file-upload-statusbar {
+  border: 0px;
+}
+
+.ajax-upload-dragdrop {
+  border: 1px dotted #a5a5c7;
+  padding: 5px 10px 5px 10px;
+}
