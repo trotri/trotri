@@ -44,6 +44,14 @@ return array(
 			'label' => 'CFG_SYSTEM_URLS_SYSTEM_OPTIONS_MODIFY',
 			'm' => 'system', 'c' => 'options', 'a' => 'modify'
 		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_PICTURES_INDEX',
+			'm' => 'system', 'c' => 'pictures', 'a' => 'index',
+			'icon' => array(
+				'label' => 'MOD_SYSTEM_URLS_PICTURES_CREATE',
+				'm' => 'system', 'c' => 'pictures', 'a' => 'upload'
+			)
+		),
 	),
 	array(
 		0 => array(

@@ -12,6 +12,7 @@ namespace modules\posts\action\posts;
 
 use library\DataAction;
 use tfc\ap\Ap;
+use tid\Role;
 use files\services\Upload AS FileUpload;
 
 /**
@@ -26,9 +27,9 @@ use files\services\Upload AS FileUpload;
 class Upload extends DataAction
 {
 	/**
-	 * @var boolean 是否验证登录，默认验证
+	 * @var integer 允许的权限
 	 */
-	protected $_validLogin = true;
+	protected $_power = Role::INSERT;
 
 	/**
 	 * (non-PHPdoc)

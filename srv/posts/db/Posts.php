@@ -40,83 +40,96 @@ class Posts extends AbstractDb
 	 */
 	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$attributes = $params;
-
-		if (isset($attributes['dt_created_start'])) {
-			$dtCreatedStart = trim($attributes['dt_created_start']);
-			if ($dtCreatedStart !== '') {
-				$attributes['dt_created >= '] = $dtCreatedStart;
-			}
-
-			unset($attributes['dt_created_start']);
-		}
-
-		if (isset($attributes['dt_created_end'])) {
-			$dtCreatedEnd = trim($attributes['dt_created_end']);
-			if ($dtCreatedEnd !== '') {
-				$attributes['dt_created <= '] = $dtCreatedEnd;
-			}
-
-			unset($attributes['dt_created_end']);
-		}
-
-		if (isset($attributes['dt_public_start'])) {
-			$dtPublicStart = trim($attributes['dt_public_start']);
-			if ($dtPublicStart !== '') {
-				$attributes['dt_public >= '] = $dtPublicStart;
-			}
-
-			unset($attributes['dt_public_start']);
-		}
-
-		if (isset($attributes['dt_public_end'])) {
-			$dtPublicEnd = trim($attributes['dt_public_end']);
-			if ($dtPublicEnd !== '') {
-				$attributes['dt_public <= '] = $dtPublicEnd;
-			}
-
-			unset($attributes['dt_public_end']);
-		}
-
-		if (isset($attributes['dt_last_modified_start'])) {
-			$dtLastModifiedStart = trim($attributes['dt_last_modified_start']);
-			if ($dtLastModifiedStart !== '') {
-				$attributes['dt_last_modified >= '] = $dtLastModifiedStart;
-			}
-
-			unset($attributes['dt_last_modified_start']);
-		}
-
-		if (isset($attributes['dt_last_modified_end'])) {
-			$dtLastModifiedEnd = trim($attributes['dt_last_modified_end']);
-			if ($dtLastModifiedEnd !== '') {
-				$attributes['dt_last_modified <= '] = $dtLastModifiedEnd;
-			}
-
-			unset($attributes['dt_last_modified_end']);
-		}
-
-		if (isset($attributes['access_count_start'])) {
-			$accessCountStart = trim($attributes['access_count_start']);
-			if ($accessCountStart !== '') {
-				$attributes['access_count >= '] = $accessCountStart;
-			}
-
-			unset($attributes['access_count_start']);
-		}
-
-		if (isset($attributes['access_count_end'])) {
-			$accessCountEnd = trim($attributes['access_count_end']);
-			if ($accessCountEnd !== '') {
-				$attributes['access_count <= '] = $accessCountEnd;
-			}
-
-			unset($attributes['access_count_end']);
-		}
-
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getPosts();
-		$condition = $commandBuilder->createAndCondition(array_keys($attributes));
+		$condition = '1';
+
+		$attributes = array();
+
+		if (isset($params['dt_created_start'])) {
+			$dtCreatedStart = trim($params['dt_created_start']);
+			if ($dtCreatedStart !== '') {
+				$condition .= " AND `dt_created` >= " . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_created_start'] = $dtCreatedStart;
+			}
+
+			unset($params['dt_created_start']);
+		}
+
+		if (isset($params['dt_created_end'])) {
+			$dtCreatedEnd = trim($params['dt_created_end']);
+			if ($dtCreatedEnd !== '') {
+				$condition .= ' AND `dt_created` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_created_end'] = $dtCreatedEnd;
+			}
+
+			unset($params['dt_created_end']);
+		}
+
+		if (isset($params['dt_public_start'])) {
+			$dtPublicStart = trim($params['dt_public_start']);
+			if ($dtPublicStart !== '') {
+				$condition .= ' AND `dt_public` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_public_start'] = $dtPublicStart;
+			}
+
+			unset($params['dt_public_start']);
+		}
+
+		if (isset($params['dt_public_end'])) {
+			$dtPublicEnd = trim($params['dt_public_end']);
+			if ($dtPublicEnd !== '') {
+				$condition .= ' AND `dt_public` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_public_end'] = $dtPublicEnd;
+			}
+
+			unset($params['dt_public_end']);
+		}
+
+		if (isset($params['dt_last_modified_start'])) {
+			$dtLastModifiedStart = trim($params['dt_last_modified_start']);
+			if ($dtLastModifiedStart !== '') {
+				$condition .= ' AND `dt_last_modified` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_last_modified_start'] = $dtLastModifiedStart;
+			}
+
+			unset($params['dt_last_modified_start']);
+		}
+
+		if (isset($params['dt_last_modified_end'])) {
+			$dtLastModifiedEnd = trim($params['dt_last_modified_end']);
+			if ($dtLastModifiedEnd !== '') {
+				$condition .= ' AND `dt_last_modified` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_last_modified_end'] = $dtLastModifiedEnd;
+			}
+
+			unset($params['dt_last_modified_end']);
+		}
+
+		if (isset($params['access_count_start'])) {
+			$accessCountStart = trim($params['access_count_start']);
+			if ($accessCountStart !== '') {
+				$condition .= ' AND `access_count` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['access_count_start'] = $accessCountStart;
+			}
+
+			unset($params['access_count_start']);
+		}
+
+		if (isset($params['access_count_end'])) {
+			$accessCountEnd = trim($params['access_count_end']);
+			if ($accessCountEnd !== '') {
+				$condition .= ' AND `access_count` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['access_count_end'] = $accessCountEnd;
+			}
+
+			unset($params['access_count_end']);
+		}
+
+		if ($params !== array()) {
+			$attributes = array_merge($attributes, $params);
+			$condition .= ' AND ' . $commandBuilder->createAndCondition(array_keys($params));
+		}
 
 		$sql = 'SELECT SQL_CALC_FOUND_ROWS `post_id`, `title`, `little_picture`, `category_id`, `category_name`, `keywords`, `description`, `sort`, `is_public`, `trash`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_html`, `html_url`, `allow_comment`, `allow_other_modify`, `access_count`, `dt_created`, `dt_public`, `dt_last_modified`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `ip_created`, `ip_last_modified` FROM `' . $tableName . '`';
 		$sql = $commandBuilder->applyCondition($sql, $condition);
@@ -124,7 +137,7 @@ class Posts extends AbstractDb
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
 		$ret = $this->fetchAllNoCache($sql, $attributes);
 		if (is_array($ret)) {
-			$ret['attributes'] = $params;
+			$ret['attributes'] = $attributes;
 			$ret['order']      = $order;
 			$ret['limit']      = $limit;
 			$ret['offset']     = $offset;

@@ -79,6 +79,16 @@ class ComponentsConstant
 	const GLYPHICON_HISTORYBACK = 'backward';
 
 	/**
+	 * @var string Glyphicons图标：链接
+	 */
+	const GLYPHICON_LINK = 'link';
+
+	/**
+	 * @var string Glyphicons图标：上传
+	 */
+	const GLYPHICON_UPLOAD = 'upload';
+
+	/**
 	 * @var string JS函数：链接
 	 */
 	const JSFUNC_HREF = 'Trotri.href';

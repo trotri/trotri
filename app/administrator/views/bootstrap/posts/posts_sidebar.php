@@ -45,6 +45,88 @@ elseif ($this->controller === 'modules') {
 
 $this->widget('views\bootstrap\components\bar\SideBar', array('config' => $config));
 ?>
+
+<?php
+if ($this->controller === 'posts') {
+	$this->widget('views\bootstrap\widgets\SearchBuilder',
+		array(
+			'name' => 'create',
+			'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'posts', 'posts'),
+			'elements_object' => $this->elements,
+			'elements' => array(
+				'title' => array(
+					'type' => 'text',
+				),
+				'post_id' => array(
+					'type' => 'text',
+				),
+				'creator_id' => array(
+					'type' => 'text',
+				),
+				'creator_name' => array(
+					'type' => 'text',
+				),
+				'last_modifier_id' => array(
+					'type' => 'text',
+				),
+				'last_modifier_name' => array(
+					'type' => 'text',
+				),
+				'category_id' => array(
+					'options' => $this->elements->getCategoryNames(),
+				),
+				'is_head' => array(
+					'type' => 'select',
+				),
+				'is_recommend' => array(
+					'type' => 'select',
+				),
+				'is_jump' => array(
+					'type' => 'select',
+				),
+				'is_html' => array(
+					'type' => 'select',
+				),
+				'allow_comment' => array(
+					'type' => 'select',
+				),
+				'is_public' => array(
+					'type' => 'select',
+				),
+				'access_count_start' => array(
+					'type' => 'text',
+				),
+				'access_count_end' => array(
+					'type' => 'text',
+				),
+			),
+			'columns' => array(
+				'title',
+				'post_id',
+				'creator_id',
+				'creator_name',
+				'last_modifier_id',
+				'last_modifier_name',
+				'category_id',
+				'is_head',
+				'is_recommend',
+				'is_jump',
+				'is_html',
+				'allow_comment',
+				'is_public',
+				'dt_created_start',
+				'dt_created_end',
+				'dt_public_start',
+				'dt_public_end',
+				'dt_last_modified_start',
+				'dt_last_modified_end',
+				'access_count_start',
+				'access_count_end',
+			)
+		)
+	);
+}
+?>
 </div><!-- /.col-xs-6 col-sm-2 -->
 <!-- /SideBar -->
 

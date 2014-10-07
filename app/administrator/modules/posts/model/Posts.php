@@ -275,6 +275,38 @@ class Posts extends BaseModel
 				'hint' => Text::_('MOD_POSTS_POSTS_IP_LAST_MODIFIED_HINT'),
 				'disabled' => true,
 			),
+			'dt_created_start' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_START_LABEL'),
+			),
+			'dt_created_end' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_END_LABEL'),
+			),
+			'dt_public_start' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_START_LABEL'),
+			),
+			'dt_public_end' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_END_LABEL'),
+			),
+			'dt_last_modified_start' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_START_LABEL'),
+			),
+			'dt_last_modified_end' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_END_LABEL'),
+			),
+			'access_count_start' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_ACCESS_COUNT_START_LABEL'),
+			),
+			'access_count_end' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POSTS_ACCESS_COUNT_END_LABEL'),
+			),
 		);
 
 		return $output;
@@ -342,6 +374,10 @@ class Posts extends BaseModel
 		$rules = array(
 			'title' => 'trim',
 			'post_id' => 'intval',
+			'creator_id' => 'intval',
+			'creator_name' => 'trim',
+			'last_modifier_id' => 'intval',
+			'last_modifier_name' => 'trim',
 			'category_id' => 'intval',
 			'is_head' => 'trim',
 			'is_recommend' => 'trim',
@@ -349,12 +385,15 @@ class Posts extends BaseModel
 			'is_html' => 'trim',
 			'allow_comment' => 'trim',
 			'is_public' => 'trim',
-			'access_count' => 'trim',
-			'creator_id' => 'trim',
-			'dt_created' => 'trim',
-			'dt_public' => 'trim',
-			'dt_last_modified' => 'trim',
 			'trash' => 'trim',
+			'dt_created_start' => 'trim',
+			'dt_created_end' => 'trim',
+			'dt_public_start' => 'trim',
+			'dt_public_end' => 'trim',
+			'dt_last_modified_start' => 'trim',
+			'dt_last_modified_end' => 'trim',
+			'access_count_start' => 'intval',
+			'access_count_end' => 'intval',
 		);
 
 		$this->filterCleanEmpty($params, $rules);

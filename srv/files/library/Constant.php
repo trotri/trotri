@@ -25,4 +25,9 @@ class Constant
 	 */
 	const POSTS_CLUSTER = 'posts';
 
+	/**
+	 * @var string 系统管理：批量上传配置
+	 */
+	const SYSTEM_CLUSTER = 'system';
+
 }

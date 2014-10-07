@@ -23,7 +23,7 @@ use tfc\util\Upload;
  * 配置 /cfg/appname/main.php：
  * return array (
  *   'little_picture' => array(
- *     'directory' => 'little_picture/thumb', // 上传目录名，在根目录：DIR_DATA . DS . 'u'下
+ *     'directory' => 'little_picture/thumb', // 上传目录名，在根目录：DIR_DATA_UPLOAD下
  *     'name_pre' => '',
  *     'name_rule' => 0, // 保存文件时的命名规则，0：原文件名、1：随机整数格式、2：随机字符串格式、3：日期和时间格式、4：日期和时间+随机整数格式、5：日期和时间+随机字符串格式、6：时间戳格式、7：时间戳+随机整数格式、8：时间戳+随机字符串格式
  *     'max_size' => 2097152, // 允许上传的文件大小最大值，单位：字节
@@ -100,19 +100,19 @@ class UploadProxy
 	const ERR_UPLOADED_FAILED     = Upload::ERR_UPLOADED_FAILED;
 
 	/**
+	 * @var string 默认的目录名规则
+	 */
+	const DEFAULT_DIR_NAME_RULE   = 'Ym/d';
+
+	/**
 	 * @var string 配置名
 	 */
 	const CONFIG_NAME = 'upload';
 
 	/**
-	 * @var string 默认的根目录名
-	 */
-	const DEFAULT_DIR_NAME_ROOT = 'u';
-
-	/**
 	 * @var string 默认的目录名规则，由时间组成
 	 */
-	const DEFAULT_DIR_NAME_RULE = 'Ym/d';
+	const DEFAULT_DIR_RULE = 'Ym/d';
 
 	/**
 	 * @var string 寄存上传配置名
@@ -130,14 +130,9 @@ class UploadProxy
 	protected $_upload = null;
 
 	/**
-	 * @var string 根目录名
-	 */
-	protected $_dirNameRoot = self::DEFAULT_DIR_NAME_ROOT;
-
-	/**
 	 * @var string 目录名规则，由时间组成
 	 */
-	protected $_dirNameRule = self::DEFAULT_DIR_NAME_RULE;
+	protected $_dirRule = self::DEFAULT_DIR_NAME_RULE;
 
 	/**
 	 * 构造方法：初始化上传配置名
@@ -253,7 +248,7 @@ class UploadProxy
 			$randMax       = isset($config['rand_max'])             ? (int) $config['rand_max']                 : null;
 			$randStrlen    = isset($config['rand_strlen'])          ? (int) $config['rand_strlen']              : null;
 
-			$upload = new Upload($this->getDirSave(), $nameRule, $replaceExists);
+			$upload = new Upload($this->getDirectory(), $nameRule, $replaceExists);
 
 			$nameRule      === null || $upload->setNameRule($nameRule);
 			$replaceExists === null || $upload->setAllowReplaceExists($replaceExists);
@@ -296,19 +291,9 @@ class UploadProxy
 	 * 获取上传文件保存目录
 	 * @return string
 	 */
-	public function getDirSave()
+	public function getDirectory()
 	{
-		$directory = $this->getDirRoot();
-		$this->mkDir($directory);
-
-		$dirName = $this->getConfig('directory', '');
-		if ($dirName !== '') {
-			$dirNames = explode('/', $dirName);
-			foreach ($dirNames as $value) {
-				$directory .= DS . $value;
-				$this->mkDir($directory);
-			}
-		}
+		$directory = DIR_DATA_UPLOAD;
 
 		$dirNames = $this->getDirNames();
 		foreach ($dirNames as $value) {
@@ -327,15 +312,15 @@ class UploadProxy
 	{
 		$ret = array();
 
-		$dirRule = $this->getDirNameRule();
-		if ($dirRule === '') {
-			return $ret;
+		$directory = str_replace('\\', '/', $this->getConfig('directory', ''));
+		if (($dirRule = $this->getDirRule()) !== '') {
+			$directory .= '/' . date($dirRule);
 		}
 
-		$dirNames = explode('/', date($dirRule));
-		foreach ($dirNames as $value) {
-			if (($value = trim($value)) !== '') {
-				$ret[] = trim($value);
+		$directories = explode('/', $directory);
+		foreach ($directories as $dirName) {
+			if (($dirName = trim($dirName)) !== '') {
+				$ret[] = $dirName;
 			}
 		}
 
@@ -343,41 +328,12 @@ class UploadProxy
 	}
 
 	/**
-	 * 获取根目录
-	 * @return string
-	 */
-	public function getDirRoot()
-	{
-		return DIR_DATA . DS . $this->getDirNameRoot();
-	}
-
-	/**
-	 * 获取根目录名
-	 * @return string
-	 */
-	public function getDirNameRoot()
-	{
-		return $this->_dirNameRoot;
-	}
-
-	/**
-	 * 设置根目录名
-	 * @param string $dirName
-	 * @return files\library\UploadProxy
-	 */
-	public function setDirNameRoot($dirName)
-	{
-		$this->_dirNameRoot = $dirName;
-		return $this;
-	}
-
-	/**
 	 * 获取目录名规则
 	 * @return string
 	 */
-	public function getDirNameRule()
+	public function getDirRule()
 	{
-		return $this->_dirNameRule;
+		return $this->_dirRule;
 	}
 
 	/**
@@ -385,9 +341,9 @@ class UploadProxy
 	 * @param string $dirRule
 	 * @return files\library\UploadProxy
 	 */
-	public function setDirNameRule($dirRule)
+	public function setDirRule($dirRule)
 	{
-		$this->_dirNameRule = trim($dirRule);
+		$this->_dirRule = str_replace('\\', '/', trim($dirRule));
 		return $this;
 	}
 

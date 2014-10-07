@@ -11,6 +11,7 @@
 namespace posts\services;
 
 use libsrv\AbstractService;
+use posts\library\Plugin;
 
 /**
  * Posts class file
@@ -44,6 +45,10 @@ class Posts extends AbstractService
 	public function findByPk($postId)
 	{
 		$row = $this->getDb()->findByPk($postId);
+
+		$dispatcher = Plugin::getInstance();
+		$dispatcher->trigger('onBeforeFind', array(__METHOD__, &$row));
+
 		return $row;
 	}
 

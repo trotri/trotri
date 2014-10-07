@@ -63,6 +63,49 @@ class EventDispatcher
     }
 
     /**
+     * 通过事件名，批量注册被观察的事件
+     * @param array $eventNames
+     * @return void
+     */
+    public function loadEvents(array $eventNames)
+    {
+        if ($eventNames === array()) {
+            return ;
+        }
+
+        foreach ($eventNames as $eventName)
+        {
+            $instance = $this->createEvent($eventName);
+            $this->attach($instance);
+        }
+    }
+
+    /**
+     * 通过被观察的事件名，创建被观察的事件类
+     * @param string $eventName
+     * @throws ErrorException 如果事件类不存在，抛出异常
+     * @throws ErrorException 如果获取的实例不是tfc\ap\Event类的子类，抛出异常
+     * @return tfc\ap\Event
+     */
+    public function createEvent($eventName)
+    {
+        if (!class_exists($eventName)) {
+            throw new ErrorException(sprintf(
+                'EventDispatcher is unable to find the requested event "%s".', $eventName
+            ));
+        }
+
+        $instance = new $eventName();
+        if (!$instance instanceof Event) {
+            throw new ErrorException(sprintf(
+                'EventDispatcher Class "%s" is not instanceof tfc\ap\Event.', $eventName
+            ));
+        }
+
+        return $instance;
+    }
+
+    /**
      * 触发所有被观察的方法
      * @param string $method
      * @param array $args
@@ -108,7 +151,7 @@ class EventDispatcher
     {
         $handler = strtolower(get_class($event));
         if ($this->hasEvent($handler)) {
-            return;
+            return ;
         }
 
         $this->_events[$handler] = $event;
@@ -131,7 +174,7 @@ class EventDispatcher
     public function detach(Event $event) {
         $handler = strtolower(get_class($event));
         if (!$this->hasEvent($handler)) {
-            return;
+            return ;
         }
 
         unset($this->_events[$handler]);

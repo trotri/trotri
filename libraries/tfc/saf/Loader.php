@@ -185,6 +185,11 @@ defined('DIR_DATA') || define('DIR_DATA', DIR_ROOT . DS . 'data');
 defined('DIR_DATA_APP') || define('DIR_DATA_APP', DIR_DATA . DS . 'app' . DS . APP_NAME);
 
 /**
+ * 上传文件存放目录
+ */
+defined('DIR_DATA_UPLOAD') || define('DIR_DATA_UPLOAD', DIR_DATA . DS . 'u');
+
+/**
  * 运行时生成的临时文件存放目录
  */
 defined('DIR_DATA_RUNTIME') || define('DIR_DATA_RUNTIME', DIR_DATA . DS . 'runtime');
@@ -226,7 +231,13 @@ is_dir(DIR_LOG_APP) || mkdir(DIR_LOG_APP, 0664, true);
 is_dir(DIR_LOG_APP) || exit('Request Error, Create Log Dir Failed');
 
 /**
- * 初始化数据文件存放根目录、当前项目的数据文件存放目录
+ * 初始化上传文件存放目录
+ */
+is_dir(DIR_DATA_UPLOAD) || mkdir(DIR_DATA_UPLOAD, 0664, true);
+is_dir(DIR_DATA_UPLOAD) || exit('Request Error, Create Upload Dir Failed');
+
+/**
+ * 初始化运行时生成的临时文件存放目录
  */
 is_dir(DIR_DATA_RUNTIME) || mkdir(DIR_DATA_RUNTIME, 0664, true);
 is_dir(DIR_DATA_RUNTIME) || exit('Request Error, Create RunTime Dir Failed');
@@ -244,6 +255,7 @@ is_dir(DIR_DATA_RUNTIME_ENTITIES) || mkdir(DIR_DATA_RUNTIME_ENTITIES, 0664, true
 is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entities Dir Failed');
 
 is_file(DIR_LOG_APP               . DS . 'index.html') || file_put_contents(DIR_LOG_APP               . DS . 'index.html', '<!DOCTYPE html><title></title>');
+is_file(DIR_DATA_UPLOAD           . DS . 'index.html') || file_put_contents(DIR_DATA_UPLOAD           . DS . 'index.html', '<!DOCTYPE html><title></title>');
 is_file(DIR_DATA_RUNTIME          . DS . 'index.html') || file_put_contents(DIR_DATA_RUNTIME          . DS . 'index.html', '<!DOCTYPE html><title></title>');
 is_file(DIR_DATA_RUNTIME_ROLES    . DS . 'index.html') || file_put_contents(DIR_DATA_RUNTIME_ROLES    . DS . 'index.html', '<!DOCTYPE html><title></title>');
 is_file(DIR_DATA_RUNTIME_ENTITIES . DS . 'index.html') || file_put_contents(DIR_DATA_RUNTIME_ENTITIES . DS . 'index.html', '<!DOCTYPE html><title></title>');

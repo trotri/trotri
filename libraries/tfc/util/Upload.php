@@ -69,6 +69,11 @@ class Upload
     const NAMERULE_TIMESTAMP_RAND_STRING  = 8;
 
     /**
+     * @var integer OK
+     */
+    const SUCCESS_NUM             = 0;
+
+    /**
      * @var integer 参数错误
      */
     const ERROR_REQUEST           = \libapp\ErrorNo::ERROR_REQUEST;

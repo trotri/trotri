@@ -28,6 +28,27 @@ use system\services\DataOptions;
 class Upload
 {
 	/**
+	 * 系统管理：批量上传配置
+	 * @param array $files
+	 * @return array
+	 */
+	public function system(array $files)
+	{
+		$clusterName = Constant::SYSTEM_CLUSTER;
+
+		$uploadProxy = new UploadProxy($clusterName);
+		$ret = $uploadProxy->save($files);
+		if ($ret['err_no'] !== UploadProxy::SUCCESS_UPLOAD_NUM) {
+			return $ret;
+		}
+
+		$fileName = $ret['file_name'];
+		$ret['file_name'] = pathinfo($fileName, PATHINFO_BASENAME);
+		$ret['url'] = $uploadProxy->getUrl($fileName);
+		return $ret;
+	}
+
+	/**
 	 * 上传图片：文档管理
 	 * @param array $files
 	 * @param boolean $littlePicture
