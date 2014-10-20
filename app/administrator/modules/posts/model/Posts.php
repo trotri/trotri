@@ -177,26 +177,26 @@ class Posts extends BaseModel
 				'hint' => Text::_('MOD_POSTS_POSTS_JUMP_URL_HINT'),
 				'required' => true,
 			),
-			'is_public' => array(
+			'is_published' => array(
 				'__tid__' => 'main',
 				'type' => 'switch',
-				'label' => Text::_('MOD_POSTS_POSTS_IS_PUBLIC_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POSTS_IS_PUBLIC_HINT'),
-				'options' => DataPosts::getIsPublicEnum(),
-				'value' => DataPosts::IS_PUBLIC_Y,
+				'label' => Text::_('MOD_POSTS_POSTS_IS_PUBLISHED_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POSTS_IS_PUBLISHED_HINT'),
+				'options' => DataPosts::getIsPublishedEnum(),
+				'value' => DataPosts::IS_PUBLISHED_Y,
 			),
-			'dt_public_up' => array(
+			'dt_publish_up' => array(
 				'__tid__' => 'advanced',
 				'type' => 'datetimepicker',
-				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_UP_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_UP_HINT'),
+				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLISH_UP_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POSTS_DT_PUBLISH_UP_HINT'),
 				'value' => $nowTime
 			),
-			'dt_public_down' => array(
+			'dt_publish_down' => array(
 				'__tid__' => 'advanced',
 				'type' => 'datetimepicker',
-				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_DOWN_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POSTS_DT_PUBLIC_DOWN_HINT'),
+				'label' => Text::_('MOD_POSTS_POSTS_DT_PUBLISH_DOWN_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POSTS_DT_PUBLISH_DOWN_HINT'),
 			),
 			'comment_status' => array(
 				'__tid__' => 'advanced',
@@ -204,7 +204,7 @@ class Posts extends BaseModel
 				'label' => Text::_('MOD_POSTS_POSTS_COMMENT_STATUS_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_COMMENT_STATUS_HINT'),
 				'options' => DataPosts::getCommentStatusEnum(),
-				'value' => DataPosts::COMMENT_STATUS_PUBLIC,
+				'value' => DataPosts::COMMENT_STATUS_PUBLISH,
 			),
 			'allow_other_modify' => array(
 				'__tid__' => 'advanced',
@@ -305,6 +305,7 @@ class Posts extends BaseModel
 					'praise_count DESC' => Text::_('MOD_POSTS_POSTS_PRAISE_COUNT_LABEL'),
 					'comment_count DESC' => Text::_('MOD_POSTS_POSTS_COMMENT_COUNT_LABEL'),
 					'dt_created DESC' => Text::_('MOD_POSTS_POSTS_DT_CREATED_LABEL'),
+					'sort' => Text::_('MOD_POSTS_POSTS_SORT_LABEL'),
 				)
 			),
 			'dt_created_start' => array(
@@ -403,6 +404,10 @@ class Posts extends BaseModel
 			unset($params['ip_last_modified']);
 		}
 
+		if ($order === '') {
+			$order = 'sort';
+		}
+
 		return parent::search($params, $order, $limit, $offset);
 	}
 
@@ -472,12 +477,12 @@ class Posts extends BaseModel
 
 	/**
 	 * 获取“是否发表”
-	 * @param string $isPublic
+	 * @param string $isPublished
 	 * @return string
 	 */
-	public function getIsPublicLangByIsPublic($isPublic)
+	public function getIsPublishedLangByIsPublished($isPublished)
 	{
-		$ret = $this->getService()->getIsPublicLangByIsPublic($isPublic);
+		$ret = $this->getService()->getIsPublishedLangByIsPublished($isPublished);
 		return $ret;
 	}
 

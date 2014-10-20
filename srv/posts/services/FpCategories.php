@@ -12,6 +12,7 @@ namespace posts\services;
 
 use libsrv\FormProcessor;
 use tfc\validator;
+use tfc\saf\Log;
 use posts\library\Lang;
 use posts\library\TableNames;
 
@@ -33,14 +34,14 @@ class FpCategories extends FormProcessor
 	{
 		if ($this->isInsert()) {
 			if (!$this->required($params,
-				'category_name', 'category_pid', 'meta_title', 'meta_keywords', 'meta_description',
+				'category_pid', 'category_name', 'meta_title', 'meta_keywords', 'meta_description',
 				'tpl_home', 'tpl_list', 'tpl_view', 'sort', 'description')) {
 				return false;
 			}
 		}
 
 		$this->isValids($params,
-			'category_name', 'category_pid', 'alias',
+			'category_pid', 'category_name', 'alias',
 			'meta_title', 'meta_keywords', 'meta_description',
 			'tpl_home', 'tpl_list', 'tpl_view', 'sort', 'description');
 		return !$this->hasError();
@@ -52,8 +53,35 @@ class FpCategories extends FormProcessor
 	 */
 	protected function _cleanPreProcess(array $params)
 	{
+		if ($this->isUpdate()) {
+			$row = $this->_object->findByPk($this->id);
+			if (!$row || !is_array($row) || !isset($row['category_id']) || !isset($row['category_pid']) || !isset($row['category_name'])) {
+				Log::warning(sprintf(
+					'FpCategories is unable to find the result by id "%d"', $this->id
+				), 0,  __METHOD__);
+
+				return false;
+			}
+
+			if (isset($params['category_name'])) {
+				$newCategoryName = trim($params['category_name']);
+				$oldCategoryName = $row['category_name'];
+				if (isset($params['category_pid'])) {
+					$newCategoryPid = (int) $params['category_pid'];
+					$oldCategoryPid = (int) $row['category_pid'];
+					if ($newCategoryPid === $oldCategoryPid && $newCategoryName === $oldCategoryName) {
+						unset($params['category_pid'], $params['category_name']);
+					}
+				}
+				else {
+					if ($newCategoryName === $oldCategoryName) {
+						unset($params['category_name']);
+					}
+				}
+			}
+		}
+
 		$rules = array(
-			'builder_name' => 'trim',
 			'category_name' => 'trim',
 			'category_pid' => 'intval',
 			'alias' => 'trim',
@@ -71,19 +99,6 @@ class FpCategories extends FormProcessor
 	}
 
 	/**
-	 * 获取“类别名”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getCategoryNameRule($value)
-	{
-		return array(
-			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_NAME_MINLENGTH')),
-			'MaxLength' => new validator\MaxLengthValidator($value, 20, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_NAME_MAXLENGTH')),
-		);
-	}
-
-	/**
 	 * 获取“所属父类别”验证规则
 	 * @param mixed $value
 	 * @return array
@@ -95,7 +110,22 @@ class FpCategories extends FormProcessor
 		}
 
 		return array(
+			'NotEqual' => new validator\NotEqualValidator($value, $this->id, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_PID_NOTEQUAL')),
 			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_PID_EXISTS'), $this->getDbProxy(), TableNames::getCategories(), 'category_id')
+		);
+	}
+
+	/**
+	 * 获取“类别名”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getCategoryNameRule($value)
+	{
+		return array(
+			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_NAME_MINLENGTH')),
+			'MaxLength' => new validator\MaxLengthValidator($value, 20, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_NAME_MAXLENGTH')),
+			'DbExists2' => new validator\DbExists2Validator($value, false, Lang::_('SRV_FILTER_POST_CATEGORIES_CATEGORY_NAME_UNIQUE'), $this->getDbProxy(), TableNames::getCategories(), 'category_name', 'category_pid', $this->category_pid)
 		);
 	}
 

@@ -50,7 +50,7 @@ $this->widget('views\bootstrap\components\bar\SideBar', array('config' => $confi
 if ($this->controller === 'posts') {
 	$this->widget('views\bootstrap\widgets\SearchBuilder',
 		array(
-			'name' => 'create',
+			'name' => 'search',
 			'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'posts', 'posts'),
 			'elements_object' => $this->elements,
 			'elements' => array(
@@ -72,13 +72,13 @@ if ($this->controller === 'posts') {
 				'is_jump' => array(
 					'type' => 'select',
 				),
-				'is_public' => array(
+				'is_published' => array(
 					'type' => 'select',
 				),
-				'dt_public_up' => array(
+				'dt_publish_up' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_public_down' => array(
+				'dt_publish_down' => array(
 					'type' => 'datetimepicker',
 				),
 				'comment_status' => array(
@@ -124,9 +124,9 @@ if ($this->controller === 'posts') {
 				'is_recommend',
 				'is_jump',
 				'jump_url',
-				'is_public',
-				'dt_public_up',
-				'dt_public_down',
+				'is_published',
+				'dt_publish_up',
+				'dt_publish_down',
 				'comment_status',
 				'allow_other_modify',
 				'creator_id',

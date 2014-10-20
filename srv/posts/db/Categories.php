@@ -133,7 +133,12 @@ class Categories extends AbstractDb
 		if (isset($params['category_pid'])) {
 			$categoryPid = (int) $params['category_pid'];
 			if ($categoryPid >= 0) {
-				$attributes['category_pid'] = $categoryPid;
+				if ($categoryPid !== $categoryId) {
+					$attributes['category_pid'] = $categoryPid;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
 				return false;

@@ -228,13 +228,13 @@ class Posts extends AbstractService
 
 	/**
 	 * 获取“是否发表”
-	 * @param string $isPublic
+	 * @param string $isPublished
 	 * @return string
 	 */
-	public function getIsPublicLangByIsPublic($isPublic)
+	public function getIsPublishedLangByIsPublished($isPublished)
 	{
-		$enum = DataPosts::getIsPublicEnum();
-		return isset($enum[$isPublic]) ? $enum[$isPublic] : '';
+		$enum = DataPosts::getIsPublishedEnum();
+		return isset($enum[$isPublished]) ? $enum[$isPublished] : '';
 	}
 
 	/**
@@ -434,9 +434,9 @@ class Posts extends AbstractService
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getIsPublicByPostId($postId)
+	public function getIsPublishedByPostId($postId)
 	{
-		$value = $this->getByPk('is_public', $postId);
+		$value = $this->getByPk('is_published', $postId);
 		return $value ? $value : '';
 	}
 
@@ -445,9 +445,9 @@ class Posts extends AbstractService
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getDtPublicUpByPostId($postId)
+	public function getDtPublishUpByPostId($postId)
 	{
-		$value = $this->getByPk('dt_public_up', $postId);
+		$value = $this->getByPk('dt_publish_up', $postId);
 		return $value ? $value : '';
 	}
 
@@ -456,9 +456,9 @@ class Posts extends AbstractService
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getDtPublicDownByPostId($postId)
+	public function getDtPublishDownByPostId($postId)
 	{
-		$value = $this->getByPk('dt_public_down', $postId);
+		$value = $this->getByPk('dt_publish_down', $postId);
 		return $value ? $value : '';
 	}
 

@@ -47,17 +47,17 @@ class TableRender extends views\bootstrap\components\TableRender
 		return $output;
 	}
 
-	public function getIsPublic($data)
+	public function getIsPublished($data)
 	{
 		$params = array(
 			'id' => $data['post_id'],
-			'column_name' => 'is_public'
+			'column_name' => 'is_published'
 		);
 
 		$output = ComponentsBuilder::getSwitch(array(
 			'id' => $data['post_id'],
-			'name' => 'is_public',
-			'value' => $data['is_public'],
+			'name' => 'is_published',
+			'value' => $data['is_published'],
 			'href' => $this->urlManager->getUrl('singlemodify', $this->controller, $this->module, $params)
 		));
 
@@ -107,8 +107,8 @@ $this->widget(
 			'is_recommend' => array(
 				'callback' => 'getIsRecommend'
 			),
-			'is_public' => array(
-				'callback' => 'getIsPublic'
+			'is_published' => array(
+				'callback' => 'getIsPublished'
 			),
 			'sort' => array(
 				'callback' => 'getSort'
@@ -120,7 +120,7 @@ $this->widget(
 			'module_id',
 			'is_head',
 			'is_recommend',
-			'is_public',
+			'is_published',
 			// 'hits',
 			'sort',
 			'creator_name',

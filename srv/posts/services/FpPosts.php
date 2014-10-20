@@ -47,7 +47,7 @@ class FpPosts extends FormProcessor
 
 		$this->isValids($params,
 			'title', 'alias', 'content', 'keywords', 'description', 'sort', 'category_id', 'category_name', 'module_id',
-			'password', 'picture', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_public', 'dt_public_up', 'dt_public_down',
+			'password', 'picture', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_published', 'dt_publish_up', 'dt_publish_down',
 			'comment_status', 'allow_other_modify', 'hits', 'praise_count', 'comment_count',
 			'creator_id', 'creator_name', 'last_modifier_id', 'last_modifier_name', 'dt_created', 'dt_last_modified', 'ip_created', 'ip_last_modified', 'trash');
 		return !$this->hasError();
@@ -115,9 +115,9 @@ class FpPosts extends FormProcessor
 			'is_recommend' => 'trim',
 			'is_jump' => 'trim',
 			'jump_url' => 'trim',
-			'is_public' => 'trim',
-			'dt_public_up' => 'trim',
-			'dt_public_down' => 'trim',
+			'is_published' => 'trim',
+			'dt_publish_up' => 'trim',
+			'dt_publish_down' => 'trim',
 			'comment_status' => 'trim',
 			'allow_other_modify' => 'trim',
 			'hits' => 'intval',
@@ -303,11 +303,11 @@ class FpPosts extends FormProcessor
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getIsPublicRule($value)
+	public function getIsPublishedRule($value)
 	{
-		$enum = DataPosts::getIsPublicEnum();
+		$enum = DataPosts::getIsPublishedEnum();
 		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_IS_PUBLIC_INARRAY'), implode(', ', $enum))),
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_IS_PUBLISHED_INARRAY'), implode(', ', $enum))),
 		);
 	}
 
@@ -316,14 +316,14 @@ class FpPosts extends FormProcessor
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getDtPublicUpRule($value)
+	public function getDtPublishUpRule($value)
 	{
 		if ($value === '') {
 			return array();
 		}
 
 		return array(
-			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLIC_UP_DATETIME')),
+			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLISH_UP_DATETIME')),
 		);
 	}
 
@@ -332,14 +332,14 @@ class FpPosts extends FormProcessor
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getDtPublicDownRule($value)
+	public function getDtPublishDownRule($value)
 	{
 		if ($value === '' || $value === '0000-00-00 00:00:00') {
 			return array();
 		}
 
 		return array(
-			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLIC_DOWN_DATETIME')),
+			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLISH_DOWN_DATETIME')),
 		);
 	}
 
@@ -418,13 +418,13 @@ class FpPosts extends FormProcessor
 			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_CREATOR_ID_EXISTS'));
 		}
 
-		$loginName = Service::getInstance('Users', 'users')->getLoginNameByUserId($value);
-		if ($loginName === '') {
+		$userName = Service::getInstance('Users', 'users')->getUserNameByUserId($value);
+		if ($userName === '') {
 			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_CREATOR_ID_EXISTS'));
 		}
 
 		$this->$columnName = $value;
-		$this->creator_name = $loginName;
+		$this->creator_name = $userName;
 
 		return array();
 	}
@@ -442,13 +442,13 @@ class FpPosts extends FormProcessor
 			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_EXISTS'));
 		}
 
-		$loginName = Service::getInstance('Users', 'users')->getLoginNameByUserId($value);
-		if ($loginName === '') {
+		$userName = Service::getInstance('Users', 'users')->getUserNameByUserId($value);
+		if ($userName === '') {
 			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_EXISTS'));
 		}
 
 		$this->$columnName = $value;
-		$this->last_modifier_name = $loginName;
+		$this->last_modifier_name = $userName;
 
 		return array();
 	}

@@ -21,9 +21,9 @@ class TableRender extends views\bootstrap\components\TableRender
 		return $this->elements_object->getIsRecommendLangByIsRecommend($data['is_recommend']);
 	}
 
-	public function getIsPublic($data)
+	public function getIsPublished($data)
 	{
-		return $this->elements_object->getIsPublicLangByIsPublic($data['is_public']);
+		return $this->elements_object->getIsPublishedLangByIsPublished($data['is_published']);
 	}
 
 	public function getOperate($data)
@@ -64,8 +64,8 @@ $this->widget(
 			'is_recommend' => array(
 				'callback' => 'getIsRecommend'
 			),
-			'is_public' => array(
-				'callback' => 'getIsPublic'
+			'is_published' => array(
+				'callback' => 'getIsPublished'
 			),
 		),
 		'columns' => array(
@@ -74,7 +74,7 @@ $this->widget(
 			'module_id',
 			'is_head',
 			'is_recommend',
-			'is_public',
+			'is_published',
 			// 'hits',
 			'sort',
 			'creator_name',

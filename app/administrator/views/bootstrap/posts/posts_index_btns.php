@@ -24,8 +24,8 @@ $this->widget(
 $this->widget(
 	'views\bootstrap\widgets\ButtonBuilder',
 	array(
-		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_ISPUBLIC,
-		'jsfunc' => 'Posts.batchIsPublic',
+		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_PUBLISH,
+		'jsfunc' => 'Posts.batchPublish',
 		'url' => $this->getUrlManager()->getUrl('singlemodify', '', '', array('is_batch' => 1)),
 		'glyphicon' => 'eye-open',
 	)
@@ -34,8 +34,8 @@ $this->widget(
 $this->widget(
 	'views\bootstrap\widgets\ButtonBuilder',
 	array(
-		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_UNISPUBLIC,
-		'jsfunc' => 'Posts.batchUnIsPublic',
+		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_UNPUBLISH,
+		'jsfunc' => 'Posts.batchUnpublish',
 		'url' => $this->getUrlManager()->getUrl('singlemodify', '', '', array('is_batch' => 1)),
 		'glyphicon' => 'eye-close',
 	)

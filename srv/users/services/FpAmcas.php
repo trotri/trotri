@@ -67,7 +67,6 @@ class FpAmcas extends FormProcessor
 		}
 
 		$rules = array(
-			'builder_name' => 'trim',
 			'amca_name' => 'trim',
 			'amca_pid' => 'intval',
 			'prompt' => 'trim',

@@ -55,17 +55,17 @@ class DataPosts
 	/**
 	 * @var string 是否发表：y
 	 */
-	const IS_PUBLIC_Y = 'y';
+	const IS_PUBLISHED_Y = 'y';
 
 	/**
 	 * @var string 是否发表：n
 	 */
-	const IS_PUBLIC_N = 'n';
+	const IS_PUBLISHED_N = 'n';
 
 	/**
-	 * @var string 评论设置：public
+	 * @var string 评论设置：publish
 	 */
-	const COMMENT_STATUS_PUBLIC = 'public';
+	const COMMENT_STATUS_PUBLISH = 'publish';
 
 	/**
 	 * @var string 评论设置：draft
@@ -155,14 +155,14 @@ class DataPosts
 	 * 获取“是否发表”所有选项
 	 * @return array
 	 */
-	public static function getIsPublicEnum()
+	public static function getIsPublishedEnum()
 	{
 		static $enum = null;
 
 		if ($enum === null) {
 			$enum = array(
-				self::IS_PUBLIC_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
-				self::IS_PUBLIC_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
+				self::IS_PUBLISHED_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
+				self::IS_PUBLISHED_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
 			);
 		}
 
@@ -179,7 +179,7 @@ class DataPosts
 
 		if ($enum === null) {
 			$enum = array(
-				self::COMMENT_STATUS_PUBLIC => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_PUBLIC'),
+				self::COMMENT_STATUS_PUBLISH => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_PUBLISH'),
 				self::COMMENT_STATUS_DRAFT => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_DRAFT'),
 				self::COMMENT_STATUS_FORBIDDEN => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_FORBIDDEN'),
 			);

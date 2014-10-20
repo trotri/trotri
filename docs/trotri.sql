@@ -139,8 +139,8 @@ CREATE TABLE `tr_users` (
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户主表';
 
-INSERT INTO `tr_users` VALUES ('1', 'administrator', 'name', '6d3f4f0d7f7ef593061de299599dcf17', 'UUeGTJ', 'administrator', '', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('2', 'trotri@yeah.net', 'mail', '5faafdadd44658ca4af91887711329f1', 'SIKVbP', '宋欢', 'trotri@yeah.net', '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
+INSERT INTO `tr_users` VALUES ('1', 'administrator', 'name', '6d3f4f0d7f7ef593061de299599dcf17', 'UUeGTJ', 'administrator', '', '', now(), now(), '0000-00-00 00:00:00', '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
+INSERT INTO `tr_users` VALUES ('2', 'trotri@yeah.net', 'mail', '5faafdadd44658ca4af91887711329f1', 'SIKVbP', '宋欢', 'trotri@yeah.net', now(), now(), '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
 
 DROP TABLE IF EXISTS `tr_user_profile`;
 CREATE TABLE `tr_user_profile` (
@@ -171,7 +171,9 @@ CREATE TABLE `tr_post_modules` (
   KEY `forbidden` (`forbidden`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档模型表';
 
-INSERT INTO `tr_post_modules` VALUES ('1', '系统文档', null, 'n', '');
+INSERT INTO `tr_post_modules` VALUES (1, '文档模型', '_source|文档来源', 'n', '');
+INSERT INTO `tr_post_modules` VALUES (2, '图集模型', '_source|图片来源\n_width|图片宽\n_height|图片高', 'n', '');
+INSERT INTO `tr_post_modules` VALUES (3, '文件模型', '_os|运行环境\n_type|文件类型|如：.exe、.zip、.rar等\n_size|文件大小|如：3MB、100KB等', 'n', '');
 
 DROP TABLE IF EXISTS `tr_post_categories`;
 CREATE TABLE `tr_post_categories` (
@@ -188,11 +190,13 @@ CREATE TABLE `tr_post_categories` (
   `sort` mediumint(8) unsigned NOT NULL DEFAULT '15' COMMENT '排序',
   `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
   PRIMARY KEY (`category_id`),
-  UNIQUE KEY `uk_category_name` (`category_name`),
+  UNIQUE KEY `uk_pid_name` (`category_pid`,`category_name`),
   KEY `category_pid` (`category_pid`,`sort`),
   KEY `alias` (`alias`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档类别表';
+
+INSERT INTO `tr_post_categories` VALUES (1, 0, '文档类别', '', '文档', 'trotri,文档', '文档', 'index.php', 'list.php', 'view.php', 1, '');
 
 DROP TABLE IF EXISTS `tr_posts`;
 CREATE TABLE `tr_posts` (
@@ -212,31 +216,31 @@ CREATE TABLE `tr_posts` (
   `is_recommend` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否推荐',
   `is_jump` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否跳转',
   `jump_url` varchar(255) NOT NULL DEFAULT '' COMMENT '跳转链接',
-  `is_public` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿或待审核',
-  `dt_public_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始发表时间',
-  `dt_public_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：不设置结束时间',
-  `comment_status` enum('public','draft','forbidden') NOT NULL DEFAULT 'public' COMMENT '评论设置，public：开放浏览、draft：审核后展示、forbidden：禁止评论',
+  `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿或待审核',
+  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始发表时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：不设置结束时间',
+  `comment_status` enum('publish','draft','forbidden') NOT NULL DEFAULT 'publish' COMMENT '评论设置，publish：开放浏览、draft：审核后展示、forbidden：禁止评论',
   `allow_other_modify` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许其他人编辑',
   `hits` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '访问次数',
   `praise_count` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '赞美次数',
   `comment_count` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '评论次数',
   `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建人ID',
-  `creator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '创建人登录名',
+  `creator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '创建人',
   `last_modifier_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑人ID',
-  `last_modifier_name` varchar(100) NOT NULL DEFAULT '' COMMENT '上次编辑人登录名',
+  `last_modifier_name` varchar(100) NOT NULL DEFAULT '' COMMENT '上次编辑人',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
   `ip_created` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建IP',
   `ip_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑IP',
   `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
   PRIMARY KEY (`post_id`),
-  KEY `pub_category_dtp` (`trash`,`is_public`,`category_id`,`sort`),
-  KEY `pub_creator_dtp` (`trash`,`is_public`,`creator_id`,`sort`),
-  KEY `pub_head_dtp` (`trash`,`is_public`,`is_head`,`sort`),
-  KEY `pub_recommend_dtp` (`trash`,`is_public`,`is_recommend`,`sort`),
-  KEY `pub_hits_dtp` (`trash`,`is_public`,`hits`),
-  KEY `pub_praise_dtp` (`trash`,`is_public`,`praise_count`),
-  KEY `pub_comment_dtp` (`trash`,`is_public`,`comment_count`),
+  KEY `pub_category_sort` (`trash`,`is_published`,`category_id`,`sort`),
+  KEY `pub_creator_sort` (`trash`,`is_published`,`creator_id`,`sort`),
+  KEY `pub_head_sort` (`trash`,`is_published`,`is_head`,`sort`),
+  KEY `pub_recommend_sort` (`trash`,`is_published`,`is_recommend`,`sort`),
+  KEY `pub_hits` (`trash`,`is_published`,`hits`),
+  KEY `pub_praise` (`trash`,`is_published`,`praise_count`),
+  KEY `pub_comment` (`trash`,`is_published`,`comment_count`),
   KEY `title` (`title`),
   KEY `alias` (`alias`),
   KEY `sort` (`sort`),
@@ -244,9 +248,9 @@ CREATE TABLE `tr_posts` (
   KEY `module_id` (`module_id`),
   KEY `is_head` (`is_head`),
   KEY `is_recommend` (`is_recommend`),
-  KEY `is_public` (`is_public`),
-  KEY `dt_public_up` (`dt_public_up`),
-  KEY `dt_public_down` (`dt_public_down`),
+  KEY `is_published` (`is_published`),
+  KEY `dt_publish_up` (`dt_publish_up`),
+  KEY `dt_publish_down` (`dt_publish_down`),
   KEY `hits` (`hits`),
   KEY `praise_count` (`praise_count`),
   KEY `comment_count` (`comment_count`),
@@ -277,7 +281,7 @@ CREATE TABLE `tr_post_comments` (
   `author_name` varchar(100) NOT NULL DEFAULT '' COMMENT '评论作者名',
   `author_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '评论作者邮箱',
   `author_url` varchar(255) NOT NULL DEFAULT '' COMMENT '评论作者网址',
-  `is_public` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：待审核',
+  `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：待审核',
   `good_count` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '好评次数',
   `bad_count` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '差评次数',
   `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建人ID',
@@ -294,7 +298,7 @@ CREATE TABLE `tr_post_comments` (
   KEY `creator_id` (`creator_id`),
   KEY `ip_created` (`ip_created`),
   KEY `good_count` (`good_count`),
-  KEY `pub_post_dtlm` (`trash`,`is_public`,`post_id`,`dt_last_modified`),
-  KEY `pub_post_good` (`trash`,`is_public`,`post_id`,`good_count`),
-  KEY `pub_creator_dtlm` (`trash`,`is_public`,`creator_id`,`dt_last_modified`)
+  KEY `pub_post_dtlm` (`trash`,`is_published`,`post_id`,`dt_last_modified`),
+  KEY `pub_post_good` (`trash`,`is_published`,`post_id`,`good_count`),
+  KEY `pub_creator_dtlm` (`trash`,`is_published`,`creator_id`,`dt_last_modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档评论表';

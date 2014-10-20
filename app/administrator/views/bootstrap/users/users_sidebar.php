@@ -50,7 +50,7 @@ $this->widget('views\bootstrap\components\bar\SideBar', array('config' => $confi
 if ($this->controller === 'users') {
 	$this->widget('views\bootstrap\widgets\SearchBuilder',
 		array(
-			'name' => 'create',
+			'name' => 'search',
 			'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'users', 'users'),
 			'elements_object' => $this->elements,
 			'elements' => array(

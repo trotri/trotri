@@ -38,8 +38,6 @@ class SearchElement extends form\InputElement
 	 */
 	protected function _init()
 	{
-		$this->setAttribute('format', $this->_format);
-
 		if ($this->_className !== '') {
 			$this->setClass($this->_className);
 		}
@@ -52,6 +50,7 @@ class SearchElement extends form\InputElement
 	public function getInput()
 	{
 		if ($this->getType() === 'datetimepicker') {
+			$this->setAttribute('format', $this->_format);
 			$this->setType('text');
 			$format = $this->getAttribute('format');
 			$this->setClass($this->getClass() . ' form_' . $format);			

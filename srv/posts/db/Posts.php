@@ -42,7 +42,7 @@ class Posts extends AbstractDb
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getPosts();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_public`, `dt_public_up`, `dt_public_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '`';
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_published`, `dt_publish_up`, `dt_publish_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '`';
 
 		$condition = '1';
 		$attributes = array();
@@ -131,32 +131,32 @@ class Posts extends AbstractDb
 			}
 		}
 
-		if (isset($params['is_public'])) {
-			$isPublic = trim($params['is_public']);
-			if ($isPublic !== '') {
-				$condition .= ' AND `is_public` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['is_public'] = $isPublic;
+		if (isset($params['is_published'])) {
+			$isPublished = trim($params['is_published']);
+			if ($isPublished !== '') {
+				$condition .= ' AND `is_published` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['is_published'] = $isPublished;
 			}
 		}
 
-		if (isset($params['dt_public_up'])) {
-			$dtPublicUp = trim($params['dt_public_up']);
-			if ($dtPublicUp !== '') {
-				$condition .= ' AND `dt_public_up` >= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_public_up'] = $dtPublicUp;
+		if (isset($params['dt_publish_up'])) {
+			$dtPublishUp = trim($params['dt_publish_up']);
+			if ($dtPublishUp !== '') {
+				$condition .= ' AND `dt_publish_up` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_publish_up'] = $dtPublishUp;
 			}
 		}
 
-		if (isset($params['dt_public_down'])) {
-			$dtPublicDown = trim($params['dt_public_down']);
-			if ($dtPublicDown !== '') {
-				if ($dtPublicDown !== '0000-00-00 00:00:00') {
-					$condition .= ' AND `dt_public_down` <= ' . $commandBuilder::PLACE_HOLDERS;
-					$attributes['dt_public_down'] = $dtPublicDown;
+		if (isset($params['dt_publish_down'])) {
+			$dtPublishDown = trim($params['dt_publish_down']);
+			if ($dtPublishDown !== '') {
+				if ($dtPublishDown !== '0000-00-00 00:00:00') {
+					$condition .= ' AND `dt_publish_down` <= ' . $commandBuilder::PLACE_HOLDERS;
+					$attributes['dt_publish_down'] = $dtPublishDown;
 				}
 				else {
-					$condition .= ' AND `dt_public_down` = ' . $commandBuilder::PLACE_HOLDERS;
-					$attributes['dt_public_down'] = $dtPublicDown;
+					$condition .= ' AND `dt_publish_down` = ' . $commandBuilder::PLACE_HOLDERS;
+					$attributes['dt_publish_down'] = $dtPublishDown;
 				}
 			}
 		}
@@ -295,7 +295,7 @@ class Posts extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getPosts();
-		$sql = 'SELECT `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_public`, `dt_public_up`, `dt_public_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '` WHERE `post_id` = ?';
+		$sql = 'SELECT `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_published`, `dt_publish_up`, `dt_publish_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '` WHERE `post_id` = ?';
 		return $this->fetchAssoc($sql, $postId);
 	}
 
@@ -338,9 +338,9 @@ class Posts extends AbstractDb
 		$isRecommend = isset($params['is_recommend']) ? trim($params['is_recommend']) : '';
 		$isJump = isset($params['is_jump']) ? trim($params['is_jump']) : '';
 		$jumpUrl = isset($params['jump_url']) ? trim($params['jump_url']) : '';
-		$isPublic = isset($params['is_public']) ? trim($params['is_public']) : '';
-		$dtPublicUp = isset($params['dt_public_up']) ? trim($params['dt_public_up']) : '';
-		$dtPublicDown = isset($params['dt_public_down']) ? trim($params['dt_public_down']) : '';
+		$isPublished = isset($params['is_published']) ? trim($params['is_published']) : '';
+		$dtPublishUp = isset($params['dt_publish_up']) ? trim($params['dt_publish_up']) : '';
+		$dtPublishDown = isset($params['dt_publish_down']) ? trim($params['dt_publish_down']) : '';
 		$commentStatus = isset($params['comment_status']) ? trim($params['comment_status']) : '';
 		$allowOtherModify = isset($params['allow_other_modify']) ? trim($params['allow_other_modify']) : '';
 		$hits = isset($params['hits']) ? (int) $params['hits'] : 0;
@@ -378,20 +378,20 @@ class Posts extends AbstractDb
 			return false;
 		}
 
-		if ($isPublic === '') {
-			$isPublic = 'n';
+		if ($isPublished === '') {
+			$isPublished = 'n';
 		}
 
-		if ($dtPublicUp === '') {
-			$dtPublicUp = date('Y-m-d H:i:s');
+		if ($dtPublishUp === '') {
+			$dtPublishUp = date('Y-m-d H:i:s');
 		}
 
-		if ($dtPublicDown === '') {
-			$dtPublicDown = '0000-00-00 00:00:00';
+		if ($dtPublishDown === '') {
+			$dtPublishDown = '0000-00-00 00:00:00';
 		}
 
 		if ($commentStatus === '') {
-			$commentStatus = 'public';
+			$commentStatus = 'publish';
 		}
 
 		if ($allowOtherModify === '') {
@@ -424,9 +424,9 @@ class Posts extends AbstractDb
 			'is_recommend' => $isRecommend,
 			'is_jump' => $isJump,
 			'jump_url' => $jumpUrl,
-			'is_public' => $isPublic,
-			'dt_public_up' => $dtPublicUp,
-			'dt_public_down' => $dtPublicDown,
+			'is_published' => $isPublished,
+			'dt_publish_up' => $dtPublishUp,
+			'dt_publish_down' => $dtPublishDown,
 			'comment_status' => $commentStatus,
 			'allow_other_modify' => $allowOtherModify,
 			'hits' => $hits,
@@ -570,30 +570,30 @@ class Posts extends AbstractDb
 			return false;
 		}
 
-		if (isset($params['is_public'])) {
-			$isPublic = trim($params['is_public']);
-			if ($isPublic !== '') {
-				$attributes['is_public'] = $isPublic;
+		if (isset($params['is_published'])) {
+			$isPublished = trim($params['is_published']);
+			if ($isPublished !== '') {
+				$attributes['is_published'] = $isPublished;
 			}
 			else {
 				return false;
 			}
 		}
 
-		if (isset($params['dt_public_up'])) {
-			$dtPublicUp = trim($params['dt_public_up']);
-			if ($dtPublicUp !== '') {
-				$attributes['dt_public_up'] = $dtPublicUp;
+		if (isset($params['dt_publish_up'])) {
+			$dtPublishUp = trim($params['dt_publish_up']);
+			if ($dtPublishUp !== '') {
+				$attributes['dt_publish_up'] = $dtPublishUp;
 			}
 			else {
 				return false;
 			}
 		}
 
-		if (isset($params['dt_public_down'])) {
-			$dtPublicDown = trim($params['dt_public_down']);
-			if ($dtPublicDown !== '') {
-				$attributes['dt_public_down'] = $dtPublicDown;
+		if (isset($params['dt_publish_down'])) {
+			$dtPublishDown = trim($params['dt_publish_down']);
+			if ($dtPublishDown !== '') {
+				$attributes['dt_publish_down'] = $dtPublishDown;
 			}
 			else {
 				return false;
@@ -774,30 +774,30 @@ class Posts extends AbstractDb
 			}
 		}
 
-		if (isset($params['is_public'])) {
-			$isPublic = trim($params['is_public']);
-			if ($isPublic !== '') {
-				$attributes['is_public'] = $isPublic;
+		if (isset($params['is_published'])) {
+			$isPublished = trim($params['is_published']);
+			if ($isPublished !== '') {
+				$attributes['is_published'] = $isPublished;
 			}
 			else {
 				return false;
 			}
 		}
 
-		if (isset($params['dt_public_up'])) {
-			$dtPublicUp = trim($params['dt_public_up']);
-			if ($dtPublicUp !== '') {
-				$attributes['dt_public_up'] = $dtPublicUp;
+		if (isset($params['dt_publish_up'])) {
+			$dtPublishUp = trim($params['dt_publish_up']);
+			if ($dtPublishUp !== '') {
+				$attributes['dt_publish_up'] = $dtPublishUp;
 			}
 			else {
 				return false;
 			}
 		}
 
-		if (isset($params['dt_public_down'])) {
-			$dtPublicDown = trim($params['dt_public_down']);
-			if ($dtPublicDown !== '') {
-				$attributes['dt_public_down'] = $dtPublicDown;
+		if (isset($params['dt_publish_down'])) {
+			$dtPublishDown = trim($params['dt_publish_down']);
+			if ($dtPublishDown !== '') {
+				$attributes['dt_publish_down'] = $dtPublishDown;
 			}
 			else {
 				return false;
