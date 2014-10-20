@@ -35,7 +35,7 @@ class BatchModifySort extends actions\Modify
 		$req = Ap::getRequest();
 		$mod = Model::getInstance('Categories');
 
-		$param = $req->getParam('menu_sort');
+		$param = $req->getParam('sort');
 		$ret = $mod->batchModifySort($param);
 
 		$url = $this->applyParams($mod->getLLU(), $ret);

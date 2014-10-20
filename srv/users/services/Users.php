@@ -12,6 +12,8 @@ namespace users\services;
 
 use libsrv\AbstractService;
 use tfc\util\String;
+use users\library\Constant;
+use users\library\Plugin;
 
 /**
  * Users class file
@@ -39,16 +41,29 @@ class Users extends AbstractService
 	}
 
 	/**
-	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接
-	 * @param array $attributes
+	 * 通过多个字段名和值，查询多条记录
+	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$rows = $this->getDb()->findAllByAttributes($attributes, $order, $limit, $offset);
+		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
+		$offset = max((int) $offset, 0);
+
+		if (isset($params['ip_registered'])) {
+			$ipRegistered = trim($params['ip_registered']); unset($params['ip_registered']);
+			if ($ipRegistered !== '') {
+				$ipRegistered = (strpos($ipRegistered, '.') !== false) ? ip2long($ipRegistered) : (int) $ipRegistered;
+				if ($ipRegistered !== false) {
+					$params['ip_registered'] = $ipRegistered;
+				}
+			}
+		}
+
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
 		return $rows;
 	}
 
@@ -63,6 +78,9 @@ class Users extends AbstractService
 		if ($row && is_array($row) && isset($row['user_id'])) {
 			$groupIds = $this->_userGroups->findGroupIdsByUserId($row['user_id']);
 			$row['group_ids'] = is_array($groupIds) ? $groupIds : array();
+
+			$dispatcher = Plugin::getInstance();
+			$dispatcher->trigger('onAfterFind', array(__METHOD__, &$row));
 		}
 
 		return $row;
@@ -110,6 +128,9 @@ class Users extends AbstractService
 			$this->_userGroups->modify($userId, $groupIds);
 		}
 
+		$dispatcher = Plugin::getInstance();
+		$dispatcher->trigger('onAfterSave', array(__METHOD__, &$params, $userId));
+
 		return $userId;
 	}
 
@@ -126,22 +147,65 @@ class Users extends AbstractService
 
 		$groupIds = $this->getFormProcessor()->group_ids;
 		if (is_array($groupIds)) {
-			return $this->_userGroups->modify($value, $groupIds);
+			$rowCount = $this->_userGroups->modify($value, $groupIds);
 		}
 
+		$dispatcher = Plugin::getInstance();
+		$dispatcher->trigger('onAfterSave', array(__METHOD__, &$params, $value));
+
+		return true;
+	}
+
+	/**
+	 * 通过主键，编辑多条记录
+	 * @param array|integer $values
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk($values, array $params = array())
+	{
+		$rowCount = $this->getDb()->batchModifyByPk($values, $params);
 		return $rowCount;
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $userId
-	 * @return mixed
+	 * 通过主键，将一条记录移至回收站
+	 * @param integer $value
+	 * @return integer
 	 */
-	public function getByPk($columnName, $userId)
+	public function trashByPk($value)
 	{
-		$value = $this->getDb()->getByPk($columnName, $userId);
-		return $value;
+		return $this->batchModifyByPk($value, array('trash' => DataUsers::TRASH_Y));
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchTrashByPk(array $values)
+	{
+		return $this->batchModifyByPk($values, array('trash' => DataUsers::TRASH_Y));
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录
+	 * @param integer $value
+	 * @return integer
+	 */
+	public function restoreByPk($value)
+	{
+		return $this->batchModifyByPk($value, array('trash' => DataUsers::TRASH_N));
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchRestoreByPk(array $values)
+	{
+		return $this->batchModifyByPk($values, array('trash' => DataUsers::TRASH_N));
 	}
 
 	/**
@@ -262,7 +326,7 @@ class Users extends AbstractService
 	public function getIpRegisteredByUserId($userId)
 	{
 		$value = $this->getByPk('ip_registered', $userId);
-		return $value ? (int) $value : 0;
+		return $value ? long2ip((int) $value) : false;
 	}
 
 	/**
@@ -273,7 +337,7 @@ class Users extends AbstractService
 	public function getIpLastLoginByUserId($userId)
 	{
 		$value = $this->getByPk('ip_last_login', $userId);
-		return $value ? (int) $value : 0;
+		return $value ? long2ip((int) $value) : false;
 	}
 
 	/**
@@ -284,7 +348,7 @@ class Users extends AbstractService
 	public function getIpLastRepwdByUserId($userId)
 	{
 		$value = $this->getByPk('ip_last_repwd', $userId);
-		return $value ? (int) $value : 0;
+		return $value ? long2ip((int) $value) : false;
 	}
 
 	/**

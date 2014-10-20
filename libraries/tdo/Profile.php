@@ -10,6 +10,7 @@
 
 namespace tdo;
 
+use tfc\ap\Cache;
 use tfc\ap\Singleton;
 use tfc\saf\DbProxy;
 
@@ -32,8 +33,13 @@ use tfc\saf\DbProxy;
  * @package tdo
  * @since 1.0
  */
-class Profile
+class Profile extends Cache
 {
+    /**
+     * @var boolean 是否缓存查询结果
+     */
+    public $isCached = true;
+
     /**
      * @var instance of tfc\saf\DbProxy
      */
@@ -76,7 +82,7 @@ class Profile
      * 单例模式：获取本类的实例
      * @param string $tableName
      * @param integer $idValue
-     * @param DbProxy $dbProxy
+     * @param tfc\saf\DbProxy $dbProxy
      * @return instance of tdo\Profile
      */
     public static function getInstance($tableName, $idValue, DbProxy $dbProxy)
@@ -97,13 +103,23 @@ class Profile
      */
     public function findAll()
     {
-        $data = array();
         $sql = $this->getCommandBuilder()->createFind($this->getTableName(), $this->_columnNames, $this->getIDCondition());
+        if ($this->isCached) {
+            if ($this->has($sql)) {
+                return $this->get($sql);
+            }
+        }
+
+        $data = array();
         $rows = $this->getDbProxy()->fetchAll($sql);
         if (is_array($rows)) {
             foreach ($rows as $row) {
                 $data[$row['profile_key']] = $row['profile_value'];
             }
+        }
+
+        if ($this->isCached) {
+            $this->set($sql, $data);
         }
 
         return $data;
@@ -117,6 +133,7 @@ class Profile
     {
         $sql = $this->getCommandBuilder()->createDelete($this->getTableName(), $this->getIDCondition());
         if ($this->getDbProxy()->query($sql)) {
+            if ($this->isCached) { $this->flush(); }
             return $this->getDbProxy()->getRowCount();
         }
 
@@ -131,7 +148,20 @@ class Profile
     public function find($key)
     {
         $sql = $this->getCommandBuilder()->createFind($this->getTableName(), array('profile_value'), $this->getUKCondition());
-        return $this->getDbProxy()->fetchColumn($sql, $key);
+        $ckey = sprintf('FIND [SQL: %s] [KEY: %s]', $sql, $key);
+
+        if ($this->isCached) {
+            if ($this->has($ckey)) {
+                return $this->get($ckey);
+            }
+        }
+
+        $value = $this->getDbProxy()->fetchColumn($sql, $key);
+        if ($this->isCached) {
+            $this->set($ckey, $value);
+        }
+
+        return $value;
     }
 
     /**
@@ -144,7 +174,14 @@ class Profile
         $result = true;
         $rows = $this->findAll();
         foreach ($attributes as $key => $value) {
-            $func = (isset($rows[$key])) ? 'update' : 'insert';
+            $func = 'insert';
+            if (isset($rows[$key])) {
+                $func = 'update';
+                if ($rows[$key] === $value) {
+                    continue;
+                }
+            }
+
             if (!$this->$func($key, $value)) {
                 $result = false;
             }
@@ -169,6 +206,7 @@ class Profile
         );
 
         if ($this->getDbProxy()->query($sql, $attributes)) {
+            if ($this->isCached) { $this->flush(); }
             return $this->getDbProxy()->getLastInsertId();
         }
 
@@ -190,6 +228,7 @@ class Profile
         );
 
         if ($this->getDbProxy()->query($sql, $attributes)) {
+            if ($this->isCached) { $this->flush(); }
             return $this->getDbProxy()->getRowCount();
         }
 
@@ -205,6 +244,7 @@ class Profile
     {
         $sql = $this->getCommandBuilder()->createDelete($this->getTableName(), $this->getUKCondition());
         if ($this->getDbProxy()->query($sql, $key)) {
+            if ($this->isCached) { $this->flush(); }
             return $this->getDbProxy()->getRowCount();
         }
 

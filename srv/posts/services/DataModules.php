@@ -16,7 +16,7 @@ use posts\library\Lang;
  * DataModules class file
  * 业务层：数据管理类，寄存常量、选项
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataModules.php 1 2014-09-11 16:41:01Z Code Generator $
+ * @version $Id: DataModules.php 1 2014-10-12 21:14:11Z Code Generator $
  * @package posts.services
  * @since 1.0
  */

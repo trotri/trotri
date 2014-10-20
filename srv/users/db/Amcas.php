@@ -73,22 +73,6 @@ class Amcas extends AbstractDb
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $amcaId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $amcaId)
-	{
-		$row = $this->findByPk($amcaId);
-		if ($row && is_array($row) && isset($row[$columnName])) {
-			return $row[$columnName];
-		}
-
-		return false;
-	}
-
-	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @param boolean $ignore
@@ -116,7 +100,8 @@ class Amcas extends AbstractDb
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -154,11 +139,23 @@ class Amcas extends AbstractDb
 		}
 
 		if (isset($params['prompt'])) {
-			$attributes['prompt'] = trim($params['prompt']);
+			$prompt = trim($params['prompt']);
+			if ($prompt !== '') {
+				$attributes['prompt'] = $prompt;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['sort'])) {
-			$attributes['sort'] = (int) $params['sort'];
+			$sort = (int) $params['sort'];
+			if ($sort >= 0) {
+				$attributes['sort'] = $sort;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['category'])) {
@@ -171,14 +168,17 @@ class Amcas extends AbstractDb
 			}
 		}
 
+		$rowCount = 0;
+
 		if ($attributes === array()) {
-			return false;
+			return $rowCount;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`amca_id` = ?');
 		$attributes['amca_id'] = $amcaId;
-		return $this->update($sql, $attributes);
+		$rowCount = $this->update($sql, $attributes);
+		return $rowCount;
 	}
 
 	/**
@@ -194,6 +194,7 @@ class Amcas extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getAmcas();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`amca_id` = ? OR `amca_pid` = ?');
-		return $this->delete($sql, array($amcaId, $amcaId));
+		$rowCount = $this->delete($sql, array($amcaId, $amcaId));
+		return $rowCount;
 	}
 }

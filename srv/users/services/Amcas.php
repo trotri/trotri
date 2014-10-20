@@ -117,29 +117,6 @@ class Amcas extends AbstractService
 	}
 
 	/**
-	 * 通过主键，查询一条记录
-	 * @param integer $amcaId
-	 * @return array
-	 */
-	public function findByPk($amcaId)
-	{
-		$row = $this->getDb()->findByPk($amcaId);
-		return $row;
-	}
-
-	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $amcaId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $amcaId)
-	{
-		$value = $this->getDb()->getByPk($columnName, $amcaId);
-		return $value;
-	}
-
-	/**
 	 * 通过“主键ID”，获取“事件名”
 	 * @param integer $amcaId
 	 * @return string

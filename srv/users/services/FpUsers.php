@@ -34,18 +34,15 @@ class FpUsers extends FormProcessor
 	protected function _process(array $params = array())
 	{
 		if ($this->isInsert()) {
-			if (!$this->required($params,
-				'login_name', 'login_type', 'password', 'repassword', 'salt', 'user_name', 'user_mail', 'user_phone',
-				'dt_registered', 'dt_last_login', 'ip_registered', 'ip_last_login',
-				'login_count', 'valid_mail', 'valid_phone', 'forbidden', 'group_ids')) {
+			if (!$this->required($params, 'login_name', 'password', 'repassword')) {
 				return false;
 			}
 		}
 
 		$this->isValids($params,
-			'login_type', 'login_name', 'password', 'repassword', 'salt', 'user_name', 'user_mail', 'user_phone',
-			'dt_registered', 'dt_last_login', 'dt_last_repwd', 'ip_registered', 'ip_last_login', 'ip_last_repwd',
-			'login_count', 'repwd_count', 'valid_mail', 'valid_phone', 'forbidden', 'group_ids');
+			'login_name', 'login_type', 'password', 'repassword', 'salt', 'user_name', 'user_mail', 'user_phone',
+			'dt_registered', 'dt_last_login', 'dt_last_repwd', 'login_count', 'repwd_count', 'valid_mail', 'valid_phone', 'forbidden', 'trash', 'group_ids');
+
 		return !$this->hasError();
 	}
 
@@ -58,6 +55,7 @@ class FpUsers extends FormProcessor
 		if (isset($params['trash'])) { unset($params['trash']); }
 
 		if ($this->isInsert()) {
+			if (isset($params['salt'])) { unset($params['salt']); }
 			if (isset($params['dt_last_repwd'])) { unset($params['dt_last_repwd']); }
 			if (isset($params['ip_last_repwd'])) { unset($params['ip_last_repwd']); }
 			if (isset($params['repwd_count'])) { unset($params['repwd_count']); }
@@ -97,18 +95,6 @@ class FpUsers extends FormProcessor
 			if (!is_array($params['group_ids'])) {
 				$params['group_ids'] = (array) $params['group_ids'];
 			}
-
-			if (!isset($params['valid_mail'])) {
-				$params['valid_mail'] = DataUsers::VALID_MAIL_N;
-			}
-
-			if (!isset($params['valid_phone'])) {
-				$params['valid_phone'] = DataUsers::VALID_PHONE_N;
-			}
-
-			if (!isset($params['forbidden'])) {
-				$params['forbidden'] = DataUsers::FORBIDDEN_N;
-			}
 		}
 		else {
 			$row = $this->_object->findByPk($this->id);
@@ -123,6 +109,8 @@ class FpUsers extends FormProcessor
 			if (isset($params['login_name'])) { unset($params['login_name']); }
 			if (isset($params['login_type'])) { unset($params['login_type']); }
 			if (isset($params['salt'])) { unset($params['salt']); }
+			if (isset($params['dt_registered'])) { unset($params['dt_registered']); }
+			if (isset($params['ip_registered'])) { unset($params['ip_registered']); }
 
 			$password = isset($params['password']) ? trim($params['password']) : '';
 			if ($password !== '') {
@@ -136,6 +124,9 @@ class FpUsers extends FormProcessor
 			else {
 				if (isset($params['password'])) { unset($params['password']); }
 				if (isset($params['repassword'])) { unset($params['repassword']); }
+				if (isset($params['dt_last_repwd'])) { unset($params['dt_last_repwd']); }
+				if (isset($params['ip_last_repwd'])) { unset($params['ip_last_repwd']); }
+				if (isset($params['repwd_count'])) { unset($params['repwd_count']); }
 			}
 
 			if (isset($params['group_ids']) && !is_array($params['group_ids'])) {
@@ -218,6 +209,19 @@ class FpUsers extends FormProcessor
 	}
 
 	/**
+	 * 获取“登录方式”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getLoginTypeRule($value)
+	{
+		$enum = DataUsers::getLoginTypeEnum();
+		return array(
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_USERS_LOGIN_TYPE_INARRAY'), implode(', ', $enum))),
+		);
+	}
+
+	/**
 	 * 获取“登录密码”验证规则
 	 * @param mixed $value
 	 * @return array
@@ -239,6 +243,18 @@ class FpUsers extends FormProcessor
 	{
 		return array(
 			'Equal' => new validator\EqualValidator($value, $this->password, Lang::_('SRV_FILTER_USERS_REPASSWORD_EQUAL')),
+		);
+	}
+
+	/**
+	 * 获取“随机附加混淆码”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getSaltRule($value)
+	{
+		return array(
+			'NotEmpty' => new validator\NotEmptyValidator($value, true, Lang::_('SRV_FILTER_USERS_SALT_NOTEMPTY')),
 		);
 	}
 
@@ -280,6 +296,56 @@ class FpUsers extends FormProcessor
 
 		return array(
 			'Phone' => new validator\PhoneValidator($value, true, Lang::_('SRV_FILTER_USERS_USER_PHONE_PHONE')),
+		);
+	}
+
+	/**
+	 * 获取“上次登录时间”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getDtLastLoginRule($value)
+	{
+		return array(
+			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_USERS_DT_LAST_LOGIN_DATETIME')),
+		);
+	}
+
+	/**
+	 * 获取“总登录次数”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getLoginCountRule($value)
+	{
+		return array(
+			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_USERS_LOGIN_COUNT_INTEGER')),
+		);
+	}
+
+	/**
+	 * 获取“是否已验证邮箱”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getValidMailRule($value)
+	{
+		$enum = DataUsers::getValidMailEnum();
+		return array(
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_USERS_VALID_MAIL_INARRAY'), implode(', ', $enum))),
+		);
+	}
+
+	/**
+	 * 获取“是否已验证手机号”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getValidPhoneRule($value)
+	{
+		$enum = DataUsers::getValidPhoneEnum();
+		return array(
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_USERS_VALID_PHONE_INARRAY'), implode(', ', $enum))),
 		);
 	}
 

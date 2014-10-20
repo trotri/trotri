@@ -11,12 +11,13 @@
 namespace posts\services;
 
 use libsrv\AbstractService;
+use posts\library\Constant;
 
 /**
  * Modules class file
  * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modules.php 1 2014-09-11 16:41:01Z Code Generator $
+ * @version $Id: Modules.php 1 2014-10-12 21:14:11Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
@@ -24,26 +25,51 @@ class Modules extends AbstractService
 {
 	/**
 	 * 查询多条记录
-	 * @param array $attributes
+	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$rows = $this->getDb()->findAll($limit, $offset);
+		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
+		$offset = max((int) $offset, 0);
+
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
 		return $rows;
 	}
 
 	/**
-	 * 获取所有的ModuleName
+	 * 获取所有的模型名称
 	 * @return array
 	 */
 	public function getModuleNames()
 	{
 		$rows = $this->getDb()->getModuleNames();
 		return $rows;
+	}
+
+	/**
+	 * 获取所有的文档扩展字段
+	 * @return array
+	 */
+	public function getFields()
+	{
+		$data = array();
+
+		$rows = $this->getDb()->getFields();
+		if ($rows && is_array($rows)) {
+			foreach ($rows as $id => $fields) {
+				if (($id = (int) $id) <= 0) {
+					continue;
+				}
+
+				$data[$id] = $this->cleanFields($fields, false);
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -54,19 +80,58 @@ class Modules extends AbstractService
 	public function findByPk($moduleId)
 	{
 		$row = $this->getDb()->findByPk($moduleId);
+		if ($row && is_array($row) && isset($row['fields'])) {
+			$row['fields'] = $this->cleanFields($row['fields'], false);
+		}
+
 		return $row;
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $moduleId
-	 * @return mixed
+	 * 清理“文档扩展字段”，除去不规则的行，并转成数组
+	 * @param string $lines
+	 * @param boolean $returnString
+	 * @return array|string
 	 */
-	public function getByPk($columnName, $moduleId)
+	public function cleanFields($lines, $returnString = true)
 	{
-		$value = $this->getDb()->getByPk($columnName, $moduleId);
-		return $value;
+		$data = array();
+
+		$lines = explode("\n", $lines);
+		foreach ($lines as $line) {
+			$temp = explode('|', $line);
+			if (count($temp) < 2) {
+				continue;
+			}
+
+			if (($name = trim($temp[0])) === '') {
+				continue;
+			}
+
+			if (($label = trim($temp[1])) === '') {
+				continue;
+			}
+
+			if (!preg_match('/^_\w+$/i', $name)) {
+				continue;
+			}
+
+			$data[$name] = array(
+				'label' => $label,
+				'hint' => (isset($temp[2]) ? trim($temp[2]) : '')
+			);
+		}
+
+		if ($returnString) {
+			$lines = '';
+			foreach ($data as $name => $row) {
+				$lines .= $name . '|' . $row['label'] . (($row['hint'] !== '') ? ('|' . $row['hint']) : '') . "\n";
+			}
+
+			$data = rtrim($lines);
+		}
+
+		return $data;
 	}
 
 	/**
@@ -81,14 +146,14 @@ class Modules extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“类别表名”
+	 * 通过“主键ID”，获取“文档扩展字段”
 	 * @param integer $moduleId
-	 * @return string
+	 * @return array
 	 */
-	public function getModuleTblnameByModuleId($moduleId)
+	public function getFieldsByModuleId($moduleId)
 	{
-		$value = $this->getByPk('module_tblname', $moduleId);
-		return $value ? $value : '';
+		$value = $this->getByPk('fields', $moduleId);
+		return $value ? $value : array();
 	}
 
 	/**

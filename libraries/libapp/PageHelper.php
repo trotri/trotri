@@ -48,7 +48,7 @@ class PageHelper
 			return $referer;
 		}
 
-		return Ap::getRequest()->getServer('HTTP_REFERER');
+		return Ap::getRequest()->getServer('HTTP_REFERER', '');
 	}
 
 	/**

@@ -7,16 +7,12 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 		'values' => $this->data,
 		'elements_object' => $this->elements,
 		'elements' => array(
-			'module_tblname' => array(
-				'disabled' => true
-			)
 		),
 		'columns' => array(
-			'module_id',
 			'module_name',
-			'module_tblname',
 			'forbidden',
 			'description',
+			'fields',
 			'_button_save_',
 			'_button_saveclose_',
 			'_button_savenew_',

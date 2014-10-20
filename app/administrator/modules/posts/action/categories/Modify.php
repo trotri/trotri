@@ -16,7 +16,7 @@ use library\actions;
  * Modify class file
  * 编辑数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modify.php 1 2014-09-12 17:33:45Z Code Generator $
+ * @version $Id: Modify.php 1 2014-10-13 22:24:54Z Code Generator $
  * @package modules.posts.action.categories
  * @since 1.0
  */

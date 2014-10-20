@@ -13,7 +13,7 @@ namespace library\actions;
 use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
-use tid\Role;
+use tfc\auth\Role;
 use libapp\Model;
 use libapp\SubmitType;
 use library\ErrorNo;

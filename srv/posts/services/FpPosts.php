@@ -12,15 +12,17 @@ namespace posts\services;
 
 use libsrv\FormProcessor;
 use tfc\ap\Ap;
+use tfc\saf\Log;
 use tfc\validator;
+use libsrv\Service;
 use posts\library\Lang;
-use users\services\Users;
+use posts\library\TableNames;
 
 /**
  * FpPosts class file
  * 业务层：表单数据处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: FpPosts.php 1 2014-09-16 19:26:44Z Code Generator $
+ * @version $Id: FpPosts.php 1 2014-10-17 11:27:20Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
@@ -33,18 +35,21 @@ class FpPosts extends FormProcessor
 	protected function _process(array $params = array())
 	{
 		if ($this->isInsert()) {
-			if (!$this->required($params,
-				'title', 'little_picture', 'category_id', 'content', 'keywords', 'description', 'sort',
-				'is_public', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_html', 'allow_comment', 'allow_other_modify',
-				'access_count', 'dt_created', 'dt_public', 'dt_last_modified', 'creator_id', 'last_modifier_id')) {
+			if (!$this->required($params, 'title', 'category_id', 'module_id', 'creator_id')) {
+				return false;
+			}
+		}
+		else {
+			if (!$this->required($params, 'last_modifier_id')) {
 				return false;
 			}
 		}
 
 		$this->isValids($params,
-			'title', 'little_picture', 'category_id', 'category_name', 'content', 'keywords', 'description', 'sort',
-			'is_public', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_html', 'allow_comment', 'allow_other_modify',
-			'access_count', 'dt_created', 'dt_public', 'dt_last_modified', 'creator_id', 'creator_name', 'last_modifier_id', 'last_modifier_name');
+			'title', 'alias', 'content', 'keywords', 'description', 'sort', 'category_id', 'category_name', 'module_id',
+			'password', 'picture', 'is_head', 'is_recommend', 'is_jump', 'jump_url', 'is_public', 'dt_public_up', 'dt_public_down',
+			'comment_status', 'allow_other_modify', 'hits', 'praise_count', 'comment_count',
+			'creator_id', 'creator_name', 'last_modifier_id', 'last_modifier_name', 'dt_created', 'dt_last_modified', 'ip_created', 'ip_last_modified', 'trash');
 		return !$this->hasError();
 	}
 
@@ -55,76 +60,75 @@ class FpPosts extends FormProcessor
 	protected function _cleanPreProcess(array $params)
 	{
 		if (isset($params['trash'])) { unset($params['trash']); }
+		if (isset($params['category_name'])) { unset($params['category_name']); }
+		if (isset($params['creator_name'])) { unset($params['creator_name']); }
+		if (isset($params['last_modifier_name'])) { unset($params['last_modifier_name']); }
 
 		if ($this->isInsert()) {
+			if (isset($params['last_modifier_id'])) { unset($params['last_modifier_id']); }
+			if (isset($params['last_modifier_name'])) { unset($params['last_modifier_name']); }
+
+			$params['dt_created'] = $params['dt_last_modified'] = date('Y-m-d H:i:s');
 			$params['ip_created'] = $params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
+
+			if (!isset($params['sort'])) {
+				$params['sort'] = 10000;
+			}
 		}
 		else {
-			$params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
-			if (isset($params['creator_id'])) { unset($params['creator_id']); }
-			if (isset($params['ip_created'])) { unset($params['ip_created']); }
-		}
+			$row = $this->_object->findByPk($this->id);
+			if (!$row || !is_array($row) || !isset($row['creator_id']) || !isset($row['allow_other_modify'])) {
+				Log::warning(sprintf(
+					'FpPosts is unable to find the result by id "%d"', $this->id
+				), 0,  __METHOD__);
 
-		$params['allow_other_modify'] = DataPosts::ALLOW_OTHER_MODIFY_Y;
+				return false;
+			}
+
+			$creatorId = isset($row['creator_id']) ? (int) $row['creator_id'] : 0;
+			$lastModifierId = isset($params['last_modifier_id']) ? (int) $params['last_modifier_id'] : 0;
+			if ($creatorId !== $lastModifierId) {
+				if ($row['allow_other_modify'] !== DataPosts::ALLOW_OTHER_MODIFY_Y) {
+					$this->addError('allow_other_modify', Lang::_('SRV_FILTER_POSTS_ALLOW_OTHER_MODIFY_POWER'));
+				}
+			}
+
+			if (isset($params['creator_id'])) { unset($params['creator_id']); }
+			if (isset($params['creator_name'])) { unset($params['creator_name']); }
+			if (isset($params['dt_created'])) { unset($params['dt_created']); }
+			if (isset($params['ip_created'])) { unset($params['ip_created']); }
+			if (isset($params['module_id'])) { unset($params['module_id']); }
+			$params['dt_last_modified'] = date('Y-m-d H:i:s');
+			$params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
+		}
 
 		$rules = array(
 			'title' => 'trim',
-			'little_picture' => 'trim',
-			'category_id' => 'intval',
+			'alias' => 'trim',
 			'keywords' => 'trim',
 			'sort' => 'intval',
-			'is_public' => 'trim',
-			'trash' => 'trim',
+			'category_id' => 'intval',
+			'module_id' => 'intval',
+			'password' => 'trim',
+			'picture' => 'trim',
 			'is_head' => 'trim',
 			'is_recommend' => 'trim',
 			'is_jump' => 'trim',
 			'jump_url' => 'trim',
-			'is_html' => 'trim',
-			'allow_comment' => 'trim',
+			'is_public' => 'trim',
+			'dt_public_up' => 'trim',
+			'dt_public_down' => 'trim',
+			'comment_status' => 'trim',
 			'allow_other_modify' => 'trim',
-			'access_count' => 'intval',
-			'dt_created' => 'trim',
-			'dt_public' => 'trim',
-			'dt_last_modified' => 'trim',
+			'hits' => 'intval',
+			'praise_count' => 'intval',
+			'comment_count' => 'intval',
 			'creator_id' => 'intval',
 			'last_modifier_id' => 'intval',
 		);
 
 		$ret = $this->clean($rules, $params);
 		return $ret;
-	}
-
-	/**
-	 * (non-PHPdoc)
-	 * @see \libsrv\FormProcessor::_cleanPostProcess()
-	 */
-	public function _cleanPostProcess()
-	{
-		$categories = new Categories();
-		$users = new Users();
-
-		if ($this->category_id > 0) {
-			$this->category_name = $categories->getCategoryNameByCategoryId($this->category_id);
-			if ($this->category_name === '') {
-				$this->addError('category_name', Lang::_('SRV_FILTER_POSTS_CATEGORY_ID_EXISTS'));
-			}
-		}
-
-		if ($this->creator_id > 0) {
-			$this->creator_name = $users->getLoginNameByUserId($this->creator_id);
-			if ($this->creator_name === '') {
-				$this->addError('creator_name', Lang::_('SRV_FILTER_POSTS_CREATOR_ID_EXISTS'));
-			}	
-		}
-
-		if ($this->last_modifier_id > 0) {
-			$this->last_modifier_name = $users->getLoginNameByUserId($this->last_modifier_id);
-			if ($this->last_modifier_name === '') {
-				$this->addError('last_modifier_name', Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_EXISTS'));
-			}
-		}
-
-		return !$this->hasError();
 	}
 
 	/**
@@ -141,14 +145,14 @@ class FpPosts extends FormProcessor
 	}
 
 	/**
-	 * 获取“所属类别”验证规则
+	 * 获取“别名”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getCategoryIdRule($value)
+	public function getAliasRule($value)
 	{
 		return array(
-			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_CATEGORY_ID_INTEGER')),
+			'MaxLength' => new validator\MaxLengthValidator($value, 120, Lang::_('SRV_FILTER_POSTS_ALIAS_MAXLENGTH')),
 		);
 	}
 
@@ -160,7 +164,6 @@ class FpPosts extends FormProcessor
 	public function getKeywordsRule($value)
 	{
 		return array(
-			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_POSTS_KEYWORDS_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POSTS_KEYWORDS_MAXLENGTH')),
 		);
 	}
@@ -190,28 +193,52 @@ class FpPosts extends FormProcessor
 	}
 
 	/**
-	 * 获取“是否发表”验证规则
+	 * 获取“所属类别”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getIsPublicRule($value)
+	public function getCategoryIdRule($value)
 	{
-		$enum = DataPosts::getIsPublicEnum();
+		$columnName = 'category_id';
+
+		if (($value = (int) $value) <= 0) {
+			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_CATEGORY_ID_EXISTS'));
+			return array();
+		}
+
+		$categoryName = Service::getInstance('Categories', 'posts')->getCategoryNameByCategoryId($value);
+		if ($categoryName === '') {
+			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_CATEGORY_ID_EXISTS'));
+			return array();
+		}
+
+		$this->$columnName = $value;
+		$this->category_name = $categoryName;
+
+		return array();
+	}
+
+	/**
+	 * 获取“所属模型”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getModuleIdRule($value)
+	{
 		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_IS_PUBLIC_INARRAY'), implode(', ', $enum))),
+			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POSTS_MODULE_ID_EXISTS'), $this->getDbProxy(), TableNames::getModules(), 'module_id')
 		);
 	}
 
 	/**
-	 * 获取“是否删除”验证规则
+	 * 获取“访问密码”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getTrashRule($value)
+	public function getPasswordRule($value)
 	{
-		$enum = DataPosts::getTrashEnum();
 		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_TRASH_INARRAY'), implode(', ', $enum))),
+			'MaxLength' => new validator\MaxLengthValidator($value, 20, Lang::_('SRV_FILTER_POSTS_PASSWORD_MAXLENGTH')),
 		);
 	}
 
@@ -261,38 +288,71 @@ class FpPosts extends FormProcessor
 	 */
 	public function getJumpUrlRule($value)
 	{
-		if ($this->is_jump === DataPosts::IS_JUMP_N) {
+		if ($this->is_jump === DataPosts::IS_JUMP_N && $value === '') {
 			return array();
 		}
 
 		return array(
+			'NotEmpty' => new validator\NotEmptyValidator($value, true, Lang::_('SRV_FILTER_POSTS_JUMP_URL_NOTEMPTY')),
 			'Url' => new validator\UrlValidator($value, true, Lang::_('SRV_FILTER_POSTS_JUMP_URL_URL')),
 		);
 	}
 
 	/**
-	 * 获取“生成静态页面”验证规则
+	 * 获取“是否发表”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getIsHtmlRule($value)
+	public function getIsPublicRule($value)
 	{
-		$enum = DataPosts::getIsHtmlEnum();
+		$enum = DataPosts::getIsPublicEnum();
 		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_IS_HTML_INARRAY'), implode(', ', $enum))),
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_IS_PUBLIC_INARRAY'), implode(', ', $enum))),
 		);
 	}
 
 	/**
-	 * 获取“是否允许评论”验证规则
+	 * 获取“开始发表时间”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getAllowCommentRule($value)
+	public function getDtPublicUpRule($value)
 	{
-		$enum = DataPosts::getAllowCommentEnum();
+		if ($value === '') {
+			return array();
+		}
+
 		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_ALLOW_COMMENT_INARRAY'), implode(', ', $enum))),
+			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLIC_UP_DATETIME')),
+		);
+	}
+
+	/**
+	 * 获取“结束发表时间”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getDtPublicDownRule($value)
+	{
+		if ($value === '' || $value === '0000-00-00 00:00:00') {
+			return array();
+		}
+
+		return array(
+			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLIC_DOWN_DATETIME')),
+		);
+	}
+
+	/**
+	 * 获取“评论设置”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getCommentStatusRule($value)
+	{
+		$enum = DataPosts::getCommentStatusEnum();
+		return array(
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_COMMENT_STATUS_INARRAY'), implode(', ', $enum))),
 		);
 	}
 
@@ -314,11 +374,83 @@ class FpPosts extends FormProcessor
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getAccessCountRule($value)
+	public function getHitsRule($value)
 	{
 		return array(
-			'NonNegativeInteger' => new validator\NonNegativeIntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_ACCESS_COUNT_NONNEGATIVEINTEGER')),
+			'NonNegativeInteger' => new validator\NonNegativeIntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_HITS_NONNEGATIVEINTEGER')),
 		);
+	}
+
+	/**
+	 * 获取“赞美次数”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getPraiseCountRule($value)
+	{
+		return array(
+			'NonNegativeInteger' => new validator\NonNegativeIntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_PRAISE_COUNT_NONNEGATIVEINTEGER')),
+		);
+	}
+
+	/**
+	 * 获取“评论次数”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getCommentCountRule($value)
+	{
+		return array(
+			'NonNegativeInteger' => new validator\NonNegativeIntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_COMMENT_COUNT_NONNEGATIVEINTEGER')),
+		);
+	}
+
+	/**
+	 * 获取“创建人ID”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getCreatorIdRule($value)
+	{
+		$columnName = 'creator_id';
+
+		if (($value = (int) $value) <= 0) {
+			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_CREATOR_ID_EXISTS'));
+		}
+
+		$loginName = Service::getInstance('Users', 'users')->getLoginNameByUserId($value);
+		if ($loginName === '') {
+			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_CREATOR_ID_EXISTS'));
+		}
+
+		$this->$columnName = $value;
+		$this->creator_name = $loginName;
+
+		return array();
+	}
+
+	/**
+	 * 获取“上次编辑人ID”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getLastModifierIdRule($value)
+	{
+		$columnName = 'last_modifier_id';
+
+		if (($value = (int) $value) <= 0) {
+			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_EXISTS'));
+		}
+
+		$loginName = Service::getInstance('Users', 'users')->getLoginNameByUserId($value);
+		if ($loginName === '') {
+			$this->addError($columnName, Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_EXISTS'));
+		}
+
+		$this->$columnName = $value;
+		$this->last_modifier_name = $loginName;
+
+		return array();
 	}
 
 	/**
@@ -330,18 +462,6 @@ class FpPosts extends FormProcessor
 	{
 		return array(
 			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_CREATED_DATETIME')),
-		);
-	}
-
-	/**
-	 * 获取“发布时间”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getDtPublicRule($value)
-	{
-		return array(
-			'DateTime' => new validator\DateTimeValidator($value, true, Lang::_('SRV_FILTER_POSTS_DT_PUBLIC_DATETIME')),
 		);
 	}
 
@@ -358,26 +478,15 @@ class FpPosts extends FormProcessor
 	}
 
 	/**
-	 * 获取“创建人”验证规则
+	 * 获取“是否删除”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getCreatorIdRule($value)
+	public function getTrashRule($value)
 	{
+		$enum = DataPosts::getTrashEnum();
 		return array(
-			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_CREATOR_ID_INTEGER')),
-		);
-	}
-
-	/**
-	 * 获取“上次编辑人”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getLastModifierIdRule($value)
-	{
-		return array(
-			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POSTS_LAST_MODIFIER_ID_INTEGER')),
+			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POSTS_TRASH_INARRAY'), implode(', ', $enum))),
 		);
 	}
 

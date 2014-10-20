@@ -15,7 +15,7 @@ $this->widget(
 	'views\bootstrap\widgets\ButtonBuilder',
 	array(
 		'label' => $this->CFG_SYSTEM_GLOBAL_BATCH_MODIFY_SORT,
-		'jsfunc' => 'Posts.batchModifySort',
+		'jsfunc' => 'Core.batchModifySort',
 		'url' => $this->getUrlManager()->getUrl('batchmodifysort', '', ''),
 		'glyphicon' => 'pencil',
 		'primary' => false,

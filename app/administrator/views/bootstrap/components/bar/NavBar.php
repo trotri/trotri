@@ -14,8 +14,8 @@ use tfc\mvc\Widget;
 use tfc\mvc\Mvc;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
+use tfc\auth\Identity;
 use views\bootstrap\components\ComponentsConstant;
-use users\library\Identity;
 
 /**
  * NavBar class file
@@ -76,7 +76,7 @@ class NavBar extends Widget
 		$this->assign('is_login',   Identity::isLogin());
 		$this->assign('user_id',    Identity::getUserId());
 		$this->assign('login_name', Identity::getLoginName());
-		$this->assign('user_name',  Identity::getUserName());
+		$this->assign('user_name',  Identity::getNickname());
 		$this->assign('app_names',  Identity::getAppNames());
 
 		$this->assign('menus', $output);

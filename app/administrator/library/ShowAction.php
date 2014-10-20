@@ -11,10 +11,9 @@
 namespace library;
 
 use libapp;
-use tfc\ap\UserIdentity;
 use tfc\mvc\Mvc;
-use tid\Role;
-use users\library\Identity;
+use tfc\auth\Role;
+use tfc\auth\Identity;
 
 /**
  * ShowAction abstract class file
@@ -34,7 +33,7 @@ abstract class ShowAction extends libapp\ShowAction
 	/**
 	 * @var boolean 是否验证身份授权，默认验证
 	 */
-	protected $_validAuth = true;
+	protected $_validAuth = false;
 
 	/**
 	 * @var integer 允许的权限
@@ -62,7 +61,7 @@ abstract class ShowAction extends libapp\ShowAction
 			return ;
 		}
 
-		if (UserIdentity::isLogin()) {
+		if (Identity::isLogin()) {
 			return ;
 		}
 
@@ -83,8 +82,8 @@ abstract class ShowAction extends libapp\ShowAction
 			return ;
 		}
 
-		$auth = Identity::getAuthorization();
-		if ($auth->isAllowed(APP_NAME, Mvc::$module, Mvc::$controller, $this->_power)) {
+		$authoriz = Identity::getAuthoriz();
+		if ($authoriz->isAllowed(APP_NAME, Mvc::$module, Mvc::$controller, $this->_power)) {
 			return ;
 		}
 
@@ -97,7 +96,7 @@ abstract class ShowAction extends libapp\ShowAction
 	 */
 	public function toLogin()
 	{
-		$this->forward('login', 'site', 'system');
+		$this->forward('login', 'account', 'users');
 	}
 
 	/**

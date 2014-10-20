@@ -178,6 +178,22 @@ Core = {
   },
 
   /**
+   * 批量编辑排序
+   * @param string url
+   * @return void
+   */
+  batchModifySort: function(url) {
+    $(":text").each(function() {
+      var name = $(this).attr("name");
+      if (name.indexOf("sort") > -1) {
+        url += "&" + name + "=" + $(this).val();
+      }
+    });
+
+    Trotri.href(url);
+  },
+
+  /**
    * 展示对话框：Ajax方式展示数据
    * @param string url Ajax请求展示数据链接
    * @return void
@@ -364,7 +380,7 @@ Core = {
       showQueueDiv: false,
       showPreview: false,
       uploadButtonClass: "ajax-file-upload-green",
-      dragDropStr: "<span><b>Drag &amp; Drop Files</b></span>",
+      dragDropStr: "<span><b>&nbsp; Drag &amp; Drop Files</b></span>",
       statusBarWidth: "70%",
       dragdropWidth: "99.8%",
       previewHeight: "200px",
@@ -391,6 +407,62 @@ Core = {
           $(".ajax-file-upload-bar").text("Upload Failed");
           setError(response.err_msg);
         }
+      },
+      onError: function(files, status, message, pd) {},
+      onCancel: function(files, pd) {}
+    };
+
+    $.extend(defaults, options);
+    button.uploadFile(defaults);
+  },
+
+  /**
+   * Ajax批量上传并预览图片，基于jquery.uploadfile.js和jquery.form.js开发框架
+   * @param string btnId
+   * @param json options
+   * @return void
+   */
+  batchUploadPreviewImg: function(btnId, options) {
+    var button = $("#" + btnId);
+    var result = []; i = 0;
+    var defaults = {
+      url: button.attr("url"),
+      fileName: button.attr("name"),
+      returnType: "JSON",
+      allowedTypes: "jpg,gif,png,bmp",
+      multiple: true,
+      dragDrop: true,
+      showDone: false,
+      showAbort: false,
+      showFileCounter: false,
+      showProgress: true,
+      showQueueDiv: false,
+      showPreview: false,
+      uploadButtonClass: "ajax-file-upload-green",
+      dragDropStr: "<span><b>&nbsp; Drag &amp; Drop Files Or Press Ctrl to Select Multiple Files.</b></span>",
+      statusBarWidth: "100%",
+      dragdropWidth: "99.8%",
+      previewHeight: "300px",
+      previewWidth: "300px",
+      onLoad: function (obj) {},
+      onSubmit: function(files, xhr) {},
+      onSuccess: function(files, response, xhr, pd) {
+        result[i++] = response;
+      },
+      afterUploadAll: function() {
+        for (var i in result) {
+          var oby = parseInt(i) + 1;
+          if (result[i].err_no == 0) {
+            $(".ajax-file-upload-preview").eq(i).attr("src", result[i].data.url);
+            $(".ajax-file-upload-filename").eq(i).text(oby + "：" + result[i].data.file_name);
+          }
+          else {
+            $(".ajax-file-upload-filename").eq(i).text(oby + "：" + result[i].err_msg);
+          }
+        }
+
+        $(".ajax-file-upload-preview").show();
+        $(".ajax-file-upload-preview").each(function() { if ($(this).attr("src") == undefined) { $(this).hide(); } });
       },
       onError: function(files, status, message, pd) {},
       onCancel: function(files, pd) {}

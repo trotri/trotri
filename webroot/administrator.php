@@ -23,11 +23,6 @@ date_default_timezone_set('PRC');
  */
 define('APP_NAME', 'administrator');
 
-/**
- * 为true时表示测试环境，会打印Debug日志，页面上展示调试信息
- */
-defined('DEBUG') || define('DEBUG', false);
-
 require '../libraries/tfc/saf/Loader.php';
 
 $bootstrap = new Bootstrap();

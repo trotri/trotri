@@ -16,7 +16,7 @@ use library\actions;
  * Trash class file
  * 移至回收站和从回收站还原
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Trash.php 1 2014-09-16 19:32:26Z Code Generator $
+ * @version $Id: Trash.php 1 2014-10-18 13:56:27Z Code Generator $
  * @package modules.posts.action.posts
  * @since 1.0
  */

@@ -18,7 +18,7 @@ use posts\library\TableNames;
  * Modules class file
  * 业务层：数据库操作类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modules.php 1 2014-09-11 16:41:01Z Code Generator $
+ * @version $Id: Modules.php 1 2014-10-12 21:47:03Z Code Generator $
  * @package posts.db
  * @since 1.0
  */
@@ -31,22 +31,52 @@ class Modules extends AbstractDb
 
 	/**
 	 * 查询多条记录
+	 * @param array $params
+	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function findAll($limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getModules();
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS `module_id`, `module_name`, `fields`, `forbidden`, `description` FROM `' . $tableName . '`';
+
+		$condition = '1';
 		$attributes = array();
 
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `module_id`, `module_name`, `module_tblname`, `forbidden`, `description` FROM `' . $tableName . '`';
+		if (isset($params['module_name'])) {
+			$moduleName = trim($params['module_name']);
+			if ($moduleName !== '') {
+				$condition .= ' AND `module_name` LIKE ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['module_name'] = '%' . $moduleName . '%';
+			}
+		}
+
+		if (isset($params['forbidden'])) {
+			$forbidden = trim($params['forbidden']);
+			if ($forbidden !== '') {
+				$condition .= ' AND `forbidden` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['forbidden'] = $forbidden;
+			}
+		}
+
+		if (isset($params['module_id'])) {
+			$moduleId = (int) $params['module_id'];
+			if ($moduleId > 0) {
+				$condition .= ' AND `module_id` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['module_id'] = $moduleId;
+			}
+		}
+
+		$sql = $commandBuilder->applyCondition($sql, $condition);
+		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
 		$ret = $this->fetchAllNoCache($sql, $attributes);
 		if (is_array($ret)) {
 			$ret['attributes'] = $attributes;
-			$ret['order']      = '';
+			$ret['order']      = $order;
 			$ret['limit']      = $limit;
 			$ret['offset']     = $offset;
 		}
@@ -55,13 +85,24 @@ class Modules extends AbstractDb
 	}
 
 	/**
-	 * 获取所有的ModuleName
+	 * 获取所有的模型名称
 	 * @return array
 	 */
 	public function getModuleNames()
 	{
 		$tableName = $this->getTblprefix() . TableNames::getModules();
-		$sql = 'SELECT `module_id`, `module_name` FROM `' . $tableName . '` WHERE `forbidden` = ?';;
+		$sql = 'SELECT `module_id`, `module_name` FROM `' . $tableName . '` WHERE `forbidden` = ?';
+		return $this->fetchPairs($sql, 'n');
+	}
+
+	/**
+	 * 获取所有的文档扩展字段
+	 * @return array
+	 */
+	public function getFields()
+	{
+		$tableName = $this->getTblprefix() . TableNames::getModules();
+		$sql = 'SELECT `module_id`, `fields` FROM `' . $tableName . '` WHERE `forbidden` = ?';
 		return $this->fetchPairs($sql, 'n');
 	}
 
@@ -77,24 +118,8 @@ class Modules extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getModules();
-		$sql = 'SELECT `module_id`, `module_name`, `module_tblname`, `forbidden`, `description` FROM `' . $tableName . '` WHERE `module_id` = ?';
+		$sql = 'SELECT `module_id`, `module_name`, `fields`, `forbidden`, `description` FROM `' . $tableName . '` WHERE `module_id` = ?';
 		return $this->fetchAssoc($sql, $moduleId);
-	}
-
-	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $moduleId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $moduleId)
-	{
-		$row = $this->findByPk($moduleId);
-		if ($row && is_array($row) && isset($row[$columnName])) {
-			return $row[$columnName];
-		}
-
-		return false;
 	}
 
 	/**
@@ -106,24 +131,29 @@ class Modules extends AbstractDb
 	public function create(array $params = array(), $ignore = false)
 	{
 		$moduleName = isset($params['module_name']) ? trim($params['module_name']) : '';
-		$moduleTblname = isset($params['module_tblname']) ? trim($params['module_tblname']) : '';
+		$fields = isset($params['fields']) ? trim($params['fields']) : '';
 		$forbidden = isset($params['forbidden']) ? trim($params['forbidden']) : '';
-		$description = isset($params['description']) ? $params['description'] : '';
+		$description = isset($params['description']) ? trim($params['description']) : '';
 
-		if ($moduleName === '' || $moduleTblname === '' || $forbidden === '') {
+		if ($moduleName === '') {
 			return false;
+		}
+
+		if ($forbidden === '') {
+			$forbidden = 'n';
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getModules();
 		$attributes = array(
 			'module_name' => $moduleName,
-			'module_tblname' => $moduleTblname,
+			'fields' => $fields,
 			'forbidden' => $forbidden,
 			'description' => $description,
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -150,14 +180,8 @@ class Modules extends AbstractDb
 			}
 		}
 
-		if (isset($params['module_tblname'])) {
-			$moduleTblname = trim($params['module_tblname']);
-			if ($moduleTblname !== '') {
-				$attributes['module_tblname'] = $moduleTblname;
-			}
-			else {
-				return false;
-			}
+		if (isset($params['fields'])) {
+			$attributes['fields'] = $params['fields'];
 		}
 
 		if (isset($params['forbidden'])) {
@@ -174,14 +198,17 @@ class Modules extends AbstractDb
 			$attributes['description'] = $params['description'];
 		}
 
+		$rowCount = 0;
+
 		if ($attributes === array()) {
-			return false;
+			return $rowCount;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getModules();
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`module_id` = ?');
 		$attributes['module_id'] = $moduleId;
-		return $this->update($sql, $attributes);
+		$rowCount = $this->update($sql, $attributes);
+		return $rowCount;
 	}
 
 	/**
@@ -197,6 +224,7 @@ class Modules extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getModules();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`module_id` = ?');
-		return $this->delete($sql, $moduleId);
+		$rowCount = $this->delete($sql, $moduleId);
+		return $rowCount;
 	}
 }

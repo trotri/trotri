@@ -9,9 +9,9 @@ $this->widget('views\bootstrap\widgets\ViewBuilder',
 		'columns' => array(
 			'module_id',
 			'module_name',
-			'module_tblname',
 			'forbidden',
 			'description',
+			'fields',
 			'_button_history_back_'
 		)
 	)

@@ -11,12 +11,13 @@
 namespace modules\posts\action\posts;
 
 use library\actions;
+use libapp\Model;
 
 /**
  * Create class file
  * 新增数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Create.php 1 2014-09-16 19:32:26Z Code Generator $
+ * @version $Id: Create.php 1 2014-10-18 13:56:27Z Code Generator $
  * @package modules.posts.action.posts
  * @since 1.0
  */
@@ -28,10 +29,10 @@ class Create extends actions\Create
 	 */
 	public function run()
 	{
-		if (isset($_POST['content'])) {
-			$_POST['content'] = \tfc\util\String::stripslashes($_POST['content']);
-		}
+		$mod = Model::getInstance('Modules');
+		$fields = json_encode($mod->getFields());
 
+		$this->assign('fields', $fields);
 		$this->execute('Posts');
 	}
 }

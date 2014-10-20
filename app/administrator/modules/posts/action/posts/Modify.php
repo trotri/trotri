@@ -11,12 +11,14 @@
 namespace modules\posts\action\posts;
 
 use library\actions;
+use libapp\Model;
+use tfc\ap\Ap;
 
 /**
  * Modify class file
  * 编辑数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modify.php 1 2014-09-16 19:32:26Z Code Generator $
+ * @version $Id: Modify.php 1 2014-10-18 13:56:27Z Code Generator $
  * @package modules.posts.action.posts
  * @since 1.0
  */
@@ -28,10 +30,19 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		if (isset($_POST['content'])) {
-			$_POST['content'] = \tfc\util\String::stripslashes($_POST['content']);
+		$fields = array();
+
+		$id = $this->getPk();
+		if ($id > 0) {
+			$fields = Model::getInstance('Posts')->getModuleFieldsByPostId($id);
 		}
 
+		if (Ap::getRequest()->getParam('do') === 'post') {
+			// $data = Ap::getRequest()->getPost();
+			// \tfc\saf\debug_dump($data);
+		}
+
+		$this->assign('profile_fields', array_keys($fields));
 		$this->execute('Posts');
 	}
 }

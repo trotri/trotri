@@ -223,7 +223,8 @@ class Options extends AbstractDb
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -239,7 +240,8 @@ class Options extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getOptions();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`option_id` = ?');
-		return $this->delete($sql, $optId);
+		$rowCount = $this->delete($sql, $optId);
+		return $rowCount;
 	}
 
 	/**
@@ -255,6 +257,7 @@ class Options extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getOptions();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`option_key` = ?');
-		return $this->delete($sql, $optKey);
+		$rowCount = $this->delete($sql, $optKey);
+		return $rowCount;
 	}
 }

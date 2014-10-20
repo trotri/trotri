@@ -43,6 +43,7 @@ class SearchBuilder extends form\FormBuilder
 		'text'     => 'views\\bootstrap\\components\\form\\SearchElement',
 		'select'   => 'views\\bootstrap\\components\\form\\SearchElement',
 		'hidden'   => 'views\\bootstrap\\components\\form\\HiddenElement',
+		'datetimepicker' => 'views\\bootstrap\\components\\form\\SearchElement',
 	);
 
 	/**

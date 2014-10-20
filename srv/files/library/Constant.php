@@ -28,6 +28,6 @@ class Constant
 	/**
 	 * @var string 系统管理：批量上传配置
 	 */
-	const SYSTEM_CLUSTER = 'system';
+	const SYSBATCH_CLUSTER = 'sysbatch';
 
 }

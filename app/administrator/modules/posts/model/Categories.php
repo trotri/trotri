@@ -12,17 +12,13 @@ namespace modules\posts\model;
 
 use library\BaseModel;
 use tfc\saf\Text;
-use tfc\saf\Log;
 use libapp\Model;
-use libapp\ErrorNo;
-use libapp\Lang;
-use posts\services\DataCategories;
 
 /**
  * Categories class file
  * 类别管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Categories.php 1 2014-09-12 17:33:45Z Code Generator $
+ * @version $Id: Categories.php 1 2014-10-13 22:24:54Z Code Generator $
  * @package modules.posts.model
  * @since 1.0
  */
@@ -35,10 +31,6 @@ class Categories extends BaseModel
 	public function getViewTabsRender()
 	{
 		$output = array(
-			'htmlcache' => array(
-				'tid' => 'htmlcache',
-				'prompt' => Text::_('MOD_POSTS_POST_CATEGORIES_VIEWTAB_HTMLCACHE_PROMPT')
-			),
 		);
 
 		return $output;
@@ -71,12 +63,11 @@ class Categories extends BaseModel
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_CATEGORY_PID_HINT'),
 				'required' => true,
 			),
-			'module_id' => array(
+			'alias' => array(
 				'__tid__' => 'main',
-				'type' => 'select',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_MODULE_ID_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_MODULE_ID_HINT'),
-				'required' => true,
+				'type' => 'textarea',
+				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_ALIAS_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_ALIAS_HINT'),
 			),
 			'meta_title' => array(
 				'__tid__' => 'main',
@@ -99,88 +90,43 @@ class Categories extends BaseModel
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_META_DESCRIPTION_HINT'),
 				'required' => true,
 			),
-			'is_hide' => array(
-				'__tid__' => 'main',
-				'type' => 'switch',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_HIDE_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_HIDE_HINT'),
-				'options' => DataCategories::getIsHideEnum(),
-				'value' => DataCategories::IS_HIDE_Y,
-			),
-			'menu_sort' => array(
-				'__tid__' => 'main',
-				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_MENU_SORT_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_MENU_SORT_HINT'),
-				'required' => true,
-				'value' => 1000
-			),
-			'is_jump' => array(
-				'__tid__' => 'main',
-				'type' => 'switch',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_JUMP_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_JUMP_HINT'),
-				'options' => DataCategories::getIsJumpEnum(),
-				'value' => DataCategories::IS_JUMP_N,
-			),
-			'jump_url' => array(
-				'__tid__' => 'main',
-				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_JUMP_URL_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_JUMP_URL_HINT'),
-				'required' => true,
-			),
-			'is_html' => array(
-				'__tid__' => 'htmlcache',
-				'type' => 'switch',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_HTML_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_IS_HTML_HINT'),
-				'options' => DataCategories::getIsHtmlEnum(),
-				'value' => DataCategories::IS_HTML_Y,
-			),
-			'html_dir' => array(
-				'__tid__' => 'htmlcache',
-				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_HTML_DIR_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_HTML_DIR_HINT'),
-				'required' => true,
-			),
 			'tpl_home' => array(
-				'__tid__' => 'htmlcache',
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_HOME_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_HOME_HINT'),
 				'required' => true,
+				'value' => 'index.php'
 			),
 			'tpl_list' => array(
-				'__tid__' => 'htmlcache',
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_LIST_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_LIST_HINT'),
 				'required' => true,
+				'value' => 'list.php'
 			),
 			'tpl_view' => array(
-				'__tid__' => 'htmlcache',
+				'__tid__' => 'main',
 				'type' => 'text',
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_VIEW_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_VIEW_HINT'),
 				'required' => true,
+				'value' => 'view.php'
 			),
-			'rule_list' => array(
-				'__tid__' => 'htmlcache',
+			'sort' => array(
+				'__tid__' => 'main',
 				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_RULE_LIST_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_RULE_LIST_HINT'),
+				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_SORT_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_SORT_HINT'),
 				'required' => true,
-				'value' => 'list_{id}.html'
+				'value' => 15
 			),
-			'rule_view' => array(
-				'__tid__' => 'htmlcache',
-				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_RULE_VIEW_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_RULE_VIEW_HINT'),
-				'required' => true,
-				'value' => '{y}/{m}/{d}/{id}.html'
+			'description' => array(
+				'__tid__' => 'main',
+				'type' => 'textarea',
+				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_DESCRIPTION_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_DESCRIPTION_HINT'),
 			),
 			'posts_count' => array(
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_POSTS_COUNT_LABEL'),
@@ -260,29 +206,7 @@ class Categories extends BaseModel
 	 */
 	public function getPostsCount($categoryId)
 	{
-		return 0;
+		return $this->getService()->getPostsCount($categoryId);
 	}
 
-	/**
-	 * 批量编辑排序
-	 * @param array $params
-	 * @return integer
-	 */
-	public function batchModifySort(array $params = array())
-	{
-		$rowCount = $this->getService()->batchModifySort($params);
-
-		$errNo = ErrorNo::SUCCESS_NUM;
-		$errMsg = ($rowCount > 0) ? Lang::_('ERROR_MSG_SUCCESS_UPDATE') : Lang::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
-		Log::debug(sprintf(
-			'%s callModifyMethod, service "%s", method "%s", rowCount "%d", params "%s"',
-			$errMsg, get_class($this), 'batchModifySort', $rowCount, serialize($params)
-		), $errNo, __METHOD__);
-
-		return array(
-			'err_no' => $errNo,
-			'err_msg' => $errMsg,
-			'row_count' => $rowCount
-		);
-	}
 }

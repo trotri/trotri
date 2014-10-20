@@ -16,7 +16,7 @@ use libapp\BaseController;
  * CategoriesController class file
  * 类别管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: CategoriesController.php 1 2014-09-12 17:33:45Z Code Generator $
+ * @version $Id: CategoriesController.php 1 2014-10-13 22:24:54Z Code Generator $
  * @package modules.posts.controller
  * @since 1.0
  */

@@ -18,7 +18,7 @@ use posts\library\TableNames;
  * Categories class file
  * 业务层：数据库操作类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Categories.php 1 2014-09-12 16:11:25Z Code Generator $
+ * @version $Id: Categories.php 1 2014-10-13 21:17:13Z Code Generator $
  * @package posts.db
  * @since 1.0
  */
@@ -41,7 +41,7 @@ class Categories extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getCategories();
-		$sql = 'SELECT `category_id`, `category_name`, `category_pid`, `module_id`, `meta_title`, `meta_keywords`, `meta_description`, `is_hide`, `menu_sort`, `is_jump`, `jump_url`, `is_html`, `html_dir`, `tpl_home`, `tpl_list`, `tpl_view`, `rule_list`, `rule_view` FROM `' . $tableName . '` WHERE `category_pid` = ? ORDER BY `menu_sort`';
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS `category_id`, `category_name`, `category_pid`, `alias`, `meta_title`, `meta_keywords`, `meta_description`, `tpl_home`, `tpl_list`, `tpl_view`, `sort`, `description` FROM `' . $tableName . '` WHERE `category_pid` = ? ORDER BY `sort`';
 		return $this->fetchAll($sql, $categoryPid);
 	}
 
@@ -57,24 +57,8 @@ class Categories extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getCategories();
-		$sql = 'SELECT `category_id`, `category_name`, `category_pid`, `module_id`, `meta_title`, `meta_keywords`, `meta_description`, `is_hide`, `menu_sort`, `is_jump`, `jump_url`, `is_html`, `html_dir`, `tpl_home`, `tpl_list`, `tpl_view`, `rule_list`, `rule_view` FROM `' . $tableName . '` WHERE `category_id` = ?';
+		$sql = 'SELECT `category_id`, `category_name`, `category_pid`, `alias`, `meta_title`, `meta_keywords`, `meta_description`, `tpl_home`, `tpl_list`, `tpl_view`, `sort`, `description` FROM `' . $tableName . '` WHERE `category_id` = ?';
 		return $this->fetchAssoc($sql, $categoryId);
-	}
-
-	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $categoryId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $categoryId)
-	{
-		$row = $this->findByPk($categoryId);
-		if ($row && is_array($row) && isset($row[$columnName])) {
-			return $row[$columnName];
-		}
-
-		return false;
 	}
 
 	/**
@@ -87,29 +71,18 @@ class Categories extends AbstractDb
 	{
 		$categoryName = isset($params['category_name']) ? trim($params['category_name']) : '';
 		$categoryPid = isset($params['category_pid']) ? (int) $params['category_pid'] : 0;
-		$moduleId = isset($params['module_id']) ? (int) $params['module_id'] : 0;
+		$alias = isset($params['alias']) ? trim($params['alias']) : '';
 		$metaTitle = isset($params['meta_title']) ? trim($params['meta_title']) : '';
 		$metaKeywords = isset($params['meta_keywords']) ? trim($params['meta_keywords']) : '';
 		$metaDescription = isset($params['meta_description']) ? trim($params['meta_description']) : '';
-		$isHide = isset($params['is_hide']) ? trim($params['is_hide']) : '';
-		$menuSort = isset($params['menu_sort']) ? (int) $params['menu_sort'] : 0;
-		$isJump = isset($params['is_jump']) ? trim($params['is_jump']) : '';
-		$jumpUrl = isset($params['jump_url']) ? trim($params['jump_url']) : '';
-		$isHtml = isset($params['is_html']) ? trim($params['is_html']) : '';
-		$htmlDir = isset($params['html_dir']) ? trim($params['html_dir']) : '';
 		$tplHome = isset($params['tpl_home']) ? trim($params['tpl_home']) : '';
 		$tplList = isset($params['tpl_list']) ? trim($params['tpl_list']) : '';
 		$tplView = isset($params['tpl_view']) ? trim($params['tpl_view']) : '';
-		$ruleList = isset($params['rule_list']) ? trim($params['rule_list']) : '';
-		$ruleView = isset($params['rule_view']) ? trim($params['rule_view']) : '';
+		$sort = isset($params['sort']) ? (int) $params['sort'] : 0;
+		$description = isset($params['description']) ? $params['description'] : '';
 
-		if ($categoryName === '' || $categoryPid < 0 || $moduleId <= 0 || $metaTitle === '' || $metaKeywords === '' || $metaDescription === ''
-			|| $isHide === '' || $menuSort <= 0 || $isJump === '' || $isHtml === '' || $htmlDir === ''
-			|| $tplHome === '' || $tplList === '' || $tplView === '' || $ruleList === '' || $ruleView === '') {
-			return false;
-		}
-
-		if ($isJump === 'y' && $jumpUrl === '') {
+		if ($categoryName === '' || $categoryPid < 0 || $metaTitle === '' || $metaKeywords === '' || $metaDescription === ''
+			|| $tplHome === '' || $tplList === '' || $tplView === '' || $sort < 0) {
 			return false;
 		}
 
@@ -117,25 +90,20 @@ class Categories extends AbstractDb
 		$attributes = array(
 			'category_name' => $categoryName,
 			'category_pid' => $categoryPid,
-			'module_id' => $moduleId,
+			'alias' => $alias,
 			'meta_title' => $metaTitle,
 			'meta_keywords' => $metaKeywords,
 			'meta_description' => $metaDescription,
-			'is_hide' => $isHide,
-			'menu_sort' => $menuSort,
-			'is_jump' => $isJump,
-			'jump_url' => $jumpUrl,
-			'is_html' => $isHtml,
-			'html_dir' => $htmlDir,
 			'tpl_home' => $tplHome,
 			'tpl_list' => $tplList,
 			'tpl_view' => $tplView,
-			'rule_list' => $ruleList,
-			'rule_view' => $ruleView,
+			'sort' => $sort,
+			'description' => $description,
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -157,26 +125,32 @@ class Categories extends AbstractDb
 			if ($categoryName !== '') {
 				$attributes['category_name'] = $categoryName;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['category_pid'])) {
 			$categoryPid = (int) $params['category_pid'];
-			if ($categoryPid > 0) {
+			if ($categoryPid >= 0) {
 				$attributes['category_pid'] = $categoryPid;
+			}
+			else {
+				return false;
 			}
 		}
 
-		if (isset($params['module_id'])) {
-			$moduleId = (int) $params['module_id'];
-			if ($moduleId > 0) {
-				$attributes['module_id'] = $moduleId;
-			}
+		if (isset($params['alias'])) {
+			$attributes['alias'] = trim($params['alias']);
 		}
 
 		if (isset($params['meta_title'])) {
 			$metaTitle = trim($params['meta_title']);
 			if ($metaTitle !== '') {
 				$attributes['meta_title'] = $metaTitle;
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -185,6 +159,9 @@ class Categories extends AbstractDb
 			if ($metaKeywords !== '') {
 				$attributes['meta_keywords'] = $metaKeywords;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['meta_description'])) {
@@ -192,47 +169,8 @@ class Categories extends AbstractDb
 			if ($metaDescription !== '') {
 				$attributes['meta_description'] = $metaDescription;
 			}
-		}
-
-		if (isset($params['is_hide'])) {
-			$isHide = trim($params['is_hide']);
-			if ($isHide !== '') {
-				$attributes['is_hide'] = $isHide;
-			}
-		}
-
-		if (isset($params['menu_sort'])) {
-			$menuSort = (int) $params['menu_sort'];
-			if ($menuSort > 0) {
-				$attributes['menu_sort'] = $menuSort;
-			}
-		}
-
-		if (isset($params['is_jump'])) {
-			$isJump = trim($params['is_jump']);
-			if ($isJump !== '') {
-				$attributes['is_jump'] = $isJump;
-			}
-		}
-
-		if (isset($params['jump_url'])) {
-			$jumpUrl = trim($params['jump_url']);
-			if ($jumpUrl !== '') {
-				$attributes['jump_url'] = $jumpUrl;
-			}
-		}
-
-		if (isset($params['is_html'])) {
-			$isHtml = trim($params['is_html']);
-			if ($isHtml !== '') {
-				$attributes['is_html'] = $isHtml;
-			}
-		}
-
-		if (isset($params['html_dir'])) {
-			$htmlDir = trim($params['html_dir']);
-			if ($htmlDir !== '') {
-				$attributes['html_dir'] = $htmlDir;
+			else {
+				return false;
 			}
 		}
 
@@ -241,12 +179,18 @@ class Categories extends AbstractDb
 			if ($tplHome !== '') {
 				$attributes['tpl_home'] = $tplHome;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['tpl_list'])) {
 			$tplList = trim($params['tpl_list']);
 			if ($tplList !== '') {
 				$attributes['tpl_list'] = $tplList;
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -255,30 +199,36 @@ class Categories extends AbstractDb
 			if ($tplView !== '') {
 				$attributes['tpl_view'] = $tplView;
 			}
-		}
-
-		if (isset($params['rule_list'])) {
-			$ruleList = trim($params['rule_list']);
-			if ($ruleList !== '') {
-				$attributes['rule_list'] = $ruleList;
+			else {
+				return false;
 			}
 		}
 
-		if (isset($params['rule_view'])) {
-			$ruleView = trim($params['rule_view']);
-			if ($ruleView !== '') {
-				$attributes['rule_view'] = $ruleView;
+		if (isset($params['sort'])) {
+			$sort = (int) $params['sort'];
+			if ($sort >= 0) {
+				$attributes['sort'] = $sort;
+			}
+			else {
+				return false;
 			}
 		}
+
+		if (isset($params['description'])) {
+			$attributes['description'] = $params['description'];
+		}
+
+		$rowCount = 0;
 
 		if ($attributes === array()) {
-			return false;
+			return $rowCount;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getCategories();
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`category_id` = ?');
 		$attributes['category_id'] = $categoryId;
-		return $this->update($sql, $attributes);
+		$rowCount = $this->update($sql, $attributes);
+		return $rowCount;
 	}
 
 	/**
@@ -294,6 +244,7 @@ class Categories extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getCategories();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`category_id` = ?');
-		return $this->delete($sql, $categoryId);
+		$rowCount = $this->delete($sql, $categoryId);
+		return $rowCount;
 	}
 }

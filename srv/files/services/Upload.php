@@ -10,18 +10,17 @@
 
 namespace files\services;
 
-use tfc\util\Image;
+use tfc\ap\Ap;
 use tfc\saf\Cfg;
+use tfc\saf\UpProxy;
 use files\library\Constant;
-use files\library\UploadProxy;
-use system\services\Options;
-use system\services\DataOptions;
+use files\library\Lang;
 
 /**
  * Upload class file
  * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Upload.php 1 2014-09-16 19:26:44Z Code Generator $
+ * @version $Id: FileManager.php 1 2014-09-16 19:26:44Z Code Generator $
  * @package files.services
  * @since 1.0
  */
@@ -32,103 +31,114 @@ class Upload
 	 * @param array $files
 	 * @return array
 	 */
-	public function system(array $files)
+	public static function sysbatch(array $files)
 	{
-		$clusterName = Constant::SYSTEM_CLUSTER;
+		$clusterName = Constant::SYSBATCH_CLUSTER;
 
-		$uploadProxy = new UploadProxy($clusterName);
-		$ret = $uploadProxy->save($files);
-		if ($ret['err_no'] !== UploadProxy::SUCCESS_UPLOAD_NUM) {
+		$ret = self::save($clusterName, $files);
+		if ($ret['err_no'] !== UpProxy::SUCCESS_NUM) {
 			return $ret;
 		}
 
-		$fileName = $ret['file_name'];
-		$ret['file_name'] = pathinfo($fileName, PATHINFO_BASENAME);
-		$ret['url'] = $uploadProxy->getUrl($fileName);
 		return $ret;
 	}
 
 	/**
 	 * 上传图片：文档管理
 	 * @param array $files
-	 * @param boolean $littlePicture
+	 * @param boolean $thumbnail
 	 * @return array
 	 */
-	public function posts(array $files, $littlePicture = false)
+	public static function posts(array $files, $thumbnail = false)
 	{
 		$clusterName = Constant::POSTS_CLUSTER;
 
-		$uploadProxy = new UploadProxy($clusterName);
-		$ret = $uploadProxy->save($files);
-		if ($ret['err_no'] !== UploadProxy::SUCCESS_UPLOAD_NUM) {
+		$ret = self::save($clusterName, $files);
+		if ($ret['err_no'] !== UpProxy::SUCCESS_NUM) {
 			return $ret;
 		}
 
-		$fileName = $ret['file_name'];
-		$fileName = $this->water($fileName);
-		if ($littlePicture) {
-			$fileName = $this->thumbnail($fileName);
-		}
-
-		$ret['file_name'] = $fileName;
-		$ret['url'] = $uploadProxy->getUrl($fileName);
 		return $ret;
 	}
 
 	/**
-	 * 生成缩略图
-	 * @param string $fileName
-	 * @return string
+	 * 检查并上传文件
+	 * @param string $clusterName
+	 * @param array $files
+	 * @return array
 	 */
-	public function thumbnail($fileName)
+	public static function save($clusterName, array $files)
 	{
-		$thumbWidth = Options::getThumbWidth();
-		$thumbHeight = Options::getThumbHeight();
-		if ($thumbWidth > 0 && $thumbHeight > 0) {
-			$toPath = dirname($fileName) . DS . 'thumb_' . basename($fileName);
-			if (Image::thumbnail($fileName, $thumbWidth, $thumbHeight, $toPath)) {
-				return $toPath;
-			}
+		$upProxy = new UpProxy($clusterName);
+		$errNo = $upProxy->save($files);
+		$filePath = $upProxy->getSavePath();
+		$fileName = str_replace(DIR_ROOT, '', $filePath);
+		if ($errNo === UpProxy::SUCCESS_NUM) {
+			$baseName = pathinfo($filePath, PATHINFO_BASENAME);
+			$url = self::getUrl($filePath);
+			$ret = array(
+				'err_no' => $errNo,
+				'err_msg' => '',
+				'file_path' => $filePath, // 文件绝对地址
+				'file_name' => $fileName, // 文件地址，目录从'/data/'后面开始
+				'base_name' => $baseName, // 文件名
+				'url' => $url
+			);
+
+			return $ret;
 		}
 
-		return $fileName;
+		switch ($errNo) {
+			case UpProxy::ERROR_REQUEST:
+				$errMsg = Lang::_('SRV_FILTER_FILES_UPLOAD_ERROR_REQUEST');
+				break;
+			case UpProxy::ERR_ABOVE_MAX_SIZE:
+				$errMsg = sprintf(Lang::_('SRV_FILTER_FILES_UPLOAD_SIZE_MAX'), $files['size'], $upProxy->getMaxSize());
+				break;
+			case UpProxy::ERR_DISALLOW_TYPE:
+				$errMsg = sprintf(Lang::_('SRV_FILTER_FILES_UPLOAD_TYPE_DISALLOW'), $files['type'], implode('|', $upProxy->getAllowTypes()));
+				break;
+			case UpProxy::ERR_DISALLOW_EXT:
+				$errMsg = sprintf(Lang::_('SRV_FILTER_FILES_UPLOAD_EXT_DISALLOW'), $upProxy->getFileExt($files['name']), implode('|', $upProxy->getAllowExts()));
+				break;
+			case UpProxy::ERR_FILE_ALREADY_EXISTS:
+				$errMsg = sprintf(Lang::_('SRV_FILTER_FILES_UPLOAD_NAME_UNIQUE'), $fileName);
+				break;
+			case UpProxy::ERR_DISALLOW_UPLOAD:
+				$errMsg = sprintf(Lang::_('SRV_FILTER_FILES_UPLOAD_POSSIBLE_ATTACK'), $fileName);
+				break;
+			case UpProxy::ERR_MOVE_UPLOADED_FILE:
+				$errMsg = sprintf(Lang::_('SRV_FILTER_FILES_UPLOAD_MOVE_FAILED'), $fileName);
+				break;
+			default:
+				$errMsg = Lang::_('SRV_FILTER_FILES_UPLOAD_SAVE_FAILED');
+				break;
+		}
+
+		$ret = array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'file_path' => '',
+			'file_name' => '',
+			'base_name' => '',
+			'url' => ''
+		);
+
+		return $ret;
 	}
 
 	/**
-	 * 生成文字水印
+	 * 通过文件名，获取访问该文件的URL
 	 * @param string $fileName
 	 * @return string
 	 */
-	public function water($fileName)
+	public static function getUrl($fileName)
 	{
-		$type = Options::getWaterMarkType();
-		if ($type !== DataOptions::WATER_MARK_TYPE_IMGDIR && $type !== DataOptions::WATER_MARK_TYPE_TEXT) {
-			return $fileName;
-		}
+		$req = Ap::getRequest();
+		$picServer = Cfg::getApp('picture_server');
 
-		$position = Options::getWaterMarkPosition();
-		if ($position < 1 || $position > 9) {
-			return $fileName;
-		}
-
-		$offset = 1;
-
-		if ($type === DataOptions::WATER_MARK_TYPE_TEXT) {
-			$text = Options::getWaterMarkText();
-			if ($text !== '') {
-				$fontFile = Cfg::getApp('fontfile');
-				Image::textWater($fileName, $text, $fontFile, $fileName, $position, $offset);
-			}
-		}
-		elseif ($type === DataOptions::WATER_MARK_TYPE_IMGDIR) {
-			$water = Options::getWaterMarkImgdir();
-			if ($water !== '') {
-				$pct = max(Options::getWaterMarkPct(), 0);
-				Image::imageWater($fileName, $water, $fileName, $position, $offset, $pct);
-			}
-		}
-
-		return $fileName;
+		$url = $picServer . str_replace('/webroot', '', $req->baseUrl) . str_replace(array(DIR_ROOT, '\\'), array('', '/'), $fileName);
+		return $url;
 	}
 
 }

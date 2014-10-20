@@ -37,14 +37,72 @@ return array(
 	),
 	array(
 		0 => array(
-			'label' => 'CFG_SYSTEM_URLS_PASSPORT',
-			'url' => 'passport.php?r=users/users/index'
-		)
+			'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_INDEX',
+			'm' => 'users', 'c' => 'users', 'a' => 'index'
+		),
+		1 => array(
+			'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_INDEX',
+			'm' => 'users', 'c' => 'users', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_CREATE',
+				'm' => 'users', 'c' => 'users', 'a' => 'create'
+			)
+		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_USERS_GROUPS_INDEX',
+			'm' => 'users', 'c' => 'groups', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_USERS_GROUPS_CREATE',
+				'm' => 'users', 'c' => 'groups', 'a' => 'create',
+			)
+		),
+		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_USERS_AMCAS_INDEX',
+			'm' => 'users', 'c' => 'amcas', 'a' => 'index',
+		),
 	),
 	array(
+		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_SYSTEM_OPTIONS_INDEX',
+			'm' => 'system', 'c' => 'options', 'a' => 'modify'
+		),
 		1 => array(
-			'label' => 'CFG_SYSTEM_URLS_PROGRAMMER',
-			'url' => 'programmer.php?r=builder/builders/index'
-		)
+			'label' => 'CFG_SYSTEM_URLS_SYSTEM_OPTIONS_MODIFY',
+			'm' => 'system', 'c' => 'options', 'a' => 'modify'
+		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_SYSTEM_PICTURES_INDEX',
+			'm' => 'system', 'c' => 'pictures', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_SYSTEM_PICTURES_UPLOAD',
+				'm' => 'system', 'c' => 'pictures', 'a' => 'upload'
+			)
+		),
+	),
+	array(
+		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
+			'm' => 'builder', 'c' => 'builders', 'a' => 'index'
+		),
+		1 => array(
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_INDEX',
+			'm' => 'builder', 'c' => 'builders', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_BUILDER_INDEX_CREATE',
+				'm' => 'builder', 'c' => 'builders', 'a' => 'create'
+			)
+		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_INDEX',
+			'm' => 'builder', 'c' => 'types', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_BUILDER_TYPES_CREATE',
+				'm' => 'builder', 'c' => 'types', 'a' => 'create',
+			)
+		),
+		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_BUILDER_TBLNAMES_INDEX',
+			'm' => 'builder', 'c' => 'tblnames', 'a' => 'index',
+		),
 	),
 );

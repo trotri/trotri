@@ -55,4 +55,13 @@ class TableNames
 	{
 		return 'users';
 	}
+
+	/**
+	 * 获取“用户扩展表”表名
+	 * @return string
+	 */
+	public static function getUserProfile()
+	{
+		return 'user_profile';
+	}
 }

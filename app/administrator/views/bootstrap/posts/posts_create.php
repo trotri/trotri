@@ -9,32 +9,40 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 			'category_id' => array(
 				'options' => $this->elements->getCategoryNames()
 			),
+			'module_id' => array(
+				'options' => $this->elements->getModuleNames()
+			),
 		),
 		'columns' => array(
 			'title',
+			'alias',
 			'category_id',
-			'little_picture_img',
-			'little_picture_file',
-			'little_picture',
+			'module_id',
+			'picture',
+			'picture_file',
 			'content',
 			'keywords',
 			'description',
-			'is_public',
 			'sort',
+			'password',
 			'is_head',
 			'is_recommend',
 			'is_jump',
 			'jump_url',
-			'is_html',
-			'allow_comment',
-			'access_count',
-			'dt_created',
-			'dt_public',
-			'dt_last_modified',
+			'is_public',
+			'dt_public_up',
+			'dt_public_down',
+			'comment_status',
+			'allow_other_modify',
+			'hits',
+			'praise_count',
+			'comment_count',
 			'creator_id',
 			'creator_name',
 			'last_modifier_id',
 			'last_modifier_name',
+			'dt_created',
+			'dt_last_modified',
 			'ip_created',
 			'ip_last_modified',
 			'_button_save_',
@@ -45,3 +53,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 	)
 );
 ?>
+
+<script type="text/javascript">
+var g_fields = <?php echo $this->fields; ?>;
+</script>

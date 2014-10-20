@@ -44,7 +44,7 @@ use tfc\util\Upload;
  *       'rand_max' => 99999,
  *       'rand_strlen' => 16 // 8 ~ 32之间
  *     ),
- *     'batch' => array(
+ *     'sysbatch' => array(
  *       ...
  *     ),
  *   ),
@@ -147,7 +147,7 @@ class UpProxy
 
         $upload = $this->getUpload();
         try {
-            $this->_savePath = $upload->save($files);
+            $upload->save($files);
         }
         catch (\Exception $e) {
             $errNo = $e->getCode();
@@ -205,7 +205,62 @@ class UpProxy
      */
     public function getSavePath()
     {
-        return $this->_savePath;
+        return $this->getUpload()->getSavePath();
+    }
+
+    /**
+     * 获取上传文件保存目录
+     * @return string
+     */
+    public function getSaveDir()
+    {
+        return $this->getUpload()->getSaveDir();
+    }
+
+    /**
+     * 获取允许上传的文件大小最大值
+     * @return integer
+     */
+    public function getMaxSize()
+    {
+        return $this->getUpload()->getMaxSize();
+    }
+
+    /**
+     * 获取所有允许上传的文件类型
+     * @return array
+     */
+    public function getAllowTypes()
+    {
+        return $this->getUpload()->getAllowTypes();
+    }
+
+    /**
+     * 获取所有允许上传的文件后缀
+     * @return array
+     */
+    public function getAllowExts()
+    {
+        return $this->getUpload()->getAllowExts();
+    }
+
+    /**
+     * 获取如果保存文件的地址已经存在其他文件，是否允许替换
+     * @return boolean
+     */
+    public function getAllowReplaceExists()
+    {
+        return $this->getUpload()->getAllowReplaceExists();
+    }
+
+    /**
+     * 通过文件名获取文件后缀，文件后缀已转化成小写字符
+     * @param string $fileName
+     * @return string
+     */
+    public function getFileExt($fileName)
+    {
+        return $this->getUpload()->getFileExt($fileName);
     }
 
     /**

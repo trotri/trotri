@@ -11,29 +11,55 @@
 namespace posts\services;
 
 use libsrv\AbstractService;
+use tfc\saf\Log;
+use libsrv\Service;
+use posts\library\Constant;
 use posts\library\Plugin;
 
 /**
  * Posts class file
  * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Posts.php 1 2014-09-16 19:26:44Z Code Generator $
+ * @version $Id: Posts.php 1 2014-10-17 11:27:20Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
 class Posts extends AbstractService
 {
 	/**
-	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接
-	 * @param array $attributes
+	 * 查询多条记录
+	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$rows = $this->getDb()->findAll($attributes, $order, $limit, $offset);
+		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
+		$offset = max((int) $offset, 0);
+
+		if (isset($params['ip_created'])) {
+			$ipCreated = trim($params['ip_created']); unset($params['ip_created']);
+			if ($ipCreated !== '') {
+				$ipCreated = (strpos($ipCreated, '.') !== false) ? ip2long($ipCreated) : (int) $ipCreated;
+				if ($ipCreated !== false) {
+					$params['ip_created'] = $ipCreated;
+				}
+			}
+		}
+
+		if (isset($params['ip_last_modified'])) {
+			$ipLastModified = trim($params['ip_last_modified']); unset($params['ip_last_modified']);
+			if ($ipLastModified !== '') {
+				$ipLastModified = (strpos($ipLastModified, '.') !== false) ? ip2long($ipLastModified) : (int) $ipLastModified;
+				if ($ipLastModified !== false) {
+					$params['ip_last_modified'] = $ipLastModified;
+				}
+			}
+		}
+
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
 		return $rows;
 	}
 
@@ -45,23 +71,137 @@ class Posts extends AbstractService
 	public function findByPk($postId)
 	{
 		$row = $this->getDb()->findByPk($postId);
-
-		$dispatcher = Plugin::getInstance();
-		$dispatcher->trigger('onBeforeFind', array(__METHOD__, &$row));
+		if ($row && is_array($row) && isset($row['post_id'])) {
+			$dispatcher = Plugin::getInstance();
+			$dispatcher->trigger('onAfterFind', array(__METHOD__, &$row));
+		}
 
 		return $row;
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $postId
-	 * @return mixed
+	 * 通过类别ID，查询记录数
+	 * @param integer $categoryId
+	 * @return integer
 	 */
-	public function getByPk($columnName, $postId)
+	public function countByCategoryId($categoryId)
 	{
-		$value = $this->getDb()->getByPk($columnName, $postId);
-		return $value;
+		$count = $this->getDb()->countByCategoryId($categoryId);
+		return $count;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see \libsrv\AbstractService::create()
+	 */
+	public function create(array $params = array(), $ignore = false)
+	{
+		$postId = parent::create($params, $ignore);
+		if (($postId = (int) $postId) <= 0) {
+			return false;
+		}
+
+		$dispatcher = Plugin::getInstance();
+		$dispatcher->trigger('onAfterSave', array(__METHOD__, &$params, $postId));
+
+		return $postId;
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see \libsrv\AbstractService::modifyByPk()
+	 */
+	public function modifyByPk($value, array $params = array())
+	{
+		$rowCount = parent::modifyByPk($value, $params);
+		if ($rowCount === false) {
+			return false;
+		}
+
+		$dispatcher = Plugin::getInstance();
+		$dispatcher->trigger('onAfterSave', array(__METHOD__, &$params, $value));
+
+		return true;
+	}
+
+	/**
+	 * 通过主键，编辑多条记录
+	 * @param array|integer $values
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk($values, array $params = array())
+	{
+		$rowCount = $this->getDb()->batchModifyByPk($values, $params);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，将一条记录移至回收站
+	 * @param integer $value
+	 * @return integer
+	 */
+	public function trashByPk($value)
+	{
+		return $this->batchModifyByPk($value, array('trash' => DataPosts::TRASH_Y));
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchTrashByPk(array $values)
+	{
+		return $this->batchModifyByPk($values, array('trash' => DataPosts::TRASH_Y));
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录
+	 * @param integer $value
+	 * @return integer
+	 */
+	public function restoreByPk($value)
+	{
+		return $this->batchModifyByPk($value, array('trash' => DataPosts::TRASH_N));
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchRestoreByPk(array $values)
+	{
+		return $this->batchModifyByPk($values, array('trash' => DataPosts::TRASH_N));
+	}
+
+	/**
+	 * 批量编辑排序
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifySort(array $params = array())
+	{
+		$rowCount = 0;
+		$columnName = 'sort';
+
+		foreach ($params as $pk => $value) {
+			if ($this->batchModifyByPk($pk, array($columnName => $value))) {
+				$rowCount += 1;
+			}
+			else {
+				$errors = $this->getErrors();
+				if ($errors) {
+					Log::warning(sprintf(
+						'Posts update args error, id "%d", params "%s", errors "%s"',
+						$pk, serialize($params), serialize($errors)
+					), 0, __METHOD__);
+				}
+			}
+		}
+
+		return $rowCount;
 	}
 
 	/**
@@ -98,6 +238,33 @@ class Posts extends AbstractService
 	}
 
 	/**
+	 * 获取“评论设置”
+	 * @param string $commentStatus
+	 * @return string
+	 */
+	public function getCommentStatusLangByCommentStatus($commentStatus)
+	{
+		$enum = DataPosts::getCommentStatusEnum();
+		return isset($enum[$commentStatus]) ? $enum[$commentStatus] : '';
+	}
+
+	/**
+	 * 通过“主键ID”，获取“文档扩展字段”
+	 * @param integer $postId
+	 * @return array
+	 */
+	public function getModuleFieldsByPostId($postId)
+	{
+		$moduleId = $this->getModuleIdByPostId($postId);
+		if ($moduleId <= 0) {
+			return array();
+		}
+
+		$value = Service::getInstance('Modules', 'posts')->getFieldsByModuleId($moduleId);
+		return is_array($value) ? $value : array();
+	}
+
+	/**
 	 * 通过“主键ID”，获取“文档标题”
 	 * @param integer $postId
 	 * @return string
@@ -109,35 +276,13 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“缩略图地址”
+	 * 通过“主键ID”，获取“别名”
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getLittlePictureByPostId($postId)
+	public function getAliasByPostId($postId)
 	{
-		$value = $this->getByPk('little_picture', $postId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“所属类别”
-	 * @param integer $postId
-	 * @return integer
-	 */
-	public function getCategoryIdByPostId($postId)
-	{
-		$value = $this->getByPk('category_id', $postId);
-		return $value ? (int) $value : 0;
-	}
-
-	/**
-	 * 通过“主键ID”，获取“类别名”
-	 * @param integer $postId
-	 * @return string
-	 */
-	public function getCategoryNameByPostId($postId)
-	{
-		$value = $this->getByPk('category_name', $postId);
+		$value = $this->getByPk('alias', $postId);
 		return $value ? $value : '';
 	}
 
@@ -186,24 +331,57 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“是否发表”
+	 * 通过“主键ID”，获取“所属类别”
+	 * @param integer $postId
+	 * @return integer
+	 */
+	public function getCategoryIdByPostId($postId)
+	{
+		$value = $this->getByPk('category_id', $postId);
+		return $value ? (int) $value : 0;
+	}
+
+	/**
+	 * 通过“主键ID”，获取“类别名”
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getIsPublicByPostId($postId)
+	public function getCategoryNameByPostId($postId)
 	{
-		$value = $this->getByPk('is_public', $postId);
+		$value = $this->getByPk('category_name', $postId);
 		return $value ? $value : '';
 	}
 
 	/**
-	 * 通过“主键ID”，获取“是否删除”
+	 * 通过“主键ID”，获取“所属模型”
+	 * @param integer $postId
+	 * @return integer
+	 */
+	public function getModuleIdByPostId($postId)
+	{
+		$value = $this->getByPk('module_id', $postId);
+		return $value ? (int) $value : 0;
+	}
+
+	/**
+	 * 通过“主键ID”，获取“访问密码”
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getTrashByPostId($postId)
+	public function getPasswordByPostId($postId)
 	{
-		$value = $this->getByPk('trash', $postId);
+		$value = $this->getByPk('password', $postId);
+		return $value ? $value : '';
+	}
+
+	/**
+	 * 通过“主键ID”，获取“主图地址”
+	 * @param integer $postId
+	 * @return string
+	 */
+	public function getPictureByPostId($postId)
+	{
+		$value = $this->getByPk('picture', $postId);
 		return $value ? $value : '';
 	}
 
@@ -252,35 +430,46 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“生成静态页面”
+	 * 通过“主键ID”，获取“是否发表”
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getIsHtmlByPostId($postId)
+	public function getIsPublicByPostId($postId)
 	{
-		$value = $this->getByPk('is_html', $postId);
+		$value = $this->getByPk('is_public', $postId);
 		return $value ? $value : '';
 	}
 
 	/**
-	 * 通过“主键ID”，获取“生成静态页面链接”
+	 * 通过“主键ID”，获取“开始发表时间”
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getHtmlUrlByPostId($postId)
+	public function getDtPublicUpByPostId($postId)
 	{
-		$value = $this->getByPk('html_url', $postId);
+		$value = $this->getByPk('dt_public_up', $postId);
 		return $value ? $value : '';
 	}
 
 	/**
-	 * 通过“主键ID”，获取“是否允许评论”
+	 * 通过“主键ID”，获取“结束发表时间”
 	 * @param integer $postId
 	 * @return string
 	 */
-	public function getAllowCommentByPostId($postId)
+	public function getDtPublicDownByPostId($postId)
 	{
-		$value = $this->getByPk('allow_comment', $postId);
+		$value = $this->getByPk('dt_public_down', $postId);
+		return $value ? $value : '';
+	}
+
+	/**
+	 * 通过“主键ID”，获取“评论设置”
+	 * @param integer $postId
+	 * @return string
+	 */
+	public function getCommentStatusByPostId($postId)
+	{
+		$value = $this->getByPk('comment_status', $postId);
 		return $value ? $value : '';
 	}
 
@@ -300,47 +489,36 @@ class Posts extends AbstractService
 	 * @param integer $postId
 	 * @return integer
 	 */
-	public function getAccessCountByPostId($postId)
+	public function getHitsByPostId($postId)
 	{
-		$value = $this->getByPk('access_count', $postId);
+		$value = $this->getByPk('hits', $postId);
 		return $value ? (int) $value : 0;
 	}
 
 	/**
-	 * 通过“主键ID”，获取“创建时间”
+	 * 通过“主键ID”，获取“赞美次数”
 	 * @param integer $postId
-	 * @return string
+	 * @return integer
 	 */
-	public function getDtCreatedByPostId($postId)
+	public function getPraiseCountByPostId($postId)
 	{
-		$value = $this->getByPk('dt_created', $postId);
-		return $value ? $value : '';
+		$value = $this->getByPk('praise_count', $postId);
+		return $value ? (int) $value : 0;
 	}
 
 	/**
-	 * 通过“主键ID”，获取“发布时间”
+	 * 通过“主键ID”，获取“评论次数”
 	 * @param integer $postId
-	 * @return string
+	 * @return integer
 	 */
-	public function getDtPublicByPostId($postId)
+	public function getCommentCountByPostId($postId)
 	{
-		$value = $this->getByPk('dt_public', $postId);
-		return $value ? $value : '';
+		$value = $this->getByPk('comment_count', $postId);
+		return $value ? (int) $value : 0;
 	}
 
 	/**
-	 * 通过“主键ID”，获取“上次编辑时间”
-	 * @param integer $postId
-	 * @return string
-	 */
-	public function getDtLastModifiedByPostId($postId)
-	{
-		$value = $this->getByPk('dt_last_modified', $postId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“创建人”
+	 * 通过“主键ID”，获取“创建人ID”
 	 * @param integer $postId
 	 * @return integer
 	 */
@@ -362,7 +540,7 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“上次编辑人”
+	 * 通过“主键ID”，获取“上次编辑人ID”
 	 * @param integer $postId
 	 * @return integer
 	 */
@@ -373,7 +551,7 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“上次编辑人”
+	 * 通过“主键ID”，获取“上次编辑人登录名”
 	 * @param integer $postId
 	 * @return string
 	 */
@@ -384,25 +562,58 @@ class Posts extends AbstractService
 	}
 
 	/**
+	 * 通过“主键ID”，获取“创建时间”
+	 * @param integer $postId
+	 * @return string
+	 */
+	public function getDtCreatedByPostId($postId)
+	{
+		$value = $this->getByPk('dt_created', $postId);
+		return $value ? $value : '';
+	}
+
+	/**
+	 * 通过“主键ID”，获取“上次编辑时间”
+	 * @param integer $postId
+	 * @return string
+	 */
+	public function getDtLastModifiedByPostId($postId)
+	{
+		$value = $this->getByPk('dt_last_modified', $postId);
+		return $value ? $value : '';
+	}
+
+	/**
 	 * 通过“主键ID”，获取“创建IP”
 	 * @param integer $postId
-	 * @return integer
+	 * @return string
 	 */
 	public function getIpCreatedByPostId($postId)
 	{
 		$value = $this->getByPk('ip_created', $postId);
-		return $value ? (int) $value : 0;
+		return $value ? long2ip((int) $value) : false;
 	}
 
 	/**
 	 * 通过“主键ID”，获取“上次编辑IP”
 	 * @param integer $postId
-	 * @return integer
+	 * @return string
 	 */
 	public function getIpLastModifiedByPostId($postId)
 	{
 		$value = $this->getByPk('ip_last_modified', $postId);
-		return $value ? (int) $value : 0;
+		return $value ? long2ip((int) $value) : false;
+	}
+
+	/**
+	 * 通过“主键ID”，获取“是否删除”
+	 * @param integer $postId
+	 * @return string
+	 */
+	public function getTrashByPostId($postId)
+	{
+		$value = $this->getByPk('trash', $postId);
+		return $value ? $value : '';
 	}
 
 }

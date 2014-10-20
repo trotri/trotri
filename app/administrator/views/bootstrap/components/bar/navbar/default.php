@@ -21,7 +21,7 @@
           <ul class="dropdown-menu">
             <li><a href="<?php echo $this->getUrlManager()->getUrl('cacheclear', 'tools', 'system'); ?>">清理缓存</a></li>
             <li class="divider"></li>
-            <li><a href="<?php echo $this->getUrlManager()->getUrl('logout', 'site', 'system'); ?>">退出登录</a></li>
+            <li><a href="<?php echo $this->getUrlManager()->getUrl('logout', 'account', 'users'); ?>">退出登录</a></li>
           </ul>
         </li>
         <?php endif; ?>

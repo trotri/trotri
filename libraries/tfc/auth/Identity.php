@@ -23,7 +23,7 @@ use tfc\ap\UserIdentity;
 class Identity
 {
     /**
-     * @var array 用户角色名
+     * @var array 用户拥有的角色名
      */
     protected static $_roleNames = array();
 
@@ -88,7 +88,7 @@ class Identity
      * 获取用户昵称
      * @return string
      */
-    public static function getNickName()
+    public static function getNickname()
     {
         return UserIdentity::getNick();
     }
@@ -98,7 +98,7 @@ class Identity
      * @param string $nick
      * @return void
      */
-    public static function setNickName($name)
+    public static function setNickname($name)
     {
         UserIdentity::setNick($name);
     }
@@ -186,19 +186,19 @@ class Identity
      * 设置所有的值
      * @param integer $userId
      * @param string $loginName
-     * @param string $nickName
+     * @param string $nickname
      * @param array $roleNames
      * @param array $appNames
      * @param tfc\auth\Authoriz $authoriz
      * @return void
      */
-    public static function setAll($userId, $loginName, $nickName, $roleNames, $appNames, Authoriz $authoriz)
+    public static function setAll($userId, $loginName, $nickname, $roleNames, $appNames, Authoriz $authoriz)
     {
-        $this->setUserId($userId);
-        $this->setLoginName($loginName);
-        $this->setNickName($nickName);
-        $this->setRoleNames($roleNames);
-        $this->setAppNames($appNames);
-        $this->setAuthoriz($authoriz);
+        self::setUserId($userId);
+        self::setLoginName($loginName);
+        self::setNickname($nickname);
+        self::setRoleNames($roleNames);
+        self::setAppNames($appNames);
+        self::setAuthoriz($authoriz);
     }
 }

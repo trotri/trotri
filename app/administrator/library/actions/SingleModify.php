@@ -11,7 +11,7 @@
 namespace library\actions;
 
 use tfc\ap\Ap;
-use tid\Role;
+use tfc\auth\Role;
 use libapp\Model;
 
 /**

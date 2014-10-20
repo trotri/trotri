@@ -9,24 +9,8 @@
  */
 
 return array (
-  'passport' => array (
-    'dsn' => 'mysql:host=localhost;dbname=trotri',
-    'username' => 'root',
-    'password' => '123456',
-    'charset' => 'utf8',
-    'retry' => 3,
-    'tblprefix' => 'tr_'
-  ),
-  'programmer' => array (
-    'dsn' => 'mysql:host=localhost;dbname=trotri',
-    'username' => 'root',
-    'password' => '123456',
-    'charset' => 'utf8',
-    'retry' => 3,
-    'tblprefix' => 'tr_'
-  ),
   'trotri' => array (
-    'dsn' => 'mysql:host=localhost;dbname=trotri',
+    'dsn' => 'mysql:host=localhost;dbname=trotri2',
     'username' => 'root',
     'password' => '123456',
     'charset' => 'utf8',

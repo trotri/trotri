@@ -146,16 +146,17 @@ abstract class DynamicService extends AbstractService
 	}
 
 	/**
-	 * 获取表中所有的记录
+	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接，findAllByAttributes别名
+	 * @param array $attributes
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @param string $option
 	 * @return array
 	 */
-	public function findAll($order = '', $limit = 0, $offset = 0, $option = '')
+	public function findAll(array $attributes = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
-		return $this->findAllByCondition(1, null, $order, $limit, $offset, $option);
+		return $this->findAllByAttributes($attributes, $order, $limit, $offset, $option);
 	}
 
 	/**
@@ -270,43 +271,127 @@ abstract class DynamicService extends AbstractService
 	}
 
 	/**
-	 * 通过主键，获取某个列的值。不支持联合主键
-	 * @param string $columnName
-	 * @param integer $value
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $value)
-	{
-		if (($value = $this->cleanPositiveInteger($value)) === false) {
-			return false;
-		}
-
-		$value = $this->getDb()->getByPk($columnName, $value);
-		return $value;
-	}
-
-	/**
-	 * 通过主键，查询一条记录。不支持联合主键
-	 * @param integer $value
-	 * @return array
-	 */
-	public function findByPk($value)
-	{
-		if (($value = $this->cleanPositiveInteger($value)) === false) {
-			return false;
-		}
-
-		$row = $this->getDb()->findByPk($value);
-		return $row;
-	}
-
-	/**
 	 * 获取"SELECT SQL_CALC_FOUND_ROWS"语句的查询总数
 	 * @return integer
 	 */
 	public function getFoundRows()
 	{
 		return $this->getDb()->getFoundRows();
+	}
+
+	/**
+	 * 通过主键，字段名和字段值，编辑一条记录
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function singleModifyByPk($pk, $columnName, $value)
+	{
+		if (($pk = $this->cleanPositiveInteger($pk)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->modifyByPk($pk, array($columnName => $value));
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，编辑多条记录。不支持联合主键
+	 * @param array $values
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifyByPk(array $values, array $params = array())
+	{
+		$formProcessor = $this->getFormProcessor();
+		if (!$formProcessor->run(FormProcessor::OP_UPDATE, $params, $values)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $formProcessor->id), $attributes);
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，字段名和字段值，编辑多条记录
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchSingleModifyByPk(array $pks, $columnName, $value)
+	{
+		if (($pks = $this->cleanPositiveInteger($pks)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->batchModifyByPk(implode(',', $pks), array($columnName => $value));
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，删除多条记录。不支持联合主键
+	 * @param array $values
+	 * @return integer
+	 */
+	public function batchRemoveByPk(array $values)
+	{
+		if (($values = $this->cleanPositiveInteger($values)) === false) {
+			return false;
+		}
+
+		$rowCount = $this->getDb()->batchRemoveByPk(implode(',', $values));
+		return $rowCount;
+	}
+
+	/**
+	 * 通过主键，将一条记录移至回收站
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function trashByPk($pk, $columnName = 'trash', $value = 'y')
+	{
+		return $this->singleModifyByPk($pk, $columnName, $value);
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchTrashByPk(array $pks, $columnName = 'trash', $value = 'y')
+	{
+		return $this->batchSingleModifyByPk($pks, $columnName, $value);
+	}
+
+	/**
+	 * 通过主键，从回收站还原一条记录
+	 * @param integer $pk
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function restoreByPk($pk, $columnName = 'trash', $value = 'n')
+	{
+		return $this->singleModifyByPk($pk, $columnName, $value);
+	}
+
+	/**
+	 * 通过主键，将多条记录移至回收站。不支持联合主键
+	 * @param array $pks
+	 * @param string $columnName
+	 * @param string $value
+	 * @return integer
+	 */
+	public function batchRestoreByPk(array $pks, $columnName = 'trash', $value = 'n')
+	{
+		return $this->batchSingleModifyByPk($pks, $columnName, $value);
 	}
 
 	/**

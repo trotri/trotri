@@ -23,6 +23,11 @@ use tfc\mvc\form;
 class SearchElement extends form\InputElement
 {
 	/**
+	 * @var string 格式：datetime | date | time
+	 */
+	protected $_format = 'datetime';
+
+	/**
 	 * @var string 表单样式名
 	 */
 	protected $_className = 'form-control input-sm';
@@ -33,9 +38,27 @@ class SearchElement extends form\InputElement
 	 */
 	protected function _init()
 	{
+		$this->setAttribute('format', $this->_format);
+
 		if ($this->_className !== '') {
 			$this->setClass($this->_className);
 		}
+	}
+
+	/**
+	 * (non-PHPdoc)
+	 * @see \tfc\mvc\form\InputElement::getInput()
+	 */
+	public function getInput()
+	{
+		if ($this->getType() === 'datetimepicker') {
+			$this->setType('text');
+			$format = $this->getAttribute('format');
+			$this->setClass($this->getClass() . ' form_' . $format);			
+		}
+
+		$output = parent::getInput();
+		return $output;
 	}
 
 	/**

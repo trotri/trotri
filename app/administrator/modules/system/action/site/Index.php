@@ -28,6 +28,6 @@ class Index extends actions\View
 	 */
 	public function run()
 	{
-		exit('aaaaaaaaaa');
+		$this->render();
 	}
 }

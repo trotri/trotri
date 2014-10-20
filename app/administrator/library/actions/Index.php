@@ -13,7 +13,7 @@ namespace library\actions;
 use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\saf\Cfg;
-use tid\Role;
+use tfc\auth\Role;
 use libapp\Model;
 use libapp\PageHelper;
 use library\ErrorNo;

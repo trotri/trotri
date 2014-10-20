@@ -73,22 +73,6 @@ class Groups extends AbstractDb
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $groupId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $groupId)
-	{
-		$row = $this->findByPk($groupId);
-		if ($row && is_array($row) && isset($row[$columnName])) {
-			return $row[$columnName];
-		}
-
-		return false;
-	}
-
-	/**
 	 * 新增一条记录，禁止新建group_pid=0组
 	 * @param array $params
 	 * @param boolean $ignore
@@ -114,7 +98,8 @@ class Groups extends AbstractDb
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -152,21 +137,30 @@ class Groups extends AbstractDb
 		}
 
 		if (isset($params['sort'])) {
-			$attributes['sort'] = (int) $params['sort'];
+			$sort = (int) $params['sort'];
+			if ($sort >= 0) {
+				$attributes['sort'] = $sort;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['description'])) {
 			$attributes['description'] = $params['description'];
 		}
 
+		$rowCount = 0;
+
 		if ($attributes === array()) {
-			return false;
+			return $rowCount;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getGroups();
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`group_id` = ?');
 		$attributes['group_id'] = $groupId;
-		return $this->update($sql, $attributes);
+		$rowCount = $this->update($sql, $attributes);
+		return $rowCount;
 	}
 
 	/**
@@ -185,7 +179,8 @@ class Groups extends AbstractDb
 		$sql = 'UPDATE `' . $tableName . '` SET `permission` = ? WHERE `group_id` = ?';
 		$attributes['permission'] = $permission;
 		$attributes['group_id'] = $groupId;
-		return $this->update($sql, $attributes);
+		$rowCount = $this->update($sql, $attributes);
+		return $rowCount;
 	}
 
 	/**
@@ -201,6 +196,7 @@ class Groups extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getGroups();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`group_id` = ?');
-		return $this->delete($sql, $groupId);
+		$rowCount = $this->delete($sql, $groupId);
+		return $rowCount;
 	}
 }

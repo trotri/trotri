@@ -17,7 +17,7 @@ use tfc\ap\Ap;
  * TrashIndex class file
  * 查询回收站数据列表
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: TrashIndex.php 1 2014-09-16 19:32:26Z Code Generator $
+ * @version $Id: TrashIndex.php 1 2014-10-18 13:56:27Z Code Generator $
  * @package modules.posts.action.posts
  * @since 1.0
  */
@@ -30,7 +30,6 @@ class TrashIndex extends actions\Index
 	public function run()
 	{
 		Ap::getRequest()->setParam('trash', 'y');
-		Ap::getRequest()->setParam('order', 'sort');
 		$this->execute('Posts');
 	}
 }

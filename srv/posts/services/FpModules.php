@@ -13,13 +13,12 @@ namespace posts\services;
 use libsrv\FormProcessor;
 use tfc\validator;
 use posts\library\Lang;
-use posts\library\TableNames;
 
 /**
  * FpModules class file
  * 业务层：表单数据处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: FpModules.php 1 2014-09-11 16:41:01Z Code Generator $
+ * @version $Id: FpModules.php 1 2014-10-12 21:14:11Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
@@ -32,12 +31,12 @@ class FpModules extends FormProcessor
 	protected function _process(array $params = array())
 	{
 		if ($this->isInsert()) {
-			if (!$this->required($params, 'module_name', 'module_tblname', 'forbidden', 'description')) {
+			if (!$this->required($params, 'module_name')) {
 				return false;
 			}
 		}
 
-		$this->isValids($params, 'module_name', 'module_tblname', 'forbidden', 'description');
+		$this->isValids($params, 'module_name', 'fields', 'forbidden', 'description');
 		return !$this->hasError();
 	}
 
@@ -47,15 +46,10 @@ class FpModules extends FormProcessor
 	 */
 	protected function _cleanPreProcess(array $params)
 	{
-		if ($this->isUpdate()) {
-			if (isset($params['module_tblname'])) { unset($params['module_tblname']); }
-		}
-
 		$rules = array(
-			'builder_name' => 'trim',
 			'module_name' => 'trim',
-			'module_tblname' => 'trim',
 			'forbidden' => 'trim',
+			'fields' => array($this->_object, 'cleanFields'),
 		);
 
 		$ret = $this->clean($rules, $params);
@@ -72,21 +66,6 @@ class FpModules extends FormProcessor
 		return array(
 			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_POST_MODULES_MODULE_NAME_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POST_MODULES_MODULE_NAME_MAXLENGTH')),
-		);
-	}
-
-	/**
-	 * 获取“类别表名”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getModuleTblnameRule($value)
-	{
-		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_POST_MODULES_MODULE_TBLNAME_ALPHANUM')),
-			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_POST_MODULES_MODULE_TBLNAME_MINLENGTH')),
-			'MaxLength' => new validator\MaxLengthValidator($value, 30, Lang::_('SRV_FILTER_POST_MODULES_MODULE_TBLNAME_MAXLENGTH')),
-			'DbExists' => new validator\DbExistsValidator($value, false, Lang::_('SRV_FILTER_POST_MODULES_MODULE_TBLNAME_UNIQUE'), $this->getDbProxy(), TableNames::getModules(), 'module_tblname')
 		);
 	}
 

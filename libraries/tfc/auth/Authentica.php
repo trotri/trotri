@@ -21,17 +21,17 @@ use tfc\saf\Cfg;
  * <pre>
  * 配置 /cfg/app/appname/main.php：
  * return array (
- *   'cluster_name' => array (
- *     'key_name' => 'auth_passport',           // 密钥配置名
- *     'domain' => '.trotri.com',               // Cookie的有效域名，缺省：当前域名
+ *   'account' => array (
+ *     'key_name' => 'auth_administrator',      // 密钥配置名
+ *     'domain' => '',                          // Cookie的有效域名，缺省：当前域名
  *     'path' => '/',                           // Cookie的有效服务器路径，缺省：/
  *     'secure' => false,                       // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
  *     'httponly' => true,                      // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
  *     'expiry' => WEEK_IN_SECONDS,             // 记住密码时间
- *     'cookie_name' => 'pptid',                // Cookie名
- *     'cookset_password' => false,             // Cookie中设置密码
- *     'cookset_groupids' => true,              // Cookie中设置所属分组ID
- *     'cookset_appnames' => true               // Cookie中设置用户拥有权限的项目名
+ *     'cookie_name' => 'atrid',                // Cookie名
+ *     'cookset_password' => false,             // Cookie中设置密码，该配置不用于此类
+ *     'cookset_rolenames' => true,             // Cookie中设置用户拥有的角色名，该配置不用于此类
+ *     'cookset_appnames' => true,              // Cookie中设置用户拥有权限的项目名，该配置不用于此类
  *   ),
  * )
  *

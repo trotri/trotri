@@ -16,7 +16,7 @@ use libapp\BaseController;
  * ModulesController class file
  * 模型管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: ModulesController.php 1 2014-09-11 18:41:37Z Code Generator $
+ * @version $Id: ModulesController.php 1 2014-10-12 22:12:36Z Code Generator $
  * @package modules.posts.controller
  * @since 1.0
  */

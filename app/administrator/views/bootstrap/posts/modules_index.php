@@ -60,7 +60,6 @@ $this->widget(
 		),
 		'columns' => array(
 			'module_name',
-			'module_tblname',
 			'forbidden',
 			'description',
 			'module_id',

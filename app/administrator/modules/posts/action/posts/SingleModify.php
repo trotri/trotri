@@ -16,7 +16,7 @@ use library\actions;
  * SingleModify class file
  * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SingleModify.php 1 2014-09-16 19:32:26Z Code Generator $
+ * @version $Id: SingleModify.php 1 2014-10-18 13:56:27Z Code Generator $
  * @package modules.posts.action.posts
  * @since 1.0
  */

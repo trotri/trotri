@@ -54,11 +54,38 @@ if ($this->controller === 'posts') {
 			'action' => $this->getUrlManager()->getUrl((($this->action == 'trashindex') ? 'trashindex' : 'index'), 'posts', 'posts'),
 			'elements_object' => $this->elements,
 			'elements' => array(
-				'title' => array(
-					'type' => 'text',
-				),
 				'post_id' => array(
 					'type' => 'text',
+				),
+				'category_id' => array(
+					'options' => $this->elements->getCategoryNames(),
+				),
+				'module_id' => array(
+					'options' => $this->elements->getModuleNames(),
+				),
+				'is_head' => array(
+					'type' => 'select',
+				),
+				'is_recommend' => array(
+					'type' => 'select',
+				),
+				'is_jump' => array(
+					'type' => 'select',
+				),
+				'is_public' => array(
+					'type' => 'select',
+				),
+				'dt_public_up' => array(
+					'type' => 'datetimepicker',
+				),
+				'dt_public_down' => array(
+					'type' => 'datetimepicker',
+				),
+				'comment_status' => array(
+					'type' => 'select',
+				),
+				'allow_other_modify' => array(
+					'type' => 'select',
 				),
 				'creator_id' => array(
 					'type' => 'text',
@@ -72,56 +99,46 @@ if ($this->controller === 'posts') {
 				'last_modifier_name' => array(
 					'type' => 'text',
 				),
-				'category_id' => array(
-					'options' => $this->elements->getCategoryNames(),
+				'dt_created_start' => array(
+					'type' => 'datetimepicker',
 				),
-				'is_head' => array(
-					'type' => 'select',
+				'dt_created_end' => array(
+					'type' => 'datetimepicker',
 				),
-				'is_recommend' => array(
-					'type' => 'select',
+				'dt_last_modified_start' => array(
+					'type' => 'datetimepicker',
 				),
-				'is_jump' => array(
-					'type' => 'select',
-				),
-				'is_html' => array(
-					'type' => 'select',
-				),
-				'allow_comment' => array(
-					'type' => 'select',
-				),
-				'is_public' => array(
-					'type' => 'select',
-				),
-				'access_count_start' => array(
-					'type' => 'text',
-				),
-				'access_count_end' => array(
-					'type' => 'text',
+				'dt_last_modified_end' => array(
+					'type' => 'datetimepicker',
 				),
 			),
 			'columns' => array(
+				'order',
 				'title',
 				'post_id',
+				'alias',
+				'keywords',
+				'category_id',
+				'module_id',
+				'is_head',
+				'is_recommend',
+				'is_jump',
+				'jump_url',
+				'is_public',
+				'dt_public_up',
+				'dt_public_down',
+				'comment_status',
+				'allow_other_modify',
 				'creator_id',
 				'creator_name',
 				'last_modifier_id',
 				'last_modifier_name',
-				'category_id',
-				'is_head',
-				'is_recommend',
-				'is_jump',
-				'is_html',
-				'allow_comment',
-				'is_public',
 				'dt_created_start',
 				'dt_created_end',
-				'dt_public_start',
-				'dt_public_end',
 				'dt_last_modified_start',
 				'dt_last_modified_end',
-				'access_count_start',
-				'access_count_end',
+				'ip_created',
+				'ip_last_modified',
 			)
 		)
 	);

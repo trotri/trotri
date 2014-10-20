@@ -24,9 +24,4 @@ class Constant
 	 * @var string 业务层名
 	 */
 	const SRV_NAME_BUILDERS = 'builders';
-
-	/**
-	 * @var string 业务层名
-	 */
-	const SRV_NAME_POSTS = 'posts';
 }

@@ -14,7 +14,7 @@ use tfc\ap\EventDispatcher;
 
 /**
  * Plugin class file
- * 当前业务的语言国际化管理类
+ * 当前业务的插件管理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Plugin.php 1 2013-04-05 01:38:06Z huan.song $
  * @package posts.library
@@ -26,7 +26,7 @@ class Plugin extends EventDispatcher
 	 * @var array 用于寄存需要加载的插件名
 	 */
 	public static $plgNames = array(
-		'linker',
+		'profile'
 	);
 
 	/**

@@ -9,10 +9,11 @@
  */
 
 return array(
-	'posts' => array(
-		'directory' => 'posts', // 上传目录名，在根目录：DIR_DATA . DS . 'u'下
+	'sysbatch' => array(
+		'directory' => 'imgs', // 上传目录名，在根目录：DIR_DATA_UPLOAD下，如：DIR_DATA_UPLOAD . '/imgs'
 		'name_pre' => '',
-		'name_rule' => 2, // 保存文件时的命名规则，0：原文件名、1：随机整数格式、2：随机字符串格式、3：日期和时间格式、4：日期和时间+随机整数格式、5：日期和时间+随机字符串格式、6：时间戳格式、7：时间戳+随机整数格式、8：时间戳+随机字符串格式
+		'name_rule' => 0, // 保存文件时的命名规则，0：原文件名、1：随机整数格式、2：随机字符串格式、3：日期和时间格式、4：日期和时间+随机整数格式、5：日期和时间+随机字符串格式、6：时间戳格式、7：时间戳+随机整数格式、8：时间戳+随机字符串格式
+		'dir_rule' => 'Ym/d', // 目录名规则，由日期时间组成，如：DIR_DATA_UPLOAD . '/imgs/thumb/201410/04'
 		'max_size' => 2097152, // 允许上传的文件大小最大值，单位：字节
 		'allow_types' => array(
 			'image/pjpeg',
@@ -25,11 +26,35 @@ return array(
 			'image/x-png'
 		),
 		'allow_exts' => 'jpg|gif|png|bmp|zip|rar',
+		'allow_replace_exists' => false, // 如果保存文件的地址已经存在其他文件，是否允许替换
+		'dt_format' => 'YmdHis',
+		'join_str' => '_',
+		'rand_min' => 10000,
+		'rand_max' => 99999,
+		'rand_strlen' => 16 // 8 ~ 32之间
+	),
+	'posts' => array(
+		'directory' => 'posts', // 上传目录名，在根目录：DIR_DATA_UPLOAD下，如：DIR_DATA_UPLOAD . '/posts'
+		'name_pre' => '',
+		'name_rule' => 2, // 保存文件时的命名规则，0：原文件名、1：随机整数格式、2：随机字符串格式、3：日期和时间格式、4：日期和时间+随机整数格式、5：日期和时间+随机字符串格式、6：时间戳格式、7：时间戳+随机整数格式、8：时间戳+随机字符串格式
+		'dir_rule' => 'Ym/d', // 目录名规则，由日期时间组成，如：DIR_DATA_UPLOAD . '/imgs/thumb/201410/04'
+		'max_size' => 2097152, // 允许上传的文件大小最大值，单位：字节
+		'allow_types' => array(
+			'image/pjpeg',
+			'image/jpeg',
+			'image/gif',
+			'image/png',
+			'image/xpng',
+			'image/wbmp',
+			'image/bmp',
+			'image/x-png'
+		),
+		'allow_exts' => 'jpg|gif|png|bmp',
 		'allow_replace_exists' => true, // 如果保存文件的地址已经存在其他文件，是否允许替换
 		'dt_format' => 'YmdHis',
 		'join_str' => '_',
 		'rand_min' => 10000,
 		'rand_max' => 99999,
-		'rand_strlen' => 16
+		'rand_strlen' => 16 // 8 ~ 32之间
 	),
 );

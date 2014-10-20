@@ -11,13 +11,14 @@
 namespace posts\services;
 
 use libsrv\AbstractService;
+use libsrv\Service;
 use posts\library\Lang;
 
 /**
  * Categories class file
  * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Categories.php 1 2014-09-12 15:48:15Z Code Generator $
+ * @version $Id: Categories.php 1 2014-10-13 21:17:13Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
@@ -102,6 +103,16 @@ class Categories extends AbstractService
 	}
 
 	/**
+	 * 通过类别ID，查询文档数
+	 * @param integer $categoryId
+	 * @return integer
+	 */
+	public function getPostsCount($categoryId)
+	{
+		return Service::getInstance('Posts', 'posts')->countByCategoryId($categoryId);
+	}
+
+	/**
 	 * 批量编辑排序
 	 * @param array $params
 	 * @return integer
@@ -109,25 +120,13 @@ class Categories extends AbstractService
 	public function batchModifySort(array $params = array())
 	{
 		$rowCount = 0;
-		$columnName = 'menu_sort';
+		$columnName = 'sort';
 
 		foreach ($params as $pk => $value) {
-			$rowCount += $this->singleModifyByPk($pk, $columnName, $value);
+			$rowCount += $this->modifyByPk($pk, array($columnName => $value));
 		}
 
 		return $rowCount;
-	}
-
-	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $categoryId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $categoryId)
-	{
-		$value = $this->getDb()->getByPk($columnName, $categoryId);
-		return $value;
 	}
 
 	/**
@@ -153,14 +152,14 @@ class Categories extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“所属模型”
+	 * 通过“主键ID”，获取“别名”
 	 * @param integer $categoryId
-	 * @return integer
+	 * @return string
 	 */
-	public function getModuleIdByCategoryId($categoryId)
+	public function getAliasByCategoryId($categoryId)
 	{
-		$value = $this->getByPk('module_id', $categoryId);
-		return $value ? (int) $value : 0;
+		$value = $this->getByPk('alias', $categoryId);
+		return $value ? $value : '';
 	}
 
 	/**
@@ -193,72 +192,6 @@ class Categories extends AbstractService
 	public function getMetaDescriptionByCategoryId($categoryId)
 	{
 		$value = $this->getByPk('meta_description', $categoryId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“菜单是否隐藏”
-	 * @param integer $categoryId
-	 * @return string
-	 */
-	public function getIsHideByCategoryId($categoryId)
-	{
-		$value = $this->getByPk('is_hide', $categoryId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“菜单排序”
-	 * @param integer $categoryId
-	 * @return integer
-	 */
-	public function getMenuSortByCategoryId($categoryId)
-	{
-		$value = $this->getByPk('menu_sort', $categoryId);
-		return $value ? (int) $value : 0;
-	}
-
-	/**
-	 * 通过“主键ID”，获取“是否跳转”
-	 * @param integer $categoryId
-	 * @return string
-	 */
-	public function getIsJumpByCategoryId($categoryId)
-	{
-		$value = $this->getByPk('is_jump', $categoryId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“跳转链接”
-	 * @param integer $categoryId
-	 * @return string
-	 */
-	public function getJumpUrlByCategoryId($categoryId)
-	{
-		$value = $this->getByPk('jump_url', $categoryId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“是否生成静态页面”
-	 * @param integer $categoryId
-	 * @return string
-	 */
-	public function getIsHtmlByCategoryId($categoryId)
-	{
-		$value = $this->getByPk('is_html', $categoryId);
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 通过“主键ID”，获取“生成静态页面存放目录”
-	 * @param integer $categoryId
-	 * @return string
-	 */
-	public function getHtmlDirByCategoryId($categoryId)
-	{
-		$value = $this->getByPk('html_dir', $categoryId);
 		return $value ? $value : '';
 	}
 
@@ -296,24 +229,24 @@ class Categories extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“列表静态页面链接规则”
+	 * 通过“主键ID”，获取“排序”
 	 * @param integer $categoryId
-	 * @return string
+	 * @return integer
 	 */
-	public function getRuleListByCategoryId($categoryId)
+	public function getSortByCategoryId($categoryId)
 	{
-		$value = $this->getByPk('rule_list', $categoryId);
-		return $value ? $value : '';
+		$value = $this->getByPk('sort', $categoryId);
+		return $value ? (int) $value : 0;
 	}
 
 	/**
-	 * 通过“主键ID”，获取“文档静态页面链接规则”
+	 * 通过“主键ID”，获取“描述”
 	 * @param integer $categoryId
 	 * @return string
 	 */
-	public function getRuleViewByCategoryId($categoryId)
+	public function getDescriptionByCategoryId($categoryId)
 	{
-		$value = $this->getByPk('rule_view', $categoryId);
+		$value = $this->getByPk('description', $categoryId);
 		return $value ? $value : '';
 	}
 

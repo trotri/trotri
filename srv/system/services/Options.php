@@ -85,7 +85,13 @@ class Options extends AbstractService
 	 */
 	public static function getValueByKey($optKey)
 	{
-		$optValue = self::getInstance()->getDb()->getValueByKey($optKey);
+		static $data = null;
+
+		if ($data === null) {
+			$data = self::getInstance()->findPairs();
+		}
+
+		$optValue = isset($data[$optKey]) ? $data[$optKey] : false;
 		return $optValue;
 	}
 

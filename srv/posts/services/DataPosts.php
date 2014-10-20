@@ -16,32 +16,12 @@ use posts\library\Lang;
  * DataPosts class file
  * 业务层：数据管理类，寄存常量、选项
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: DataPosts.php 1 2014-09-16 19:26:44Z Code Generator $
+ * @version $Id: DataPosts.php 1 2014-10-17 11:27:20Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
 class DataPosts
 {
-	/**
-	 * @var string 是否发表：y
-	 */
-	const IS_PUBLIC_Y = 'y';
-
-	/**
-	 * @var string 是否发表：n
-	 */
-	const IS_PUBLIC_N = 'n';
-
-	/**
-	 * @var string 是否删除：y
-	 */
-	const TRASH_Y = 'y';
-
-	/**
-	 * @var string 是否删除：n
-	 */
-	const TRASH_N = 'n';
-
 	/**
 	 * @var string 是否头条：y
 	 */
@@ -73,24 +53,29 @@ class DataPosts
 	const IS_JUMP_N = 'n';
 
 	/**
-	 * @var string 生成静态页面：y
+	 * @var string 是否发表：y
 	 */
-	const IS_HTML_Y = 'y';
+	const IS_PUBLIC_Y = 'y';
 
 	/**
-	 * @var string 生成静态页面：n
+	 * @var string 是否发表：n
 	 */
-	const IS_HTML_N = 'n';
+	const IS_PUBLIC_N = 'n';
 
 	/**
-	 * @var string 是否允许评论：y
+	 * @var string 评论设置：public
 	 */
-	const ALLOW_COMMENT_Y = 'y';
+	const COMMENT_STATUS_PUBLIC = 'public';
 
 	/**
-	 * @var string 是否允许评论：n
+	 * @var string 评论设置：draft
 	 */
-	const ALLOW_COMMENT_N = 'n';
+	const COMMENT_STATUS_DRAFT = 'draft';
+
+	/**
+	 * @var string 评论设置：forbidden
+	 */
+	const COMMENT_STATUS_FORBIDDEN = 'forbidden';
 
 	/**
 	 * @var string 允许其他人编辑：y
@@ -103,40 +88,14 @@ class DataPosts
 	const ALLOW_OTHER_MODIFY_N = 'n';
 
 	/**
-	 * 获取“是否发表”所有选项
-	 * @return array
+	 * @var string 是否删除：y
 	 */
-	public static function getIsPublicEnum()
-	{
-		static $enum = null;
-
-		if ($enum === null) {
-			$enum = array(
-				self::IS_PUBLIC_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
-				self::IS_PUBLIC_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
-			);
-		}
-
-		return $enum;
-	}
+	const TRASH_Y = 'y';
 
 	/**
-	 * 获取“是否删除”所有选项
-	 * @return array
+	 * @var string 是否删除：n
 	 */
-	public static function getTrashEnum()
-	{
-		static $enum = null;
-
-		if ($enum === null) {
-			$enum = array(
-				self::TRASH_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
-				self::TRASH_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
-			);
-		}
-
-		return $enum;
-	}
+	const TRASH_N = 'n';
 
 	/**
 	 * 获取“是否头条”所有选项
@@ -193,17 +152,17 @@ class DataPosts
 	}
 
 	/**
-	 * 获取“生成静态页面”所有选项
+	 * 获取“是否发表”所有选项
 	 * @return array
 	 */
-	public static function getIsHtmlEnum()
+	public static function getIsPublicEnum()
 	{
 		static $enum = null;
 
 		if ($enum === null) {
 			$enum = array(
-				self::IS_HTML_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
-				self::IS_HTML_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
+				self::IS_PUBLIC_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
+				self::IS_PUBLIC_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
 			);
 		}
 
@@ -211,17 +170,18 @@ class DataPosts
 	}
 
 	/**
-	 * 获取“是否允许评论”所有选项
+	 * 获取“评论设置”所有选项
 	 * @return array
 	 */
-	public static function getAllowCommentEnum()
+	public static function getCommentStatusEnum()
 	{
 		static $enum = null;
 
 		if ($enum === null) {
 			$enum = array(
-				self::ALLOW_COMMENT_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
-				self::ALLOW_COMMENT_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
+				self::COMMENT_STATUS_PUBLIC => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_PUBLIC'),
+				self::COMMENT_STATUS_DRAFT => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_DRAFT'),
+				self::COMMENT_STATUS_FORBIDDEN => Lang::_('SRV_ENUM_POSTS_COMMENT_STATUS_FORBIDDEN'),
 			);
 		}
 
@@ -240,6 +200,24 @@ class DataPosts
 			$enum = array(
 				self::ALLOW_OTHER_MODIFY_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
 				self::ALLOW_OTHER_MODIFY_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
+			);
+		}
+
+		return $enum;
+	}
+
+	/**
+	 * 获取“是否删除”所有选项
+	 * @return array
+	 */
+	public static function getTrashEnum()
+	{
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::TRASH_Y => Lang::_('SRV_ENUM_GLOBAL_YES'),
+				self::TRASH_N => Lang::_('SRV_ENUM_GLOBAL_NO'),
 			);
 		}
 

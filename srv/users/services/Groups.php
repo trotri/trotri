@@ -12,8 +12,8 @@ namespace users\services;
 
 use libsrv\AbstractService;
 use tfc\saf\Log;
+use tfc\auth\Authoriz;
 use libsrv\Service;
-use tid\Authorization;
 
 /**
  * Groups class file
@@ -25,21 +25,6 @@ use tid\Authorization;
  */
 class Groups extends AbstractService
 {
-	/**
-	 * @var instance of tid\Authorization
-	 */
-	protected $_authorization = null;
-
-	/**
-	 * 构造方法：初始化数据库操作类
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$this->_authorization = new Authorization();
-	}
-
 	/**
 	 * 获取所有的组ID
 	 * @return array
@@ -254,8 +239,8 @@ class Groups extends AbstractService
 	 */
 	public function findByPk($groupId)
 	{
-		$row = $this->getDb()->findByPk($groupId);
-		if (is_array($row) && isset($row['permission'])) {
+		$row = parent::findByPk($groupId);
+		if (is_array($row) && isset($row['group_id'])) {
 			$row['permission'] = unserialize(base64_decode($row['permission']));
 			if (!is_array($row['permission'])) {
 				$row['permission'] = array();
@@ -263,18 +248,6 @@ class Groups extends AbstractService
 		}
 
 		return $row;
-	}
-
-	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $groupId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $groupId)
-	{
-		$value = $this->getDb()->getByPk($columnName, $groupId);
-		return $value;
 	}
 
 	/**
@@ -317,12 +290,31 @@ class Groups extends AbstractService
 	 */
 	public function getPermissionByGroupId($groupId)
 	{
-		$row = $this->findByPk($groupId);
-		if (is_array($row) && isset($row['permission'])) {
-			return $row['permission'];
+		$data = array();
+
+		$permission = $this->getByPk('permission', $groupId);
+		if ($permission && is_array($permission)) {
+			foreach ($permission as $appName => $mods) {
+				if (is_array($mods)) {
+					foreach ($mods as $modName => $ctrls) {
+						if (is_array($ctrls)) {
+							foreach ($ctrls as $ctrlName => $powers) {
+								if (is_array($powers)) {
+									foreach ($powers as $powerName) {
+										if (!isset($data[$appName][$modName][$ctrlName])
+											|| !in_array($powerName, $data[$appName][$modName][$ctrlName])) {
+											$data[$appName][$modName][$ctrlName][] = $powerName;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
-		return array();
+		return $data;
 	}
 
 	/**
@@ -338,6 +330,56 @@ class Groups extends AbstractService
 
 	/**
 	 * 通过主键，编辑“权限设置”
+	 * <pre>
+	 * $params = array (
+	 *   'app_name' => array (
+	 *     'mod_name' => array (
+	 *       'ctrl_name' => array (
+	 *         'Power-SELECT', 'Power-INSERT', 'Power-UPDATE', 'Power-DELETE'
+	 *       )
+	 *     )
+	 *   )
+	 * );
+	 * 示例：
+	 * $params = array (
+	 *   'administrator' => array (
+	 *     'system' => array (
+	 *       'site' => array ( '1', '2', '4', '8' ),
+	 *     ),
+	 *     'posts' => array (
+	 *       'categories' => array ( '1', '2', '4', '8' ),
+	 *       'modules' => array ( '1', '2', '4', '8' ),
+	 *       'posts' => array ( '1', '2', '4', '8' ),
+	 *     ),
+	 *   ),
+	 *   'passport' => array (
+	 *     'system' => array (
+	 *       'options' => array ( '1', '2', '4', '8' ),
+	 *       'pictures' => array ( '1', '2', '4', '8' ),
+	 *       'site' => array ( '1', '2', '4', '8' ),
+	 *     ),
+	 *     'users' => array (
+	 *       'account' => array ( '1', '2', '4', '8' ),
+	 *       'amcas' => array ( '1', '2', '4', '8' ),
+	 *       'groups' => array ( '1', '2', '4', '8' ),
+	 *       'users' => array ( '1', '2', '4', '8' ),
+	 *     ),
+	 *   ),
+	 *   'programmer' => array (
+	 *     'builder' => array (
+	 *       'builders' => array ( '1', '2', '4', '8' ),
+	 *       'fields' => array ( '1', '2', '4', '8' ),
+	 *       'groups' => array ( '1', '2', '4', '8' ),
+	 *       'tblnames' => array ( '1', '2', '4', '8' ),
+	 *       'types' => array ( '1', '2', '4', '8' ),
+	 *       'validators' => array ( '1', '2', '4', '8' ),
+	 *     ),
+	 *     'system' => array (
+	 *       'site' => array ( '1', '2', '4', '8' ),
+	 *     ),
+	 *   ),
+	 * );
+	 * </pre>
 	 * @param integer $groupId
 	 * @param array $params
 	 * @return array
@@ -414,8 +456,9 @@ class Groups extends AbstractService
 		$data = base64_encode(serialize($data));
 		$rowCount = $this->getDb()->modifyPermissionByPk($groupId, $data);
 		if ($rowCount > 0) {
-			if (!$this->_authorization->flush()) {
-				Log::warning('Groups Authorization flush roles cache Failed.', 0,  __METHOD__);
+			$authoriz = new Authoriz();
+			if (!$authoriz->flush()) {
+				Log::warning('Groups Authoriz flush roles cache Failed.', 0,  __METHOD__);
 			}
 		}
 

@@ -8,6 +8,11 @@ class TableRender extends views\bootstrap\components\TableRender
 		return $this->elements_object->getTitleLink($data);
 	}
 
+	public function getModuleName($data)
+	{
+		return $this->elements_object->getModuleNameByModuleId($data['module_id']);
+	}
+
 	public function getIsHead($data)
 	{
 		$params = array(
@@ -59,6 +64,11 @@ class TableRender extends views\bootstrap\components\TableRender
 		return $output;
 	}
 
+	public function getSort($data)
+	{
+		return $this->html->text('sort[' . $data['post_id'] . ']', $data['sort'], array('class' => 'form-control input-listsort', 'size' => '14'));
+	}
+
 	public function getOperate($data)
 	{
 		$params = array(
@@ -88,6 +98,9 @@ $this->widget(
 			'title' => array(
 				'callback' => 'getTitleLink'
 			),
+			'module_id' => array(
+				'callback' => 'getModuleName'
+			),
 			'is_head' => array(
 				'callback' => 'getIsHead'
 			),
@@ -97,18 +110,22 @@ $this->widget(
 			'is_public' => array(
 				'callback' => 'getIsPublic'
 			),
+			'sort' => array(
+				'callback' => 'getSort'
+			),
 		),
 		'columns' => array(
 			'title',
 			'category_name',
+			'module_id',
 			'is_head',
 			'is_recommend',
 			'is_public',
-			'access_count',
+			// 'hits',
+			'sort',
 			'creator_name',
 			'last_modifier_name',
-			'dt_public',
-			'sort',
+			'dt_created',
 			'post_id',
 			'_operate_',
 		),

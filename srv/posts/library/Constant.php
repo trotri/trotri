@@ -25,4 +25,9 @@ class Constant
 	 */
 	const DB_CLUSTER = 'trotri';
 
+	/**
+	 * @var integer 限制最大的查询读取条数
+	 */
+	const FIND_MAX_LIMIT = 100;
+
 }

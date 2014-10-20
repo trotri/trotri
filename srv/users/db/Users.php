@@ -31,14 +31,14 @@ class Users extends AbstractDb
 	protected $_clusterName = Constant::DB_CLUSTER;
 
 	/**
-	 * 通过多个字段名和值，查询多条记录，字段之间用简单的AND连接
-	 * @param array $attributes
+	 * 通过多个字段名和值，查询多条记录
+	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function findAllByAttributes(array $attributes = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$usersTblName = $this->getTblprefix() . TableNames::getUsers();
@@ -50,9 +50,160 @@ class Users extends AbstractDb
 		}
 
 		$condition = '1';
-		foreach ($attributes as $columnName => $value) {
-			$alias = ($columnName === 'group_id') ? '`g`' : '`u`';
-			$condition .= ' AND ' . $alias . '.' . $commandBuilder->quoteColumnName($columnName) . ' = ' . $commandBuilder::PLACE_HOLDERS;
+		$attributes = array();
+
+		if (isset($params['login_name'])) {
+			$loginName = trim($params['login_name']);
+			if ($loginName !== '') {
+				$condition .= ' AND `u`.`login_name` LIKE ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['login_name'] = '%' . $loginName . '%';
+			}
+		}
+
+		if (isset($params['login_type'])) {
+			$loginType = trim($params['login_type']);
+			if ($loginType !== '') {
+				$condition .= ' AND `u`.`login_type` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['login_type'] = $loginType;
+			}
+		}
+
+		if (isset($params['user_name'])) {
+			$userName = trim($params['user_name']);
+			if ($userName !== '') {
+				$condition .= ' AND `u`.`user_name` LIKE ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_name'] = '%' . $userName . '%';
+			}
+			else {
+				$condition .= ' AND `u`.`user_name` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_name'] = '';
+			}
+		}
+
+		if (isset($params['user_mail'])) {
+			$userMail = trim($params['user_mail']);
+			if ($userMail !== '') {
+				$condition .= ' AND `u`.`user_mail` LIKE ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_mail'] = '%' . $userMail . '%';
+			}
+			else {
+				$condition .= ' AND `u`.`user_mail` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_mail'] = '';
+			}
+		}
+
+		if (isset($params['user_phone'])) {
+			$userPhone = trim($params['user_phone']);
+			if ($userPhone !== '') {
+				$condition .= ' AND `u`.`user_phone` LIKE ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_phone'] = '%' . $userPhone . '%';
+			}
+			else {
+				$condition .= ' AND `u`.`user_phone` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_phone'] = '';
+			}
+		}
+
+		if (isset($params['valid_mail'])) {
+			$validMail = trim($params['valid_mail']);
+			if ($validMail !== '') {
+				$condition .= ' AND `u`.`valid_mail` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['valid_mail'] = $validMail;
+			}
+		}
+
+		if (isset($params['valid_phone'])) {
+			$validPhone = trim($params['valid_phone']);
+			if ($validPhone !== '') {
+				$condition .= ' AND `u`.`valid_phone` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['valid_phone'] = $validPhone;
+			}
+		}
+
+		if (isset($params['forbidden'])) {
+			$forbidden = trim($params['forbidden']);
+			if ($forbidden !== '') {
+				$condition .= ' AND `u`.`forbidden` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['forbidden'] = $forbidden;
+			}
+		}
+
+		if (isset($params['trash'])) {
+			$trash = trim($params['trash']);
+			if ($trash !== '') {
+				$condition .= ' AND `u`.`trash` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['trash'] = $trash;
+			}
+		}
+
+		if (isset($params['group_id'])) {
+			$groupId = (int) $params['group_id'];
+			if ($groupId > 0) {
+				$condition .= ' AND `g`.`group_id` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['group_id'] = $groupId;
+			}
+		}
+
+		if (isset($params['dt_registered_start'])) {
+			$dtRegisteredStart = trim($params['dt_registered_start']);
+			if ($dtRegisteredStart !== '') {
+				$condition .= ' AND `u`.`dt_registered` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_registered_start'] = $dtRegisteredStart;
+			}
+		}
+
+		if (isset($params['dt_registered_end'])) {
+			$dtRegisteredEnd = trim($params['dt_registered_end']);
+			if ($dtRegisteredEnd !== '') {
+				$condition .= ' AND `u`.`dt_registered` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_registered_end'] = $dtRegisteredEnd;
+			}
+		}
+
+		if (isset($params['dt_last_login_start'])) {
+			$dtLastLoginStart = trim($params['dt_last_login_start']);
+			if ($dtLastLoginStart !== '') {
+				$condition .= ' AND `u`.`dt_last_login` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_last_login_start'] = $dtLastLoginStart;
+			}
+		}
+
+		if (isset($params['dt_last_login_end'])) {
+			$dtLastLoginEnd = trim($params['dt_last_login_end']);
+			if ($dtLastLoginEnd !== '') {
+				$condition .= ' AND `u`.`dt_last_login` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_last_login_end'] = $dtLastLoginEnd;
+			}
+		}
+
+		if (isset($params['login_count_start'])) {
+			$loginCountStart = (int) $params['login_count_start'];
+			if ($loginCountStart >= 0) {
+				$condition .= ' AND `u`.`login_count` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['login_count_start'] = $loginCountStart;
+			}
+		}
+
+		if (isset($params['login_count_end'])) {
+			$loginCountEnd = (int) $params['login_count_end'];
+			if ($loginCountEnd >= 0) {
+				$condition .= ' AND `u`.`login_count` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['login_count_end'] = $loginCountEnd;
+			}
+		}
+
+		if (isset($params['ip_registered'])) {
+			$ipRegistered = (int) $params['ip_registered'];
+			$condition .= ' AND `u`.`ip_registered` = ' . $commandBuilder::PLACE_HOLDERS;
+			$attributes['ip_registered'] = $ipRegistered;
+		}
+
+		if (isset($params['user_id'])) {
+			$userId = (int) $params['user_id'];
+			if ($userId > 0) {
+				$condition .= ' AND `u`.`user_id` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['user_id'] = $userId;
+			}
 		}
 
 		$sql = $commandBuilder->applyCondition($sql, $condition);
@@ -123,22 +274,6 @@ class Users extends AbstractDb
 	}
 
 	/**
-	 * 通过主键，获取某个列的值
-	 * @param string $columnName
-	 * @param integer $userId
-	 * @return mixed
-	 */
-	public function getByPk($columnName, $userId)
-	{
-		$row = $this->findByPk($userId);
-		if ($row && is_array($row) && isset($row[$columnName])) {
-			return $row[$columnName];
-		}
-
-		return false;
-	}
-
-	/**
 	 * 新增一条记录
 	 * @param array $params
 	 * @param boolean $ignore
@@ -163,9 +298,28 @@ class Users extends AbstractDb
 		$forbidden = isset($params['forbidden']) ? trim($params['forbidden']) : '';
 		$trash = 'n';
 
-		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $userName === ''
-			|| $dtRegistered === '' || $dtLastLogin === '' || $loginCount < 0 || $validMail === '' || $validPhone === '' || $forbidden === '') {
+		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $userName === '' || $loginCount < 0) {
 			return false;
+		}
+
+		if ($validMail === '') {
+			$validMail = 'n';
+		}
+
+		if ($validPhone === '') {
+			$validPhone = 'n';
+		}
+
+		if ($forbidden === '') {
+			$forbidden = 'n';
+		}
+
+		if ($dtRegistered === '') {
+			$dtRegistered = date('Y-m-d H:i:s');
+		}
+
+		if ($dtLastLogin === '') {
+			$dtLastLogin = $dtRegistered;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getUsers();
@@ -189,7 +343,8 @@ class Users extends AbstractDb
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -245,11 +400,23 @@ class Users extends AbstractDb
 		}
 
 		if (isset($params['dt_last_login'])) {
-			$attributes['dt_last_login'] = trim($params['dt_last_login']);
+			$dtLastLogin = trim($params['dt_last_login']);
+			if ($dtLastLogin !== '') {
+				$attributes['dt_last_login'] = $dtLastLogin;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['dt_last_repwd'])) {
-			$attributes['dt_last_repwd'] = trim($params['dt_last_repwd']);
+			$dtLastRepwd = trim($params['dt_last_repwd']);
+			if ($dtLastRepwd !== '') {
+				$attributes['dt_last_repwd'] = $dtLastRepwd;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['ip_last_login'])) {
@@ -265,12 +432,18 @@ class Users extends AbstractDb
 			if ($loginCount >= 0) {
 				$attributes['login_count'] = $loginCount;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['repwd_count'])) {
 			$repwdCount = (int) $params['repwd_count'];
 			if ($repwdCount >= 0) {
 				$attributes['repwd_count'] = $repwdCount;
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -279,12 +452,18 @@ class Users extends AbstractDb
 			if ($validMail !== '') {
 				$attributes['valid_mail'] = $validMail;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['valid_phone'])) {
 			$validPhone = trim($params['valid_phone']);
 			if ($validPhone !== '') {
 				$attributes['valid_phone'] = $validPhone;
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -293,6 +472,9 @@ class Users extends AbstractDb
 			if ($forbidden !== '') {
 				$attributes['forbidden'] = $forbidden;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['trash'])) {
@@ -300,29 +482,39 @@ class Users extends AbstractDb
 			if ($trash !== '') {
 				$attributes['trash'] = $trash;
 			}
+			else {
+				return false;
+			}
 		}
 
+		$rowCount = 0;
+
 		if ($attributes === array()) {
-			return false;
+			return $rowCount;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getUsers();
 		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), '`user_id` = ?');
 		$attributes['user_id'] = $userId;
-		return $this->update($sql, $attributes);
+		$rowCount = $this->update($sql, $attributes);
+		return $rowCount;
 	}
 
 	/**
-	 * 通过主键，编辑多条记录。不支持联合主键
-	 * @param string $userIds
+	 * 通过主键，编辑多条记录
+	 * @param array|integer $userIds
 	 * @param array $params
 	 * @return integer
 	 */
 	public function batchModifyByPk($userIds, array $params = array())
 	{
-		$userIds = Clean::sqlPositiveInteger($userIds);
+		$userIds = Clean::positiveInteger($userIds);
 		if ($userIds === false) {
 			return false;
+		}
+
+		if (is_array($userIds)) {
+			$userIds = implode(', ', $userIds);
 		}
 
 		$attributes = array();
@@ -332,12 +524,18 @@ class Users extends AbstractDb
 			if ($validMail !== '') {
 				$attributes['valid_mail'] = $validMail;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['valid_phone'])) {
 			$validPhone = trim($params['valid_phone']);
 			if ($validPhone !== '') {
 				$attributes['valid_phone'] = $validPhone;
+			}
+			else {
+				return false;
 			}
 		}
 
@@ -346,6 +544,9 @@ class Users extends AbstractDb
 			if ($forbidden !== '') {
 				$attributes['forbidden'] = $forbidden;
 			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['trash'])) {
@@ -353,16 +554,22 @@ class Users extends AbstractDb
 			if ($trash !== '') {
 				$attributes['trash'] = $trash;
 			}
+			else {
+				return false;
+			}
 		}
 
+		$rowCount = 0;
+
 		if ($attributes === array()) {
-			return false;
+			return $rowCount;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getUsers();
         $condition = '`user_id` IN (' . $userIds . ')';
         $sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), $condition);
-        return $this->update($sql, $attributes);
+        $rowCount = $this->update($sql, $attributes);
+        return $rowCount;
 	}
 
 	/**
@@ -378,6 +585,7 @@ class Users extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getUsers();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`user_id` = ?');
-		return $this->delete($sql, $userId);
+		$rowCount = $this->delete($sql, $userId);
+		return $rowCount;
 	}
 }

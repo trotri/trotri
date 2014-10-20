@@ -78,6 +78,21 @@ class DataUsers
 	const TRASH_N = 'n';
 
 	/**
+	 * @var string 性别：男
+	 */
+	const SEX_MALE = 'm';
+
+	/**
+	 * @var string 性别：女
+	 */
+	const SEX_FEMALE = 'f';
+
+	/**
+	 * @var string 性别：保密
+	 */
+	const SEX_UNKNOW = 'u';
+
+	/**
 	 * 获取“登录方式”所有选项
 	 * @return array
 	 */
@@ -179,6 +194,25 @@ class DataUsers
 		if ($enum === null) {
 			$groups = new Groups();
 			$enum = $groups->getGroupIds();
+		}
+
+		return $enum;
+	}
+
+	/**
+	 * 获取“性别”所有选项
+	 * @return array
+	 */
+	public static function getSexEnum()
+	{
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = array(
+				self::SEX_MALE => Lang::_('SRV_ENUM_USERS_SEX_MALE'),
+				self::SEX_FEMALE => Lang::_('SRV_ENUM_USERS_SEX_FEMALE'),
+				self::SEX_UNKNOW => Lang::_('SRV_ENUM_USERS_SEX_UNKNOW'),
+			);
 		}
 
 		return $enum;

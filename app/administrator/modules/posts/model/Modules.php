@@ -18,7 +18,7 @@ use posts\services\DataModules;
  * Modules class file
  * 模型管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modules.php 1 2014-09-11 18:41:37Z Code Generator $
+ * @version $Id: Modules.php 1 2014-10-12 22:12:36Z Code Generator $
  * @package modules.posts.model
  * @since 1.0
  */
@@ -56,12 +56,12 @@ class Modules extends BaseModel
 				'hint' => Text::_('MOD_POSTS_POST_MODULES_MODULE_NAME_HINT'),
 				'required' => true,
 			),
-			'module_tblname' => array(
+			'fields' => array(
 				'__tid__' => 'main',
-				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POST_MODULES_MODULE_TBLNAME_LABEL'),
-				'hint' => Text::_('MOD_POSTS_POST_MODULES_MODULE_TBLNAME_HINT'),
-				'required' => true,
+				'type' => 'textarea',
+				'label' => Text::_('MOD_POSTS_POST_MODULES_FIELDS_LABEL'),
+				'hint' => Text::_('MOD_POSTS_POST_MODULES_FIELDS_HINT'),
+				'rows' => 15
 			),
 			'forbidden' => array(
 				'__tid__' => 'main',
@@ -99,26 +99,44 @@ class Modules extends BaseModel
 	}
 
 	/**
-	 * 查询数据列表
-	 * @param array $params
-	 * @param string $order
-	 * @param integer $limit
-	 * @param integer $offset
-	 * @return array
+	 * (non-PHPdoc)
+	 * @see \library\BaseModel::findByPk()
 	 */
-	public function search(array $params = array(), $order = '', $limit = null, $offset = null)
+	public function findByPk($value)
 	{
-		$ret = parent::search($this->getService(), array(), '', $limit, $offset);
+		$ret = parent::findByPk($value);
+		if ($ret && is_array($ret)) {
+			if (isset($ret['data']) && is_array($ret['data'])) {
+				if (isset($ret['data']['fields']) && is_array($ret['data']['fields'])) {
+					$lines = '';
+					foreach ($ret['data']['fields'] as $name => $row) {
+						$lines .= $name . '|' . $row['label'] . (($row['hint'] !== '') ? ('|' . $row['hint']) : '') . "\n";
+					}
+
+					$ret['data']['fields'] = rtrim($lines);
+				}
+			}
+		}
+
 		return $ret;
 	}
 
 	/**
-	 * 获取所有的ModuleName
+	 * 获取所有的模型名称
 	 * @return array
 	 */
 	public function getModuleNames()
 	{
 		return $this->getService()->getModuleNames();
+	}
+
+	/**
+	 * 获取所有的文档扩展字段
+	 * @return array
+	 */
+	public function getFields()
+	{
+		return $this->getService()->getFields();
 	}
 
 	/**
@@ -130,5 +148,4 @@ class Modules extends BaseModel
 	{
 		return $this->getService()->getModuleNameByModuleId($moduleId);
 	}
-
 }

@@ -11,9 +11,10 @@
 namespace library;
 
 use libapp;
+use tfc\saf\Log;
 use libsrv\Service;
-use libsrv\AbstractService;
 use libsrv\Clean;
+use libapp\Lang;
 
 /**
  * BaseModel abstract class file
@@ -58,14 +59,13 @@ abstract class BaseModel extends libapp\BaseModel
 
 	/**
 	 * 查询数据列表
-	 * @param libsrv\AbstractService $object
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public function search(AbstractService $object, array $params = array(), $order = '', $limit = null, $offset = null)
+	public function search(array $params = array(), $order = '', $limit = null, $offset = null)
 	{
 		if ($limit === null) {
 			$limit = libapp\PageHelper::getListRows();
@@ -75,7 +75,7 @@ abstract class BaseModel extends libapp\BaseModel
 			$offset = libapp\PageHelper::getFirstRow();
 		}
 
-		$ret = $this->callFetchMethod($object, 'findAllByAttributes', array($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS'));
+		$ret = $this->callFetchMethod($this->getService(), 'findAll', array($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS'));
 		if ($ret['err_no'] !== ErrorNo::SUCCESS_NUM) {
 			return $ret;
 		}
@@ -156,6 +156,29 @@ abstract class BaseModel extends libapp\BaseModel
 	{
 		$ret = $this->callModifyMethod($this->getService(), 'batchModifyByPk', $values, $params);
 		return $ret;
+	}
+
+	/**
+	 * 批量编辑排序
+	 * @param array $params
+	 * @return integer
+	 */
+	public function batchModifySort(array $params = array())
+	{
+		$rowCount = $this->getService()->batchModifySort($params);
+
+		$errNo = ErrorNo::SUCCESS_NUM;
+		$errMsg = ($rowCount > 0) ? Lang::_('ERROR_MSG_SUCCESS_UPDATE') : Lang::_('ERROR_MSG_ERROR_DB_AFFECTS_ZERO');
+		Log::debug(sprintf(
+			'%s callModifyMethod, service "%s", method "%s", rowCount "%d", params "%s"',
+			$errMsg, get_class($this), 'batchModifySort', $rowCount, serialize($params)
+		), $errNo, __METHOD__);
+
+		return array(
+			'err_no' => $errNo,
+			'err_msg' => $errMsg,
+			'row_count' => $rowCount
+		);
 	}
 
 	/**

@@ -69,7 +69,8 @@ class Usergroups extends AbstractDb
 		);
 
 		$sql = $this->getCommandBuilder()->createInsert($tableName, array_keys($attributes), $ignore);
-		return $this->insert($sql, $attributes);
+		$lastInsertId = $this->insert($sql, $attributes);
+		return $lastInsertId;
 	}
 
 	/**
@@ -116,7 +117,8 @@ class Usergroups extends AbstractDb
 
 		$tableName = $this->getTblprefix() . TableNames::getUsergroups();
 		$sql = $this->getCommandBuilder()->createDelete($tableName, '`user_id` = ? AND `group_id` = ?');
-		return $this->delete($sql, $pks);
+		$rowCount = $this->delete($sql, $pks);
+		return $rowCount;
 	}
 
 	/**

@@ -16,7 +16,7 @@ use libapp\BaseController;
  * PostsController class file
  * 文档管理
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: PostsController.php 1 2014-09-16 19:32:26Z Code Generator $
+ * @version $Id: PostsController.php 1 2014-10-18 01:27:03Z Code Generator $
  * @package modules.posts.controller
  * @since 1.0
  */

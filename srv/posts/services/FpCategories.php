@@ -19,7 +19,7 @@ use posts\library\TableNames;
  * FpCategories class file
  * 业务层：表单数据处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: FpCategories.php 1 2014-09-12 15:48:15Z Code Generator $
+ * @version $Id: FpCategories.php 1 2014-10-13 21:17:13Z Code Generator $
  * @package posts.services
  * @since 1.0
  */
@@ -33,17 +33,16 @@ class FpCategories extends FormProcessor
 	{
 		if ($this->isInsert()) {
 			if (!$this->required($params,
-				'category_name', 'category_pid', 'module_id', 'meta_title', 'meta_keywords', 'meta_description',
-				'is_hide', 'menu_sort', 'is_jump', 'jump_url', 'is_html', 'html_dir',
-				'tpl_home', 'tpl_list', 'tpl_view', 'rule_list', 'rule_view')) {
+				'category_name', 'category_pid', 'meta_title', 'meta_keywords', 'meta_description',
+				'tpl_home', 'tpl_list', 'tpl_view', 'sort', 'description')) {
 				return false;
 			}
 		}
 
 		$this->isValids($params,
-			'category_name', 'category_pid', 'module_id', 'meta_title', 'meta_keywords', 'meta_description',
-			'is_hide', 'menu_sort', 'is_jump', 'jump_url', 'is_html', 'html_dir',
-			'tpl_home', 'tpl_list', 'tpl_view', 'rule_list', 'rule_view');
+			'category_name', 'category_pid', 'alias',
+			'meta_title', 'meta_keywords', 'meta_description',
+			'tpl_home', 'tpl_list', 'tpl_view', 'sort', 'description');
 		return !$this->hasError();
 	}
 
@@ -57,21 +56,14 @@ class FpCategories extends FormProcessor
 			'builder_name' => 'trim',
 			'category_name' => 'trim',
 			'category_pid' => 'intval',
-			'module_id' => 'intval',
+			'alias' => 'trim',
 			'meta_title' => 'trim',
 			'meta_keywords' => 'trim',
 			'meta_description' => 'trim',
-			'is_hide' => 'trim',
-			'menu_sort' => 'intval',
-			'is_jump' => 'trim',
-			'jump_url' => 'trim',
-			'is_html' => 'trim',
-			'html_dir' => 'trim',
 			'tpl_home' => 'trim',
 			'tpl_list' => 'trim',
 			'tpl_view' => 'trim',
-			'rule_list' => 'trim',
-			'rule_view' => 'trim',
+			'sort' => 'intval',
 		);
 
 		$ret = $this->clean($rules, $params);
@@ -108,14 +100,14 @@ class FpCategories extends FormProcessor
 	}
 
 	/**
-	 * 获取“所属模型”验证规则
+	 * 获取“别名”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getModuleIdRule($value)
+	public function getAliasRule($value)
 	{
 		return array(
-			'DbExists' => new validator\DbExistsValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_MODULE_ID_EXISTS'), $this->getDbProxy(), TableNames::getModules(), 'module_id')
+			'MaxLength' => new validator\MaxLengthValidator($value, 120, Lang::_('SRV_FILTER_POST_CATEGORIES_ALIAS_MAXLENGTH')),
 		);
 	}
 
@@ -155,85 +147,6 @@ class FpCategories extends FormProcessor
 		return array(
 			'MinLength' => new validator\MinLengthValidator($value, 2, Lang::_('SRV_FILTER_POST_CATEGORIES_META_DESCRIPTION_MINLENGTH')),
 			'MaxLength' => new validator\MaxLengthValidator($value, 120, Lang::_('SRV_FILTER_POST_CATEGORIES_META_DESCRIPTION_MAXLENGTH')),
-		);
-	}
-
-	/**
-	 * 获取“菜单是否隐藏”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getIsHideRule($value)
-	{
-		$enum = DataCategories::getIsHideEnum();
-		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POST_CATEGORIES_IS_HIDE_INARRAY'), implode(', ', $enum))),
-		);
-	}
-
-	/**
-	 * 获取“菜单排序”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getMenuSortRule($value)
-	{
-		return array(
-			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_MENU_SORT_INTEGER')),
-		);
-	}
-
-	/**
-	 * 获取“是否跳转”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getIsJumpRule($value)
-	{
-		$enum = DataCategories::getIsJumpEnum();
-		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POST_CATEGORIES_IS_JUMP_INARRAY'), implode(', ', $enum))),
-		);
-	}
-
-	/**
-	 * 获取“跳转链接”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getJumpUrlRule($value)
-	{
-		if ($this->is_jump === DataCategories::IS_JUMP_N) { return array(); }
-
-		return array(
-			'Url' => new validator\UrlValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_JUMP_URL_URL')),
-		);
-	}
-
-	/**
-	 * 获取“是否生成静态页面”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getIsHtmlRule($value)
-	{
-		$enum = DataCategories::getIsHtmlEnum();
-		return array(
-			'InArray' => new validator\InArrayValidator($value, array_keys($enum), sprintf(Lang::_('SRV_FILTER_POST_CATEGORIES_IS_HTML_INARRAY'), implode(', ', $enum))),
-		);
-	}
-
-	/**
-	 * 获取“生成静态页面存放目录”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getHtmlDirRule($value)
-	{
-		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_HTML_DIR_ALPHANUM')),
-			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POST_CATEGORIES_HTML_DIR_MINLENGTH')),
-			'MaxLength' => new validator\MaxLengthValidator($value, 20, Lang::_('SRV_FILTER_POST_CATEGORIES_HTML_DIR_MAXLENGTH')),
 		);
 	}
 
@@ -280,28 +193,14 @@ class FpCategories extends FormProcessor
 	}
 
 	/**
-	 * 获取“列表静态页面链接规则”验证规则
+	 * 获取“排序”验证规则
 	 * @param mixed $value
 	 * @return array
 	 */
-	public function getRuleListRule($value)
+	public function getSortRule($value)
 	{
 		return array(
-			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POST_CATEGORIES_RULE_LIST_MINLENGTH')),
-			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POST_CATEGORIES_RULE_LIST_MAXLENGTH')),
-		);
-	}
-
-	/**
-	 * 获取“文档静态页面链接规则”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getRuleViewRule($value)
-	{
-		return array(
-			'MinLength' => new validator\MinLengthValidator($value, 1, Lang::_('SRV_FILTER_POST_CATEGORIES_RULE_VIEW_MINLENGTH')),
-			'MaxLength' => new validator\MaxLengthValidator($value, 50, Lang::_('SRV_FILTER_POST_CATEGORIES_RULE_VIEW_MAXLENGTH')),
+			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_POST_CATEGORIES_SORT_INTEGER')),
 		);
 	}
 

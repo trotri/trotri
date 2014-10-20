@@ -11,7 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
-use modules\posts\model\Posts;
+use users\services\Users;
 
 /**
  * Test class file
@@ -29,9 +29,19 @@ class Test extends actions\View
 	 */
 	public function run()
 	{
-		$posts = new Posts();
-		$ret = $posts->findByPk(5);
-		print_r($ret);
-		exit;
+		$users = new Users();
+		$users->findByPk(1);
+		$users->findByPk(1);
+		$users->findByPk(1);
+		$users->findByPk(1);
+		$users->findByPk(1);
+
+		$users->modifyByPk(1, array('sex' => 'f'));
+
+		$users->findByPk(1);
+		$users->findByPk(1);
+		$users->findByPk(1);
+		$users->findByPk(1);
+		$users->findByPk(1);
 	}
 }
