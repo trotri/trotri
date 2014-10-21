@@ -83,14 +83,14 @@ class Posts extends BaseModel
 			),
 			'picture' => array(
 				'__tid__' => 'main',
-				'type' => 'hidden',
+				'type' => 'text',
 				'label' => Text::_('MOD_POSTS_POSTS_PICTURE_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POSTS_PICTURE_HINT'),
 			),
 			'picture_file' => array(
 				'__tid__' => 'main',
 				'type' => 'string',
-				'label' => Text::_('MOD_POSTS_POSTS_PICTURE_LABEL'),
+				'label' => '',
 				'hint' => Text::_('MOD_POSTS_POSTS_PICTURE_HINT'),
 				'value' => '<div id="picture_file" url="' . $urlManager->getUrl('ajaxupload', '', '', array('from' => 'picture')) . '" name="upload">' . Text::_('CFG_SYSTEM_GLOBAL_UPLOAD') . '</div>',
 			),

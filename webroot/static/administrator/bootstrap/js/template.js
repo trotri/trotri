@@ -357,14 +357,36 @@ Core = {
    */
   uploadPreviewImg: function(btnId, name, options) {
     var button = $("#" + btnId);
-    var hidden = $(":hidden[name='" + name + "']");
+    var oIpt = $("input[name='" + name + "']");
+
+    var removeImg = function() {
+      $(".ajax-file-upload-statusbar").next(".ajax-file-upload-statusbar").remove();
+    };
+
+    var loadImg = function() {
+      var url = oIpt.val();
+      if (url != "") {
+        var str = '<div class="ajax-file-upload-statusbar" style="width: ' + defaults.statusBarWidth + ';">';
+        str += '<img class="ajax-file-upload-preview" src="' + url + '" style="display: inline-block; height: ' + defaults.previewHeight + '; width: ' + defaults.previewWidth + ';">';
+        str += '</div>';
+        button.next().after(str);
+      }
+
+      removeImg();
+    };
 
     var setError = function(errMsg) {
       if (errMsg == undefined) { errMsg = ""; }
       var obj = button.parent().parent();
       errMsg ? obj.addClass("has-error") : obj.removeClass("has-error");
       button.parent().next().text(errMsg);
-    }
+    };
+
+    oIpt.blur(function() {
+      if ($(this).val() != "") {
+        loadImg();
+      }
+    });
 
     var defaults = {
       url: button.attr("url"),
@@ -386,21 +408,15 @@ Core = {
       previewHeight: "200px",
       previewWidth: "200px",
       onLoad: function (obj) {
-        var url = hidden.val();
-        if (url != "") {
-          var str = '<div class="ajax-file-upload-statusbar" style="width: ' + defaults.statusBarWidth + ';">';
-          str += '<img class="ajax-file-upload-preview" src="' + url + '" style="display: inline-block; height: ' + defaults.previewHeight + '; width: ' + defaults.previewWidth + ';">';
-          str += '</div>';
-          button.next().after(str);
-        }
+        loadImg();
       },
       onSubmit: function(files, xhr) {
-        $(".ajax-file-upload-statusbar").next(".ajax-file-upload-statusbar").remove();
+        removeImg();
         setError();
       },
       onSuccess: function(files, response, xhr, pd) {
         if (response.err_no == 0) {
-          hidden.val(response.data.url);
+          oIpt.val(response.data.url);
           $(".ajax-file-upload-preview").show("fast", function() { $(this).attr("src", response.data.url); });
         }
         else {

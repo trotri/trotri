@@ -59,26 +59,18 @@ Posts = {
 
   /**
    * 显示和隐藏跳转链接
-   * @param string isJump
    * @return void
    */
   toggleJumpUrl: function() {
-    var run = function(isJump) {
-      if (typeof(isJump) == "undefined") {
-        isJump = $(":checkbox[name='is_jump']").val();
-      }
-
-      $(":text[name='jump_url']").each(function() {
-        if ($(this).parent().attr("name") != "search") {
-          var jumpUrl = $(this).parent().parent();
-          isJump == "y" ? jumpUrl.show() : jumpUrl.hide();
-        }
-      });
+    var exec = function(isJump) {
+      var jumpUrl = $("#advanced :text[name='jump_url']").parent().parent();
+      isJump == "y" ? jumpUrl.show() : jumpUrl.hide();
     };
 
-    run();
-    $(":checkbox[name='is_jump']").change(function() {
-      run($(this).val() == "y" ? "n" : "y");
+    var o = $("#advanced :checkbox[name='is_jump']");
+    exec(o.val());
+    o.change(function() {
+      exec($(this).val() == "y" ? "n" : "y");
     });
   },
 
@@ -87,42 +79,35 @@ Posts = {
    * @return void
    */
   changeFields: function() {
-    var append = function(fields) {
+    var append = function(a) {
       $("#profile").find(".fields").remove();
-      for (var name in fields) {
-        var html = "<div class=\"form-group fields\">";
-        html += "<label class=\"col-lg-2 control-label\">" + fields[name].label + "</label>";
-        html += "<div class=\"col-lg-4\">";
-        html += "<textarea class=\"form-control input-sm\" rows=\"5\" name=\"" + name + "\"></textarea>";
-        html += "</div>";
-        html += "<span class=\"control-label\">" + fields[name].hint + "</span>";
-        html += "</div>";
-        $("#profile").append(html);
+      for (var n in a) {
+        var s = "<div class=\"form-group fields\">";
+        s += "<label class=\"col-lg-2 control-label\">" + a[n].label + "</label>";
+        s += "<div class=\"col-lg-4\">";
+        s += "<textarea class=\"form-control input-sm\" rows=\"5\" name=\"" + n + "\"></textarea>";
+        s += "</div>";
+        s += "<span class=\"control-label\">" + a[n].hint + "</span>";
+        s += "</div>";
+        $("#profile").append(s);
       }
     };
 
-    var render = function(modId) {
-      var fields = {};
+    var exec = function(mId) {
+      var a = {};
       for (var id in g_fields) {
-        if (modId == id) {
-          fields = g_fields[id];
+        if (mId == id) {
+          a = g_fields[id];
         }
       }
 
-      append(fields);
+      append(a);
     };
 
-    var run = function() {
-      $("select[name='module_id']").each(function() {
-        if ($(this).parent().attr("name") != "search") {
-          render($(this).val());
-          $(this).change(function() {
-            render($(this).val());
-          });
-        }
-      });
-    };
-
-    run();
+    var o = $("#profile select[name='module_id']");
+    exec(o.val());
+    o.change(function() {
+      exec($(this).val());
+    });
   }
 }
