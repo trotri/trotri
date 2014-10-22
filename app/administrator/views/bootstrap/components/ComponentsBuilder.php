@@ -152,6 +152,7 @@ class ComponentsBuilder
 		$jsfunc    = isset($params['jsfunc'])    ? $params['jsfunc']    : '';
 		$title     = isset($params['title'])     ? $params['title']     : '';
 		$placement = isset($params['placement']) ? $params['placement'] : 'left';
+		$style     = isset($params['style'])     ? $params['style'] : '';
 
 		$click = $jsfunc . '(\'' . $url . '\')';
 		$attributes = array(
@@ -161,6 +162,10 @@ class ComponentsBuilder
 			'data-original-title' => $title,
 			'onclick'             => 'return ' . $click . ';'
 		);
+
+		if ($style !== '') {
+			$attributes['style'] = $style;
+		}
 
 		return Mvc::getView()->getHtml()->tag('span', $attributes, '');
 	}

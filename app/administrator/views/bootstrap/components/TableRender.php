@@ -125,4 +125,19 @@ class TableRender
 			'title' => $this->view->CFG_SYSTEM_GLOBAL_RESTORE,
 		));
 	}
+
+	/**
+	 * 获取“预览”图标
+	 * @param array $params
+	 * @return array
+	 */
+	public function getPreviewIcon(array $params)
+	{
+		return ComponentsBuilder::getGlyphicon(array(
+			'type' => ComponentsConstant::GLYPHICON_LINK,
+			'url' => $params['url'],
+			'jsfunc' => ComponentsConstant::JSFUNC_BHREF,
+			'title' => $this->view->CFG_SYSTEM_GLOBAL_PREVIEW,
+		));
+	}
 }

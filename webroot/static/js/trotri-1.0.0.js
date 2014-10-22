@@ -370,5 +370,15 @@ Trotri = {
   href: function(url) {
     window.location.href = url;
     return false;
+  },
+
+  /**
+   * 页面跳转，在新窗口打开
+   * @param string url
+   * @return void
+   */
+  bHref: function(url) {
+    window.open(url);
+    return false;
   }
 }

@@ -25,7 +25,7 @@ use posts\library\Lang;
 class Categories extends AbstractService
 {
 	/**
-	 * 递归方式获取所有的类别，默认用空格填充子类别左边用于和父类别错位（可用于Table列表）
+	 * 递归方式获取所有的类别，默认用|—填充子类别左边用于和父类别错位（可用于Table列表）
 	 * @param integer $categoryPid
 	 * @param string $padStr
 	 * @param string $leftPad
@@ -83,8 +83,8 @@ class Categories extends AbstractService
 					continue;
 				}
 
-				$groupId = (int) $row['category_id'];
-				$data[$groupId] = $row['category_name'];
+				$categoryId = (int) $row['category_id'];
+				$data[$categoryId] = $row['category_name'];
 			}
 		}
 
@@ -107,7 +107,7 @@ class Categories extends AbstractService
 	 * @param integer $categoryId
 	 * @return integer
 	 */
-	public function getPostsCount($categoryId)
+	public function getPostCount($categoryId)
 	{
 		return Service::getInstance('Posts', 'posts')->countByCategoryId($categoryId);
 	}

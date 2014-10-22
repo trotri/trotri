@@ -21,7 +21,7 @@ namespace posts\library;
 class TableNames
 {
 	/**
-	 * 获取“文档类别模型表”表名
+	 * 获取“文档模型表”表名
 	 * @return string
 	 */
 	public static function getModules()
@@ -39,7 +39,7 @@ class TableNames
 	}
 
 	/**
-	 * 获取“系统自带的文档管理表”表名
+	 * 获取“文档管理表”表名
 	 * @return string
 	 */
 	public static function getPosts()
@@ -57,7 +57,7 @@ class TableNames
 	}
 
 	/**
-	 * 获取“系统自带评论表”表名
+	 * 获取“文档评论表”表名
 	 * @return string
 	 */
 	public static function getPostComments()

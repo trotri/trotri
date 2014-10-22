@@ -37,6 +37,16 @@ return array(
 	),
 	array(
 		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_INDEX_INDEX',
+			'm' => 'menus', 'c' => 'types', 'a' => 'index'
+		),
+		1 => array(
+			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_MENUS_INDEX',
+			'm' => 'menus', 'c' => 'types', 'a' => 'index'
+		),
+	),
+	array(
+		0 => array(
 			'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_INDEX',
 			'm' => 'users', 'c' => 'users', 'a' => 'index'
 		),

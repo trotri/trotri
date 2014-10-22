@@ -84,6 +84,11 @@ class ComponentsConstant
 	const GLYPHICON_LINK = 'link';
 
 	/**
+	 * @var string Glyphicons图标：图片预览
+	 */
+	const GLYPHICON_PICTURE = 'picture';
+
+	/**
 	 * @var string Glyphicons图标：上传
 	 */
 	const GLYPHICON_UPLOAD = 'upload';
@@ -92,6 +97,11 @@ class ComponentsConstant
 	 * @var string JS函数：链接
 	 */
 	const JSFUNC_HREF = 'Trotri.href';
+
+	/**
+	 * @var string JS函数：链接，新窗口打开
+	 */
+	const JSFUNC_BHREF = 'Trotri.bHref';
 
 	/**
 	 * @var string JS函数：提交表单

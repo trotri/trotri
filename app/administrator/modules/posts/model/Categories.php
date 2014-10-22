@@ -128,8 +128,8 @@ class Categories extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_DESCRIPTION_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_DESCRIPTION_HINT'),
 			),
-			'posts_count' => array(
-				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_POSTS_COUNT_LABEL'),
+			'post_count' => array(
+				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_POST_COUNT_LABEL'),
 			),
 		);
 
@@ -153,7 +153,7 @@ class Categories extends BaseModel
 	}
 
 	/**
-	 * 递归方式获取所有的类别，默认用空格填充子类别左边用于和父类别错位（可用于Table列表）
+	 * 递归方式获取所有的类别，默认用|—填充子类别左边用于和父类别错位（可用于Table列表）
 	 * @param integer $categoryPid
 	 * @param string $padStr
 	 * @param string $leftPad
@@ -204,9 +204,9 @@ class Categories extends BaseModel
 	 * @param integer $categoryId
 	 * @return integer
 	 */
-	public function getPostsCount($categoryId)
+	public function getPostCount($categoryId)
 	{
-		return $this->getService()->getPostsCount($categoryId);
+		return $this->getService()->getPostCount($categoryId);
 	}
 
 }

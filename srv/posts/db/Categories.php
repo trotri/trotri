@@ -41,7 +41,7 @@ class Categories extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getCategories();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `category_id`, `category_name`, `category_pid`, `alias`, `meta_title`, `meta_keywords`, `meta_description`, `tpl_home`, `tpl_list`, `tpl_view`, `sort`, `description` FROM `' . $tableName . '` WHERE `category_pid` = ? ORDER BY `sort`';
+		$sql = 'SELECT `category_id`, `category_name`, `category_pid`, `alias`, `meta_title`, `meta_keywords`, `meta_description`, `tpl_home`, `tpl_list`, `tpl_view`, `sort`, `description` FROM `' . $tableName . '` WHERE `category_pid` = ? ORDER BY `sort`';
 		return $this->fetchAll($sql, $categoryPid);
 	}
 

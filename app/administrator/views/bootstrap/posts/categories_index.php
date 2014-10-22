@@ -6,9 +6,9 @@ class TableRender extends views\bootstrap\components\TableRender
 		return $this->elements_object->getCategoryNameLink($data);
 	}
 
-	public function getPostsCount($data)
+	public function getPostCount($data)
 	{
-		return $this->elements_object->getPostsCount($data['category_id']);
+		return $this->elements_object->getPostCount($data['category_id']);
 	}
 
 	public function getSort($data)
@@ -45,8 +45,8 @@ $this->widget(
 			'category_name' => array(
 				'callback' => 'getCategoryNameLink'
 			),
-			'posts_count' => array(
-				'callback' => 'getPostsCount'
+			'post_count' => array(
+				'callback' => 'getPostCount'
 			),
 			'sort' => array(
 				'callback' => 'getSort'
@@ -60,7 +60,7 @@ $this->widget(
 			'tpl_list',
 			'tpl_view',
 			'sort',
-			'posts_count',
+			'post_count',
 			'category_id',
 			'_operate_',
 		),

@@ -60,7 +60,8 @@ CREATE TABLE `tr_menus` (
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
   PRIMARY KEY (`menu_id`),
-  KEY `type_key` (`type_key`,`menu_pid`,`sort`),
+  KEY `key_pid` (`type_key`,`menu_pid`,`sort`),
+  KEY `key_pid_allow` (`type_key`,`menu_pid`,`allow_unregistered`,`sort`),
   KEY `menu_name` (`menu_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单表';
 
