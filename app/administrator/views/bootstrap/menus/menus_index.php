@@ -1,5 +1,4 @@
 <?php
-use views\bootstrap\components\ComponentsConstant;
 use views\bootstrap\components\ComponentsBuilder;
 
 class TableRender extends views\bootstrap\components\TableRender
@@ -15,12 +14,8 @@ class TableRender extends views\bootstrap\components\TableRender
 			return '';
 		}
 
-		return ComponentsBuilder::getGlyphicon(array(
-			'type' => ComponentsConstant::GLYPHICON_PICTURE,
-			'url' => $data['picture'],
-			'jsfunc' => ComponentsConstant::JSFUNC_BHREF,
-			'title' => $this->view->CFG_SYSTEM_GLOBAL_PREVIEW,
-		));
+		$imgHtml = $this->html->image($data['picture'], '', array('width' => 80, 'height' => 80));
+		return $this->html->a($imgHtml, $data['picture'], array('target' => '_blank'));
 	}
 
 	public function getAllowUnregistered($data)
@@ -109,7 +104,6 @@ $this->widget(
 			'menu_id',
 			'_operate_',
 		),
-		'checkedToggle' => 'menu_id',
 	)
 );
 ?>

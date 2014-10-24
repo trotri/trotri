@@ -273,6 +273,31 @@ class Posts extends AbstractDb
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
 		$ret = $this->fetchAllNoCache($sql, $attributes);
+
+		if (isset($attributes['title'])) {
+			$attributes['title'] = $title;
+		}
+
+		if (isset($attributes['alias'])) {
+			$attributes['alias'] = $alias;
+		}
+
+		if (isset($attributes['keywords'])) {
+			$attributes['keywords'] = $keywords;
+		}
+
+		if (isset($attributes['jump_url'])) {
+			$attributes['jump_url'] = $jumpUrl;
+		}
+
+		if (isset($attributes['creator_name'])) {
+			$attributes['creator_name'] = $creatorName;
+		}
+
+		if (isset($attributes['last_modifier_name'])) {
+			$attributes['last_modifier_name'] = $lastModifierName;
+		}
+
 		if (is_array($ret)) {
 			$ret['attributes'] = $attributes;
 			$ret['order']      = $order;

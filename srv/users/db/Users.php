@@ -210,6 +210,23 @@ class Users extends AbstractDb
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
 		$ret = $this->fetchAllNoCache($sql, $attributes);
+
+		if (isset($attributes['login_name'])) {
+			$attributes['login_name'] = $loginName;
+		}
+
+		if (isset($attributes['user_name'])) {
+			$attributes['user_name'] = $userName;
+		}
+
+		if (isset($attributes['user_mail'])) {
+			$attributes['user_mail'] = $userMail;
+		}
+
+		if (isset($attributes['user_phone'])) {
+			$attributes['user_phone'] = $userPhone;
+		}
+
 		if (is_array($ret)) {
 			$ret['attributes'] = $attributes;
 			$ret['order']      = $order;

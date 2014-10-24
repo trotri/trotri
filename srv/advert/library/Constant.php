@@ -8,14 +8,14 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace menus\library;
+namespace advert\library;
 
 /**
  * Constant class file
  * 常用常量类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Constant.php 1 2013-04-05 01:08:06Z huan.song $
- * @package menus.library
+ * @package advert.library
  * @since 1.0
  */
 class Constant

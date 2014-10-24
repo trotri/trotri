@@ -32,8 +32,8 @@ CREATE TABLE `tr_system_options` (
 DROP TABLE IF EXISTS `tr_menu_types`;
 CREATE TABLE `tr_menu_types` (
   `type_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `type_key` varchar(24) NOT NULL DEFAULT '' COMMENT '类型Key',
   `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类型名',
+  `type_key` varchar(24) NOT NULL DEFAULT '' COMMENT '类型Key',
   `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
   PRIMARY KEY (`type_id`),
   UNIQUE KEY `uk_type_key` (`type_key`)
@@ -52,10 +52,10 @@ CREATE TABLE `tr_menus` (
   `allow_unregistered` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许非会员访问',
   `is_hide` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否隐藏',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
-  `attr_target` varchar(255) NOT NULL DEFAULT '' COMMENT 'Target属性',
+  `attr_target` varchar(100) NOT NULL DEFAULT '' COMMENT 'Target属性，如：_blank、_self、_parent、_top等',
   `attr_title` varchar(255) NOT NULL DEFAULT '' COMMENT 'Title属性',
-  `attr_rel` varchar(255) NOT NULL DEFAULT '' COMMENT 'Rel属性',
-  `attr_class` varchar(255) NOT NULL DEFAULT '' COMMENT 'CSS-class名',
+  `attr_rel` varchar(100) NOT NULL DEFAULT '' COMMENT 'Rel属性，如：alternate、stylesheet、start、next、prev等',
+  `attr_class` varchar(100) NOT NULL DEFAULT '' COMMENT 'CSS-class名',
   `attr_style` varchar(255) NOT NULL DEFAULT '' COMMENT 'CSS-style属性',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
@@ -219,7 +219,7 @@ CREATE TABLE `tr_posts` (
   `jump_url` varchar(255) NOT NULL DEFAULT '' COMMENT '跳转链接',
   `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿或待审核',
   `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始发表时间',
-  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：不设置结束时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：永不过期',
   `comment_status` enum('publish','draft','forbidden') NOT NULL DEFAULT 'publish' COMMENT '评论设置，publish：开放浏览、draft：审核后展示、forbidden：禁止评论',
   `allow_other_modify` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许其他人编辑',
   `hits` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '访问次数',
@@ -303,3 +303,46 @@ CREATE TABLE `tr_post_comments` (
   KEY `pub_post_good` (`trash`,`is_published`,`post_id`,`good_count`),
   KEY `pub_creator_dtlm` (`trash`,`is_published`,`creator_id`,`dt_last_modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档评论表';
+
+DROP TABLE IF EXISTS `tr_advert_types`;
+CREATE TABLE `tr_advert_types` (
+  `type_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '位置名',
+  `type_key` varchar(24) NOT NULL DEFAULT '' COMMENT '位置Key',
+  `picture` varchar(100) NOT NULL DEFAULT '' COMMENT '示例图片',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  PRIMARY KEY (`type_id`),
+  UNIQUE KEY `uk_type_key` (`type_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告位置表';
+
+DROP TABLE IF EXISTS `tr_adverts`;
+CREATE TABLE `tr_adverts` (
+  `advert_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `advert_name` varchar(255) NOT NULL DEFAULT '' COMMENT '广告名',
+  `type_key` varchar(24) NOT NULL DEFAULT '' COMMENT '位置Key',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿',
+  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始发表时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：永不过期',
+  `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `show_type` enum('code','text','image','flash') NOT NULL DEFAULT 'image' COMMENT '展现方式，code：代码、text：文字、image：图片、flash：Flash',
+  `show_code` text COMMENT '展现代码',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '文字内容',
+  `advert_url` varchar(1024) NOT NULL DEFAULT '' COMMENT '广告链接',
+  `advert_src` varchar(255) NOT NULL DEFAULT '' COMMENT '图片|Flash链接',
+  `advert_src2` varchar(255) NOT NULL DEFAULT '' COMMENT '辅图链接',
+  `attr_alt` varchar(255) NOT NULL DEFAULT '' COMMENT '图片替换文字',
+  `attr_width` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '图片|Flash-宽度，单位：px',
+  `attr_height` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '图片|Flash-高度，单位：px',
+  `attr_fontsize` varchar(100) NOT NULL DEFAULT '' COMMENT '文字大小，单位： pt、px、em',
+  `attr_target` varchar(100) NOT NULL DEFAULT '_blank' COMMENT 'Target属性，如：_blank、_self、_parent、_top等',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`advert_id`),
+  KEY `key_sort` (`type_key`,`sort`),
+  KEY `key_pub_sort` (`type_key`,`is_published`,`sort`),
+  KEY `advert_name` (`advert_name`),
+  KEY `advert_url` (`advert_url`),
+  KEY `advert_src` (`advert_src`),
+  KEY `dt_publish_up` (`dt_publish_up`),
+  KEY `dt_publish_down` (`dt_publish_down`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告表';

@@ -8,18 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace menus\db;
+namespace advert\db;
 
 use tdo\AbstractDb;
-use menus\library\Constant;
-use menus\library\TableNames;
+use advert\library\Constant;
+use advert\library\TableNames;
 
 /**
  * Types class file
  * 业务层：数据库操作类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Types.php 1 2014-10-22 10:08:47Z Code Generator $
- * @package menus.db
+ * @version $Id: Types.php 1 2014-10-23 22:38:25Z Code Generator $
+ * @package advert.db
  * @since 1.0
  */
 class Types extends AbstractDb
@@ -41,10 +41,18 @@ class Types extends AbstractDb
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getTypes();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `type_id`, `type_key`, `type_name`, `description` FROM `' . $tableName . '`';
+		$sql = 'SELECT SQL_CALC_FOUND_ROWS `type_id`, `type_name`, `type_key`, `picture`, `description` FROM `' . $tableName . '`';
 
 		$condition = '1';
 		$attributes = array();
+
+		if (isset($params['type_name'])) {
+			$typeName = trim($params['type_name']);
+			if ($typeName !== '') {
+				$condition .= ' AND `type_name` LIKE ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['type_name'] = '%' . $typeName . '%';
+			}
+		}
 
 		if (isset($params['type_key'])) {
 			$typeKey = trim($params['type_key']);
@@ -54,11 +62,11 @@ class Types extends AbstractDb
 			}
 		}
 
-		if (isset($params['type_name'])) {
-			$typeName = trim($params['type_name']);
-			if ($typeName !== '') {
-				$condition .= ' AND `type_name` LIKE ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['type_name'] = '%' . $typeName . '%';
+		if (isset($params['picture'])) {
+			$picture = trim($params['picture']);
+			if ($picture !== '') {
+				$condition .= ' AND `picture` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['picture'] = $picture;
 			}
 		}
 
@@ -101,12 +109,12 @@ class Types extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getTypes();
-		$sql = 'SELECT `type_id`, `type_key`, `type_name`, `description` FROM `' . $tableName . '` WHERE `type_id` = ?';
+		$sql = 'SELECT `type_id`, `type_name`, `type_key`, `picture`, `description` FROM `' . $tableName . '` WHERE `type_id` = ?';
 		return $this->fetchAssoc($sql, $typeId);
 	}
 
 	/**
-	 * 通过类型Key，查询一条记录
+	 * 通过位置Key，查询一条记录
 	 * @param string $typeKey
 	 * @return array
 	 */
@@ -117,7 +125,7 @@ class Types extends AbstractDb
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getTypes();
-		$sql = 'SELECT `type_id`, `type_key`, `type_name`, `description` FROM `' . $tableName . '` WHERE `type_key` = ?';
+		$sql = 'SELECT `type_id`, `type_name`, `type_key`, `picture`, `description` FROM `' . $tableName . '` WHERE `type_key` = ?';
 		return $this->fetchAssoc($sql, $typeKey);
 	}
 
@@ -129,18 +137,20 @@ class Types extends AbstractDb
 	 */
 	public function create(array $params = array(), $ignore = false)
 	{
-		$typeKey = isset($params['type_key']) ? trim($params['type_key']) : '';
 		$typeName = isset($params['type_name']) ? trim($params['type_name']) : '';
+		$typeKey = isset($params['type_key']) ? trim($params['type_key']) : '';
+		$picture = isset($params['picture']) ? trim($params['picture']) : '';
 		$description = isset($params['description']) ? $params['description'] : '';
 
-		if ($typeKey === '' || $typeName === '') {
+		if ($typeName === '' || $typeKey === '' || $picture === '') {
 			return false;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getTypes();
 		$attributes = array(
-			'type_key' => $typeKey,
 			'type_name' => $typeName,
+			'type_key' => $typeKey,
+			'picture' => $picture,
 			'description' => $description,
 		);
 
@@ -163,6 +173,16 @@ class Types extends AbstractDb
 
 		$attributes = array();
 
+		if (isset($params['type_name'])) {
+			$typeName = trim($params['type_name']);
+			if ($typeName !== '') {
+				$attributes['type_name'] = $typeName;
+			}
+			else {
+				return false;
+			}
+		}
+
 		if (isset($params['type_key'])) {
 			$typeKey = trim($params['type_key']);
 			if ($typeKey !== '') {
@@ -173,10 +193,10 @@ class Types extends AbstractDb
 			}
 		}
 
-		if (isset($params['type_name'])) {
-			$typeName = trim($params['type_name']);
-			if ($typeName !== '') {
-				$attributes['type_name'] = $typeName;
+		if (isset($params['picture'])) {
+			$picture = trim($params['picture']);
+			if ($picture !== '') {
+				$attributes['picture'] = $picture;
 			}
 			else {
 				return false;

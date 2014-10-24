@@ -8,18 +8,18 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace menus\services;
+namespace advert\services;
 
 use libsrv\AbstractService;
 use libsrv\Service;
-use menus\library\Constant;
+use advert\library\Constant;
 
 /**
  * Types class file
  * 业务层：业务处理类
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Types.php 1 2014-10-22 10:08:47Z Code Generator $
- * @package menus.services
+ * @version $Id: Types.php 1 2014-10-23 22:47:36Z Code Generator $
+ * @package advert.services
  * @since 1.0
  */
 class Types extends AbstractService
@@ -53,8 +53,8 @@ class Types extends AbstractService
 	}
 
 	/**
-	 * 通过类型Key，查询一条记录
-	 * @param string $typeKey
+	 * 通过位置Key，查询一条记录
+	 * @param integer $typeKey
 	 * @return array
 	 */
 	public function findByTypeKey($typeKey)
@@ -64,7 +64,7 @@ class Types extends AbstractService
 	}
 
 	/**
-	 * 通过类型Key，获取某个列的值
+	 * 通过位置Key，获取某个列的值
 	 * @param string $columnName
 	 * @param integer $value
 	 * @return mixed
@@ -80,17 +80,28 @@ class Types extends AbstractService
 	}
 
 	/**
-	 * 通过类型Key，查询菜单数
+	 * 通过位置Key，查询广告数
 	 * @param string $typeKey
 	 * @return integer
 	 */
-	public function getMenuCount($typeKey)
+	public function getAdvertCount($typeKey)
 	{
-		return Service::getInstance('Menus', 'menus')->countByTypeKey($typeKey);
+		return Service::getInstance('Advert', 'advert')->countByTypeKey($typeKey);
 	}
 
 	/**
-	 * 通过“类型Key”，获取“类型名”
+	 * 通过“示例图片”，获取“示例图片名”
+	 * @param string $picture
+	 * @return string
+	 */
+	public function getPictureLangByPicture($picture)
+	{
+		$enum = DataTypes::getPictureEnum();
+		return isset($enum[$picture]) ? $enum[$picture] : '';
+	}
+
+	/**
+	 * 通过“位置Key”，获取“位置名”
 	 * @param string $typeKey
 	 * @return string
 	 */
@@ -101,7 +112,18 @@ class Types extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“类型Key”
+	 * 通过“主键ID”，获取“位置名”
+	 * @param integer $typeId
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($typeId)
+	{
+		$value = $this->getByPk('type_name', $typeId);
+		return $value ? $value : '';
+	}
+
+	/**
+	 * 通过“主键ID”，获取“位置Key”
 	 * @param integer $typeId
 	 * @return string
 	 */
@@ -112,13 +134,13 @@ class Types extends AbstractService
 	}
 
 	/**
-	 * 通过“主键ID”，获取“类型名”
+	 * 通过“主键ID”，获取“示例图片”
 	 * @param integer $typeId
 	 * @return string
 	 */
-	public function getTypeNameByTypeId($typeId)
+	public function getPictureByTypeId($typeId)
 	{
-		$value = $this->getByPk('type_name', $typeId);
+		$value = $this->getByPk('picture', $typeId);
 		return $value ? $value : '';
 	}
 

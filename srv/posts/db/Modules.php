@@ -74,6 +74,11 @@ class Modules extends AbstractDb
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
 		$ret = $this->fetchAllNoCache($sql, $attributes);
+
+		if (isset($attributes['module_name'])) {
+			$attributes['module_name'] = $moduleName;
+		}
+
 		if (is_array($ret)) {
 			$ret['attributes'] = $attributes;
 			$ret['order']      = $order;

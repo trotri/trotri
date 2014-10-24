@@ -44,6 +44,10 @@ return array(
 			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_MENUS_INDEX',
 			'm' => 'menus', 'c' => 'types', 'a' => 'index'
 		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_ADVERT_INDEX',
+			'm' => 'advert', 'c' => 'types', 'a' => 'index'
+		),
 	),
 	array(
 		0 => array(
