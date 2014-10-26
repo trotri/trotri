@@ -78,6 +78,7 @@ class Menus extends BaseModel
 				'label' => Text::_('MOD_MENUS_MENUS_MENU_URL_LABEL'),
 				'hint' => Text::_('MOD_MENUS_MENUS_MENU_URL_HINT'),
 				'required' => true,
+				'rows' => 3
 			),
 			'type_name' => array(
 				'__tid__' => 'main',
@@ -131,6 +132,7 @@ class Menus extends BaseModel
 				'label' => Text::_('MOD_MENUS_MENUS_SORT_LABEL'),
 				'hint' => Text::_('MOD_MENUS_MENUS_SORT_HINT'),
 				'required' => true,
+				'value' => 1000
 			),
 			'attr_target' => array(
 				'__tid__' => 'advanced',

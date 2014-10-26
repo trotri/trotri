@@ -32,7 +32,7 @@ class PlgProfile extends Event
 	 * @param mixed $params
 	 * @return void
 	 */
-	public function onAfterFind($context, &$row, $params = null)
+	public function onAfterFind($context, array &$row, $params = null)
 	{
 		if ($context !== 'posts\services\Posts::findByPk') {
 			return ;
@@ -73,7 +73,7 @@ class PlgProfile extends Event
 	 * @param mixed $params
 	 * @return void
 	 */
-	public function onAfterSave($context, &$row, $params = null)
+	public function onAfterSave($context, array &$row, $params = null)
 	{
 		$isCreate = ($context === 'posts\services\Posts::create')     ? true : false;
 		$isModify = ($context === 'posts\services\Posts::modifyByPk') ? true : false;

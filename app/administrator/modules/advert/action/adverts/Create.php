@@ -8,21 +8,20 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\menus\action\menus;
+namespace modules\advert\action\adverts;
 
 use library\actions;
-use tfc\ap\Ap;
 use libapp\Model;
 
 /**
- * Index class file
- * 查询数据列表
+ * Create class file
+ * 新增数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Index.php 1 2014-10-22 16:43:30Z Code Generator $
- * @package modules.menus.action.menus
+ * @version $Id: Create.php 1 2014-10-26 19:08:03Z Code Generator $
+ * @package modules.advert.action.adverts
  * @since 1.0
  */
-class Index extends actions\Index
+class Create extends actions\Create
 {
 	/**
 	 * (non-PHPdoc)
@@ -30,22 +29,13 @@ class Index extends actions\Index
 	 */
 	public function run()
 	{
-		$typeKey = Ap::getRequest()->getTrim('type_key');
+		$mod = Model::getInstance('Adverts');
+		$typeKey = $mod->getTypeKey();
 		if ($typeKey === '') {
 			$this->err404();
 		}
 
-		$ret = array();
-		$mod = Model::getInstance('Menus');
-
-		$typeName = $mod->getTypeNameByTypeKey($typeKey);
-		$ret = $mod->findLists($typeKey);
-
-		$mod->setLLU(array('type_key' => $typeKey));
-
 		$this->assign('type_key', $typeKey);
-		$this->assign('type_name', $typeName);
-		$this->assign('elements', $mod);
-		$this->render($ret);
+		$this->execute('Adverts');
 	}
 }

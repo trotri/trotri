@@ -86,7 +86,7 @@ class Types extends AbstractService
 	 */
 	public function getAdvertCount($typeKey)
 	{
-		return Service::getInstance('Advert', 'advert')->countByTypeKey($typeKey);
+		return Service::getInstance('Adverts', 'advert')->countByTypeKey($typeKey);
 	}
 
 	/**

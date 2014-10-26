@@ -42,8 +42,8 @@ class TableRender extends views\bootstrap\components\TableRender
 			'title' => $this->view->MOD_ADVERT_URLS_ADVERTS_CREATE,
 		));
 
-		$output = $indexIcon . $createIcon;
-		// $output = $indexIcon;
+		// $output = $indexIcon . $createIcon;
+		$output = $indexIcon;
 		return $output;
 	}
 

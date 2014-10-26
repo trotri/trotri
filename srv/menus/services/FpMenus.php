@@ -54,6 +54,7 @@ class FpMenus extends FormProcessor
 		}
 		else {
 			$params['dt_last_modified'] = date('Y-m-d H:i:s');
+			if (isset($params['dt_created'])) { unset($params['dt_created']); }
 		}
 
 		$rules = array(

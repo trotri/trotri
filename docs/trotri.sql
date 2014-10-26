@@ -334,7 +334,7 @@ CREATE TABLE `tr_adverts` (
   `attr_alt` varchar(255) NOT NULL DEFAULT '' COMMENT '图片替换文字',
   `attr_width` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '图片|Flash-宽度，单位：px',
   `attr_height` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '图片|Flash-高度，单位：px',
-  `attr_fontsize` varchar(100) NOT NULL DEFAULT '' COMMENT '文字大小，单位： pt、px、em',
+  `attr_fontsize` varchar(100) NOT NULL DEFAULT '' COMMENT '文字大小，单位：pt、px、em',
   `attr_target` varchar(100) NOT NULL DEFAULT '_blank' COMMENT 'Target属性，如：_blank、_self、_parent、_top等',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   PRIMARY KEY (`advert_id`),

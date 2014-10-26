@@ -152,12 +152,12 @@ class Posts extends AbstractDb
 			if ($dtPublishDown !== '') {
 				if ($dtPublishDown !== '0000-00-00 00:00:00') {
 					$condition .= ' AND `dt_publish_down` <= ' . $commandBuilder::PLACE_HOLDERS;
-					$attributes['dt_publish_down'] = $dtPublishDown;
 				}
 				else {
-					$condition .= ' AND `dt_publish_down` = ' . $commandBuilder::PLACE_HOLDERS;
-					$attributes['dt_publish_down'] = $dtPublishDown;
+					$condition .= ' AND `dt_publish_down` = ' . $commandBuilder::PLACE_HOLDERS;					
 				}
+
+				$attributes['dt_publish_down'] = $dtPublishDown;
 			}
 		}
 

@@ -21,7 +21,7 @@ namespace files\library;
 class Constant
 {
 	/**
-	 * @var string 上传缩略图配置
+	 * @var string 文档管理：上传图片配置
 	 */
 	const POSTS_CLUSTER = 'posts';
 
@@ -29,5 +29,10 @@ class Constant
 	 * @var string 系统管理：批量上传配置
 	 */
 	const SYSBATCH_CLUSTER = 'sysbatch';
+
+	/**
+	 * @var string 广告管理：上传图片|Flash配置
+	 */
+	const ADVERTS_CLUSTER = 'adverts';
 
 }

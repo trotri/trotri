@@ -14,7 +14,7 @@ $createIcon = $this->getHtml()->tag(
 );
 
 echo $this->getHtml()->a(
-	$createIcon . $prompt,
+	$createIcon . '&nbsp;&nbsp;&nbsp;' . $prompt,
 	$this->getUrlManager()->getUrl('index', '', '', array('app_id' => $appId)),
 	array(
 		'class' => 'btn btn-' . (($this->app_id == $appId) ? 'primary' : 'default')

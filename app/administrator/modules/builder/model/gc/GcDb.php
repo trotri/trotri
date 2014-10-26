@@ -130,7 +130,15 @@ class GcDb extends AbstractGc
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyCondition(\$sql, \$condition);\n");
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyOrder(\$sql, \$order);\n");
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyLimit(\$sql, \$limit, \$offset);\n");
-		fwrite($stream, "\t\t\$ret = \$this->fetchAllNoCache(\$sql, \$attributes);\n");
+		fwrite($stream, "\t\t\$ret = \$this->fetchAllNoCache(\$sql, \$attributes);\n\n");
+		foreach ($fields as $rows) {
+			if ($rows['field_type'] !== 'INT') {
+				fwrite($stream, "\t\tif (isset(\$attributes['{$rows['field_name']}'])) {\n");
+				fwrite($stream, "\t\t\t\$attributes['{$rows['field_name']}'] = {$rows['var_name']};\n");
+				fwrite($stream, "\t\t}\n\n");
+			}
+		}
+
 		fwrite($stream, "\t\tif (is_array(\$ret)) {\n");
 		fwrite($stream, "\t\t\t\$ret['attributes'] = \$attributes;\n");
 		fwrite($stream, "\t\t\t\$ret['order']      = \$order;\n");

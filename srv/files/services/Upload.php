@@ -62,6 +62,23 @@ class Upload
 	}
 
 	/**
+	 * 上传图片|Flash：广告管理
+	 * @param array $files
+	 * @return array
+	 */
+	public static function adverts(array $files)
+	{
+		$clusterName = Constant::ADVERTS_CLUSTER;
+
+		$ret = self::save($clusterName, $files);
+		if ($ret['err_no'] !== UpProxy::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * 检查并上传文件
 	 * @param string $clusterName
 	 * @param array $files

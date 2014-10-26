@@ -26,6 +26,7 @@ class Plugin extends EventDispatcher
 	 * @var array 用于寄存需要加载的插件名
 	 */
 	public static $plgNames = array(
+		'showcode'
 	);
 
 	/**

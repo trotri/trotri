@@ -122,8 +122,7 @@ class Types extends BaseModel
 	 */
 	public function getAdvertCount($typeKey)
 	{
-		// $count = $this->getService()->getAdvertCount($typeKey);
-		$count = 0;
+		$count = $this->getService()->getAdvertCount($typeKey);
 		return $count;
 	}
 

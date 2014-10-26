@@ -357,19 +357,29 @@ Core = {
    */
   uploadPreviewImg: function(btnId, name, options) {
     var button = $("#" + btnId);
+    var field = button.parent().parent();
     var oIpt = $("input[name='" + name + "']");
 
     var removeImg = function() {
       $(".ajax-file-upload-statusbar").next(".ajax-file-upload-statusbar").remove();
     };
 
+    var getFlash = function(url) {
+      return '<embed width="' + defaults.previewHeight + '" height="' + defaults.previewWidth + '" src=' + url + ' type="application/x-shockwave-flash" wmode="transparent"></embed>';
+    };
+
     var loadImg = function() {
       var url = oIpt.val();
       if (url != "") {
-        var str = '<div class="ajax-file-upload-statusbar" style="width: ' + defaults.statusBarWidth + ';">';
-        str += '<img class="ajax-file-upload-preview" src="' + url + '" style="display: inline-block; height: ' + defaults.previewHeight + '; width: ' + defaults.previewWidth + ';">';
-        str += '</div>';
-        button.next().after(str);
+        var string = '<div class="ajax-file-upload-statusbar" style="width: ' + defaults.statusBarWidth + ';">';
+        if (Trotri.endWith(".swf", url)) {
+          string += getFlash(url);
+        }
+        else {
+          string += '<img class="ajax-file-upload-preview" src="' + url + '" style="display: inline-block; height: ' + defaults.previewHeight + '; width: ' + defaults.previewWidth + ';">';
+        }
+        string += '</div>';
+        button.next().after(string);
       }
 
       removeImg();
@@ -392,7 +402,7 @@ Core = {
       url: button.attr("url"),
       fileName: button.attr("name"),
       returnType: "JSON",
-      allowedTypes: "jpg,gif,png,bmp",
+      allowedTypes: "jpg,gif,png,bmp,swf",
       multiple: false,
       dragDrop: true,
       showDone: false,
@@ -416,8 +426,14 @@ Core = {
       },
       onSuccess: function(files, response, xhr, pd) {
         if (response.err_no == 0) {
-          oIpt.val(response.data.url);
-          $(".ajax-file-upload-preview").show("fast", function() { $(this).attr("src", response.data.url); });
+          var url = response.data.url;
+          oIpt.val(url);
+          if (Trotri.endWith(".swf", url)) {
+            field.find(".ajax-file-upload-preview").after(getFlash(url));
+          }
+          else {
+            field.find(".ajax-file-upload-preview").show("fast", function() { $(this).attr("src", url); }); 
+          }
         }
         else {
           $(".ajax-file-upload-bar").text("Upload Failed");
