@@ -194,7 +194,7 @@ class FpAdverts extends FormProcessor
 	 */
 	public function getTitleRule($value)
 	{
-		if (!$this->_object->isShowTypeText($value)) {
+		if (!$this->_object->isShowTypeText($this->show_type)) {
 			return array();
 		}
 
@@ -210,7 +210,7 @@ class FpAdverts extends FormProcessor
 	 */
 	public function getAdvertUrlRule($value)
 	{
-		if ($this->_object->isShowTypeFlash($value) || $this->_object->isShowTypeCode($value)) {
+		if ($this->_object->isShowTypeFlash($this->show_type) || $this->_object->isShowTypeCode($this->show_type)) {
 			return array();
 		}
 
@@ -226,7 +226,7 @@ class FpAdverts extends FormProcessor
 	 */
 	public function getAdvertSrcRule($value)
 	{
-		if ($this->_object->isShowTypeText($value) || $this->_object->isShowTypeCode($value)) {
+		if ($this->_object->isShowTypeText($this->show_type) || $this->_object->isShowTypeCode($this->show_type)) {
 			return array();
 		}
 
@@ -242,7 +242,7 @@ class FpAdverts extends FormProcessor
 	 */
 	public function getAttrAltRule($value)
 	{
-		if (!$this->_object->isShowTypeImage($value)) {
+		if (!$this->_object->isShowTypeImage($this->show_type)) {
 			return array();
 		}
 

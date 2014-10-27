@@ -1,7 +1,14 @@
 $(document).ready(function() {
   if (g_mod == "advert" && g_ctrl == "adverts" && (g_act == "create" || g_act == "modify" || g_act == "view")) {
-    Core.uploadPreviewImg("advert_src_file", "advert_src");
-    Core.uploadPreviewImg("advert_src2_file", "advert_src2");
+    if (g_act != "view") {
+      Core.uploadPreviewImg("advert_src_file", "advert_src");
+      Core.uploadPreviewImg("advert_src2_file", "advert_src2");
+    }
+    else {
+      Core.uploadPreviewImg("advert_src_file", "advert_src", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});
+      Core.uploadPreviewImg("advert_src2_file", "advert_src2", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});
+    }
+
     Components.changeAdvertFields();
   }
 });

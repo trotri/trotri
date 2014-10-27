@@ -13,6 +13,7 @@ namespace modules\advert\model;
 use library\BaseModel;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
+use tfc\util\String;
 use tfc\saf\Text;
 use libapp\Model;
 use advert\services\DataAdverts;
@@ -237,6 +238,36 @@ class Adverts extends BaseModel
 	}
 
 	/**
+	 * 新增一条记录
+	 * @param array $params
+	 * @param boolean $ignore
+	 * @return array
+	 */
+	public function create(array $params = array(), $ignore = false)
+	{
+		if (isset($params['show_code'])) {
+			$params['show_code'] = String::stripslashes($params['show_code']);
+		}
+
+		return parent::create($params, $ignore);
+	}
+
+	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $id
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($id, array $params = array())
+	{
+		if (isset($params['show_code'])) {
+			$params['show_code'] = String::stripslashes($params['show_code']);
+		}
+
+		return parent::modifyByPk($id, $params);
+	}
+
+	/**
 	 * 获取type_key值
 	 * @return string
 	 */
@@ -259,5 +290,15 @@ class Adverts extends BaseModel
 	public function getTypeNameByTypeKey($typeKey)
 	{
 		return Model::getInstance('Types')->getTypeNameByTypeKey($typeKey);
+	}
+
+	/**
+	 * 通过“展现方式”，获取“展现方式名”
+	 * @param string $showType
+	 * @return string
+	 */
+	public function getShowTypeLangByShowType($showType)
+	{
+		return $this->getService()->getShowTypeLangByShowType($showType);
 	}
 }

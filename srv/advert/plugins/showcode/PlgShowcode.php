@@ -33,6 +33,11 @@ class PlgShowcode extends Event
 	);
 
 	/**
+	 * @var instance of tfc\mvc\Html
+	 */
+	protected $_html = null;
+
+	/**
 	 * 新增或编辑前执行
 	 * @param string $context
 	 * @param array $row
@@ -48,8 +53,9 @@ class PlgShowcode extends Event
 			return ;
 		}
 
+		$enum = DataAdverts::getShowTypeEnum();
 		$showType = isset($row['show_type']) ? trim($row['show_type']) : '';
-		if (!in_array($showType, DataAdverts::getShowTypeEnum())) {
+		if (!isset($enum[$showType])) {
 			return ;
 		}
 

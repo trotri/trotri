@@ -12,7 +12,7 @@ namespace advert\services;
 
 use libsrv\AbstractService;
 use advert\library\Constant;
-use posts\library\Plugin;
+use advert\library\Plugin;
 
 /**
  * Adverts class file
@@ -102,6 +102,17 @@ class Adverts extends AbstractService
 		}
 
 		return $rowCount;
+	}
+
+	/**
+	 * 通过“展现方式”，获取“展现方式名”
+	 * @param string $showType
+	 * @return string
+	 */
+	public function getShowTypeLangByShowType($showType)
+	{
+		$enum = DataAdverts::getShowTypeEnum();
+		return isset($enum[$showType]) ? $enum[$showType] : '';
 	}
 
 	/**
