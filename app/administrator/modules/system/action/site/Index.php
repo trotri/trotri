@@ -11,6 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
+use system\services\Options;
 
 /**
  * Index class file
@@ -20,7 +21,7 @@ use library\actions;
  * @package modules.system.action.site
  * @since 1.0
  */
-class Index extends actions\View
+class Index extends actions\Index
 {
 	/**
 	 * (non-PHPdoc)
@@ -28,6 +29,11 @@ class Index extends actions\View
 	 */
 	public function run()
 	{
+		$sysInfo = Options::getSysInfo();
+		$devInfo = Options::getDevInfo();
+
+		$this->assign('sys_info', $sysInfo);
+		$this->assign('dev_info', $devInfo);
 		$this->render();
 	}
 }

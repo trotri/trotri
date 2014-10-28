@@ -11,6 +11,7 @@
 namespace views\bootstrap\components\bar;
 
 use tfc\mvc\Widget;
+use tfc\ap\Registry;
 
 /**
  * AlertBar class file
@@ -32,7 +33,24 @@ class AlertBar extends Widget
 		$errMsg = $this->getView()->err_msg;
 
 		if ($errMsg != '') {
-			echo '<div id="alert_bar" class="alert alert-', ($errNo > 0 ? 'danger' : 'success'), '">', $errMsg, '</div>';
+			$attributes = array(
+				'id' => $this->getId(),
+				'class' => 'alert alert-' . ($errNo > 0 ? 'danger' : 'success')
+			);
+
+			echo $this->getHtml()->tag('div', $attributes, $errMsg);
 		}
+	}
+
+	/**
+	 * 获取警告栏ID
+	 * @return string
+	 */
+	public function getId()
+	{
+		$id = (int) Registry::get('AlertBar_ID') + 1;
+		Registry::set('AlertBar_ID', $id);
+
+		return 'alert_bar_' . $id;
 	}
 }

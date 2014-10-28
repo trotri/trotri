@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `trotri2`;
+CREATE DATABASE IF NOT EXISTS `trotri`;
 
-USE `trotri2`;
+USE `trotri`;
 
 DROP TABLE IF EXISTS `tr_builder_types`;
 CREATE TABLE `tr_builder_types` (

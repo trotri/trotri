@@ -15,6 +15,7 @@ use tfc\ap\Ap;
 use tfc\saf\Log;
 use tfc\validator;
 use libsrv\Service;
+use libapp\ErrorNo;
 use posts\library\Lang;
 use posts\library\TableNames;
 
@@ -80,7 +81,7 @@ class FpPosts extends FormProcessor
 			if (!$row || !is_array($row) || !isset($row['creator_id']) || !isset($row['allow_other_modify'])) {
 				Log::warning(sprintf(
 					'FpPosts is unable to find the result by id "%d"', $this->id
-				), 0,  __METHOD__);
+				), ErrorNo::ERROR_DB_SELECT,  __METHOD__);
 
 				return false;
 			}

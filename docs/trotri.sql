@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS `trotri2`;
+CREATE DATABASE IF NOT EXISTS `trotri`;
 
-USE `trotri2`;
+USE `trotri`;
 
 DROP TABLE IF EXISTS `tr_system_logwf_ym`;
 CREATE TABLE `tr_system_logwf_ym` (

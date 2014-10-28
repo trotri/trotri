@@ -10,7 +10,7 @@
 
 return array (
   'trotri' => array (
-    'dsn' => 'mysql:host=localhost;dbname=trotri2',
+    'dsn' => 'mysql:host=localhost;dbname=trotri',
     'username' => 'root',
     'password' => '123456',
     'charset' => 'utf8',

@@ -14,6 +14,7 @@ use tfc\ap\Event;
 use tfc\ap\Singleton;
 use tfc\saf\Log;
 use libsrv\Service;
+use libapp\ErrorNo;
 use advert\services\DataAdverts;
 
 /**
@@ -88,7 +89,7 @@ class PlgShowcode extends Event
 			if (!$advert || !is_array($advert) || !isset($advert['advert_id']) || !isset($advert['advert_url'])) {
 				Log::warning(sprintf(
 					'PlgShowcode is unable to find the result by id "%d"', $advertId
-				), 0,  __METHOD__);
+				), ErrorNo::ERROR_DB_SELECT,  __METHOD__);
 
 				return ;
 			}

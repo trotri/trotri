@@ -13,6 +13,7 @@ namespace posts\services;
 use libsrv\FormProcessor;
 use tfc\validator;
 use tfc\saf\Log;
+use libapp\ErrorNo;
 use posts\library\Lang;
 use posts\library\TableNames;
 
@@ -58,7 +59,7 @@ class FpCategories extends FormProcessor
 			if (!$row || !is_array($row) || !isset($row['category_id']) || !isset($row['category_pid']) || !isset($row['category_name'])) {
 				Log::warning(sprintf(
 					'FpCategories is unable to find the result by id "%d"', $this->id
-				), 0,  __METHOD__);
+				), ErrorNo::ERROR_DB_SELECT,  __METHOD__);
 
 				return false;
 			}

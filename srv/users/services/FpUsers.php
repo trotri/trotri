@@ -14,6 +14,7 @@ use libsrv\FormProcessor;
 use tfc\ap\Ap;
 use tfc\saf\Log;
 use tfc\validator;
+use libapp\ErrorNo;
 use users\library\Lang;
 use users\library\TableNames;
 
@@ -101,7 +102,7 @@ class FpUsers extends FormProcessor
 			if (!$row || !is_array($row) || !isset($row['repwd_count'])) {
 				Log::warning(sprintf(
 					'FpUsers is unable to find the result by id "%d"', $this->id
-				), 0,  __METHOD__);
+				), ErrorNo::ERROR_DB_SELECT,  __METHOD__);
 
 				return false;
 			}

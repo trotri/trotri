@@ -39,6 +39,15 @@ class Metadata
     }
 
     /**
+     * 获取MySQL版本号
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->getDbProxy()->fetchColumn('SELECT VERSION()');
+    }
+
+    /**
      * 获取数据库中所有表名，如果$value不为null，通过LIKE匹配$value指定的表名
      * @param string|null $value
      * @return array

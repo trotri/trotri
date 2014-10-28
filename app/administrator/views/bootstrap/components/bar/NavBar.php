@@ -79,7 +79,8 @@ class NavBar extends Widget
 		$this->assign('user_name',  Identity::getNickname());
 		$this->assign('app_names',  Identity::getAppNames());
 
-		$this->assign('menus', $output);
+		$this->assign('menus',  $output);
+		$this->assign('logout', $this->getView()->CFG_SYSTEM_GLOBAL_LOGOUT);
 		$this->display();
 	}
 

@@ -13,6 +13,7 @@ namespace advert\services;
 use libsrv\FormProcessor;
 use tfc\saf\Log;
 use tfc\validator;
+use libapp\ErrorNo;
 use advert\library\Lang;
 use advert\library\TableNames;
 
@@ -54,7 +55,7 @@ class FpTypes extends FormProcessor
 				if (!$row || !is_array($row) || !isset($row['type_key'])) {
 					Log::warning(sprintf(
 						'FpTypes is unable to find the result by id "%d"', $this->id
-					), 0,  __METHOD__);
+					), ErrorNo::ERROR_DB_SELECT,  __METHOD__);
 
 					return false;
 				}

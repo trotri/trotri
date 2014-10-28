@@ -94,7 +94,10 @@ abstract class ShowAction extends BaseAction
 
 		if (!isset($data['err_no']) || $data['err_no'] === ErrorNo::SUCCESS_NUM) {
 			$data['err_no'] = Ap::getRequest()->getInteger('err_no', ErrorNo::SUCCESS_NUM);
-			$data['err_msg'] = String::escapeXss(Ap::getRequest()->getString('err_msg'));
+			$errMsg = String::escapeXss(Ap::getRequest()->getString('err_msg'));
+			if ($errMsg !== '') {
+				$data['err_msg'] = $errMsg;
+			}
 		}
 
 		$viw->render($tplName, $data);

@@ -11,6 +11,9 @@
 namespace system\services;
 
 use libsrv\AbstractService;
+use tfc\ap\Ap;
+use tdo\Metadata;
+use system\library\Lang;
 
 /**
  * Options class file
@@ -76,6 +79,50 @@ class Options extends AbstractService
 		$attributes = $formProcessor->getValues();
 		$rowCount = $this->getDb()->batchReplace($attributes);
 		return $rowCount;
+	}
+
+	/**
+	 * 获取系统信息
+	 * @return array
+	 */
+	public static function getSysInfo()
+	{
+		static $metadata = null;
+		if ($metadata === null) {
+			$metadata = new Metadata(self::getInstance()->getDb()->getDbProxy());
+		}
+
+		$data = array(
+			'tfcversion' => Ap::getVersion(),
+			'dbversion'  => $metadata->getVersion(),
+			'phpversion' => PHP_OS . ' / PHP v' . PHP_VERSION . (@ini_get('safe_mode') ? ' Safe Mode' : ''),
+			'software'   => Ap::getRequest()->getServer('SERVER_SOFTWARE'),
+			'maxupsize'  => @ini_get('file_uploads') ? ini_get('upload_max_filesize') : Lang::_('SRV_ENUM_GLOBAL_UNKOWN')
+		);
+
+		return $data;
+	}
+
+	/**
+	 * 获取开发者信息
+	 * @return array
+	 */
+	public static function getDevInfo()
+	{
+		$data = array(
+			'author' => 'Huan Song <a href="mailto:trotri@yeah.net">trotri@yeah.net</a>',
+			'copyright' => 'Copyright &copy; 2011-2013 <a href="http://www.trotri.com/" target="_blank">http://www.trotri.com/</a> All rights reserved.',
+			'license' => 'http://www.apache.org/licenses/LICENSE-2.0',
+			'team' => '',
+			'skins' => '<a href="http://www.bootcss.com/" target="_blank">Bootstrap</a>',
+			'thanks' => '',
+			'links' => array(
+				'<a href="http://www.trotri.com/" target="_blank">' . Lang::_('SRV_ENUM_GLOBAL_LINKS_WEBSITE') . '</a>',
+				'<a href="http://github.com/trotri/trotri" target="_blank">' . Lang::_('SRV_ENUM_GLOBAL_LINKS_GIT') . '</a>',
+			)
+		);
+
+		return $data;
 	}
 
 	/**
