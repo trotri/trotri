@@ -89,6 +89,10 @@ class GcViews extends AbstractGc
 		}
 
 		$output = implode(' . ', $outputs);
+		if ($output === '') {
+			$output = "''";
+		}
+
 		fwrite($stream, "\n");
 		fwrite($stream, "\t\t\$output = {$output};\n");
 		fwrite($stream, "\t\treturn \$output;\n");

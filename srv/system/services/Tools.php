@@ -51,20 +51,18 @@ class Tools extends AbstractService
 	{
 		$fileManager = new FileManager();
 
-		$directory = DIR_DATA_RUNTIME_ENTITIES;
-		if (!$fileManager->rmDir($directory)) {
-			Log::warning(sprintf(
-				'Tools Cache clear Failed, Directory: "%s"', $directory
-			), ErrorNo::ERROR_CACHE_DELETE,  __METHOD__);
-			return false;
-		}
+		$dirs = $fileManager->scanDir(DIR_DATA_RUNTIME);
+		foreach ($dirs as $directory) {
+			if (is_file($directory)) {
+				continue;
+			}
 
-		$directory = DIR_DATA_RUNTIME_ROLES;
-		if (!$fileManager->rmDir($directory)) {
-			Log::warning(sprintf(
-				'Tools Cache clear Failed, Directory: "%s"', $directory
-			), ErrorNo::ERROR_CACHE_DELETE,  __METHOD__);
-			return false;
+			if (!$fileManager->rmDir($directory)) {
+				Log::warning(sprintf(
+					'Tools Cache clear Failed, Directory: "%s"', $directory
+				), ErrorNo::ERROR_CACHE_DELETE,  __METHOD__);
+				return false;
+			}
 		}
 
 		return true;

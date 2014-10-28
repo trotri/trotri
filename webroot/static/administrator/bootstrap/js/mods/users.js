@@ -19,10 +19,10 @@ Users = {
    * @return void
    */
   forwardLoginHistory: function() {
-    if ($("#alert_bar").hasClass("alert-success")) {
+    if ($("#alert_bar_1").hasClass("alert-success")) {
       var httpReferer = $(":hidden[name='http_referer']").val();
       if (httpReferer != "") {
-        $("#alert_bar").html($("#alert_bar").text() + "&nbsp;&nbsp;正在跳转...");
+        $("#alert_bar_1").html($("#alert_bar_1").text() + "&nbsp;&nbsp;正在跳转...");
         $(".form-signin").hide();
         setTimeout(function() {
           location.href = httpReferer;
