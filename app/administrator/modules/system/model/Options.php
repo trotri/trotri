@@ -11,6 +11,7 @@
 namespace modules\system\model;
 
 use library\BaseModel;
+use tfc\util\String;
 use tfc\saf\Text;
 use system\services\DataOptions;
 
@@ -292,6 +293,14 @@ class Options extends BaseModel
 	 */
 	public function batchReplace(array $params = array())
 	{
+		if (isset($params['stat_code'])) {
+			$params['stat_code'] = String::stripslashes($params['stat_code']);
+		}
+
+		if (isset($params['powerby'])) {
+			$params['powerby'] = String::stripslashes($params['powerby']);
+		}
+
 		$ret = $this->callModifyMethod($this->getService(), 'batchReplaceById', 0, $params);
 		return $ret;
 	}

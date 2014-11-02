@@ -24,6 +24,30 @@ use menus\library\Lang;
 class Menus extends AbstractService
 {
 	/**
+	 * 递归获取指定类型下的所有菜单
+	 * @param string $typeKey
+	 * @param integer $menuPid
+	 * @param boolean $allowUnregistered
+	 * @return array
+	 */
+	public function findRows($typeKey, $menuPid = 0, $allowUnregistered = true)
+	{
+		$rows = $this->findAllByKeyPid($typeKey, $menuPid, $allowUnregistered);
+		if (!$rows || !is_array($rows)) {
+			return array();
+		}
+
+		$data = array();
+		foreach ($rows as $row) {
+			$tmpRows = $this->findRows($typeKey, $row['menu_id'], $allowUnregistered);
+			$row['data'] = $tmpRows;
+			$data[] = $row;
+		}
+
+		return $data;
+	}
+
+	/**
 	 * 递归方式获取指定类型下的菜单，默认用|—填充子菜单左边用于和父菜单错位（可用于Table列表）
 	 * @param string $typeKey
 	 * @param integer $menuPid
@@ -35,7 +59,7 @@ class Menus extends AbstractService
 	 */
 	public function findLists($typeKey, $menuPid = 0, $allowUnregistered = true, $padStr = '|—', $leftPad = '', $rightPad = null)
 	{
-		$rows = $this->getDb()->findAllByKeyPid($typeKey, $menuPid, $allowUnregistered);
+		$rows = $this->findAllByKeyPid($typeKey, $menuPid, $allowUnregistered);
 		if (!$rows || !is_array($rows)) {
 			return array();
 		}
@@ -92,6 +116,19 @@ class Menus extends AbstractService
 		}
 
 		return $data;
+	}
+
+	/**
+	 * 方式获取指定类型下的菜单
+	 * @param string $typeKey
+	 * @param integer $menuPid
+	 * @param boolean $allowUnregistered
+	 * @return array
+	 */
+	public function findAllByKeyPid($typeKey, $menuPid = 0, $allowUnregistered = true)
+	{
+		$rows = $this->getDb()->findAllByKeyPid($typeKey, $menuPid, $allowUnregistered);
+		return $rows;
 	}
 
 	/**

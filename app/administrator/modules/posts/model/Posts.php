@@ -498,6 +498,17 @@ class Posts extends BaseModel
 	}
 
 	/**
+	 * 通过“主键ID”，获取“文档标题”
+	 * @param integer $postId
+	 * @return string
+	 */
+	public function getTitleByPostId($postId)
+	{
+		$ret = $this->getService()->getTitleByPostId($postId);
+		return $ret;
+	}
+
+	/**
 	 * 通过“主键ID”，获取“文档扩展字段”
 	 * @param integer $postId
 	 * @return array

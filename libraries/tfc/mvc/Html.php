@@ -53,6 +53,18 @@ class Html
     }
 
     /**
+     * 获取表单元素：<input type="email" />
+     * @param string $name
+     * @param mixed $value
+     * @param array $attributes
+     * @return string
+     */
+    public function email($name, $value = '', $attributes = array())
+    {
+        return $this->input('email', $name, $value, $attributes);
+    }
+
+    /**
      * 获取表单元素：<input type="password" />
      * @param string $name
      * @param mixed $value

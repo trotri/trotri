@@ -293,15 +293,14 @@ CREATE TABLE `tr_post_comments` (
   `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
   `ip_created` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建IP',
   `ip_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑IP',
-  `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
   PRIMARY KEY (`comment_id`),
   KEY `post_id` (`post_id`),
   KEY `creator_id` (`creator_id`),
   KEY `ip_created` (`ip_created`),
   KEY `good_count` (`good_count`),
-  KEY `pub_post_dtlm` (`trash`,`is_published`,`post_id`,`dt_last_modified`),
-  KEY `pub_post_good` (`trash`,`is_published`,`post_id`,`good_count`),
-  KEY `pub_creator_dtlm` (`trash`,`is_published`,`creator_id`,`dt_last_modified`)
+  KEY `pub_post_dtlm` (`is_published`,`post_id`,`comment_pid`,`dt_last_modified`),
+  KEY `pub_post_good` (`is_published`,`post_id`,`comment_pid`,`good_count`),
+  KEY `pub_creator_dtlm` (`is_published`,`creator_id`,`comment_pid`,`dt_last_modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文档评论表';
 
 DROP TABLE IF EXISTS `tr_advert_types`;

@@ -261,7 +261,7 @@ abstract class Widget implements interfaces\View
             return $this->_widgetDirectory;
         }
 
-        $className = strtolower(get_class($this));
+        $className = strstr(strtolower(get_class($this)), 'widgets\\');
         $this->_widgetDirectory = $this->getView()->viewDirectory . DIRECTORY_SEPARATOR . $this->getView()->skinName . DIRECTORY_SEPARATOR . $className;
         if (is_dir($this->_widgetDirectory)) {
             return $this->_widgetDirectory;

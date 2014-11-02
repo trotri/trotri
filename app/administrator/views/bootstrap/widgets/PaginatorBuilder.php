@@ -114,7 +114,7 @@ class PaginatorBuilder extends Widget
 		$url = $this->getUrlManager()->getUrl(Mvc::$action, Mvc::$controller, Mvc::$module, $attributes);
 
 		$paginator = new Paginator($totalRows, $url, PageHelper::getPageVar());
-		$paginator->setListPages($this->getListPages());
+		$paginator->setListPages(PageHelper::getListPages());
 		$paginator->setListRows($listRows);
 		$paginator->setCurrPage($currPage);
 
@@ -129,16 +129,5 @@ class PaginatorBuilder extends Widget
 	{
 		$totalRows = isset($this->_tplVars['total']) ? (int) $this->_tplVars['total'] : 0;
 		return $totalRows;
-	}
-
-	/**
-	 * 获取分页参数：每页展示的页码数
-	 * @return integer
-	 */
-	public function getListPages()
-	{
-		$listPages = (int) Cfg::getApp('list_pages', 'paginator');
-		$listPages = max($listPages, 1);
-		return $listPages;
 	}
 }

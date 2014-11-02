@@ -30,4 +30,8 @@ class Constant
 	 */
 	const FIND_MAX_LIMIT = 100;
 
+	/**
+	 * @var integer 查询评论子类别的读取条数
+	 */
+	const COMMENT_CHILDREN_FIND_LIMIT = 5;
 }

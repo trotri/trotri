@@ -96,7 +96,7 @@ class Categories extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_HOME_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_HOME_HINT'),
 				'required' => true,
-				'value' => 'index.php'
+				'value' => 'home'
 			),
 			'tpl_list' => array(
 				'__tid__' => 'main',
@@ -104,7 +104,7 @@ class Categories extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_LIST_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_LIST_HINT'),
 				'required' => true,
-				'value' => 'list.php'
+				'value' => 'index'
 			),
 			'tpl_view' => array(
 				'__tid__' => 'main',
@@ -112,7 +112,7 @@ class Categories extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_VIEW_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_CATEGORIES_TPL_VIEW_HINT'),
 				'required' => true,
-				'value' => 'view.php'
+				'value' => 'view'
 			),
 			'sort' => array(
 				'__tid__' => 'main',

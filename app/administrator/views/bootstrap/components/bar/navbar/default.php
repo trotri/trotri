@@ -23,6 +23,7 @@
           </ul>
         </li>
         <?php endif; ?>
+        <li><a href="index.php" target="_blank"><?php echo $this->getView()->CFG_SYSTEM_URLS_INDEX; ?></a></li>
       </ul>
     </div><!-- /.nav-collapse -->
   </div><!-- /.container -->

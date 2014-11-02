@@ -27,6 +27,178 @@ use posts\library\Plugin;
 class Posts extends AbstractService
 {
 	/**
+	 * 查询多条头条
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getHeads($limit = 0, $offset = 0)
+	{
+		$rows = $this->findRows(array('is_head' => DataPosts::IS_HEAD_Y), DataPosts::ORDER_SORT, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 查询多条推荐
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getRecommends($limit = 0, $offset = 0)
+	{
+		$rows = $this->findRows(array('is_recommend' => DataPosts::IS_RECOMMEND_Y), DataPosts::ORDER_SORT, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 通过类别ID，查询访问次数最多的记录
+	 * @param integer $catId
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getHitsByCatId($catId, $limit = 0, $offset = 0)
+	{
+		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_HITS, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 通过类别ID，查询赞美次数最多的记录
+	 * @param integer $catId
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getPraisesByCatId($catId, $limit = 0, $offset = 0)
+	{
+		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_PRAISE, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 通过类别ID，查询赞美次数最多的记录
+	 * @param integer $catId
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getCommentsByCatId($catId, $limit = 0, $offset = 0)
+	{
+		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_COMMENT, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 通过类别ID，查询多条记录
+	 * @param integer $catId
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getRowsByCatId($catId, $order = '', $limit = 0, $offset = 0)
+	{
+		if (($catId = (int) $catId) <= 0) {
+			return array();
+		}
+
+		$rows = $this->findRows(array('category_id' => $catId), $order, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 通过创建人ID，查询多条记录
+	 * @param integer $creatorId
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getRowsByCreatorId($creatorId, $limit = 0, $offset = 0)
+	{
+		if (($creatorId = (int) $creatorId) <= 0) {
+			return array();
+		}
+
+		$rows = $this->findRows(array('creator_id' => $creatorId), DataPosts::ORDER_SORT, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 查询多条记录：不包含分页信息
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	{
+		if (($order = trim($order)) === '') {
+			$order = DataPosts::ORDER_SORT;
+		}
+
+		$limit = min(max((int) $limit, 0), Constant::FIND_MAX_LIMIT);
+		$offset = max((int) $offset, 0);
+		$nowTime = date('Y-m-d H:i:s');
+
+		$params['is_published'] = DataPosts::IS_PUBLISHED_Y;
+		$params['dt_publish_up'] = $nowTime;
+		$params['dt_publish_down'] = $nowTime;
+
+		$rows = $this->getDb()->findRows($params, $order, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 查询多条记录：包含分页信息
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function findLists(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	{
+		if (($order = trim($order)) === '') {
+			$order = DataPosts::ORDER_SORT;
+		}
+
+		$nowTime = date('Y-m-d H:i:s');
+
+		$params['trash'] = DataPosts::TRASH_N;
+		$params['is_published'] = DataPosts::IS_PUBLISHED_Y;
+		$params['dt_publish_up'] = $nowTime;
+		$params['dt_publish_down'] = $nowTime;
+
+		$rows = $this->findAll($params, $order, $limit, $offset);
+		if ($rows && is_array($rows)) {
+			if (isset($rows['attributes']) && is_array($rows['attributes'])) {
+				if (isset($rows['attributes']['trash'])) {
+					unset($rows['attributes']['trash']);
+				}
+
+				if (isset($rows['attributes']['is_published'])) {
+					unset($rows['attributes']['is_published']);
+				}
+
+				if (isset($rows['attributes']['dt_publish_up'])) {
+					unset($rows['attributes']['dt_publish_up']);
+				}
+
+				if (isset($rows['attributes']['dt_publish_down'])) {
+					unset($rows['attributes']['dt_publish_down']);
+				}
+			}
+
+			if (isset($rows['order']) && $rows['order'] === DataPosts::ORDER_SORT) {
+				$rows['order'] = '';
+			}
+		}
+
+		return $rows;
+	}
+
+	/**
 	 * 查询多条记录
 	 * @param array $params
 	 * @param string $order
@@ -72,11 +244,17 @@ class Posts extends AbstractService
 	{
 		$row = $this->getDb()->findByPk($postId);
 		if ($row && is_array($row) && isset($row['post_id'])) {
+			if ($row['trash'] === DataPosts::TRASH_Y) {
+				return array();
+			}
+
 			$dispatcher = Plugin::getInstance();
 			$dispatcher->trigger('onAfterFind', array(__METHOD__, &$row));
+
+			return $row;
 		}
 
-		return $row;
+		return array();
 	}
 
 	/**

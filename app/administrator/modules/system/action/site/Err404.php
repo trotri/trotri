@@ -24,6 +24,11 @@ use libapp\PageHelper;
 class Err404 extends actions\View
 {
 	/**
+	 * @var boolean 是否验证登录
+	 */
+	protected $_validLogin = false;
+
+	/**
 	 * (non-PHPdoc)
 	 * @see \tfc\mvc\interfaces\Action::run()
 	 */

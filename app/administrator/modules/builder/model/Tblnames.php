@@ -158,7 +158,7 @@ class Tblnames extends BaseModel
 			'tbl_comment' => isset($comments['__table__']) ? $comments['__table__'] : '',
 			'srv_type' => DataBuilders::SRV_TYPE_NORMAL,
 			'srv_name' => 'undefined',
-			'app_name' => 'undefined',
+			'app_name' => 'administrator',
 			'mod_name' => 'undefined',
 			'ctrl_name' => substr($tableSchema->name, strrpos($tableSchema->name, '_') + 1),
 			'cls_name' => substr($tableSchema->name, strrpos($tableSchema->name, '_') + 1),

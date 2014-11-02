@@ -14,6 +14,10 @@ $config = array(
 		'label' => 'MOD_POSTS_URLS_POSTS_TRASHINDEX',
 		'm' => 'posts', 'c' => 'posts', 'a' => 'trashindex'
 	),
+	'comments' => array(
+		'label' => 'MOD_POSTS_URLS_COMMENTS_INDEX',
+		'm' => 'posts', 'c' => 'comments', 'a' => 'index'
+	),
 	'categories' => array(
 		'label' => 'MOD_POSTS_URLS_CATEGORIES_INDEX',
 		'm' => 'posts', 'c' => 'categories', 'a' => 'index',
@@ -35,6 +39,9 @@ if ($this->controller === 'posts') {
 	else {
 		$config['posts_index']['active'] = true;
 	}
+}
+elseif ($this->controller === 'comments') {
+	$config['comments']['active'] = true;
 }
 elseif ($this->controller === 'categories') {
 	$config['categories']['active'] = true;

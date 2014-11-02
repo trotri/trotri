@@ -23,6 +23,10 @@ return array(
 			)
 		),
 		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_POSTS_COMMENTS_INDEX',
+			'm' => 'posts', 'c' => 'comments', 'a' => 'index',
+		),
+		3 => array(
 			'label' => 'CFG_SYSTEM_URLS_POSTS_CATEGORIES_INDEX',
 			'm' => 'posts', 'c' => 'categories', 'a' => 'index',
 			'icon' => array(
@@ -30,7 +34,7 @@ return array(
 				'm' => 'posts', 'c' => 'categories', 'a' => 'create',
 			)
 		),
-		3 => array(
+		4 => array(
 			'label' => 'CFG_SYSTEM_URLS_POSTS_MODULES_INDEX',
 			'm' => 'posts', 'c' => 'modules', 'a' => 'index',
 		),

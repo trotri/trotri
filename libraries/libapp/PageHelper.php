@@ -66,9 +66,17 @@ class PageHelper
 	 * 获取分页参数：当前开始查询的行数
 	 * @return integer
 	 */
-	public static function getFirstRow()
+	public static function getFirstRow($paged = 0, $listRows = 0)
 	{
-		$firstRow = (self::getCurrPage() - 1) * self::getListRows();
+		if (($paged = (int) $paged) <= 0) {
+			$paged = self::getCurrPage();
+		}
+
+		if (($listRows = (int) $listRows) <= 0) {
+			$listRows = self::getListRows();
+		}
+
+		$firstRow = ($paged - 1) * $listRows;
 		$firstRow = max($firstRow, 0);
 		return $firstRow;
 	}
@@ -88,6 +96,17 @@ class PageHelper
 		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
 		$listRows = max($listRows, 1);
 		return $listRows;
+	}
+
+	/**
+	 * 获取分页参数：每页展示的页码数
+	 * @return integer
+	 */
+	public function getListPages()
+	{
+		$listPages = (int) Cfg::getApp('list_pages', 'paginator');
+		$listPages = max($listPages, 1);
+		return $listPages;
 	}
 
 	/**

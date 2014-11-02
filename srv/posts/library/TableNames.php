@@ -60,7 +60,7 @@ class TableNames
 	 * 获取“文档评论表”表名
 	 * @return string
 	 */
-	public static function getPostComments()
+	public static function getComments()
 	{
 		return 'post_comments';
 	}

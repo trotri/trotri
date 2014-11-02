@@ -37,6 +37,62 @@ class Adverts extends AbstractDb
 	 * @param integer $offset
 	 * @return array
 	 */
+	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	{
+		$commandBuilder = $this->getCommandBuilder();
+		$tableName = $this->getTblprefix() . TableNames::getAdverts();
+		$sql = 'SELECT `advert_id`, `advert_name`, `type_key`, `description`, `is_published`, `dt_publish_up`, `dt_publish_down`, `sort`, `show_type`, `show_code`, `title`, `advert_url`, `advert_src`, `advert_src2`, `attr_alt`, `attr_width`, `attr_height`, `attr_fontsize`, `attr_target`, `dt_created` FROM `' . $tableName . '`';
+
+		$condition = '1';
+		$attributes = array();
+
+		if (isset($params['type_key'])) {
+			$typeKey = trim($params['type_key']);
+			if ($typeKey !== '') {
+				$condition .= ' AND `type_key` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['type_key'] = $typeKey;
+			}
+		}
+
+		if (isset($params['is_published'])) {
+			$isPublished = trim($params['is_published']);
+			if ($isPublished !== '') {
+				$condition .= ' AND `is_published` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['is_published'] = $isPublished;
+			}
+		}
+
+		if (isset($params['dt_publish_up'])) {
+			$dtPublishUp = trim($params['dt_publish_up']);
+			if ($dtPublishUp !== '') {
+				$condition .= ' AND `dt_publish_up` <= ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['dt_publish_up'] = $dtPublishUp;
+			}
+		}
+
+		if (isset($params['dt_publish_down'])) {
+			$dtPublishDown = trim($params['dt_publish_down']);
+			if ($dtPublishDown !== '' && $dtPublishDown !== '0000-00-00 00:00:00') {
+				$condition .= ' AND (`dt_publish_down` >= ' . $commandBuilder::PLACE_HOLDERS . ' OR `dt_publish_down` = \'0000-00-00 00:00:00\')';
+				$attributes['dt_publish_down'] = $dtPublishDown;
+			}
+		}
+
+		$sql = $commandBuilder->applyCondition($sql, $condition);
+		$sql = $commandBuilder->applyOrder($sql, $order);
+		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
+		$ret = $this->fetchAll($sql, $attributes);
+		return $ret;
+	}
+
+	/**
+	 * 查询多条记录
+	 * @param array $params
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
 	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
 		$commandBuilder = $this->getCommandBuilder();
@@ -65,7 +121,7 @@ class Adverts extends AbstractDb
 		if (isset($params['dt_publish_up'])) {
 			$dtPublishUp = trim($params['dt_publish_up']);
 			if ($dtPublishUp !== '') {
-				$condition .= ' AND `dt_publish_up` >= ' . $commandBuilder::PLACE_HOLDERS;
+				$condition .= ' AND `dt_publish_up` <= ' . $commandBuilder::PLACE_HOLDERS;
 				$attributes['dt_publish_up'] = $dtPublishUp;
 			}
 		}
@@ -74,7 +130,7 @@ class Adverts extends AbstractDb
 			$dtPublishDown = trim($params['dt_publish_down']);
 			if ($dtPublishDown !== '') {
 				if ($dtPublishDown !== '0000-00-00 00:00:00') {
-					$condition .= ' AND `dt_publish_down` <= ' . $commandBuilder::PLACE_HOLDERS;
+					$condition .= ' AND (`dt_publish_down` >= ' . $commandBuilder::PLACE_HOLDERS . ' OR `dt_publish_down` = \'0000-00-00 00:00:00\')';
 				}
 				else {
 					$condition .= ' AND `dt_publish_down` = ' . $commandBuilder::PLACE_HOLDERS;

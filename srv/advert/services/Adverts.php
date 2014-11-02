@@ -25,6 +25,53 @@ use advert\library\Plugin;
 class Adverts extends AbstractService
 {
 	/**
+	 * 查询一条记录
+	 * @param string $typeKey
+	 * @return array
+	 */
+	public function getRow($typeKey)
+	{
+		if (($typeKey = trim($typeKey)) === '') {
+			return array();
+		}
+
+		$rows = $this->findRows($typeKey, 1);
+		if ($rows && is_array($rows)) {
+			$row = array_shift($rows);
+			return $row;
+		}
+
+		return array();
+	}
+
+	/**
+	 * 查询多条记录：不包含分页信息
+	 * @param string $typeKey
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function findRows($typeKey, $limit = 0, $offset = 0)
+	{
+		if (($typeKey = trim($typeKey)) === '') {
+			return array();
+		}
+
+		$limit = min(max((int) $limit, 0), Constant::FIND_MAX_LIMIT);
+		$offset = max((int) $offset, 0);
+		$nowTime = date('Y-m-d H:i:s');
+		$params = array(
+			'type_key' => $typeKey,
+			'is_published' => DataAdverts::IS_PUBLISHED_Y,
+			'dt_publish_up' => $nowTime,
+			'dt_publish_down' => $nowTime
+		);
+
+		$rows = $this->getDb()->findRows($params, 'sort', $limit, $offset);
+		return $rows;
+	}
+
+	/**
 	 * 查询多条记录
 	 * @param array $params
 	 * @param string $order
@@ -34,7 +81,7 @@ class Adverts extends AbstractService
 	 */
 	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
 	{
-		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
+		$limit = min(max((int) $limit, 0), Constant::FIND_MAX_LIMIT);
 		$offset = max((int) $offset, 0);
 
 		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);

@@ -1,11 +1,6 @@
 <?php
 class TableRender extends views\bootstrap\components\TableRender
 {
-	public function getTitleLink($data)
-	{
-		return $this->elements_object->getTitleLink($data);
-	}
-
 	public function getModuleName($data)
 	{
 		return $this->elements_object->getModuleNameByModuleId($data['module_id']);
@@ -52,9 +47,6 @@ $this->widget(
 		'data' => $this->data,
 		'table_render' => $tblRender,
 		'elements' => array(
-			'title' => array(
-				'callback' => 'getTitleLink'
-			),
 			'module_id' => array(
 				'callback' => 'getModuleName'
 			),
