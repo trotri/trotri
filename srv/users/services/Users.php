@@ -46,9 +46,10 @@ class Users extends AbstractService
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
 		$offset = max((int) $offset, 0);
@@ -63,7 +64,7 @@ class Users extends AbstractService
 			}
 		}
 
-		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset, $option);
 		return $rows;
 	}
 

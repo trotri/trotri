@@ -25,7 +25,7 @@ use advert\library\Plugin;
 class Adverts extends AbstractService
 {
 	/**
-	 * 查询一条记录
+	 * 查询第一条记录
 	 * @param string $typeKey
 	 * @return array
 	 */
@@ -57,9 +57,9 @@ class Adverts extends AbstractService
 			return array();
 		}
 
-		$limit = min(max((int) $limit, 0), Constant::FIND_MAX_LIMIT);
-		$offset = max((int) $offset, 0);
+		$order = DataAdverts::ORDER_BY_SORT;
 		$nowTime = date('Y-m-d H:i:s');
+
 		$params = array(
 			'type_key' => $typeKey,
 			'is_published' => DataAdverts::IS_PUBLISHED_Y,
@@ -67,7 +67,7 @@ class Adverts extends AbstractService
 			'dt_publish_down' => $nowTime
 		);
 
-		$rows = $this->getDb()->findRows($params, 'sort', $limit, $offset);
+		$rows = $this->findAll($params, $order, $limit, $offset);
 		return $rows;
 	}
 
@@ -77,14 +77,15 @@ class Adverts extends AbstractService
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$limit = min(max((int) $limit, 0), Constant::FIND_MAX_LIMIT);
 		$offset = max((int) $offset, 0);
 
-		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset, $option);
 		return $rows;
 	}
 

@@ -36,61 +36,14 @@ class Comments extends AbstractDb
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getComments();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `comment_id`, `comment_pid`, `post_id`, `content`, `author_name`, `author_mail`, `author_url`, `is_published`, `good_count`, `bad_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified` FROM `' . $tableName . '`';
-
-		$condition = "`is_published` = 'y'";
-		$attributes = array();
-
-		if (isset($params['comment_pid'])) {
-			$commentPid = (int) $params['comment_pid'];
-			if ($commentPid > 0) {
-				$condition .= ' AND `comment_pid` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['comment_pid'] = $commentPid;
-			}
-		}
-
-		if (isset($params['post_id'])) {
-			$postId = (int) $params['post_id'];
-			if ($postId > 0) {
-				$condition .= ' AND `post_id` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['post_id'] = $postId;
-			}
-		}
-
-		if (isset($params['creator_id'])) {
-			$creatorId = (int) $params['creator_id'];
-			if ($creatorId > 0) {
-				$condition .= ' AND `creator_id` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['creator_id'] = $creatorId;
-			}
-		}
-
-		$sql = $commandBuilder->applyCondition($sql, $condition);
-		$sql = $commandBuilder->applyOrder($sql, $order);
-		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
-		$ret = $this->fetchAll($sql, $attributes);
-		return $ret;
-	}
-
-	/**
-	 * 查询多条记录
-	 * @param array $params
-	 * @param string $order
-	 * @param integer $limit
-	 * @param integer $offset
-	 * @return array
-	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
-	{
-		$commandBuilder = $this->getCommandBuilder();
-		$tableName = $this->getTblprefix() . TableNames::getComments();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `comment_id`, `comment_pid`, `post_id`, `content`, `author_name`, `author_mail`, `author_url`, `is_published`, `good_count`, `bad_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified` FROM `' . $tableName . '`';
+		$sql = 'SELECT ' . $option . ' `comment_id`, `comment_pid`, `post_id`, `content`, `author_name`, `author_mail`, `author_url`, `is_published`, `good_count`, `bad_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified` FROM `' . $tableName . '`';
 
 		$condition = '1';
 		$attributes = array();
@@ -226,37 +179,36 @@ class Comments extends AbstractDb
 		$sql = $commandBuilder->applyCondition($sql, $condition);
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
-		$ret = $this->fetchAllNoCache($sql, $attributes);
 
-		if (isset($attributes['content'])) {
-			$attributes['content'] = $content;
+		if ($option === 'SQL_CALC_FOUND_ROWS') {
+			$ret = $this->fetchAllNoCache($sql, $attributes);
+			if (isset($attributes['content'])) {
+				$attributes['content'] = $content;
+			}
+			if (isset($attributes['author_name'])) {
+				$attributes['author_name'] = $authorName;
+			}
+			if (isset($attributes['author_mail'])) {
+				$attributes['author_mail'] = $authorMail;
+			}
+			if (isset($attributes['author_url'])) {
+				$attributes['author_url'] = $authorUrl;
+			}
+			if (isset($attributes['creator_name'])) {
+				$attributes['creator_name'] = $creatorName;
+			}
+			if (isset($attributes['last_modifier_name'])) {
+				$attributes['last_modifier_name'] = $lastModifierName;
+			}
+			if (is_array($ret)) {
+				$ret['attributes'] = $attributes;
+				$ret['order']      = $order;
+				$ret['limit']      = $limit;
+				$ret['offset']     = $offset;
+			}
 		}
-
-		if (isset($attributes['author_name'])) {
-			$attributes['author_name'] = $authorName;
-		}
-
-		if (isset($attributes['author_mail'])) {
-			$attributes['author_mail'] = $authorMail;
-		}
-
-		if (isset($attributes['author_url'])) {
-			$attributes['author_url'] = $authorUrl;
-		}
-
-		if (isset($attributes['creator_name'])) {
-			$attributes['creator_name'] = $creatorName;
-		}
-
-		if (isset($attributes['last_modifier_name'])) {
-			$attributes['last_modifier_name'] = $lastModifierName;
-		}
-
-		if (is_array($ret)) {
-			$ret['attributes'] = $attributes;
-			$ret['order']      = $order;
-			$ret['limit']      = $limit;
-			$ret['offset']     = $offset;
+		else {
+			$ret = $this->fetchAll($sql, $attributes);
 		}
 
 		return $ret;

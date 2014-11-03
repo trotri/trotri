@@ -26,15 +26,15 @@ class Categories extends AbstractService
 {
 	/**
 	 * 递归方式获取所有的类别，默认用|—填充子类别左边用于和父类别错位（可用于Table列表）
-	 * @param integer $categoryPid
+	 * @param integer $catPid
 	 * @param string $padStr
 	 * @param string $leftPad
 	 * @param string $rightPad
 	 * @return array
 	 */
-	public function findLists($categoryPid = 0, $padStr = '|—', $leftPad = '', $rightPad = null)
+	public function findLists($catPid = 0, $padStr = '|—', $leftPad = '', $rightPad = null)
 	{
-		$rows = $this->getDb()->findAllByCategoryPid($categoryPid);
+		$rows = $this->findAllByPid($catPid);
 		if (!$rows || !is_array($rows)) {
 			return array();
 		}
@@ -57,15 +57,15 @@ class Categories extends AbstractService
 	/**
 	 * 递归方式获取所有的类别名，默认用空格填充子类别左边用于和父类别错位
 	 * （只返回ID和类别名的键值对）（可用于Select表单的Option选项）
-	 * @param integer $categoryPid
+	 * @param integer $catPid
 	 * @param string $padStr
 	 * @param string $leftPad
 	 * @param string $rightPad
 	 * @return array
 	 */
-	public function getOptions($categoryPid = -1, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
+	public function getOptions($catPid = -1, $padStr = '&nbsp;&nbsp;&nbsp;&nbsp;', $leftPad = '', $rightPad = null)
 	{
-		if ($categoryPid === -1) {
+		if ($catPid === -1) {
 			$tmpLeftPad = is_string($leftPad) ? $leftPad . $padStr : null;
 			$tmpRightPad = is_string($rightPad) ? $rightPad . $padStr : null;
 
@@ -76,7 +76,7 @@ class Categories extends AbstractService
 
 		$data = array();
 
-		$rows = $this->findLists($categoryPid, $padStr, $leftPad, $rightPad);
+		$rows = $this->findLists($catPid, $padStr, $leftPad, $rightPad);
 		if (is_array($rows)) {
 			foreach ($rows as $row) {
 				if (!isset($row['category_id']) || !isset($row['category_name'])) {
@@ -89,6 +89,17 @@ class Categories extends AbstractService
 		}
 
 		return $data;
+	}
+
+	/**
+	 * 通过父ID，获取所有的类别
+	 * @param integer $catPid
+	 * @return array
+	 */
+	public function findAllByPid($catPid)
+	{
+		$rows = $this->getDb()->findAllByPid($catPid);
+		return $rows;
 	}
 
 	/**

@@ -106,16 +106,16 @@ if ($this->controller === 'posts') {
 				'last_modifier_name' => array(
 					'type' => 'text',
 				),
-				'dt_created_start' => array(
+				'dt_created_ge' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_created_end' => array(
+				'dt_created_le' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_last_modified_start' => array(
+				'dt_last_modified_ge' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_last_modified_end' => array(
+				'dt_last_modified_le' => array(
 					'type' => 'datetimepicker',
 				),
 			),
@@ -140,12 +140,62 @@ if ($this->controller === 'posts') {
 				'creator_name',
 				'last_modifier_id',
 				'last_modifier_name',
-				'dt_created_start',
-				'dt_created_end',
-				'dt_last_modified_start',
-				'dt_last_modified_end',
+				'dt_created_ge',
+				'dt_created_le',
+				'dt_last_modified_ge',
+				'dt_last_modified_le',
 				'ip_created',
 				'ip_last_modified',
+			)
+		)
+	);
+}
+
+if ($this->controller === 'comments') {
+	$this->widget('views\bootstrap\widgets\SearchBuilder',
+		array(
+			'name' => 'search',
+			'action' => $this->getUrlManager()->getUrl('index', 'comments', 'posts'),
+			'elements_object' => $this->elements,
+			'elements' => array(
+				'post_id' => array(
+					'type' => 'text',
+				),
+				'content' => array(
+					'type' => 'text',
+				),
+				'author_name' => array(
+					'type' => 'text',
+				),
+				'author_mail' => array(
+					'type' => 'text',
+				),
+				'author_url' => array(
+					'type' => 'text',
+				),
+				'is_published' => array(
+					'type' => 'select',
+				),
+				'dt_created_le' => array(
+					'type' => 'datetimepicker',
+				),
+				'dt_created_ge' => array(
+					'type' => 'datetimepicker',
+				),
+				'ip_created' => array(
+					'type' => 'text',
+				),
+			),
+			'columns' => array(
+				'post_id',
+				'content',
+				'author_name',
+				'author_mail',
+				'author_url',
+				'is_published',
+				'dt_created_le',
+				'dt_created_ge',
+				'ip_created'
 			)
 		)
 	);

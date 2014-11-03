@@ -53,7 +53,7 @@ class Groups extends AbstractService
 	 */
 	public function findLists($groupPid = 0, $padStr = '|—', $leftPad = '', $rightPad = null)
 	{
-		$rows = $this->getDb()->findAllByGroupPid($groupPid);
+		$rows = $this->findAllByPid($groupPid);
 		if (!$rows || !is_array($rows)) {
 			return array();
 		}
@@ -99,6 +99,17 @@ class Groups extends AbstractService
 		}
 
 		return $data;
+	}
+
+	/**
+	 * 通过父ID，获取所有的组
+	 * @param integer $groupPid
+	 * @return array
+	 */
+	public function findAllByPid($groupPid)
+	{
+		$rows = $this->getDb()->findAllByPid($groupPid);
+		return $rows;
 	}
 
 	/**

@@ -11,6 +11,8 @@
 namespace library;
 
 use libapp;
+use tfc\ap\HttpCookie;
+use tfc\mvc\Mvc;
 use tfc\saf\Log;
 use libsrv\Service;
 use libsrv\Clean;
@@ -42,11 +44,68 @@ abstract class BaseModel extends libapp\BaseModel
 	protected $_className = '';
 
 	/**
-	 * (non-PHPdoc)
-	 * @see \libapp\Elements::_init()
+	 * @var string 存放最后一次访问的列表页链接的Cookie名
 	 */
-	protected function _init()
+	const LLU_COOKIE_NAME = 'last_list_url';
+
+	/**
+	 * @var integer 存放在Cookie中的列表页链接数量
+	 */
+	const LLU_COOKIE_COUNT = 4;
+
+	/**
+	 * @var string 缺省的列表页方法名
+	 */
+	const DEFAULT_ACT_NAME_LIST = 'index';
+
+	/**
+	 * @var string 缺省的详情页方法名
+	 */
+	const DEFAULT_ACT_NAME_VIEW = 'view';
+
+	/**
+	 * @var string 缺省的新增数据方法名
+	 */
+	const DEFAULT_ACT_NAME_CREATE = 'create';
+
+	/**
+	 * @var string 缺省的编辑数据方法名
+	 */
+	const DEFAULT_ACT_NAME_MODIFY = 'modify';
+
+	/**
+	 * @var string 缺省的删除数据方法名
+	 */
+	const DEFAULT_ACT_NAME_REMOVE = 'remove';
+
+	/**
+	 * @var 模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
+	 */
+	public
+		$view,
+		$urlManager,
+		$html,
+		$module,
+		$controller,
+		$action,
+		$actNameList = self::DEFAULT_ACT_NAME_LIST,
+		$actNameView = self::DEFAULT_ACT_NAME_VIEW,
+		$actNameCreate = self::DEFAULT_ACT_NAME_CREATE,
+		$actNameModify = self::DEFAULT_ACT_NAME_MODIFY,
+		$actNameRemove = self::DEFAULT_ACT_NAME_REMOVE;
+
+	/**
+	 * 构造方法，初始化模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
+	 */
+	public function __construct()
 	{
+		$this->view = Mvc::getView();
+		$this->urlManager = $this->view->getUrlManager();
+		$this->html = $this->view->getHtml();
+		$this->module = Mvc::$module;
+		$this->controller = Mvc::$controller;
+		$this->action = Mvc::$action;
+
 		list(, $moduleName, , $className) = explode('\\', get_class($this));
 		if ($this->_srvName === '') {
 			$this->_srvName = $moduleName;
@@ -55,6 +114,15 @@ abstract class BaseModel extends libapp\BaseModel
 		if ($this->_className === '') {
 			$this->_className = $className;
 		}
+
+		$this->_init();
+	}
+
+	/**
+	 * 子类构造方法：子类调用此方法作为构造方法，避免重写父类构造方法
+	 */
+	protected function _init()
+	{
 	}
 
 	/**
@@ -68,11 +136,11 @@ abstract class BaseModel extends libapp\BaseModel
 	public function search(array $params = array(), $order = '', $limit = null, $offset = null)
 	{
 		if ($limit === null) {
-			$limit = libapp\PageHelper::getListRows();
+			$limit = PageHelper::getListRows();
 		}
 
 		if ($offset === null) {
-			$offset = libapp\PageHelper::getFirstRow();
+			$offset = PageHelper::getFirstRow();
 		}
 
 		$ret = $this->callFetchMethod($this->getService(), 'findAll', array($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS'));
@@ -274,5 +342,82 @@ abstract class BaseModel extends libapp\BaseModel
 				continue;
 			}
 		}
+	}
+
+	/**
+	 * 获取缺省的最后一次访问的列表页链接
+	 * @return string
+	 */
+	public function getLLUDefault()
+	{
+		return $this->urlManager->getUrl($this->actNameList, $this->controller, $this->module);
+	}
+
+	/**
+	 * 获取最后一次访问的列表页链接
+	 * @return string
+	 */
+	public function getLLU()
+	{
+		$urls = $this->getLLUs();
+		$router = $this->module . '_' . $this->controller . '_' . $this->actNameList;
+		if (isset($urls[$router])) {
+			return $urls[$router];
+		}
+
+		return $this->getLLUDefault();
+	}
+
+	/**
+	 * 设置最后一次访问的列表页链接
+	 * @param array $params
+	 * @return void
+	 */
+	public function setLLU(array $params = array())
+	{
+		$urls = $this->getLLUs();
+		$router = $this->module . '_' . $this->controller . '_' . $this->actNameList;
+		$urls[$router] = $this->urlManager->getUrl($this->action, $this->controller, $this->module, $params);
+		while (count($urls) > self::LLU_COOKIE_COUNT) {
+			array_shift($urls);
+		}
+
+		$value = str_replace('=', '', base64_encode(serialize($urls)));
+		HttpCookie::add(self::LLU_COOKIE_NAME, $value);
+	}
+
+	/**
+	 * 获取Cookie中所有的列表页链接
+	 * @return array
+	 */
+	public function getLLUs()
+	{
+		$value = HttpCookie::get(self::LLU_COOKIE_NAME);
+		if ($value !== null) {
+			$urls = unserialize(base64_decode($value));
+			if (is_array($urls)) {
+				return $urls;
+			}
+		}
+
+		return array();
+	}
+
+	/**
+	 * 获取Input表单元素分类标签，需要子类重写此方法
+	 * @return array
+	 */
+	public function getViewTabsRender()
+	{
+		return array();
+	}
+
+	/**
+	 * 获取表单元素配置，需要子类重写此方法
+	 * @return array
+	 */
+	public function getElementsRender()
+	{
+		return array();
 	}
 }

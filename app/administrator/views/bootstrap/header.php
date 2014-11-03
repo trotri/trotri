@@ -6,9 +6,9 @@
 <?php echo $this->getHtml()->meta('', '', 'author'); ?>
 <title>Trotri</title>
 <!-- Bootstrap core CSS -->
-<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap.min.css'); ?>
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->skinVersion . '/css/bootstrap.min.css'); ?>
 <!-- Bootstrap theme CSS -->
-<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/css/bootstrap-theme.min.css'); ?>
+<?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap/' . $this->skinVersion . '/css/bootstrap-theme.min.css'); ?>
 <!-- Bootstrap-switch CSS -->
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/bootstrap-switch/bootstrap-switch.css'); ?>
 <!-- Jquery-icheck CSS -->
@@ -26,10 +26,10 @@ var g_mod = "<?php echo $this->module; ?>"; var g_ctrl = "<?php echo $this->cont
 </script>
 
 <!-- Just for debugging purposes. Don't actually copy this line! -->
-<!--[if lt IE 9]><?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/ie8-responsive-file-warning.js'); ?><![endif]-->
+<!--[if lt IE 9]><?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->skinVersion . '/js/ie8-responsive-file-warning.js'); ?><![endif]-->
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
-  <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/html5shiv.min.js'); ?>
-  <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->bootstrap_version . '/js/respond.min.js'); ?>
+  <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->skinVersion . '/js/html5shiv.min.js'); ?>
+  <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/bootstrap/' . $this->skinVersion . '/js/respond.min.js'); ?>
 <![endif]-->

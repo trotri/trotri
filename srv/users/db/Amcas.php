@@ -45,7 +45,7 @@ class Amcas extends AbstractDb
 	 * @param integer $amcaPid
 	 * @return array
 	 */
-	public function findAllByAmcaPid($amcaPid)
+	public function findAllByPid($amcaPid)
 	{
 		if (($amcaPid = (int) $amcaPid) < 0) {
 			return false;

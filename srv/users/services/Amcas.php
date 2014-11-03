@@ -37,9 +37,9 @@ class Amcas extends AbstractService
 	 * @param integer $amcaPid
 	 * @return array
 	 */
-	public function findAllByAmcaPid($amcaPid)
+	public function findAllByPid($amcaPid)
 	{
-		$rows = $this->getDb()->findAllByAmcaPid($amcaPid);
+		$rows = $this->getDb()->findAllByPid($amcaPid);
 		return $rows;
 	}
 
@@ -53,12 +53,12 @@ class Amcas extends AbstractService
 	{
 		$data = array();
 
-		$mods = $this->findAllByAmcaPid($appId);
+		$mods = $this->findAllByPid($appId);
 		if ($mods && is_array($mods)) {
 			foreach ($mods as $modRows) {
 				$data[] = $modRows;
 
-				$ctrls = $this->findAllByAmcaPid($modRows['amca_id']);
+				$ctrls = $this->findAllByPid($modRows['amca_id']);
 				if ($ctrls && is_array($ctrls)) {
 					foreach ($ctrls as $ctrlRows) {
 						$ctrlRows['amca_name'] = $padStr . $ctrlRows['amca_name'];
@@ -79,22 +79,22 @@ class Amcas extends AbstractService
 	{
 		$data = array();
 
-		$apps = $this->findAllByAmcaPid(0);
+		$apps = $this->findAllByPid(0);
 		if ($apps && is_array($apps)) {
 			foreach ($apps as $appRow) {
 				$appRow['rows'] = array();
 
-				$mods = $this->findAllByAmcaPid($appRow['amca_id']);
+				$mods = $this->findAllByPid($appRow['amca_id']);
 				if ($mods && is_array($mods)) {
 					foreach ($mods as $modRow) {
 						$modRow['rows'] = array();
 
-						$ctrls = $this->findAllByAmcaPid($modRow['amca_id']);
+						$ctrls = $this->findAllByPid($modRow['amca_id']);
 						if ($ctrls && is_array($ctrls)) {
 							foreach ($ctrls as $ctrlRow) {
 								$ctrlRow['rows'] = array();
 
-								$acts = $this->findAllByAmcaPid($ctrlRow['amca_id']);
+								$acts = $this->findAllByPid($ctrlRow['amca_id']);
 								if ($acts && is_array($acts)) {
 									foreach ($acts as $actRow) {
 										$ctrlRow['rows'][$actRow['amca_name']] = $actRow;

@@ -15,7 +15,7 @@ use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use tfc\auth\Role;
 use libapp\Model;
-use libapp\SubmitType;
+use library\SubmitType;
 use library\ErrorNo;
 
 /**

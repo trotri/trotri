@@ -14,7 +14,7 @@ use library\actions;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use libapp\Model;
-use libapp\SubmitType;
+use library\SubmitType;
 use library\ErrorNo;
 
 /**

@@ -31,7 +31,7 @@ class Amcas extends BaseModel
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getViewTabsRender()
+	 * @see \library\BaseModel::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
 	{
@@ -43,7 +43,7 @@ class Amcas extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getElementsRender()
+	 * @see \library\BaseModel::getElementsRender()
 	 */
 	public function getElementsRender()
 	{
@@ -155,7 +155,7 @@ class Amcas extends BaseModel
 	 */
 	public function findAllByAmcaPid($amcaPid)
 	{
-		$ret = $this->callFetchMethod($this->getService(), 'findAllByAmcaPid', array($amcaPid));
+		$ret = $this->callFetchMethod($this->getService(), 'findAllByPid', array($amcaPid));
 		return $ret;
 	}
 

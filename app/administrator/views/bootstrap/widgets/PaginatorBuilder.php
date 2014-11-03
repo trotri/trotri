@@ -15,7 +15,7 @@ use tfc\mvc\Mvc;
 use tfc\util\Paginator;
 use tfc\saf\Cfg;
 use tfc\saf\Text;
-use libapp\PageHelper;
+use library\PageHelper;
 
 /**
  * PaginatorBuilder class file

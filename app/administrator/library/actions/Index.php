@@ -15,7 +15,7 @@ use tfc\ap\Ap;
 use tfc\saf\Cfg;
 use tfc\auth\Role;
 use libapp\Model;
-use libapp\PageHelper;
+use library\PageHelper;
 use library\ErrorNo;
 
 /**

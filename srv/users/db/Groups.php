@@ -45,7 +45,7 @@ class Groups extends AbstractDb
 	 * @param integer $groupPid
 	 * @return array
 	 */
-	public function findAllByGroupPid($groupPid)
+	public function findAllByPid($groupPid)
 	{
 		if (($groupPid = (int) $groupPid) < 0) {
 			return false;

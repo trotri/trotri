@@ -27,7 +27,7 @@ class Comments extends BaseModel
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getViewTabsRender()
+	 * @see \library\BaseModel::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
 	{
@@ -39,7 +39,7 @@ class Comments extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getElementsRender()
+	 * @see \library\BaseModel::getElementsRender()
 	 */
 	public function getElementsRender()
 	{
@@ -175,6 +175,14 @@ class Comments extends BaseModel
 				'label' => Text::_('MOD_POSTS_POST_COMMENTS_IP_LAST_MODIFIED_LABEL'),
 				'hint' => Text::_('MOD_POSTS_POST_COMMENTS_IP_LAST_MODIFIED_HINT'),
 				'required' => true,
+			),
+			'dt_created_le' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POST_COMMENTS_DT_CREATED_LE_LABEL'),
+			),
+			'dt_created_ge' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_POSTS_POST_COMMENTS_DT_CREATED_GE_LABEL'),
 			),
 		);
 

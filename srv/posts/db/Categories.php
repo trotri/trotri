@@ -31,18 +31,18 @@ class Categories extends AbstractDb
 
 	/**
 	 * 通过父ID，获取所有的类别
-	 * @param integer $categoryPid
+	 * @param integer $catPid
 	 * @return array
 	 */
-	public function findAllByCategoryPid($categoryPid)
+	public function findAllByPid($catPid)
 	{
-		if (($categoryPid = (int) $categoryPid) < 0) {
+		if (($catPid = (int) $catPid) < 0) {
 			return false;
 		}
 
 		$tableName = $this->getTblprefix() . TableNames::getCategories();
 		$sql = 'SELECT `category_id`, `category_name`, `category_pid`, `alias`, `meta_title`, `meta_keywords`, `meta_description`, `tpl_home`, `tpl_list`, `tpl_view`, `sort`, `description` FROM `' . $tableName . '` WHERE `category_pid` = ? ORDER BY `sort`';
-		return $this->fetchAll($sql, $categoryPid);
+		return $this->fetchAll($sql, $catPid);
 	}
 
 	/**

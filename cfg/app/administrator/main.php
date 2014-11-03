@@ -18,12 +18,12 @@ return array (
 		'charset' => 'utf-8',           // HTML编码
 		'tpl_extension' => '.php',      // 模板后缀
 		'version' => '1.0',             // Js、Css文件的版本号
-		'bootstrap_version' => '3.0.3', // Bootstrap文件的版本号
+		'skin_version' => '3.0.3',      // 模板风格文件的版本号
 	),
 	'paginator' => array (
 		'page_var' => 'paged',      // 从$_GET或$_POST中获取当前页的键名，缺省：paged
 		'list_rows_var' => 'limit', // 从$_GET或$_POST中获取每页展示的行数的键名，缺省：limit
-		'list_rows' => 5,          // 每页展示的行数
+		'list_rows' => 5,           // 每页展示的行数
 		'list_pages' => 4,          // 每页展示的页码数
 	),
 	'account' => array (

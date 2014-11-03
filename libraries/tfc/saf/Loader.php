@@ -25,6 +25,11 @@ namespace tfc\saf;
 defined('DEBUG') || define('DEBUG', false);
 
 /**
+ * 显示所有错误信息
+ */
+DEBUG && ini_set('display_errors', 'On');
+
+/**
  * 设置PHP报错级别
  */
 error_reporting(DEBUG ? E_ALL : 0);

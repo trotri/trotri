@@ -36,109 +36,14 @@ class Posts extends AbstractDb
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getPosts();
-		$sql = 'SELECT `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_published`, `dt_publish_up`, `dt_publish_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '`';
-
-		$condition = "`trash` = 'n'";
-		$attributes = array();
-
-		if (isset($params['category_id'])) {
-			$categoryId = (int) $params['category_id'];
-			if ($categoryId > 0) {
-				$condition .= ' AND `category_id` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['category_id'] = $categoryId;
-			}
-		}
-
-		if (isset($params['creator_id'])) {
-			$creatorId = (int) $params['creator_id'];
-			if ($creatorId > 0) {
-				$condition .= ' AND `creator_id` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['creator_id'] = $creatorId;
-			}
-		}
-
-		if (isset($params['is_head'])) {
-			$isHead = trim($params['is_head']);
-			if ($isHead !== '') {
-				$condition .= ' AND `is_head` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['is_head'] = $isHead;
-			}
-		}
-
-		if (isset($params['is_recommend'])) {
-			$isRecommend = trim($params['is_recommend']);
-			if ($isRecommend !== '') {
-				$condition .= ' AND `is_recommend` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['is_recommend'] = $isRecommend;
-			}
-		}
-
-		if (isset($params['is_published'])) {
-			$isPublished = trim($params['is_published']);
-			if ($isPublished !== '') {
-				$condition .= ' AND `is_published` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['is_published'] = $isPublished;
-			}
-		}
-
-		if (isset($params['dt_publish_up'])) {
-			$dtPublishUp = trim($params['dt_publish_up']);
-			if ($dtPublishUp !== '') {
-				$condition .= ' AND `dt_publish_up` <= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_publish_up'] = $dtPublishUp;
-			}
-		}
-
-		if (isset($params['dt_publish_down'])) {
-			$dtPublishDown = trim($params['dt_publish_down']);
-			if ($dtPublishDown !== '' && $dtPublishDown !== '0000-00-00 00:00:00') {
-				$condition .= ' AND (`dt_publish_down` >= ' . $commandBuilder::PLACE_HOLDERS . ' OR `dt_publish_down` = \'0000-00-00 00:00:00\')';
-				$attributes['dt_publish_down'] = $dtPublishDown;
-			}
-		}
-
-		if (isset($params['sort_start'])) {
-			$sort = (int) $params['sort_start'];
-			if ($sort > 0) {
-				$condition .= ' AND `sort` > ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['sort_start'] = $sort;
-			}
-		}
-
-		if (isset($params['sort_end'])) {
-			$sort = (int) $params['sort_end'];
-			if ($sort > 0) {
-				$condition .= ' AND `sort` < ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['sort_end'] = $sort;
-			}
-		}
-
-		$sql = $commandBuilder->applyCondition($sql, $condition);
-		$sql = $commandBuilder->applyOrder($sql, $order);
-		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
-		$ret = $this->fetchAll($sql, $attributes);
-		return $ret;
-	}
-
-	/**
-	 * 查询多条记录
-	 * @param array $params
-	 * @param string $order
-	 * @param integer $limit
-	 * @param integer $offset
-	 * @return array
-	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
-	{
-		$commandBuilder = $this->getCommandBuilder();
-		$tableName = $this->getTblprefix() . TableNames::getPosts();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_published`, `dt_publish_up`, `dt_publish_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '`';
+		$sql = 'SELECT ' . $option . ' `post_id`, `title`, `alias`, `content`, `keywords`, `description`, `sort`, `category_id`, `category_name`, `module_id`, `password`, `picture`, `is_head`, `is_recommend`, `is_jump`, `jump_url`, `is_published`, `dt_publish_up`, `dt_publish_down`, `comment_status`, `allow_other_modify`, `hits`, `praise_count`, `comment_count`, `creator_id`, `creator_name`, `last_modifier_id`, `last_modifier_name`, `dt_created`, `dt_last_modified`, `ip_created`, `ip_last_modified`, `trash` FROM `' . $tableName . '`';
 
 		$condition = '1';
 		$attributes = array();
@@ -305,35 +210,51 @@ class Posts extends AbstractDb
 			}
 		}
 
-		if (isset($params['dt_created_start'])) {
-			$dtCreatedStart = trim($params['dt_created_start']);
-			if ($dtCreatedStart !== '') {
+		if (isset($params['sort_gt'])) {
+			$sortGt = (int) $params['sort_gt'];
+			if ($sortGt > 0) {
+				$condition .= ' AND `sort` > ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['sort_gt'] = $sortGt;
+			}
+		}
+
+		if (isset($params['sort_lt'])) {
+			$sortLt = (int) $params['sort_lt'];
+			if ($sortLt > 0) {
+				$condition .= ' AND `sort` < ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['sort_lt'] = $sortLt;
+			}
+		}
+
+		if (isset($params['dt_created_ge'])) {
+			$dtCreatedGe = trim($params['dt_created_ge']);
+			if ($dtCreatedGe !== '') {
 				$condition .= ' AND `dt_created` >= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_created_start'] = $dtCreatedStart;
+				$attributes['dt_created_ge'] = $dtCreatedGe;
 			}
 		}
 
-		if (isset($params['dt_created_end'])) {
-			$dtCreatedEnd = trim($params['dt_created_end']);
-			if ($dtCreatedEnd !== '') {
+		if (isset($params['dt_created_le'])) {
+			$dtCreatedLe = trim($params['dt_created_le']);
+			if ($dtCreatedLe !== '') {
 				$condition .= ' AND `dt_created` <= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_created_end'] = $dtCreatedEnd;
+				$attributes['dt_created_le'] = $dtCreatedLe;
 			}
 		}
 
-		if (isset($params['dt_last_modified_start'])) {
-			$dtLastModifiedStart = trim($params['dt_last_modified_start']);
-			if ($dtLastModifiedStart !== '') {
+		if (isset($params['dt_last_modified_ge'])) {
+			$dtLastModifiedGe = trim($params['dt_last_modified_ge']);
+			if ($dtLastModifiedGe !== '') {
 				$condition .= ' AND `dt_last_modified` >= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_last_modified_start'] = $dtLastModifiedStart;
+				$attributes['dt_last_modified_ge'] = $dtLastModifiedGe;
 			}
 		}
 
-		if (isset($params['dt_last_modified_end'])) {
-			$dtLastModifiedEnd = trim($params['dt_last_modified_end']);
-			if ($dtLastModifiedEnd !== '') {
+		if (isset($params['dt_last_modified_le'])) {
+			$dtLastModifiedLe = trim($params['dt_last_modified_le']);
+			if ($dtLastModifiedLe !== '') {
 				$condition .= ' AND `dt_last_modified` <= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_last_modified_end'] = $dtLastModifiedEnd;
+				$attributes['dt_last_modified_le'] = $dtLastModifiedLe;
 			}
 		}
 
@@ -368,37 +289,36 @@ class Posts extends AbstractDb
 		$sql = $commandBuilder->applyCondition($sql, $condition);
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
-		$ret = $this->fetchAllNoCache($sql, $attributes);
 
-		if (isset($attributes['title'])) {
-			$attributes['title'] = $title;
+		if ($option === 'SQL_CALC_FOUND_ROWS') {
+			$ret = $this->fetchAllNoCache($sql, $attributes);
+			if (isset($attributes['title'])) {
+				$attributes['title'] = $title;
+			}
+			if (isset($attributes['alias'])) {
+				$attributes['alias'] = $alias;
+			}
+			if (isset($attributes['keywords'])) {
+				$attributes['keywords'] = $keywords;
+			}
+			if (isset($attributes['jump_url'])) {
+				$attributes['jump_url'] = $jumpUrl;
+			}
+			if (isset($attributes['creator_name'])) {
+				$attributes['creator_name'] = $creatorName;
+			}
+			if (isset($attributes['last_modifier_name'])) {
+				$attributes['last_modifier_name'] = $lastModifierName;
+			}
+			if (is_array($ret)) {
+				$ret['attributes'] = $attributes;
+				$ret['order']      = $order;
+				$ret['limit']      = $limit;
+				$ret['offset']     = $offset;
+			}
 		}
-
-		if (isset($attributes['alias'])) {
-			$attributes['alias'] = $alias;
-		}
-
-		if (isset($attributes['keywords'])) {
-			$attributes['keywords'] = $keywords;
-		}
-
-		if (isset($attributes['jump_url'])) {
-			$attributes['jump_url'] = $jumpUrl;
-		}
-
-		if (isset($attributes['creator_name'])) {
-			$attributes['creator_name'] = $creatorName;
-		}
-
-		if (isset($attributes['last_modifier_name'])) {
-			$attributes['last_modifier_name'] = $lastModifierName;
-		}
-
-		if (is_array($ret)) {
-			$ret['attributes'] = $attributes;
-			$ret['order']      = $order;
-			$ret['limit']      = $limit;
-			$ret['offset']     = $offset;
+		else {
+			$ret = $this->fetchAll($sql, $attributes);
 		}
 
 		return $ret;

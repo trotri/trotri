@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace libapp;
+namespace library;
 
 use tfc\ap\Ap;
 
@@ -17,7 +17,7 @@ use tfc\ap\Ap;
  * 表单提交后跳转方式管理类
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: SubmitType.php 1 2013-04-05 01:08:06Z huan.song $
- * @package libapp
+ * @package library
  * @since 1.0
  */
 class SubmitType

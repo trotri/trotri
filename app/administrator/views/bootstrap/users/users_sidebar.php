@@ -72,16 +72,16 @@ if ($this->controller === 'users') {
 				'valid_phone' => array(
 					'type' => 'select',
 				),
-				'dt_registered_start' => array(
+				'dt_registered_ge' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_registered_end' => array(
+				'dt_registered_le' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_last_login_start' => array(
+				'dt_last_login_ge' => array(
 					'type' => 'datetimepicker',
 				),
-				'dt_last_login_end' => array(
+				'dt_last_login_le' => array(
 					'type' => 'datetimepicker',
 				),
 			),
@@ -98,12 +98,12 @@ if ($this->controller === 'users') {
 				'forbidden',
 				'group_id',
 				'ip_registered',
-				'dt_registered_start',
-				'dt_registered_end',
-				'dt_last_login_start',
-				'dt_last_login_end',
-				'login_count_start',
-				'login_count_end',
+				'dt_registered_ge',
+				'dt_registered_le',
+				'dt_last_login_ge',
+				'dt_last_login_le',
+				'login_count_ge',
+				'login_count_le',
 			)
 		)
 	);

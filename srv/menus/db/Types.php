@@ -35,13 +35,14 @@ class Types extends AbstractDb
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getTypes();
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `type_id`, `type_key`, `type_name`, `description` FROM `' . $tableName . '`';
+		$sql = 'SELECT ' . $option . ' `type_id`, `type_key`, `type_name`, `description` FROM `' . $tableName . '`';
 
 		$condition = '1';
 		$attributes = array();
@@ -73,17 +74,21 @@ class Types extends AbstractDb
 		$sql = $commandBuilder->applyCondition($sql, $condition);
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
-		$ret = $this->fetchAllNoCache($sql, $attributes);
 
-		if (isset($attributes['type_name'])) {
-			$attributes['type_name'] = $typeName;
+		if ($option === 'SQL_CALC_FOUND_ROWS') {
+			$ret = $this->fetchAllNoCache($sql, $attributes);
+			if (isset($attributes['type_name'])) {
+				$attributes['type_name'] = $typeName;
+			}
+			if (is_array($ret)) {
+				$ret['attributes'] = $attributes;
+				$ret['order']      = $order;
+				$ret['limit']      = $limit;
+				$ret['offset']     = $offset;
+			}
 		}
-
-		if (is_array($ret)) {
-			$ret['attributes'] = $attributes;
-			$ret['order']      = $order;
-			$ret['limit']      = $limit;
-			$ret['offset']     = $offset;
+		else {
+			$ret = $this->fetchAll($sql, $attributes);
 		}
 
 		return $ret;

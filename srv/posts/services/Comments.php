@@ -24,23 +24,36 @@ use posts\library\Constant;
 class Comments extends AbstractService
 {
 	/**
-	 * 查询多条记录
+	 * 查询多条记录，包含分页信息
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		if (($order = trim($order)) === '') {
-			$order = DataComments::ORDER_DT_LAST_MODIFIED;
+			$order = DataPosts::ORDER_BY_DT_LAST_MODIFIED;
 		}
 
-		$limit = min(max((int) $limit, 0), Constant::COMMENT_CHILDREN_FIND_LIMIT);
-		$offset = max((int) $offset, 0);
+		$params['is_published'] = DataComments::IS_PUBLISHED_Y;
 
-		$rows = $this->getDb()->findRows($params, $order, $limit, $offset);
+		$rows = $this->findAll($params, $order, $limit, $offset, $option);
+		if ($option === 'SQL_CALC_FOUND_ROWS') {
+			if ($rows && is_array($rows)) {
+				if (isset($rows['attributes']) && is_array($rows['attributes'])) {
+					if (isset($rows['attributes']['is_published'])) {
+						unset($rows['attributes']['is_published']);
+					}
+				}
+				if (isset($rows['order']) && $rows['order'] === DataComments::ORDER_BY_DT_LAST_MODIFIED) {
+					$rows['order'] = '';
+				}
+			}
+		}
+
 		return $rows;
 	}
 
@@ -50,9 +63,10 @@ class Comments extends AbstractService
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
 		$offset = max((int) $offset, 0);
@@ -77,7 +91,7 @@ class Comments extends AbstractService
 			}
 		}
 
-		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset, $option);
 		return $rows;
 	}
 

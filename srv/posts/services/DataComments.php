@@ -25,12 +25,12 @@ class DataComments
 	/**
 	 * @var string 排序字段：dt_last_modified
 	 */
-	const ORDER_DT_LAST_MODIFIED = 'dt_last_modified DESC';
+	const ORDER_BY_DT_LAST_MODIFIED = 'dt_last_modified DESC';
 
 	/**
 	 * @var string 排序字段：good_count
 	 */
-	const ORDER_GOOD_COUNT = 'good_count DESC';
+	const ORDER_BY_GOOD_COUNT = 'good_count DESC';
 
 	/**
 	 * @var string 是否发表：y

@@ -11,7 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
-use libapp\PageHelper;
+use library\PageHelper;
 
 /**
  * Err403 class file
@@ -27,6 +27,11 @@ class Err403 extends actions\View
 	 * @var boolean 是否验证登录
 	 */
 	protected $_validLogin = false;
+
+	/**
+	 * @var string 页面首次渲染的布局名
+	 */
+	public $layoutName = 'column1';
 
 	/**
 	 * (non-PHPdoc)

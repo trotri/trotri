@@ -23,6 +23,11 @@ use advert\library\Lang;
 class DataAdverts
 {
 	/**
+	 * @var string 排序字段：sort
+	 */
+	const ORDER_BY_SORT = 'sort';
+
+	/**
 	 * @var string 是否发表：y
 	 */
 	const IS_PUBLISHED_Y = 'y';

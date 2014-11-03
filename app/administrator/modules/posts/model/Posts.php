@@ -31,7 +31,7 @@ class Posts extends BaseModel
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getViewTabsRender()
+	 * @see \library\BaseModel::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
 	{
@@ -55,7 +55,7 @@ class Posts extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getElementsRender()
+	 * @see \library\BaseModel::getElementsRender()
 	 */
 	public function getElementsRender()
 	{
@@ -308,21 +308,21 @@ class Posts extends BaseModel
 					'sort' => Text::_('MOD_POSTS_POSTS_SORT_LABEL'),
 				)
 			),
-			'dt_created_start' => array(
+			'dt_created_ge' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_START_LABEL'),
+				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_GE_LABEL'),
 			),
-			'dt_created_end' => array(
+			'dt_created_le' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_END_LABEL'),
+				'label' => Text::_('MOD_POSTS_POSTS_DT_CREATED_LE_LABEL'),
 			),
-			'dt_last_modified_start' => array(
+			'dt_last_modified_ge' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_START_LABEL'),
+				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_GE_LABEL'),
 			),
-			'dt_last_modified_end' => array(
+			'dt_last_modified_le' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_END_LABEL'),
+				'label' => Text::_('MOD_POSTS_POSTS_DT_LAST_MODIFIED_LE_LABEL'),
 			),
 		);
 

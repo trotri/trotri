@@ -25,22 +25,22 @@ class DataPosts
 	/**
 	 * @var string 排序字段：sort
 	 */
-	const ORDER_SORT = 'sort';
+	const ORDER_BY_SORT = 'sort';
 
 	/**
 	 * @var string 排序字段：点击次数
 	 */
-	const ORDER_HITS = 'hits DESC';
+	const ORDER_BY_HITS = 'hits DESC';
 
 	/**
 	 * @var string 排序字段：赞美次数
 	 */
-	const ORDER_PRAISE = 'praise_count DESC';
+	const ORDER_BY_PRAISE = 'praise_count DESC';
 
 	/**
 	 * @var string 排序字段：评论次数
 	 */
-	const ORDER_COMMENT = 'comment_count DESC';
+	const ORDER_BY_COMMENT = 'comment_count DESC';
 
 	/**
 	 * @var string 是否头条：y

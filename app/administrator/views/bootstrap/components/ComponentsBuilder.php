@@ -12,7 +12,7 @@ namespace views\bootstrap\components;
 
 use tfc\mvc\Mvc;
 use tfc\saf\Text;
-use libapp\SubmitType;
+use library\SubmitType;
 
 /**
  * ComponentsBuilder class file

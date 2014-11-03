@@ -240,7 +240,7 @@ CREATE TABLE `tr_post_categories` (
 -- ----------------------------
 -- Records of tr_post_categories
 -- ----------------------------
-INSERT INTO `tr_post_categories` VALUES ('1', '0', '文档类别', '', '文档', 'trotri,文档', '文档', 'index.php', 'list.php', 'view.php', '1', '');
+INSERT INTO `tr_post_categories` VALUES ('1', '0', '文档类别', '', '文档', 'trotri,文档', '文档', 'home', 'index', 'view', '1', '');
 INSERT INTO `tr_post_categories` VALUES ('2', '1', '新闻', '', '新闻', '我的网站,文档,新闻', '每天最新资讯.', 'home', 'index', 'view', '1', '');
 
 -- ----------------------------

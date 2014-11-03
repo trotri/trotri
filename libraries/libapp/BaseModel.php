@@ -21,7 +21,7 @@ use libsrv\AbstractService;
  * @package libapp
  * @since 1.0
  */
-abstract class BaseModel extends Elements
+abstract class BaseModel
 {
 	/**
 	 * 调用查询类方法

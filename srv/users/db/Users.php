@@ -36,15 +36,16 @@ class Users extends AbstractDb
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$commandBuilder = $this->getCommandBuilder();
 		$usersTblName = $this->getTblprefix() . TableNames::getUsers();
 		$userGroupsTblName = $this->getTblprefix() . TableNames::getUsergroups();
 
-		$sql = 'SELECT SQL_CALC_FOUND_ROWS `u`.`user_id`, `u`.`login_name`, `u`.`login_type`, `u`.`user_name`, `u`.`user_mail`, `u`.`user_phone`, `u`.`dt_registered`, `u`.`dt_last_login`, `u`.`dt_last_repwd`, `u`.`ip_registered`, `u`.`ip_last_login`, `u`.`ip_last_repwd`, `u`.`login_count`, `u`.`repwd_count`, `u`.`valid_mail`, `u`.`valid_phone`, `u`.`forbidden`, `u`.`trash` FROM `' . $usersTblName . '` AS `u`';
+		$sql = 'SELECT ' . $option . ' `u`.`user_id`, `u`.`login_name`, `u`.`login_type`, `u`.`user_name`, `u`.`user_mail`, `u`.`user_phone`, `u`.`dt_registered`, `u`.`dt_last_login`, `u`.`dt_last_repwd`, `u`.`ip_registered`, `u`.`ip_last_login`, `u`.`ip_last_repwd`, `u`.`login_count`, `u`.`repwd_count`, `u`.`valid_mail`, `u`.`valid_phone`, `u`.`forbidden`, `u`.`trash` FROM `' . $usersTblName . '` AS `u`';
 		if (isset($attributes['group_id'])) {
 			$sql .= ' LEFT JOIN `' . $userGroupsTblName . '` AS `g` ON `u`.`user_id` = `g`.`user_id`';
 		}
@@ -144,51 +145,51 @@ class Users extends AbstractDb
 			}
 		}
 
-		if (isset($params['dt_registered_start'])) {
-			$dtRegisteredStart = trim($params['dt_registered_start']);
-			if ($dtRegisteredStart !== '') {
+		if (isset($params['dt_registered_ge'])) {
+			$dtRegisteredGe = trim($params['dt_registered_ge']);
+			if ($dtRegisteredGe !== '') {
 				$condition .= ' AND `u`.`dt_registered` >= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_registered_start'] = $dtRegisteredStart;
+				$attributes['dt_registered_ge'] = $dtRegisteredGe;
 			}
 		}
 
-		if (isset($params['dt_registered_end'])) {
-			$dtRegisteredEnd = trim($params['dt_registered_end']);
-			if ($dtRegisteredEnd !== '') {
+		if (isset($params['dt_registered_le'])) {
+			$dtRegisteredLe = trim($params['dt_registered_le']);
+			if ($dtRegisteredLe !== '') {
 				$condition .= ' AND `u`.`dt_registered` <= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_registered_end'] = $dtRegisteredEnd;
+				$attributes['dt_registered_le'] = $dtRegisteredLe;
 			}
 		}
 
-		if (isset($params['dt_last_login_start'])) {
-			$dtLastLoginStart = trim($params['dt_last_login_start']);
-			if ($dtLastLoginStart !== '') {
+		if (isset($params['dt_last_login_ge'])) {
+			$dtLastLoginGe = trim($params['dt_last_login_ge']);
+			if ($dtLastLoginGe !== '') {
 				$condition .= ' AND `u`.`dt_last_login` >= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_last_login_start'] = $dtLastLoginStart;
+				$attributes['dt_last_login_ge'] = $dtLastLoginGe;
 			}
 		}
 
-		if (isset($params['dt_last_login_end'])) {
-			$dtLastLoginEnd = trim($params['dt_last_login_end']);
-			if ($dtLastLoginEnd !== '') {
+		if (isset($params['dt_last_login_le'])) {
+			$dtLastLoginLe = trim($params['dt_last_login_le']);
+			if ($dtLastLoginLe !== '') {
 				$condition .= ' AND `u`.`dt_last_login` <= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['dt_last_login_end'] = $dtLastLoginEnd;
+				$attributes['dt_last_login_le'] = $dtLastLoginLe;
 			}
 		}
 
-		if (isset($params['login_count_start'])) {
-			$loginCountStart = (int) $params['login_count_start'];
-			if ($loginCountStart >= 0) {
+		if (isset($params['login_count_ge'])) {
+			$loginCountGe = (int) $params['login_count_ge'];
+			if ($loginCountGe >= 0) {
 				$condition .= ' AND `u`.`login_count` >= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['login_count_start'] = $loginCountStart;
+				$attributes['login_count_ge'] = $loginCountGe;
 			}
 		}
 
-		if (isset($params['login_count_end'])) {
-			$loginCountEnd = (int) $params['login_count_end'];
-			if ($loginCountEnd >= 0) {
+		if (isset($params['login_count_le'])) {
+			$loginCountLe = (int) $params['login_count_le'];
+			if ($loginCountLe >= 0) {
 				$condition .= ' AND `u`.`login_count` <= ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['login_count_end'] = $loginCountEnd;
+				$attributes['login_count_le'] = $loginCountLe;
 			}
 		}
 
@@ -209,29 +210,30 @@ class Users extends AbstractDb
 		$sql = $commandBuilder->applyCondition($sql, $condition);
 		$sql = $commandBuilder->applyOrder($sql, $order);
 		$sql = $commandBuilder->applyLimit($sql, $limit, $offset);
-		$ret = $this->fetchAllNoCache($sql, $attributes);
 
-		if (isset($attributes['login_name'])) {
-			$attributes['login_name'] = $loginName;
+		if ($option === 'SQL_CALC_FOUND_ROWS') {
+			$ret = $this->fetchAllNoCache($sql, $attributes);
+			if (isset($attributes['login_name'])) {
+				$attributes['login_name'] = $loginName;
+			}
+			if (isset($attributes['user_name'])) {
+				$attributes['user_name'] = $userName;
+			}
+			if (isset($attributes['user_mail'])) {
+				$attributes['user_mail'] = $userMail;
+			}
+			if (isset($attributes['user_phone'])) {
+				$attributes['user_phone'] = $userPhone;
+			}
+			if (is_array($ret)) {
+				$ret['attributes'] = $attributes;
+				$ret['order']      = $order;
+				$ret['limit']      = $limit;
+				$ret['offset']     = $offset;
+			}
 		}
-
-		if (isset($attributes['user_name'])) {
-			$attributes['user_name'] = $userName;
-		}
-
-		if (isset($attributes['user_mail'])) {
-			$attributes['user_mail'] = $userMail;
-		}
-
-		if (isset($attributes['user_phone'])) {
-			$attributes['user_phone'] = $userPhone;
-		}
-
-		if (is_array($ret)) {
-			$ret['attributes'] = $attributes;
-			$ret['order']      = $order;
-			$ret['limit']      = $limit;
-			$ret['offset']     = $offset;
+		else {
+			$ret = $this->fetchAll($sql, $attributes);
 		}
 
 		return $ret;

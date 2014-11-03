@@ -13,7 +13,7 @@ namespace views\bootstrap\widgets;
 use tfc\ap\ErrorException;
 use tfc\mvc\form;
 use tfc\saf\Text;
-use libapp\Elements;
+use library\BaseModel;
 use views\bootstrap\components\ComponentsBuilder;
 
 /**
@@ -37,7 +37,7 @@ class FormBuilder extends form\FormBuilder
 	public $attributes = array('class' => 'form-horizontal');
 
 	/**
-	 * @var libapp\Elements 表单元素管理类
+	 * @var library\BaseModel 表单元素管理类
 	 */
 	public $elements_object = null;
 
@@ -287,8 +287,8 @@ class FormBuilder extends form\FormBuilder
 			unset($this->_tplVars['elements_object']);
 		}
 
-		if ($this->elements_object === null || !$this->elements_object instanceof Elements) {
-			throw new ErrorException('FormBuilder elements_object is not instanceof libapp\Elements.');
+		if ($this->elements_object === null || !$this->elements_object instanceof BaseModel) {
+			throw new ErrorException('FormBuilder elements_object is not instanceof library\BaseModel.');
 		}
 
 		return $this;

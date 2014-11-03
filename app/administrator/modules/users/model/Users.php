@@ -27,7 +27,7 @@ class Users extends BaseModel
 {
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getViewTabsRender()
+	 * @see \library\BaseModel::getViewTabsRender()
 	 */
 	public function getViewTabsRender()
 	{
@@ -51,7 +51,7 @@ class Users extends BaseModel
 
 	/**
 	 * (non-PHPdoc)
-	 * @see \libapp\Elements::getElementsRender()
+	 * @see \library\BaseModel::getElementsRender()
 	 */
 	public function getElementsRender()
 	{
@@ -218,29 +218,29 @@ class Users extends BaseModel
 					'login_count DESC' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_LABEL'),
 				)
 			),
-			'dt_registered_start' => array(
+			'dt_registered_ge' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_USERS_USERS_DT_REGISTERED_START_LABEL'),
+				'label' => Text::_('MOD_USERS_USERS_DT_REGISTERED_GE_LABEL'),
 			),
-			'dt_registered_end' => array(
+			'dt_registered_le' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_USERS_USERS_DT_REGISTERED_END_LABEL'),
+				'label' => Text::_('MOD_USERS_USERS_DT_REGISTERED_LE_LABEL'),
 			),
-			'dt_last_login_start' => array(
+			'dt_last_login_ge' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_USERS_USERS_DT_LAST_LOGIN_START_LABEL'),
+				'label' => Text::_('MOD_USERS_USERS_DT_LAST_LOGIN_GE_LABEL'),
 			),
-			'dt_last_login_end' => array(
+			'dt_last_login_le' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_USERS_USERS_DT_LAST_LOGIN_END_LABEL'),
+				'label' => Text::_('MOD_USERS_USERS_DT_LAST_LOGIN_LE_LABEL'),
 			),
-			'login_count_start' => array(
+			'login_count_ge' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_START_LABEL'),
+				'label' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_GE_LABEL'),
 			),
-			'login_count_end' => array(
+			'login_count_le' => array(
 				'type' => 'text',
-				'label' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_END_LABEL'),
+				'label' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_LE_LABEL'),
 			),
 			'sex' => array(
 				'__tid__' => 'profile',

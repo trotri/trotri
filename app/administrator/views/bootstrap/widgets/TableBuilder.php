@@ -12,7 +12,7 @@ namespace views\bootstrap\widgets;
 
 use tfc\ap\ErrorException;
 use tfc\mvc\Widget;
-use libapp\Elements;
+use library\BaseModel;
 use views\bootstrap\components\TableRender;
 
 /**
@@ -41,7 +41,7 @@ class TableBuilder extends Widget
 	protected $_elements = array();
 
 	/**
-	 * @var libapp\Elements 表单元素管理类
+	 * @var library\BaseModel 表单元素管理类
 	 */
 	public $elements_object = null;
 
@@ -162,8 +162,8 @@ class TableBuilder extends Widget
 	public function initElementsObject()
 	{
 		$this->elements_object = $this->table_render->elements_object;
-		if ($this->elements_object === null || !$this->elements_object instanceof Elements) {
-			throw new ErrorException('TableBuilder elements_object is not instanceof libapp\Elements.');
+		if ($this->elements_object === null || !$this->elements_object instanceof BaseModel) {
+			throw new ErrorException('TableBuilder elements_object is not instanceof library\BaseModel.');
 		}
 
 		return $this;

@@ -34,7 +34,7 @@ class Posts extends AbstractService
 	 */
 	public function getHeads($limit = 0, $offset = 0)
 	{
-		$rows = $this->findRows(array('is_head' => DataPosts::IS_HEAD_Y), DataPosts::ORDER_SORT, $limit, $offset);
+		$rows = $this->findRows(array('is_head' => DataPosts::IS_HEAD_Y), DataPosts::ORDER_BY_SORT, $limit, $offset);
 		return $rows;
 	}
 
@@ -46,7 +46,7 @@ class Posts extends AbstractService
 	 */
 	public function getRecommends($limit = 0, $offset = 0)
 	{
-		$rows = $this->findRows(array('is_recommend' => DataPosts::IS_RECOMMEND_Y), DataPosts::ORDER_SORT, $limit, $offset);
+		$rows = $this->findRows(array('is_recommend' => DataPosts::IS_RECOMMEND_Y), DataPosts::ORDER_BY_SORT, $limit, $offset);
 		return $rows;
 	}
 
@@ -59,7 +59,7 @@ class Posts extends AbstractService
 	 */
 	public function getHitsByCatId($catId, $limit = 0, $offset = 0)
 	{
-		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_HITS, $limit, $offset);
+		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_BY_HITS, $limit, $offset);
 		return $rows;
 	}
 
@@ -77,7 +77,7 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过类别ID，查询赞美次数最多的记录
+	 * 通过类别ID，查询评论次数最多的记录
 	 * @param integer $catId
 	 * @param integer $limit
 	 * @param integer $offset
@@ -85,7 +85,7 @@ class Posts extends AbstractService
 	 */
 	public function getCommentsByCatId($catId, $limit = 0, $offset = 0)
 	{
-		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_COMMENT, $limit, $offset);
+		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_BY_COMMENT, $limit, $offset);
 		return $rows;
 	}
 
@@ -107,60 +107,18 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 通过创建人ID，查询多条记录
-	 * @param integer $creatorId
-	 * @param integer $limit
-	 * @param integer $offset
-	 * @return array
-	 */
-	public function getRowsByCreatorId($creatorId, $limit = 0, $offset = 0)
-	{
-		if (($creatorId = (int) $creatorId) <= 0) {
-			return array();
-		}
-
-		$rows = $this->findRows(array('creator_id' => $creatorId), DataPosts::ORDER_SORT, $limit, $offset);
-		return $rows;
-	}
-
-	/**
-	 * 查询多条记录：不包含分页信息
+	 * 查询多条记录，包含分页信息
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findRows(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		if (($order = trim($order)) === '') {
-			$order = DataPosts::ORDER_SORT;
-		}
-
-		$limit = min(max((int) $limit, 0), Constant::FIND_MAX_LIMIT);
-		$offset = max((int) $offset, 0);
-		$nowTime = date('Y-m-d H:i:s');
-
-		$params['is_published'] = DataPosts::IS_PUBLISHED_Y;
-		$params['dt_publish_up'] = $nowTime;
-		$params['dt_publish_down'] = $nowTime;
-
-		$rows = $this->getDb()->findRows($params, $order, $limit, $offset);
-		return $rows;
-	}
-
-	/**
-	 * 查询多条记录：包含分页信息
-	 * @param array $params
-	 * @param string $order
-	 * @param integer $limit
-	 * @param integer $offset
-	 * @return array
-	 */
-	public function findLists(array $params = array(), $order = '', $limit = 0, $offset = 0)
-	{
-		if (($order = trim($order)) === '') {
-			$order = DataPosts::ORDER_SORT;
+			$order = DataPosts::ORDER_BY_SORT;
 		}
 
 		$nowTime = date('Y-m-d H:i:s');
@@ -170,28 +128,26 @@ class Posts extends AbstractService
 		$params['dt_publish_up'] = $nowTime;
 		$params['dt_publish_down'] = $nowTime;
 
-		$rows = $this->findAll($params, $order, $limit, $offset);
-		if ($rows && is_array($rows)) {
-			if (isset($rows['attributes']) && is_array($rows['attributes'])) {
-				if (isset($rows['attributes']['trash'])) {
-					unset($rows['attributes']['trash']);
+		$rows = $this->findAll($params, $order, $limit, $offset, $option);
+		if ($option === 'SQL_CALC_FOUND_ROWS') {
+			if ($rows && is_array($rows)) {
+				if (isset($rows['attributes']) && is_array($rows['attributes'])) {
+					if (isset($rows['attributes']['trash'])) {
+						unset($rows['attributes']['trash']);
+					}
+					if (isset($rows['attributes']['is_published'])) {
+						unset($rows['attributes']['is_published']);
+					}
+					if (isset($rows['attributes']['dt_publish_up'])) {
+						unset($rows['attributes']['dt_publish_up']);
+					}
+					if (isset($rows['attributes']['dt_publish_down'])) {
+						unset($rows['attributes']['dt_publish_down']);
+					}
 				}
-
-				if (isset($rows['attributes']['is_published'])) {
-					unset($rows['attributes']['is_published']);
+				if (isset($rows['order']) && $rows['order'] === DataPosts::ORDER_SORT) {
+					$rows['order'] = '';
 				}
-
-				if (isset($rows['attributes']['dt_publish_up'])) {
-					unset($rows['attributes']['dt_publish_up']);
-				}
-
-				if (isset($rows['attributes']['dt_publish_down'])) {
-					unset($rows['attributes']['dt_publish_down']);
-				}
-			}
-
-			if (isset($rows['order']) && $rows['order'] === DataPosts::ORDER_SORT) {
-				$rows['order'] = '';
 			}
 		}
 
@@ -204,9 +160,10 @@ class Posts extends AbstractService
 	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
+	 * @param string $option
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0)
+	public function findAll(array $params = array(), $order = '', $limit = 0, $offset = 0, $option = '')
 	{
 		$limit = min(max((int) $limit, 1), Constant::FIND_MAX_LIMIT);
 		$offset = max((int) $offset, 0);
@@ -231,7 +188,7 @@ class Posts extends AbstractService
 			}
 		}
 
-		$rows = $this->getDb()->findAll($params, $order, $limit, $offset);
+		$rows = $this->getDb()->findAll($params, $order, $limit, $offset, $option);
 		return $rows;
 	}
 
