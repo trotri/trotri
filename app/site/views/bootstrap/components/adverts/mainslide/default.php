@@ -2,14 +2,14 @@
 <?php if ($this->is_show) : ?>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
-  <?php foreach ($this->adverts as $i => $rows) : ?>
-    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i; ?>" class="<?php echo $i > 0 ? '' : 'active'; ?>"></li>
+  <?php foreach ($this->rows as $i => $row) : ?>
+    <li data-target="#carousel-example-generic" data-slide-to="<?php echo $i; ?>" class="<?php echo (($i > 0) ? '' : 'active'); ?>"></li>
   <?php endforeach; ?>
   </ol>
   <div class="carousel-inner">
-  <?php foreach ($this->adverts as $i => $rows) : ?>
-    <div class="item <?php echo $i > 0 ? '' : 'active'; ?>">
-      <?php echo isset($rows['show_code']) ? $rows['show_code'] : ''; ?>
+  <?php foreach ($this->rows as $i => $row) : ?>
+    <div class="item <?php echo (($i > 0) ? '' : 'active'); ?>">
+      <?php echo isset($row['show_code']) ? $row['show_code'] : ''; ?>
     </div>
   <?php endforeach; ?>
   </div>

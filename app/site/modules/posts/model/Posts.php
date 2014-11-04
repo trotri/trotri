@@ -11,10 +11,9 @@
 namespace modules\posts\model;
 
 use libapp\BaseModel;
-use tfc\saf\Cfg;
 use libsrv\Service;
-use libapp\PageHelper;
-use system\services\Options;
+use library\PageHelper;
+use posts\services\DataPosts;
 
 /**
  * Posts class file
@@ -27,69 +26,82 @@ use system\services\Options;
 class Posts extends BaseModel
 {
 	/**
-	 * 通过类别ID，查询多条记录
+	 * 查询上一条记录
 	 * @param integer $catId
-	 * @param integer $dt
-	 * @param string $order
-	 * @param integer $paged
+	 * @param integer $sort
 	 * @return array
 	 */
-	public function findListByCatId($catId, $dt, $order = '', $paged = 0)
+	public function getPrevByCatId($catId, $sort)
 	{
 		if (($catId = (int) $catId) <= 0) {
 			return array();
 		}
 
-		$params = array('category_id' => $catId);
-		if ((($dt = trim($dt)) !== '') && (($dt = strtotime($dt)) > 0)) {
-			$params['dt_created_start'] = date('Y-m-01 00:00:00', $dt);
-			$params['dt_created_end'] = date('Y-m-01 00:00:00', (strtotime($params['dt_created_start']) + MONTH_IN_SECONDS + WEEK_IN_SECONDS));
+		if (($sort = (int) $sort) <= 0) {
+			return array();
 		}
 
-		$data = $this->findLists($params, $order, $paged);
-		if ($data && is_array($data)) {
-			$data['attributes'] = array('catid' => $catId);
-		}
+		$params = array(
+			'category_id' => $catId,
+			'sort_lt' => $sort,
+		);
 
-		return $data;
+		$row = $this->getRow($params, DataPosts::ORDER_BY_SORT . ' DESC');
+		return $row;
 	}
 
 	/**
-	 * 查询多条记录
+	 * 查询下一条记录
+	 * @param integer $catId
+	 * @param integer $sort
+	 * @return array
+	 */
+	public function getNextByCatId($catId, $sort)
+	{
+		if (($catId = (int) $catId) <= 0) {
+			return array();
+		}
+
+		if (($sort = (int) $sort) <= 0) {
+			return array();
+		}
+
+		$params = array(
+			'category_id' => $catId,
+			'sort_gt' => $sort,
+		);
+
+		$row = $this->getRow($params, DataPosts::ORDER_BY_SORT);
+		return $row;
+	}
+
+	/**
+	 * 查询第一条记录
+	 * @param array $params
+	 * @param string $order
+	 * @return array
+	 */
+	public function getRow(array $params = array(), $order = '')
+	{
+		$row = $this->getService()->getRow($params, $order);
+		return $row;
+	}
+
+	/**
+	 * 查询多条记录，包含分页信息
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $paged
 	 * @return array
 	 */
-	public function findLists(array $params = array(), $order = '', $paged = 0)
+	public function findRows(array $params = array(), $order = '', $paged = 0)
 	{
 		$paged = max((int) $paged, 1);
-		$limit = $this->getListRows();
+		$limit = PageHelper::getListRowsPosts();
 		$offset = PageHelper::getFirstRow($paged, $limit);
 
-		$data = $this->getService()->findLists($params, $order, $limit, $offset);
-		if ($data && is_array($data)) {
-			$data['paged'] = $paged;
-			$data['page_var'] = PageHelper::getPageVar();
-		}
-
-		return $data;
-	}
-
-	/**
-	 * 获取分页参数：每页展示的行数
-	 * @return integer
-	 */
-	public function getListRows()
-	{
-		$listRows = Options::getListRowsPosts();
-		if ($listRows > 0) {
-			return $listRows;
-		}
-
-		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
-		$listRows = max($listRows, 1);
-		return $listRows;
+		$rows = $this->getService()->findRows($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS');
+		return $rows;
 	}
 
 	/**
@@ -101,64 +113,6 @@ class Posts extends BaseModel
 	{
 		$row = $this->getService()->findByPk($postId);
 		return $row;
-	}
-
-	/**
-	 * 通过类别ID，查询上一条记录
-	 * @param integer $catId
-	 * @param integer $sort
-	 * @return array
-	 */
-	public function findPrevByCatId($catId, $sort)
-	{
-		if (($catId = (int) $catId) <= 0) {
-			return array();
-		}
-
-		if (($sort = (int) $sort) <= 0) {
-			return array();
-		}
-
-		$params = array(
-			'category_id' => $catId,
-			'sort_end' => $sort,
-		);
-
-		$rows = $this->getService()->findRows($params, 'sort DESC', 1);
-		if ($rows && is_array($rows) && isset($rows[0])) {
-			return $rows[0];
-		}
-
-		return array();
-	}
-
-	/**
-	 * 通过类别ID，查询下一条记录
-	 * @param integer $catId
-	 * @param integer $sort
-	 * @return array
-	 */
-	public function findNextByCatId($catId, $sort)
-	{
-		if (($catId = (int) $catId) <= 0) {
-			return array();
-		}
-
-		if (($sort = (int) $sort) <= 0) {
-			return array();
-		}
-
-		$params = array(
-			'category_id' => $catId,
-			'sort_start' => $sort,
-		);
-
-		$rows = $this->getService()->findRows($params, 'sort', 1);
-		if ($rows && is_array($rows) && isset($rows[0])) {
-			return $rows[0];
-		}
-
-		return array();
 	}
 
 	/**

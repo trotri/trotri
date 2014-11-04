@@ -8,31 +8,37 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\system\action\show;
+namespace modules\posts\action\show;
 
 use library\ShowAction;
+use tfc\mvc\Mvc;
 
 /**
- * Index class file
- * 网站首页
+ * Home class file
+ * 文档首页
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Index.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.system.action.show
+ * @version $Id: Home.php 1 2014-01-18 14:19:29Z huan.song $
+ * @package modules.posts.action.show
  * @since 1.0
  */
-class Index extends ShowAction
+class Home extends ShowAction
 {
-	/**
-	 * @var boolean 是否验证登录
-	 */
-	protected $_validLogin = false;
-
 	/**
 	 * (non-PHPdoc)
 	 * @see \tfc\mvc\interfaces\Action::run()
 	 */
 	public function run()
 	{
+		$beforeContent = Mvc::getView()->widget(
+			'components\adverts\Adverts',
+			array(
+				'type_key' => 'mainslide'
+			),
+			array(), true
+		);
+
+		$this->assign('beforeLayoutContent', $beforeContent);
+
 		$this->render();
 	}
 }

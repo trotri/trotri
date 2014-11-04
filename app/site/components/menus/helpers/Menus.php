@@ -11,6 +11,7 @@
 namespace components\menus\helpers;
 
 use libsrv\Service;
+use tfc\mvc\Mvc;
 use tfc\auth\Identity;
 
 /**
@@ -34,6 +35,61 @@ class Menus
 		$allowUnregistered = Identity::isLogin() ? true : false;
 		$rows = self::getService()->findRows($typeKey, $menuPid, $allowUnregistered);
 		return $rows;
+	}
+
+	/**
+	 * 获取A标签
+	 * @param array $data
+	 * @param array $attributes
+	 * @return string
+	 */
+	public static function a(array &$data, array $attributes = array())
+	{
+		if ($attributes === array()) {
+			$attributes = self::getAttributes($data);
+		}
+
+		$url     = isset($data['menu_url'])  ? $data['menu_url']  : '#';
+		$content = isset($data['menu_name']) ? $data['menu_name'] : '';
+		return Mvc::getView()->getHtml()->a($content, $url, $attributes);
+	}
+
+	/**
+	 * 获取A标签的属性
+	 * @param array $data
+	 * @return array
+	 */
+	public static function getAttributes(array &$data)
+	{
+		$attributes = array();
+
+		$target = isset($data['attr_target']) ? $data['attr_target'] : '';
+		$title  = isset($data['attr_title'])  ? $data['attr_title']  : '';
+		$rel    = isset($data['attr_rel'])    ? $data['attr_rel']    : '';
+		$class  = isset($data['attr_class'])  ? $data['attr_class']  : '';
+		$style  = isset($data['attr_style'])  ? $data['attr_style']  : '';
+
+		if ($target !== '') {
+			$attributes['target'] = $target;
+		}
+
+		if ($title !== '') {
+			$attributes['title'] = $title;
+		}
+
+		if ($rel !== '') {
+			$attributes['rel'] = $rel;
+		}
+
+		if ($class !== '') {
+			$attributes['class'] = $class;
+		}
+
+		if ($style !== '') {
+			$attributes['style'] = $style;
+		}
+
+		return $attributes;
 	}
 
 	/**

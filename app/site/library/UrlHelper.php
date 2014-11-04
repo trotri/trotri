@@ -62,13 +62,13 @@ class UrlHelper
 	 */
 	public function getPostIndex(array $data)
 	{
-		$categoryId = isset($data['category_id']) ? (int) $data['category_id'] : 0;
-		if ($categoryId <= 0) {
+		$catId = isset($data['category_id']) ? (int) $data['category_id'] : 0;
+		if ($catId <= 0) {
 			return '';
 		}
 
 		$urlManager = Mvc::getView()->getUrlManager();
-		return $urlManager->getUrl('index', 'show', 'posts', $params = array('catid' => $categoryId));
+		return $urlManager->getUrl('index', 'show', 'posts', $params = array('catid' => $catId));
 	}
 
 	/**

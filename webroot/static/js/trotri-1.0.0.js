@@ -238,6 +238,10 @@ Trotri = {
    * @return mixed
    */
   ajax: function(p) {
+    if (typeof(p) != "object") {
+      Trotri.log("Trotri.ajax args is wrong");
+    }
+
     var xhrObj = false;
     try {
       xhrObj = new XMLHttpRequest(); // Firefox IE8和非IE内核

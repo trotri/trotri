@@ -10,6 +10,7 @@ $this->widget(
 	)
 );
 ?>
+
 <?php
 $this->widget(
 	'components\posts\ListBox',
@@ -22,6 +23,7 @@ $this->widget(
 	)
 );
 ?>
+
 <?php
 $this->widget(
 	'components\posts\ListBox',

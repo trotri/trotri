@@ -36,32 +36,47 @@ Core = {
   /**
    * 获取分页HTML
    * @param string funcName
-   * @param integer currPage
    * @param integer totalRows
    * @param integer listRows
+   * @param integer firstRow
+   * @param string prevStr
+   * @param string nextStr
    */
-  getPaginator: function(funcName, currPage, totalRows, listRows) {
-    if (typeof(currPage) == "undefined" || typeof(totalRows) == "undefined" || typeof(listRows) == "undefined") {
+  getPaginator: function(funcName, totalRows, listRows, firstRow, prevStr, nextStr) {
+    if (typeof(funcName) == "undefined" || typeof(totalRows) == "undefined" || typeof(listRows) == "undefined" || typeof(firstRow) == "undefined") {
       return "";
     }
 
-    currPage = parseInt(currPage);
+    if (typeof(prevStr) == "undefined") {
+      prevStr = "&lt;&lt;";
+    }
+
+    if (typeof(nextStr) == "undefined") {
+      nextStr = "&gt;&gt;";
+    }
+
     totalRows = parseInt(totalRows);
     listRows = parseInt(listRows);
-    if (currPage <= 0 || totalRows <= 0 || listRows <= 0) {
+    if (totalRows <= 0 || listRows <= 0) {
       return "";
+    }
+
+    if ((firstRow = parseInt(firstRow)) < 0) {
+      firstRow = 0;
     }
 
     var totalPages = Math.ceil(totalRows / listRows);
-    var nextPage = (currPage < totalPages) ? currPage + 1 : totalPages;
+    var currPage = Math.floor(firstRow / listRows) + 1;
 
     var string  = "<ul class=\"pagination\">";
     if (currPage > 1) {
-      string += "<li><a href=\"javascript: " + funcName + "('" + (currPage - 1) + "');\">&lt;&lt;</a></li>";
+      string += "<li><a href=\"javascript: " + funcName + "('" + (currPage - 1) + "');\">" + prevStr + "</a></li>";
     }
+
     if (currPage < totalPages) {
-      string += "<li><a href=\"javascript: " + funcName + "('" + (currPage + 1) + "');\">&gt;&gt;</a></li>";
+      string += "<li><a href=\"javascript: " + funcName + "('" + (currPage + 1) + "');\">" + nextStr + "</a></li>";
     }
+
     string += "</ul>";
     return string;
   },

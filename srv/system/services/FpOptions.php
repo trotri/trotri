@@ -56,7 +56,7 @@ class FpOptions extends FormProcessor
 			'close_register', 'close_register_reason', 'show_register_service_item', 'register_service_item',
 			'thumb_width', 'thumb_height', 'water_mark_type', 'water_mark_imgdir', 'water_mark_text', 'water_mark_position', 'water_mark_pct',
 			'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_frommail',
-			'page_var', 'list_rows_var', 'list_pages', 'list_rows', 'list_rows_posts', 'list_rows_users');
+			'list_rows_posts', 'list_rows_post_comments', 'list_rows_users');
 		return !$this->hasError();
 	}
 
@@ -89,11 +89,8 @@ class FpOptions extends FormProcessor
 			'smtp_username' => 'trim',
 			'smtp_password' => 'trim',
 			'smtp_frommail' => 'trim',
-			'page_var' => 'trim',
-			'list_rows_var' => 'trim',
-			'list_pages' => 'intval',
-			'list_rows' => 'intval',
 			'list_rows_posts' => 'intval',
+			'list_rows_post_comments' => 'intval',
 			'list_rows_users' => 'intval',
 		);
 
@@ -268,54 +265,6 @@ class FpOptions extends FormProcessor
 	}
 
 	/**
-	 * 获取“从$_GET或$_POST中获取当前页的键名”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getPageVarRule($value)
-	{
-		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_SYSTEM_OPTIONS_PAGE_VAR_ALPHANUM')),
-		);
-	}
-
-	/**
-	 * 获取“从$_GET或$_POST中获取每页展示的行数的键名”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getListRowsVarRule($value)
-	{
-		return array(
-			'AlphaNum' => new validator\AlphaNumValidator($value, true, Lang::_('SRV_FILTER_SYSTEM_OPTIONS_LIST_ROWS_VAR_ALPHANUM')),
-		);
-	}
-
-	/**
-	 * 获取“每页展示的页码数”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getListPagesRule($value)
-	{
-		return array(
-			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_SYSTEM_OPTIONS_LIST_PAGES_INTEGER')),
-		);
-	}
-
-	/**
-	 * 获取“每页展示的行数”验证规则
-	 * @param mixed $value
-	 * @return array
-	 */
-	public function getListRowsRule($value)
-	{
-		return array(
-			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_SYSTEM_OPTIONS_LIST_ROWS_INTEGER')),
-		);
-	}
-
-	/**
 	 * 获取“文档列表每页展示条数”验证规则
 	 * @param mixed $value
 	 * @return array
@@ -324,6 +273,18 @@ class FpOptions extends FormProcessor
 	{
 		return array(
 			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_SYSTEM_OPTIONS_LIST_ROWS_POSTS_INTEGER')),
+		);
+	}
+
+	/**
+	 * 获取“文档评论列表每页展示条数”验证规则
+	 * @param mixed $value
+	 * @return array
+	 */
+	public function getListRowsPostCommentsRule($value)
+	{
+		return array(
+			'Integer' => new validator\IntegerValidator($value, true, Lang::_('SRV_FILTER_SYSTEM_OPTIONS_LIST_ROWS_POST_COMMENTS_INTEGER')),
 		);
 	}
 

@@ -11,7 +11,7 @@
 namespace modules\system\action\show;
 
 use library\ShowAction;
-use libapp\PageHelper;
+use library\PageHelper;
 
 /**
  * Err403 class file

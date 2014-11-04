@@ -11,8 +11,7 @@
 namespace components\menus;
 
 use libapp\Component;
-use components\menus\helpers\Constant;
-use components\menus\helpers\Menus;
+use components\menus\helpers\Menus AS Helper;
 
 /**
  * NavBar class file
@@ -25,17 +24,21 @@ use components\menus\helpers\Menus;
 class NavBar extends Component
 {
 	/**
+	 * @var string 主导航类型Key
+	 */
+	const TYPE_KEY = 'mainnav';
+
+	/**
 	 * (non-PHPdoc)
 	 * @see \tfc\mvc\Widget::run()
 	 */
 	public function run()
 	{
 		$output = '';
-		$typeKey = Constant::TYPE_KEY_NAVBAR;
+		$typeKey = self::TYPE_KEY;
 
 		$html = $this->getHtml();
-		$menus = Menus::findRows($typeKey);
-
+		$menus = Helper::findRows($typeKey);
 		$divider = $html->tag('li', array('class' => 'divider'), '');
 
 		if ($menus && is_array($menus)) {
@@ -92,37 +95,10 @@ class NavBar extends Component
 	 */
 	public function getAttributes(array &$data, $isDropdown = false)
 	{
-		$target = isset($data['attr_target']) ? $data['attr_target'] : '';
-		$title  = isset($data['attr_title'])  ? $data['attr_title']  : '';
-		$rel    = isset($data['attr_rel'])    ? $data['attr_rel']    : '';
-		$class  = isset($data['attr_class'])  ? $data['attr_class']  : '';
-		$style  = isset($data['attr_style'])  ? $data['attr_style']  : '';
-
-		$attributes = array();
-
+		$attributes = Helper::getAttributes($data);
 		if ($isDropdown) {
 			$class = ltrim($class . ' dropdown-toggle');
 			$attributes['data-toggle'] = 'dropdown';
-		}
-
-		if ($target !== '') {
-			$attributes['target'] = $target;
-		}
-
-		if ($title !== '') {
-			$attributes['title'] = $title;
-		}
-
-		if ($rel !== '') {
-			$attributes['rel'] = $rel;
-		}
-
-		if ($class !== '') {
-			$attributes['class'] = $class;
-		}
-
-		if ($style !== '') {
-			$attributes['style'] = $style;
 		}
 
 		return $attributes;

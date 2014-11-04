@@ -34,13 +34,15 @@ class Adverts
 	}
 
 	/**
-	 * 查询指定位置下的广告
+	 * 查询指定位置下多条广告
 	 * @param string $typeKey
+	 * @param integer $limit
+	 * @param integer $offset
 	 * @return array
 	 */
-	public static function findRows($typeKey)
+	public static function findRows($typeKey, $limit = 0, $offset = 0)
 	{
-		$rows = self::getService()->findRows($typeKey);
+		$rows = self::getService()->findRows($typeKey, $limit, $offset);
 		return $rows;
 	}
 

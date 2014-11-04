@@ -235,35 +235,17 @@ class Options extends BaseModel
 				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_SMTP_FROMMAIL_LABEL'),
 				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_SMTP_FROMMAIL_HINT'),
 			),
-			'page_var' => array(
-				'__tid__' => 'paginator',
-				'type' => 'text',
-				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_PAGE_VAR_LABEL'),
-				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_PAGE_VAR_HINT'),
-			),
-			'list_rows_var' => array(
-				'__tid__' => 'paginator',
-				'type' => 'text',
-				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_VAR_LABEL'),
-				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_VAR_HINT'),
-			),
-			'list_pages' => array(
-				'__tid__' => 'paginator',
-				'type' => 'text',
-				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_PAGES_LABEL'),
-				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_PAGES_HINT'),
-			),
-			'list_rows' => array(
-				'__tid__' => 'paginator',
-				'type' => 'text',
-				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_LABEL'),
-				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_HINT'),
-			),
 			'list_rows_posts' => array(
 				'__tid__' => 'paginator',
 				'type' => 'text',
 				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_POSTS_LABEL'),
 				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_POSTS_HINT'),
+			),
+			'list_rows_post_comments' => array(
+				'__tid__' => 'paginator',
+				'type' => 'text',
+				'label' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_POST_COMMENTS_LABEL'),
+				'hint' => Text::_('MOD_SYSTEM_SYSTEM_OPTIONS_LIST_ROWS_POST_COMMENTS_HINT'),
 			),
 			'list_rows_users' => array(
 				'__tid__' => 'paginator',

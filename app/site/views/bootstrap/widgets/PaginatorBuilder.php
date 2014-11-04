@@ -13,7 +13,7 @@ namespace views\bootstrap\widgets;
 use tfc\mvc\Widget;
 use tfc\util\Paginator;
 use tfc\saf\Text;
-use libapp\PageHelper;
+use library\PageHelper;
 
 /**
  * PaginatorBuilder class file
@@ -48,7 +48,7 @@ class PaginatorBuilder extends Widget
 	{
 		$paginator = $this->getPaginator();
 		if ($paginator === null) {
-			return null;
+			return ;
 		}
 
 		$urlManager = $this->getUrlManager();
@@ -94,10 +94,13 @@ class PaginatorBuilder extends Widget
 			return null;
 		}
 
+		$firstRow = max($this->getFirstRow(), 0);
+		$currPage = floor($firstRow / $listRows) + 1;
+
 		$paginator = new Paginator($totalRows, $this->getUrl(), PageHelper::getPageVar());
 		$paginator->setListPages(PageHelper::getListPages());
 		$paginator->setListRows($listRows);
-		$paginator->setCurrPage($this->getPaged());
+		$paginator->setCurrPage($currPage);
 
 		return $paginator;
 	}
@@ -123,13 +126,13 @@ class PaginatorBuilder extends Widget
 	}
 
 	/**
-	 * 获取分页参数：当前的页码
+	 * 获取分页参数：当前页开始的记录数
 	 * @return integer
 	 */
-	public function getPaged()
+	public function getFirstRow()
 	{
-		$paged = isset($this->_tplVars['paged']) ? (int) $this->_tplVars['paged'] : 0;
-		return $paged;
+		$firstRow = isset($this->_tplVars['offset']) ? (int) $this->_tplVars['offset'] : 0;
+		return $firstRow;
 	}
 
 	/**

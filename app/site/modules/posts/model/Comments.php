@@ -11,9 +11,8 @@
 namespace modules\posts\model;
 
 use libapp\BaseModel;
-use tfc\saf\Cfg;
 use libsrv\Service;
-use libapp\PageHelper;
+use library\PageHelper;
 
 /**
  * Comments class file
@@ -26,29 +25,32 @@ use libapp\PageHelper;
 class Comments extends BaseModel
 {
 	/**
-	 * 通过文档ID，查询多条记录
-	 * @param integer $catId
+	 * @var integer 查询子评论记录数
+	 */
+	const SUB_LIST_ROWS = 5;
+
+	/**
+	 * 通过文档ID，查询多条评论，包括2层子评论
+	 * @param integer $postId
 	 * @param string $order
 	 * @param integer $paged
 	 * @return array
 	 */
-	public function findListByPostId($postId, $order = '', $paged = 0)
+	public function getRowsByPostId($postId, $order = '', $paged = 0)
 	{
 		if (($postId = (int) $postId) <= 0) {
 			return array();
 		}
 
-		$service = $this->getService();
-
-		$ret = $this->findAll(array('post_id' => $postId, 'comment_pid' => 0), $order, $paged);
+		$ret = $this->findRows(array('post_id' => $postId, 'comment_pid' => 0), $order, $paged);
 		if ($ret && is_array($ret)) {
 			$ret['attributes'] = array('postid' => $postId);
 			if (isset($ret['rows']) && is_array($ret['rows'])) {
 				foreach ($ret['rows'] as $key => $row) {
-					$data = $service->findRows(array('comment_pid' => $row['comment_id']), $order);
+					$data = $this->getRowsByPid($row['comment_id'], $order, self::SUB_LIST_ROWS);
 					if ($data && is_array($data)) {
 						foreach ($data as $_k => $_r) {
-							$data[$_k]['data'] = $service->findRows(array('comment_pid' => $_r['comment_id']), $order);
+							$data[$_k]['data'] = $this->getRowsByPid($_r['comment_id'], $order, self::SUB_LIST_ROWS);
 						}
 
 						$ret['rows'][$key]['data'] = $data;
@@ -61,42 +63,34 @@ class Comments extends BaseModel
 	}
 
 	/**
+	 * 通过父评论ID，查询多条记录
+	 * @param integer $pId
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getRowsByPid($pId, $order = '', $limit = 0, $offset = 0)
+	{
+		$rows = $this->getService()->getRowsByPid($pId, $order, $limit, $offset);
+		return $rows;
+	}
+
+	/**
 	 * 查询多条记录
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $paged
 	 * @return array
 	 */
-	public function findAll(array $params = array(), $order = '', $paged = 0)
+	public function findRows(array $params = array(), $order = '', $paged = 0)
 	{
 		$paged = max((int) $paged, 1);
-		$limit = $this->getListRows();
+		$limit = PageHelper::getListRowsPostComments();
 		$offset = PageHelper::getFirstRow($paged, $limit);
 
-		$params['is_published'] = 'y';
-		$ret = $this->getService()->findAll($params, $order, $limit, $offset);
-		if ($ret && is_array($ret) && isset($ret['rows']) && is_array($ret['rows'])) {
-			$ret['paged'] = $paged;
-			$ret['page_var'] = PageHelper::getPageVar();
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * 获取分页参数：每页展示的行数
-	 * @return integer
-	 */
-	public function getListRows()
-	{
-		$listRows = 3;
-		if ($listRows > 0) {
-			return $listRows;
-		}
-
-		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
-		$listRows = max($listRows, 1);
-		return $listRows;
+		$rows = $this->getService()->findRows($params, $order, $limit, $offset, 'SQL_CALC_FOUND_ROWS');
+		return $rows;
 	}
 
 	/**

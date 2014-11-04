@@ -13,8 +13,7 @@ namespace components\posts;
 use libapp\Component;
 use tfc\saf\Text;
 use library\UrlHelper;
-use components\posts\helpers\Constant;
-use components\posts\helpers\Posts;
+use components\posts\helpers\Posts AS Helper;
 use components\posts\helpers\Categories;
 
 /**
@@ -33,34 +32,34 @@ class ListBox extends Component
 	 */
 	public function run()
 	{
-		$findType = trim($this->find_type);
-		$limit = (int) $this->limit;
-		$offset = (int) $this->offset;
-		$title = trim($this->title);
-
+		$findType = isset($this->find_type) ? trim($this->find_type) : '';
 		if ($findType === '') {
 			return ;
 		}
 
-		$id = 0;
+		$limit = isset($this->limit) ? (int) $this->limit : 0;
+		$offset = isset($this->offset) ? (int) $this->offset : 0;
+		$title = isset($this->title) ? trim($this->title) : '';
+
+		$catId = 0;
 		if (($p = strpos($findType, '-')) !== false) {
-			$id = (int) substr($findType, $p + 1);
+			$catId = (int) substr($findType, $p + 1);
 			$findType = substr($findType, 0, $p);
 		}
 
 		$findType = strtolower($findType);
-		if (!in_array($findType, Constant::$findTypes)) {
+		if (!in_array($findType, Helper::$findTypes)) {
 			return ;
 		}
 
 		$title = '';
 		$url = '';
-		if ($findType === Constant::FIND_TYPE_CATID) {
-			if ($id <= 0) {
+		if ($findType === Helper::FIND_TYPE_CATID) {
+			if ($catId <= 0) {
 				return ;
 			}
 
-			$row = Categories::findByPk($id);
+			$row = Categories::findByPk($catId);
 			if (!$row || !is_array($row) || !isset($row['category_name'])) {
 				return ;
 			}
@@ -70,10 +69,10 @@ class ListBox extends Component
 		}
 		else {
 			switch (true) {
-				case $findType === Constant::FIND_TYPE_HEAD:
+				case $findType === Helper::FIND_TYPE_HEAD:
 					$title = Text::_('MOD_POSTS_POSTS_HEAD');
 					break;
-				case $findType === Constant::FIND_TYPE_RECOMMEND:
+				case $findType === Helper::FIND_TYPE_RECOMMEND:
 					$title = Text::_('MOD_POSTS_POSTS_RECOMMEND');
 					break;
 				default:
@@ -83,14 +82,14 @@ class ListBox extends Component
 
 		$rows = array();
 		switch (true) {
-			case $findType === Constant::FIND_TYPE_CATID:
-				$rows = Posts::getRowsByCatId($id, $limit, $offset);
+			case $findType === Helper::FIND_TYPE_CATID:
+				$rows = Helper::getRowsByCatId($catId, '', $limit, $offset);
 				break;
-			case $findType === Constant::FIND_TYPE_HEAD:
-				$rows = Posts::getHeads($limit, $offset);
+			case $findType === Helper::FIND_TYPE_HEAD:
+				$rows = Helper::getHeads($limit, $offset);
 				break;
-			case $findType === Constant::FIND_TYPE_RECOMMEND:
-				$rows = Posts::getRecommends($limit, $offset);
+			case $findType === Helper::FIND_TYPE_RECOMMEND:
+				$rows = Helper::getRecommends($limit, $offset);
 				break;
 			default:
 				break;

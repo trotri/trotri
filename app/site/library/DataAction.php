@@ -24,7 +24,7 @@ use tfc\auth\Identity;
 abstract class DataAction extends libapp\DataAction
 {
 	/**
-	 * @var boolean 是否验证登录，默认验证
+	 * @var boolean 是否验证登录，默认不验证
 	 */
 	protected $_validLogin = false;
 

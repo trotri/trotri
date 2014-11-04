@@ -23,6 +23,30 @@ use libsrv\Service;
 class Posts
 {
 	/**
+	 * @var string 查询条件：头条
+	 */
+	const FIND_TYPE_HEAD = 'head';
+
+	/**
+	 * @var string 查询条件：推荐
+	 */
+	const FIND_TYPE_RECOMMEND = 'recommend';
+
+	/**
+	 * @var string 查询条件：类别ID
+	 */
+	const FIND_TYPE_CATID = 'catid';
+
+	/**
+	 * @var array 所有查询条件
+	 */
+	public static $findTypes = array(
+		self::FIND_TYPE_HEAD,
+		self::FIND_TYPE_RECOMMEND,
+		self::FIND_TYPE_CATID
+	);
+
+	/**
 	 * 查询多条头条
 	 * @param integer $limit
 	 * @param integer $offset
@@ -49,13 +73,14 @@ class Posts
 	/**
 	 * 通过类别ID，查询多条记录
 	 * @param integer $catId
+	 * @param string $order
 	 * @param integer $limit
 	 * @param integer $offset
 	 * @return array
 	 */
-	public static function getRowsByCatId($catId, $limit = 0, $offset = 0)
+	public static function getRowsByCatId($catId, $order = '', $limit = 0, $offset = 0)
 	{
-		$rows = self::getService()->getRowsByCatId($catId, 'sort', $limit, $offset);
+		$rows = self::getService()->getRowsByCatId($catId, $order, $limit, $offset);
 		return $rows;
 	}
 

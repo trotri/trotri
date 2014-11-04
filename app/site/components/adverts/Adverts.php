@@ -31,16 +31,20 @@ class Adverts extends Component
 	 */
 	public function run()
 	{
-		if ($this->type_key === '') {
+		$typeKey = isset($this->type_key) ? trim($this->type_key) : '';
+		if ($typeKey === '') {
 			return ;
 		}
 
-		$typeName = Types::getTypeNameByTypeKey($this->type_key);
+		$typeName = Types::getTypeNameByTypeKey($typeKey);
 		if ($typeName === '') {
 			return ;
 		}
 
-		$rows = Helper::findRows($this->type_key);
+		$limit = isset($this->limit) ? (int) $this->limit : 0;
+		$offset = isset($this->offset) ? (int) $this->offset : 0;
+
+		$rows = Helper::findRows($typeKey, $limit, $offset);
 		$isShow = false;
 		if ($rows && is_array($rows)) {
 			$isShow = true;
@@ -48,13 +52,13 @@ class Adverts extends Component
 
 		$this->assign('is_show', $isShow);
 		$this->assign('type_name', $typeName);
-		$this->assign('adverts', $rows);
+		$this->assign('rows', $rows);
 		$this->display();
 	}
 
 	/**
 	 * (non-PHPdoc)
-	 * @see \tfc\mvc\Widget::getWidgetDirectory()
+	 * @see \libapp\Component::getWidgetDirectory()
 	 */
 	public function getWidgetDirectory()
 	{

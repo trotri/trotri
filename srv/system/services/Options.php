@@ -403,52 +403,22 @@ class Options extends AbstractService
 	}
 
 	/**
-	 * 获取“从$_GET或$_POST中获取当前页的键名”
-	 * @return string
-	 */
-	public static function getPageVar()
-	{
-		$value = self::getValueByKey('page_var');
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 获取“从$_GET或$_POST中获取每页展示的行数的键名”
-	 * @return string
-	 */
-	public static function getListRowsVar()
-	{
-		$value = self::getValueByKey('list_rows_var');
-		return $value ? $value : '';
-	}
-
-	/**
-	 * 获取“每页展示的页码数”
-	 * @return integer
-	 */
-	public static function getListPages()
-	{
-		$value = self::getValueByKey('list_pages');
-		return $value ? (int) $value : 0;
-	}
-
-	/**
-	 * 获取“每页展示的行数”
-	 * @return integer
-	 */
-	public static function getListRows()
-	{
-		$value = self::getValueByKey('list_rows');
-		return $value ? (int) $value : 0;
-	}
-
-	/**
 	 * 获取“文档列表每页展示条数”
 	 * @return integer
 	 */
 	public static function getListRowsPosts()
 	{
 		$value = self::getValueByKey('list_rows_posts');
+		return $value ? (int) $value : 0;
+	}
+
+	/**
+	 * 获取“文档评论列表每页展示条数”
+	 * @return integer
+	 */
+	public static function getListRowsPostComments()
+	{
+		$value = self::getValueByKey('list_rows_post_comments');
 		return $value ? (int) $value : 0;
 	}
 

@@ -30,11 +30,12 @@ class Advert extends Component
 	 */
 	public function run()
 	{
-		if ($this->type_key === '') {
+		$typeKey = isset($this->type_key) ? trim($this->type_key) : '';
+		if ($typeKey === '') {
 			return ;
 		}
 
-		$row = Helper::getRow($this->type_key);
+		$row = Helper::getRow($typeKey);
 		$isShow = false;
 		if ($row && is_array($row) && isset($row['show_code'])) {
 			$isShow = true;

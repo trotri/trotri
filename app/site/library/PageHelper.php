@@ -15,6 +15,7 @@ use tfc\ap\ErrorException;
 use tfc\mvc\Mvc;
 use tfc\util\Paginator;
 use tfc\saf\Cfg;
+use system\services\Options;
 
 /**
  * PageHelper class file
@@ -24,7 +25,6 @@ use tfc\saf\Cfg;
  * return array (
  *   'paginator' => array (
  *     'page_var' => 'paged',      // 从$_GET或$_POST中获取当前页的键名，缺省：paged
- *     'list_rows_var' => 'limit', // 从$_GET或$_POST中获取每页展示的行数的键名，缺省：limit
  *     'list_rows' => 10,          // 每页展示的行数
  *     'list_pages' => 4,          // 每页展示的页码数
  *   ),
@@ -37,6 +37,34 @@ use tfc\saf\Cfg;
  */
 class PageHelper
 {
+	/**
+	 * 获取文档列表每页展示条数
+	 * @return integer
+	 */
+	public static function getListRowsPosts()
+	{
+		$listRows = Options::getListRowsPosts();
+		if ($listRows <= 0) {
+			$listRows = self::getListRows();
+		}
+
+		return $listRows;
+	}
+
+	/**
+	 * 获取文档评论列表每页展示条数
+	 * @return integer
+	 */
+	public static function getListRowsPostComments()
+	{
+		$listRows = Options::getListRowsPostComments();
+		if ($listRows <= 0) {
+			$listRows = self::getListRows();
+		}
+
+		return $listRows;
+	}
+
 	/**
 	 * 获取上一个页面链接
 	 * @return string
@@ -89,12 +117,6 @@ class PageHelper
 	 */
 	public static function getListRows()
 	{
-		$listRowsVar = self::getListRowsVar();
-		$listRows = Ap::getRequest()->getInteger($listRowsVar);
-		if ($listRows > 0) {
-			return $listRows;
-		}
-
 		$listRows = (int) Cfg::getApp('list_rows', 'paginator');
 		$listRows = max($listRows, 1);
 		return $listRows;
@@ -121,22 +143,6 @@ class PageHelper
 		$currPage = Ap::getRequest()->getInteger($pageVar);
 		$currPage = max($currPage, 1);
 		return $currPage;
-	}
-
-	/**
-	 * 获取从$_GET或$_POST中获取每页展示的行数的键名
-	 * @return string
-	 */
-	public static function getListRowsVar()
-	{
-		try {
-			$listRowsVar = Cfg::getApp('list_rows_var', 'paginator');
-		}
-		catch (ErrorException $e) {
-			$listRowsVar = 'limit';
-		}
-
-		return $listRowsVar;
 	}
 
 	/**

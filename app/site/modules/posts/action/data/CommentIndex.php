@@ -13,7 +13,7 @@ namespace modules\posts\action\data;
 use library\DataAction;
 use tfc\ap\Ap;
 use libapp\Model;
-use libapp\PageHelper;
+use library\PageHelper;
 
 /**
  * CommentIndex class file
@@ -35,11 +35,10 @@ class CommentIndex extends DataAction
 
 		$postId = $req->getInteger('postid');
 		$order = $req->getTrim('order', 'dt_last_modified DESC');
-		$pageVar = PageHelper::getPageVar();
 		$paged = PageHelper::getCurrPage();
 
 		$mod = Model::getInstance('Comments', 'posts');
-		$ret = $mod->findListByPostId($postId, $order, $paged);
+		$ret = $mod->getRowsByPostId($postId, $order, $paged);
 
 		$this->display($ret);
 	}

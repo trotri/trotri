@@ -72,7 +72,7 @@ class Posts extends AbstractService
 	 */
 	public function getPraisesByCatId($catId, $limit = 0, $offset = 0)
 	{
-		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_PRAISE, $limit, $offset);
+		$rows = $this->getRowsByCatId($catId, DataPosts::ORDER_BY_PRAISE, $limit, $offset);
 		return $rows;
 	}
 
@@ -107,7 +107,24 @@ class Posts extends AbstractService
 	}
 
 	/**
-	 * 查询多条记录，包含分页信息
+	 * 查询第一条记录
+	 * @param array $params
+	 * @param string $order
+	 * @return array
+	 */
+	public function getRow(array $params = array(), $order = '')
+	{
+		$rows = $this->findRows($params, $order, 1);
+		if ($rows && is_array($rows)) {
+			$row = array_shift($rows);
+			return $row;
+		}
+
+		return array();
+	}
+
+	/**
+	 * 查询多条记录
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit
@@ -145,7 +162,7 @@ class Posts extends AbstractService
 						unset($rows['attributes']['dt_publish_down']);
 					}
 				}
-				if (isset($rows['order']) && $rows['order'] === DataPosts::ORDER_SORT) {
+				if (isset($rows['order']) && $rows['order'] === DataPosts::ORDER_BY_SORT) {
 					$rows['order'] = '';
 				}
 			}

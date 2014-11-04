@@ -28,7 +28,7 @@ class Bootstrap extends ap\Bootstrap
 	 */
 	public function _initRGPC()
 	{
-		$rawKeys = array();
+		$rawKeys = array('http_referer');
 
 		foreach ($_GET as $key => $value) {
 			if (in_array($key, $rawKeys)) {
@@ -62,7 +62,7 @@ class Bootstrap extends ap\Bootstrap
 	public function _initDefaultRouter()
 	{
 		$router = Mvc::getRouter();
-		$router->setDefaultModule('bloger')
+		$router->setDefaultModule('posts')
 			   ->setDefaultController('show')
 			   ->setDefaultAction('home');
 	}

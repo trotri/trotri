@@ -14,7 +14,7 @@ use library\ShowAction;
 use tfc\ap\Ap;
 use tfc\mvc\Mvc;
 use libapp\Model;
-use libapp\PageHelper;
+use library\PageHelper;
 use library\UrlHelper;
 
 /**
@@ -34,7 +34,6 @@ class Index extends ShowAction
 	public function run()
 	{
 		$req = Ap::getRequest();
-		$viw = Mvc::getView();
 
 		$catId = $req->getInteger('catid');
 		if ($catId <= 0) {
@@ -42,8 +41,6 @@ class Index extends ShowAction
 		}
 
 		$order = $req->getTrim('order', '');
-		$dt = $req->getTrim('dt', '');
-		$pageVar = PageHelper::getPageVar();
 		$paged = PageHelper::getCurrPage();
 
 		$category = Model::getInstance('Categories', 'posts')->findByPk($catId);
@@ -51,20 +48,17 @@ class Index extends ShowAction
 			$this->err404();
 		}
 
-		$tplName = isset($category['tpl_list']) ? Mvc::$module . DS . $category['tpl_list'] : '';
-		if ($tplName === '') {
-			$this->err500();
-		}
-
-		$viw->assign('system_meta_title', isset($category['meta_title']) ? $category['meta_title'] : '');
-		$viw->assign('system_meta_keywords', isset($category['meta_keywords']) ? $category['meta_keywords'] : '');
-		$viw->assign('system_meta_description', isset($category['meta_description']) ? $category['meta_description'] : '');
-		$viw->assign('url', UrlHelper::getInstance()->getPostIndex($category));
-
-		$mod = Model::getInstance('Posts', 'posts');
-		$ret = $mod->findListByCatId($catId, $dt, $order, $paged);
+		$tplName = isset($category['tpl_list']) ? Mvc::$module . DS . $category['tpl_list'] : null;
 
 		$this->assign('category', $category);
+		$this->assign('meta_title', isset($category['meta_title']) ? $category['meta_title'] : '');
+		$this->assign('meta_keywords', isset($category['meta_keywords']) ? $category['meta_keywords'] : '');
+		$this->assign('meta_description', isset($category['meta_description']) ? $category['meta_description'] : '');
+		$this->assign('url', UrlHelper::getInstance()->getPostIndex($category));
+
+		$mod = Model::getInstance('Posts', 'posts');
+		$ret = $mod->findRows(array('category_id' => $catId), $order, $paged);
+
 		$this->render($ret, $tplName);
 	}
 }

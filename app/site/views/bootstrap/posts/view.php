@@ -17,24 +17,23 @@
 
 <?php
 $this->widget(
-	'views\bootstrap\widgets\ListPostComments',
+	'views\bootstrap\widgets\PostComments',
 	array(
+		'html_type' => 'list',
 		'post_id' => $this->post_id,
-		'comment_status' => $this->comment_status
+		'comment_status' => $this->comment_status,
 	)
 );
 ?>
 
-<div id="comm_response_reference"></div>
 <?php
 $this->widget(
-	'views\bootstrap\widgets\FormPostComments',
+	'views\bootstrap\widgets\PostComments',
 	array(
-		'action' => $this->getUrlManager()->getUrl('commentcreate', 'data', 'posts'),
+		'html_type' => 'form',
 		'post_id' => $this->post_id,
-		'comment_status' => $this->comment_status
+		'comment_status' => $this->comment_status,
 	)
 );
 ?>
-
 <p></p>

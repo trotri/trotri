@@ -22,8 +22,8 @@ $this->widget(
 	array(
 		'url' => $this->url,
 		'total' => $this->total,
-		'paged' => $this->paged,
-		'limit' => $this->limit
+		'limit' => $this->limit,
+		'offset' => $this->offset,
 	)
 );
 ?>

@@ -42,8 +42,8 @@ class View extends ShowAction
 			$this->err404();
 		}
 
-		$prev = $mod->findPrevByCatId($row['category_id'], $row['sort']);
-		$next = $mod->findNextByCatId($row['category_id'], $row['sort']);
+		$prev = $mod->getPrevByCatId($row['category_id'], $row['sort']);
+		$next = $mod->getNextByCatId($row['category_id'], $row['sort']);
 
 		$this->assign('prev', $prev);
 		$this->assign('next', $next);

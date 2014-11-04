@@ -24,7 +24,25 @@ use posts\library\Constant;
 class Comments extends AbstractService
 {
 	/**
-	 * 查询多条记录，包含分页信息
+	 * 通过父评论ID，查询多条记录
+	 * @param integer $pId
+	 * @param string $order
+	 * @param integer $limit
+	 * @param integer $offset
+	 * @return array
+	 */
+	public function getRowsByPid($pId, $order = '', $limit = 0, $offset = 0)
+	{
+		if (($pId = (int) $pId) <= 0) {
+			return array();
+		}
+
+		$rows = $this->findRows(array('comment_pid' => $pId), $order, $limit, $offset);
+		return $rows;
+	}
+
+	/**
+	 * 查询多条记录
 	 * @param array $params
 	 * @param string $order
 	 * @param integer $limit

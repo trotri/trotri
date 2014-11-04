@@ -1,1 +1,1 @@
-<?php $this->display('posts/index_sidebar'); ?>
+<?php $this->display('posts/home_sidebar'); ?>
