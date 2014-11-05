@@ -28,7 +28,7 @@ $this->widget(
 $this->widget(
 	'components\posts\ListBox',
 	array(
-		'find_type' => 'catid-2',
+		'find_type' => 'catid-1',
 		'limit' => 4
 	),
 	array(

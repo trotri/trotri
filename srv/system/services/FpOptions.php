@@ -52,7 +52,7 @@ class FpOptions extends FormProcessor
 	protected function _process(array $params = array())
 	{
 		$this->isValids($params,
-			'site_name', 'site_url', 'tpl_dir', 'html_dir', 'meta_title', 'meta_keywords', 'meta_description', 'powerby', 'stat_code', 'url_rewrite',
+			'site_name', 'site_url', /* 'tpl_dir', 'html_dir', */ 'meta_title', 'meta_keywords', 'meta_description', 'powerby', 'stat_code', 'url_rewrite',
 			'close_register', 'close_register_reason', 'show_register_service_item', 'register_service_item',
 			'thumb_width', 'thumb_height', 'water_mark_type', 'water_mark_imgdir', 'water_mark_text', 'water_mark_position', 'water_mark_pct',
 			'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_frommail',
