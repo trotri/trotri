@@ -29,6 +29,9 @@ class Index extends actions\Index
 	 */
 	public function run()
 	{
+		$install = DIR_ROOT . DS . 'webroot' . DS . 'install.php';
+		$this->assign('install', $install);
+
 		$sysInfo = Options::getSysInfo();
 		$devInfo = Options::getDevInfo();
 

@@ -1,3 +1,7 @@
+<?php if (is_file($this->install)) : ?>
+<div class="alert alert-danger">为了网站安全，请删除安装文件：<?php echo $this->install; ?></div>
+<?php endif; ?>
+
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title"><?php echo $this->MOD_SYSTEM_SYSTEM_SYSINFO_LABEL; ?></h3>
