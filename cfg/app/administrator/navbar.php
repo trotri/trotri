@@ -52,6 +52,10 @@ return array(
 			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_ADVERT_INDEX',
 			'm' => 'advert', 'c' => 'types', 'a' => 'index'
 		),
+		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_TOPIC_INDEX',
+			'm' => 'topic', 'c' => 'topic', 'a' => 'index'
+		),
 	),
 	array(
 		0 => array(

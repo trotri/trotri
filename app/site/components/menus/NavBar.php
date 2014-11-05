@@ -97,7 +97,7 @@ class NavBar extends Component
 	{
 		$attributes = Helper::getAttributes($data);
 		if ($isDropdown) {
-			$class = ltrim($class . ' dropdown-toggle');
+			$attributes['class'] = isset($attributes['class']) ? $attributes['class'] . ' dropdown-toggle' : 'dropdown-toggle';
 			$attributes['data-toggle'] = 'dropdown';
 		}
 

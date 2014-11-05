@@ -84,13 +84,15 @@ class GcDb extends AbstractGc
 		fwrite($stream, "\t * @param string \$order\n");
 		fwrite($stream, "\t * @param integer \$limit\n");
 		fwrite($stream, "\t * @param integer \$offset\n");
+		fwrite($stream, "\t * @param string \$option\n");
 		fwrite($stream, "\t * @return array\n");
 		fwrite($stream, "\t */\n");
-		fwrite($stream, "\tpublic function findAll(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0)\n");
+		fwrite($stream, "\tpublic function findAll(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0, \$option = '')\n");
 		fwrite($stream, "\t{\n");
 		fwrite($stream, "\t\t\$commandBuilder = \$this->getCommandBuilder();\n");
 		fwrite($stream, "\t\t{$tableName}\n");
-		$command = '\'' . str_replace($commandBuilder->quoteTableName('$tableName'), $commandBuilder->quoteTableName('\' . $tableName . \''), $commandBuilder->createFind('$tableName', $fieldNames, '', '', 0, 0, 'SQL_CALC_FOUND_ROWS')) . '\'';
+		$command = '\'' . str_replace($commandBuilder->quoteTableName('$tableName'), $commandBuilder->quoteTableName('\' . $tableName . \''), $commandBuilder->createFind('$tableName', $fieldNames, '', '', 0, 0, '\' . $option . \'')) . '\'';
+		$command = str_replace('$OPTION', '$option', $command);
 		fwrite($stream, "\t\t\$sql = {$command};\n\n");
 		fwrite($stream, "\t\t\$condition = '1';\n");
 		fwrite($stream, "\t\t\$attributes = array();\n\n");
@@ -129,21 +131,28 @@ class GcDb extends AbstractGc
 
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyCondition(\$sql, \$condition);\n");
 		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyOrder(\$sql, \$order);\n");
-		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyLimit(\$sql, \$limit, \$offset);\n");
-		fwrite($stream, "\t\t\$ret = \$this->fetchAllNoCache(\$sql, \$attributes);\n\n");
+		fwrite($stream, "\t\t\$sql = \$commandBuilder->applyLimit(\$sql, \$limit, \$offset);\n\n");
+
+		fwrite($stream, "\t\tif (\$option === 'SQL_CALC_FOUND_ROWS') {\n");
+
+		fwrite($stream, "\t\t\t\$ret = \$this->fetchAllNoCache(\$sql, \$attributes);\n\n");
 		foreach ($fields as $rows) {
 			if ($rows['field_type'] !== 'INT') {
-				fwrite($stream, "\t\tif (isset(\$attributes['{$rows['field_name']}'])) {\n");
-				fwrite($stream, "\t\t\t\$attributes['{$rows['field_name']}'] = {$rows['var_name']};\n");
-				fwrite($stream, "\t\t}\n\n");
+				fwrite($stream, "\t\t\tif (isset(\$attributes['{$rows['field_name']}'])) {\n");
+				fwrite($stream, "\t\t\t\t\$attributes['{$rows['field_name']}'] = {$rows['var_name']};\n");
+				fwrite($stream, "\t\t\t}\n\n");
 			}
 		}
 
-		fwrite($stream, "\t\tif (is_array(\$ret)) {\n");
-		fwrite($stream, "\t\t\t\$ret['attributes'] = \$attributes;\n");
-		fwrite($stream, "\t\t\t\$ret['order']      = \$order;\n");
-		fwrite($stream, "\t\t\t\$ret['limit']      = \$limit;\n");
-		fwrite($stream, "\t\t\t\$ret['offset']     = \$offset;\n");
+		fwrite($stream, "\t\t\tif (is_array(\$ret)) {\n");
+		fwrite($stream, "\t\t\t\t\$ret['attributes'] = \$attributes;\n");
+		fwrite($stream, "\t\t\t\t\$ret['order']      = \$order;\n");
+		fwrite($stream, "\t\t\t\t\$ret['limit']      = \$limit;\n");
+		fwrite($stream, "\t\t\t\t\$ret['offset']     = \$offset;\n");
+		fwrite($stream, "\t\t\t}\n");
+		fwrite($stream, "\t\t}\n");
+		fwrite($stream, "\t\telse {\n");
+		fwrite($stream, "\t\t\t\$ret = \$this->fetchAll(\$sql, \$attributes);\n");
 		fwrite($stream, "\t\t}\n\n");
 		fwrite($stream, "\t\treturn \$ret;\n");
 		fwrite($stream, "\t}\n\n");

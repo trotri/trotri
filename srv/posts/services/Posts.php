@@ -212,14 +212,30 @@ class Posts extends AbstractService
 	/**
 	 * 通过主键，查询一条记录
 	 * @param integer $postId
+	 * @param boolean $usable
 	 * @return array
 	 */
-	public function findByPk($postId)
+	public function findByPk($postId, $usable = false)
 	{
 		$row = $this->getDb()->findByPk($postId);
 		if ($row && is_array($row) && isset($row['post_id'])) {
-			if ($row['trash'] === DataPosts::TRASH_Y) {
-				return array();
+			if ($usable) {
+				if ($row['trash'] !== DataPosts::TRASH_N) {
+					return array();
+				}
+
+				if ($row['is_published'] !== DataPosts::IS_PUBLISHED_Y) {
+					return array();
+				}
+
+				$nowTime = date('Y-m-d H:i:s');
+				if ($row['dt_publish_up'] > $nowTime) {
+					return array();
+				}
+
+				if ($row['dt_publish_down'] !== '0000-00-00 00:00:00' && $row['dt_publish_down'] < $nowTime) {
+					return array();
+				}
 			}
 
 			$dispatcher = Plugin::getInstance();

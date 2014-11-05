@@ -39,6 +39,10 @@ class Menus extends AbstractService
 
 		$data = array();
 		foreach ($rows as $row) {
+			if ($row['is_hide'] !== DataMenus::IS_HIDE_N) {
+				continue;
+			}
+
 			$tmpRows = $this->findRows($typeKey, $row['menu_id'], $allowUnregistered);
 			$row['data'] = $tmpRows;
 			$data[] = $row;

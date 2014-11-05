@@ -83,13 +83,14 @@ class GcService extends AbstractGc
 		fwrite($stream, "\t * @param string \$order\n");
 		fwrite($stream, "\t * @param integer \$limit\n");
 		fwrite($stream, "\t * @param integer \$offset\n");
+		fwrite($stream, "\t * @param string \$option\n");
 		fwrite($stream, "\t * @return array\n");
 		fwrite($stream, "\t */\n");
-		fwrite($stream, "\tpublic function findAll(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0)\n");
+		fwrite($stream, "\tpublic function findAll(array \$params = array(), \$order = '', \$limit = 0, \$offset = 0, \$option = '')\n");
 		fwrite($stream, "\t{\n");
 		fwrite($stream, "\t\t\$limit = min(max((int) \$limit, 1), Constant::FIND_MAX_LIMIT);\n");
 		fwrite($stream, "\t\t\$offset = max((int) \$offset, 0);\n\n");
-		fwrite($stream, "\t\t\$rows = \$this->getDb()->findAll(\$params, \$order, \$limit, \$offset);\n");
+		fwrite($stream, "\t\t\$rows = \$this->getDb()->findAll(\$params, \$order, \$limit, \$offset, \$option);\n");
 		fwrite($stream, "\t\treturn \$rows;\n");
 		fwrite($stream, "\t}\n\n");
 

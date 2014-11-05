@@ -20,7 +20,7 @@ return array (
 	),
 	'paginator' => array (
 		'page_var' => 'paged',      // 从$_GET或$_POST中获取当前页的键名，缺省：paged
-		'list_rows' => 5,           // 每页展示的行数
+		'list_rows' => 2,           // 每页展示的行数
 		'list_pages' => 4,          // 每页展示的页码数
 	),
 	'cookie' => array (

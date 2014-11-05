@@ -47,6 +47,10 @@ class View extends ShowAction
 
 		$this->assign('prev', $prev);
 		$this->assign('next', $next);
+
+		$this->assign('meta_title', isset($row['title']) ? $row['title'] : '');
+		$this->assign('meta_keywords', isset($row['keywords']) ? $row['keywords'] : '');
+		$this->assign('meta_description', isset($row['description']) ? $row['description'] : '');
 		$this->render($row);
 	}
 }

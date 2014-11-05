@@ -68,7 +68,7 @@ class UrlHelper
 		}
 
 		$urlManager = Mvc::getView()->getUrlManager();
-		return $urlManager->getUrl('index', 'show', 'posts', $params = array('catid' => $catId));
+		return $urlManager->getUrl('index', 'show', 'posts', array('catid' => $catId));
 	}
 
 	/**
@@ -90,7 +90,22 @@ class UrlHelper
 		}
 
 		$urlManager = Mvc::getView()->getUrlManager();
-		return $urlManager->getUrl('view', 'show', 'posts', $params = array('id' => $postId));
+		return $urlManager->getUrl('view', 'show', 'posts', array('id' => $postId));
 	}
 
+	/**
+	 * 获取专题链接
+	 * @param array $data
+	 * @return string
+	 */
+	public function getTopicView(array $data)
+	{
+		$topicKey = isset($data['topic_key']) ? trim($data['topic_key']) : '';
+		if ($topicKey === '') {
+			return '';
+		}
+
+		$urlManager = Mvc::getView()->getUrlManager();
+		return $urlManager->getUrl('view', 'show', 'topic', array('key' => $topicKey));
+	}
 }

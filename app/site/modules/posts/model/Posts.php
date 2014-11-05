@@ -111,7 +111,7 @@ class Posts extends BaseModel
 	 */
 	public function findByPk($postId)
 	{
-		$row = $this->getService()->findByPk($postId);
+		$row = $this->getService()->findByPk($postId, true);
 		return $row;
 	}
 

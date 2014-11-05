@@ -11,6 +11,15 @@ $(document).ready(function() {
 
     Components.changeAdvertFields();
   }
+
+  if (g_mod == "topic" && g_ctrl == "topic" && (g_act == "create" || g_act == "modify" || g_act == "view")) {
+    if (g_act != "view") {
+      Core.uploadPreviewImg("cover_file", "cover");
+    }
+    else {
+      Core.uploadPreviewImg("cover_file", "cover", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});
+    }
+  }
 });
 
 /**

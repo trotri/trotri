@@ -14,7 +14,6 @@ use libapp\BaseAction;
 use tfc\ap\Ap;
 use tfc\ap\Registry;
 use tfc\mvc\Mvc;
-use tfc\util\String;
 use tfc\auth\Identity;
 use tfc\saf\Text;
 use tfc\saf\Log;
@@ -156,13 +155,8 @@ abstract class ShowAction extends BaseAction
 			$tplName = $this->getDefaultTplName();
 		}
 
-		if (!isset($data['err_no']) || $data['err_no'] === ErrorNo::SUCCESS_NUM) {
-			$data['err_no'] = Ap::getRequest()->getInteger('err_no', ErrorNo::SUCCESS_NUM);
-			$errMsg = String::escapeXss(Ap::getRequest()->getString('err_msg'));
-			if ($errMsg !== '') {
-				$data['err_msg'] = $errMsg;
-			}
-		}
+		isset($data['err_no'])  || $data['err_no'] = ErrorNo::SUCCESS_NUM;
+		isset($data['err_msg']) || $data['err_msg'] = '';
 
 		$viw->render($tplName, $data);
 	}

@@ -22,7 +22,6 @@ $this->widget('views\bootstrap\components\bar\SideBar', array('config' => $confi
 </div><!-- /.col-xs-6 col-sm-2 -->
 <!-- /SideBar -->
 
-<?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/ckeditor/ckeditor.js'); ?>
 <?php echo $this->getHtml()->cssFile($this->static_url . '/plugins/jquery-upload-file/uploadpreviewimg.css'); ?>
 <?php echo $this->getHtml()->jsFile($this->static_url . '/plugins/jquery-upload-file/jquery.uploadfile.min.js'); ?>
 
