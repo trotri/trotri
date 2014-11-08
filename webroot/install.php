@@ -50,7 +50,7 @@ if ($do === 'source_db_tables') {
 			}
 		}
 
-		echo '<p>创建表完成.</p>';
+		echo '<p>创建表完成，正在导入数据，请稍后 ...</p>';
 	}
 	else {
 		echo '<p>创建表失败.</p>';
@@ -198,14 +198,16 @@ function ajax(p) {
     <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法读取SQL安装文件！</small>
     <?php endif; ?>
   </p>
-  <p>安装需要一些数据库信息，用来导入SQL安装文件。</p>
+  <p>安装需要一些数据库信息，用来导入SQL安装文件，这些数据库信息将被写入/cfg/db/cluster.php配置文件。</p>
   <p>1. 数据库名</p>
   <p>2. 数据库用户名</p>
   <p>3. 数据库密码</p>
   <p>4. 数据库主机</p>
   <p>5. 数据表前缀</p>
-  <p>这些数据库信息将被写入/cfg/db/cluster.php配置文件。</p>
-  <p>如果自动创建/cfg/db/cluster.php配置文件失败，请手动将这些数据库信息写入/cfg/db/cluster-sample.php文件，并将cluster-sample.php文件重命名为cluster.php。</p>
+  <p>如果自动安装失败，手动安装过程：</p>
+  <p>1. 请手动将这些数据库信息写入/cfg/db/cluster-sample.php文件，并将cluster-sample.php文件重命名为cluster.php</p>
+  <p>2. 请手动将/data/install/db_tables.sql和/data/install/db_data.sql中的#@__替换成表前缀，并依次将两个文件手动导入数据库</p>
+  <p>3. 再执行<a href="install.php?do=adform" target="_blank">创建管理员</a>操作</p>
   <p></p>
   <?php if (!$hasError) : ?>
   <p><a class="btn btn-primary btn-lg" href="install.php?do=dbform">继续 &gt;&gt;</a></p>
@@ -223,7 +225,7 @@ function ajax(p) {
       <div class="col-lg-4">
         <input class="form-control input-sm" type="text" name="dbhost" value="localhost">
       </div>
-      <span class="control-label">通常都是localhost</span>
+      <span class="control-label">通常都是localhost.</span>
     </div>
 
     <div class="form-group">
@@ -231,23 +233,23 @@ function ajax(p) {
       <div class="col-lg-4">
         <input class="form-control input-sm" type="text" name="dbuser" value="root">
       </div>
-      <span class="control-label">连接MySQL用户名</span>
+      <span class="control-label">连接MySQL用户名.</span>
     </div>
 
     <div class="form-group">
       <label class="col-lg-2 control-label">数据库密码</label>
       <div class="col-lg-4">
-        <input class="form-control input-sm" type="text" name="dbpwd" value="123456">
+        <input class="form-control input-sm" type="text" name="dbpwd" value="">
       </div>
-      <span class="control-label">连接MySQL密码</span>
+      <span class="control-label">连接MySQL密码.</span>
     </div>
 
     <div class="form-group">
       <label class="col-lg-2 control-label">数据库名</label>
       <div class="col-lg-4">
-        <input class="form-control input-sm" type="text" name="dbname" value="test">
+        <input class="form-control input-sm" type="text" name="dbname" value="">
       </div>
-      <span class="control-label"></span>
+      <span class="control-label">请先手动创建数据库，系统不会自动创建数据库.</span>
     </div>
 
     <div class="form-group">
@@ -314,6 +316,7 @@ function ajax(p) {
       "data"     : "do=source_db_tables",
       "success"  : function(data) {
         document.getElementById("dbsource_tables").innerHTML = data;
+        document.body.scrollTop = 768;
         ajax({
           "type"     : "POST",
           "dataType" : "TEXT",
@@ -322,6 +325,7 @@ function ajax(p) {
           "success"  : function(data) {
             document.getElementById("dbsource_data").innerHTML = data;
             document.getElementById("button_to_adform").style.display = "block";
+            document.body.scrollTop = 768;
           }
         });
       }
@@ -341,7 +345,7 @@ function ajax(p) {
     <div class="form-group">
       <label class="col-lg-2 control-label">管理员登录名</label>
       <div class="col-lg-4">
-        <input class="form-control input-sm" type="text" name="login_name" value="administrator">
+        <input class="form-control input-sm" type="text" name="login_name" value="">
       </div>
       <span class="control-label">登录名由英文字母开头，6~18个英文字母、数字或下划线组成.</span>
     </div>
@@ -349,7 +353,7 @@ function ajax(p) {
     <div class="form-group">
       <label class="col-lg-2 control-label">管理员登录密码</label>
       <div class="col-lg-4">
-        <input class="form-control input-sm" type="password" name="login_pwd" value="123456">
+        <input class="form-control input-sm" type="password" name="login_pwd" value="">
       </div>
       <span class="control-label">6~20位字符，可使用字母、数字或符号的组合，不建议使用纯数字、纯字母或纯符号.</span>
     </div>
@@ -357,7 +361,7 @@ function ajax(p) {
     <div class="form-group">
       <label class="col-lg-2 control-label">确认登录密码</label>
       <div class="col-lg-4">
-        <input class="form-control input-sm" type="password" name="login_repwd" value="123456">
+        <input class="form-control input-sm" type="password" name="login_repwd" value="">
       </div>
       <span class="control-label">请再次输入密码.</span>
     </div>
