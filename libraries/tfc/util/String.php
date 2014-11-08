@@ -216,7 +216,7 @@ class String
      */
     public static function randChars($length = 4, $format = 'ALL')
     {
-        $chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+        static $chars = 'ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
         $start = $format == 'NUMBER' ? 49 : 0;
         $end   = $format == 'LATTER' ? 48 : 56;
         $rand  = array();
