@@ -324,7 +324,7 @@ class GcActs extends AbstractGc
 		$fileManager = $this->fileManager;
 		$schema = $this->schema;
 
-		$clsName = 'Single' . ucfirst($schema->actModifyName);
+		$clsName = 'Single' . $schema->actModifyName;
 		$filePath = $fileManager->action . DS . $clsName . '.php';
 		$stream = $fileManager->fopen($filePath);
 		$fileManager->writeCopyrightComment($stream);

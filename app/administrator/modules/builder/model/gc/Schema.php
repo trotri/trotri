@@ -96,7 +96,7 @@ class Schema
 		}
 
 		if ($this->hasTrash) {
-			$this->actTrashIndexName = 'trash' . ucfirst($this->actIndexName);
+			$this->actTrashIndexName = 'trash' . strtolower($this->actIndexName);
 			$this->actTrashName = 'trash';
 		}
 

@@ -15,14 +15,14 @@ use tfc\ap\Ap;
 use libapp\Model;
 
 /**
- * BatchModifySort class file
+ * Batchmodifysort class file
  * 批量编辑排序
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: BatchModifySort.php 1 2014-09-12 17:33:45Z Code Generator $
+ * @version $Id: Batchmodifysort.php 1 2014-09-12 17:33:45Z Code Generator $
  * @package modules.posts.action.posts
  * @since 1.0
  */
-class BatchModifySort extends actions\Modify
+class Batchmodifysort extends actions\Modify
 {
 	/**
 	 * (non-PHPdoc)

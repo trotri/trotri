@@ -232,32 +232,37 @@ defined('DIR_WEBROOT_STATIC') || define('DIR_WEBROOT_STATIC', DIR_WEBROOT . DS .
 /**
  * 初始化日志文件存放根目录、当前项目的日志文件存放目录
  */
-is_dir(DIR_LOG_APP) || mkdir(DIR_LOG_APP, 0664, true);
-is_dir(DIR_LOG_APP) || exit('Request Error, Create Log Dir Failed');
+is_dir(DIR_LOG_APP)       || mkdir(DIR_LOG_APP, 0777, true);
+is_dir(DIR_LOG_APP)       || exit('Request Error, Create Log Dir Failed');
+is_writeable(DIR_LOG_APP) || exit('Directory Error, "' . DIR_LOG_APP . '" Can not writeable');
 
 /**
  * 初始化上传文件存放目录
  */
-is_dir(DIR_DATA_UPLOAD) || mkdir(DIR_DATA_UPLOAD, 0664, true);
-is_dir(DIR_DATA_UPLOAD) || exit('Request Error, Create Upload Dir Failed');
+is_dir(DIR_DATA_UPLOAD)       || mkdir(DIR_DATA_UPLOAD, 0777, true);
+is_dir(DIR_DATA_UPLOAD)       || exit('Request Error, Create Upload Dir Failed');
+is_writeable(DIR_DATA_UPLOAD) || exit('Directory Error, "' . DIR_DATA_UPLOAD . '" Can not writeable');
 
 /**
  * 初始化运行时生成的临时文件存放目录
  */
-is_dir(DIR_DATA_RUNTIME) || mkdir(DIR_DATA_RUNTIME, 0664, true);
-is_dir(DIR_DATA_RUNTIME) || exit('Request Error, Create RunTime Dir Failed');
+is_dir(DIR_DATA_RUNTIME)       || mkdir(DIR_DATA_RUNTIME, 0777, true);
+is_dir(DIR_DATA_RUNTIME)       || exit('Request Error, Create RunTime Dir Failed');
+is_writeable(DIR_DATA_RUNTIME) || exit('Directory Error, "' . DIR_DATA_RUNTIME . '" Can not writeable');
 
 /**
  * 初始化角色授权数据缓存目录
  */
-is_dir(DIR_DATA_RUNTIME_ROLES) || mkdir(DIR_DATA_RUNTIME_ROLES, 0664, true);
-is_dir(DIR_DATA_RUNTIME_ROLES) || exit('Request Error, Create RunTime Roles Dir Failed');
+is_dir(DIR_DATA_RUNTIME_ROLES)       || mkdir(DIR_DATA_RUNTIME_ROLES, 0777, true);
+is_dir(DIR_DATA_RUNTIME_ROLES)       || exit('Request Error, Create RunTime Roles Dir Failed');
+is_writeable(DIR_DATA_RUNTIME_ROLES) || exit('Directory Error, "' . DIR_DATA_RUNTIME_ROLES . '" Can not writeable');
 
 /**
  * 初始化表实体类存放目录
  */
-is_dir(DIR_DATA_RUNTIME_ENTITIES) || mkdir(DIR_DATA_RUNTIME_ENTITIES, 0664, true);
-is_dir(DIR_DATA_RUNTIME_ENTITIES) || exit('Request Error, Create RunTime Entities Dir Failed');
+is_dir(DIR_DATA_RUNTIME_ENTITIES)       || mkdir(DIR_DATA_RUNTIME_ENTITIES, 0777, true);
+is_dir(DIR_DATA_RUNTIME_ENTITIES)       || exit('Request Error, Create RunTime Entities Dir Failed');
+is_writeable(DIR_DATA_RUNTIME_ENTITIES) || exit('Directory Error, "' . DIR_DATA_RUNTIME_ENTITIES . '" Can not writeable');
 
 is_file(DIR_LOG_APP               . DS . 'index.html') || file_put_contents(DIR_LOG_APP               . DS . 'index.html', '<!DOCTYPE html><title></title>');
 is_file(DIR_DATA_UPLOAD           . DS . 'index.html') || file_put_contents(DIR_DATA_UPLOAD           . DS . 'index.html', '<!DOCTYPE html><title></title>');
@@ -279,13 +284,14 @@ exit('Request Error, your server configuration not allowed to change PHP include
  */
 function spl_autoload($className)
 {
+	$className = str_replace('\\', DS, $className) . '.php';
     require $className;
 }
 
 /**
  * 注册__autoload方法
  */
-spl_autoload_register('spl_autoload') || exit('Request Error, unable to register autoload as an autoloading method');
+spl_autoload_register('\tfc\saf\spl_autoload') || exit('Request Error, unable to register autoload as an autoloading method');
 
 /**
  * 初始化$_GET、$_POST、$_COOKIE值，在指定的预定义字符前添加反斜杠

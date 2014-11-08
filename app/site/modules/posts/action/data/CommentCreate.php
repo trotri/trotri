@@ -15,14 +15,14 @@ use tfc\ap\Ap;
 use libapp\Model;
 
 /**
- * CommentCreate class file
+ * Commentcreate class file
  * 文档列表页面
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: CommentCreate.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: Commentcreate.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.posts.action.show
  * @since 1.0
  */
-class CommentCreate extends DataAction
+class Commentcreate extends DataAction
 {
 	/**
 	 * (non-PHPdoc)

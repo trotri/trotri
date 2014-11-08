@@ -26,6 +26,7 @@ define('DB_IMG_HOLDERS',         '###baseurl###');
 define('DS',                     DIRECTORY_SEPARATOR);
 define('DIR_ROOT',               substr(dirname(__FILE__), 0, -8));
 define('DIR_CFG_DB',             DIR_ROOT . DS . 'cfg'  . DS . 'db');
+define('DIR_LOG',                DIR_ROOT . DS . 'log');
 define('DIR_DATA_INSTALL',       DIR_ROOT . DS . 'data' . DS . 'install');
 define('PATH_CFG_DB',            DIR_CFG_DB       . DS . 'cluster.php');
 define('PATH_DB_TABLES',         DIR_DATA_INSTALL . DS . 'db_tables.sql');
@@ -187,6 +188,15 @@ function ajax(p) {
     <?php else : ?>
     <?php $hasError = true; ?>
     <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法写入DB配置文件！</small>
+    <?php endif; ?>
+  </p>
+  <p>
+    /log目录可写权限&nbsp;
+    <?php if (is_writeable(DIR_LOG)) : ?>
+    <span class="glyphicon glyphicon-ok"></span>
+    <?php else : ?>
+    <?php $hasError = true; ?>
+    <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法写入日志！</small>
     <?php endif; ?>
   </p>
   <p>

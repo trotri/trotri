@@ -13,14 +13,14 @@ namespace modules\posts\action\comments;
 use library\actions;
 
 /**
- * SingleModify class file
+ * Singlemodify class file
  * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SingleModify.php 1 2014-10-31 11:14:54Z Code Generator $
+ * @version $Id: Singlemodify.php 1 2014-10-31 11:14:54Z Code Generator $
  * @package modules.posts.action.comments
  * @since 1.0
  */
-class SingleModify extends actions\SingleModify
+class Singlemodify extends actions\SingleModify
 {
 	/**
 	 * (non-PHPdoc)

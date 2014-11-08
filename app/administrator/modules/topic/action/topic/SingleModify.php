@@ -13,14 +13,14 @@ namespace modules\topic\action\topic;
 use library\actions;
 
 /**
- * SingleModify class file
+ * Singlemodify class file
  * 编辑单个字段
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: SingleModify.php 1 2014-11-04 17:38:30Z Code Generator $
+ * @version $Id: Singlemodify.php 1 2014-11-04 17:38:30Z Code Generator $
  * @package modules.topic.action.topic
  * @since 1.0
  */
-class SingleModify extends actions\SingleModify
+class Singlemodify extends actions\SingleModify
 {
 	/**
 	 * (non-PHPdoc)

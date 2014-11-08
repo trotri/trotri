@@ -18,14 +18,14 @@ use library\SubmitType;
 use library\ErrorNo;
 
 /**
- * Modify class file
+ * Permissionmodify class file
  * 编辑“权限设置”数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modify.php 1 2014-05-30 11:00:05Z Code Generator $
+ * @version $Id: Permissionmodify.php 1 2014-05-30 11:00:05Z Code Generator $
  * @package modules.users.action.groups
  * @since 1.0
  */
-class PermissionModify extends actions\Modify
+class Permissionmodify extends actions\Modify
 {
 	/**
 	 * (non-PHPdoc)

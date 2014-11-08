@@ -16,14 +16,14 @@ use libapp\Model;
 use library\PageHelper;
 
 /**
- * CommentIndex class file
+ * Commentindex class file
  * 文档列表页面
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: CommentIndex.php 1 2014-01-18 14:19:29Z huan.song $
+ * @version $Id: Commentindex.php 1 2014-01-18 14:19:29Z huan.song $
  * @package modules.posts.action.show
  * @since 1.0
  */
-class CommentIndex extends DataAction
+class Commentindex extends DataAction
 {
 	/**
 	 * (non-PHPdoc)

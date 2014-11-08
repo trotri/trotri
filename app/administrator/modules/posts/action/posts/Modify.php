@@ -12,7 +12,6 @@ namespace modules\posts\action\posts;
 
 use library\actions;
 use libapp\Model;
-use tfc\ap\Ap;
 
 /**
  * Modify class file
@@ -35,11 +34,6 @@ class Modify extends actions\Modify
 		$id = $this->getPk();
 		if ($id > 0) {
 			$fields = Model::getInstance('Posts')->getModuleFieldsByPostId($id);
-		}
-
-		if (Ap::getRequest()->getParam('do') === 'post') {
-			// $data = Ap::getRequest()->getPost();
-			// \tfc\saf\debug_dump($data);
 		}
 
 		$this->assign('profile_fields', array_keys($fields));

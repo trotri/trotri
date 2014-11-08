@@ -16,14 +16,14 @@ use tfc\auth\Role;
 use files\services\Upload;
 
 /**
- * AjaxUpload class file
+ * Ajaxupload class file
  * Ajax上传图片
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: AjaxUpload.php 1 2014-09-29 23:33:28Z huan.song $
+ * @version $Id: Ajaxupload.php 1 2014-09-29 23:33:28Z huan.song $
  * @package modules.posts.action.posts
  * @since 1.0
  */
-class AjaxUpload extends DataAction
+class Ajaxupload extends DataAction
 {
 	/**
 	 * @var integer 允许的权限
