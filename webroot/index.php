@@ -25,6 +25,12 @@ define('APP_NAME', 'site');
 
 require '../libraries/tfc/saf/Loader.php';
 
+if (DEBUG) {
+	if (!is_file(DIR_CFG_DB . DS . 'cluster.php') && is_file(DIR_WEBROOT . DS . 'install.php')) {
+		header('location: install.php');
+	}
+}
+
 $bootstrap = new Bootstrap();
 $bootstrap->run();
 
