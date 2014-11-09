@@ -95,7 +95,7 @@ class Identity
 
     /**
      * 设置用户昵称
-     * @param string $nick
+     * @param string $name
      * @return void
      */
     public static function setNickname($name)
@@ -114,7 +114,7 @@ class Identity
 
     /**
      * 设置用户角色名
-     * @param array $roleNames
+     * @param array $names
      * @return void
      */
     public static function setRoleNames($names)

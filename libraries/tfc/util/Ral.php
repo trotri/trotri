@@ -218,6 +218,7 @@ class Ral
 
     /**
      * 判断提交方式是否是GET
+     * @param string $method
      * @return boolean
      */
     public function isGet($method)
@@ -227,6 +228,7 @@ class Ral
 
     /**
      * 判断提交方式是否是POST
+     * @param string $method
      * @return boolean
      */
     public function isPost($method)

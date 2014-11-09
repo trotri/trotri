@@ -42,7 +42,7 @@ class Registry
     /**
      * 设置名称和数据
      * @param string $name
-     * @param mixed
+     * @param mixed $value
      * @return void
      */
     public static function set($name, $value)

@@ -68,6 +68,7 @@ class HttpRequest extends Request
 
     /**
      * 获取当前应用的路径
+     * @param boolean $absolute
      * @return string
      */
     public function getBaseUrl($absolute = false)

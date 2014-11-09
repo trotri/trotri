@@ -76,7 +76,7 @@ class Upload
     /**
      * @var integer 参数错误
      */
-    const ERROR_REQUEST           = \libapp\ErrorNo::ERROR_REQUEST;
+    const ERROR_REQUEST           = 400;
 
     /**
      * @var integer 上传文件失败：文件大小超过最大限制

@@ -53,6 +53,7 @@ class Logger
      * 根据日志级别和日志内容，打印日志
      * @param array $events
      * @param string $priority
+     * @param string $method
      * @return void
      */
     public function write(array $events, $priority, $method = '')
