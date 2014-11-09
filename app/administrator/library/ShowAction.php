@@ -39,7 +39,7 @@ abstract class ShowAction extends BaseAction
 	/**
 	 * @var boolean 是否验证身份授权，默认验证
 	 */
-	protected $_validAuth = false;
+	protected $_validAuth = true;
 
 	/**
 	 * @var integer 允许的权限

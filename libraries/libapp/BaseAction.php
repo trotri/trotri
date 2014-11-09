@@ -169,19 +169,6 @@ abstract class BaseAction extends Action
 	}
 
 	/**
-	 * 页面重定向到上一个页面
-	 * @param array $params
-	 * @param string $message
-	 * @param integer $delay
-	 * @return void
-	 */
-	public function httpReferer(array $params = array(), $message = '', $delay = 0)
-	{
-		$url = $this->getUrlManager()->applyParams(PageHelper::getHttpReferer(), $params);
-		$this->redirect($url, $message, $delay);
-	}
-
-	/**
 	 * 页面重定向到当前页面
 	 * @param array $params
 	 * @param string $message
