@@ -232,7 +232,7 @@ class Paginator
     /**
      * 设置当前的页码
      * @param integer|null $currPage
-     * @return tfc\util\Paginator
+     * @return \tfc\util\Paginator
      */
     public function setCurrPage($currPage = null)
     {
@@ -261,7 +261,7 @@ class Paginator
     /**
      * 设置每页展示的行数
      * @param integer $listRows
-     * @return tfc\util\Paginator
+     * @return \tfc\util\Paginator
      * @throws ErrorException 如果设置的行数小于或等于0，抛出异常
      */
     public function setListRows($listRows)
@@ -288,7 +288,7 @@ class Paginator
     /**
      * 设置每页展示的页码数
      * @param integer $listPages
-     * @return tfc\util\Paginator
+     * @return \tfc\util\Paginator
      * @throws ErrorException 如果设置的页码数小于或等于0，抛出异常
      */
     public function setListPages($listPages)
@@ -320,7 +320,7 @@ class Paginator
     /**
      * 设置链接地址的前半部分，拼接上页码就是完整的链接
      * @param string $url
-     * @return tfc\util\Paginator
+     * @return \tfc\util\Paginator
      */
     public function setUrl($url)
     {
@@ -340,7 +340,7 @@ class Paginator
     /**
      * 设置总的记录数
      * @param integer $totalRows
-     * @return tfc\util\Paginator
+     * @return \tfc\util\Paginator
      * @throws ErrorException 如果设置的总记录数小于0，抛出异常
      */
     public function setTotalRows($totalRows)
@@ -367,7 +367,7 @@ class Paginator
     /**
      * 设置从$_GET或$_POST中获取当前页的键名
      * @param string $pageVar
-     * @return tfc\util\Paginator
+     * @return \tfc\util\Paginator
      * @throws ErrorException 如果设置的键名为空字符串，抛出异常
      */
     public function setPageVar($pageVar)

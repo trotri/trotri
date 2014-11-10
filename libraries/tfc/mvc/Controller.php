@@ -39,7 +39,7 @@ abstract class Controller extends Application
 
     /**
      * 请求Action类中的run方法
-     * @param tfc\mvc\Action $action
+     * @param \tfc\mvc\Action $action
      * @return void
      */
     public function runAction(Action $action)
@@ -56,7 +56,7 @@ abstract class Controller extends Application
     /**
      * 根据ActionId，创建Action类的实例
      * @param string $id
-     * @return tfc\mvc\Action
+     * @return \tfc\mvc\Action
      */
     public function createActionById($id)
     {
@@ -75,7 +75,7 @@ abstract class Controller extends Application
      * 根据ActionId和Action配置，创建Action实例
      * @param array $maps
      * @param string $id
-     * @return tfc\mvc\Action
+     * @return \tfc\mvc\Action
      * @throws ErrorException 如果Action类不存在，抛出异常
      * @throws ErrorException 如果获取的实例不是tfc\mvc\Action类的子类，抛出异常
      */

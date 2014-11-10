@@ -51,7 +51,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * 构造方法：初始化页面解析类、渲染模板的变量名和值、用于模板处理的参数
-     * @param tfc\mvc\View $view
+     * @param \tfc\mvc\View $view
      * @param array $tplVars
      * @param array $params
      */
@@ -195,7 +195,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * 获取页面解析类
-     * @return tfc\mvc\View
+     * @return \tfc\mvc\View
      */
     public function getView()
     {
@@ -204,7 +204,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * 获取页面辅助类
-     * @return tfc\mvc\Html
+     * @return \tfc\mvc\Html
      */
     public function getHtml()
     {
@@ -213,7 +213,7 @@ abstract class Widget implements interfaces\View
 
     /**
      * 获取URL管理类
-     * @return tfc\mvc\UrlManager
+     * @return \tfc\mvc\UrlManager
      */
     public function getUrlManager()
     {

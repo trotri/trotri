@@ -109,7 +109,7 @@ class Ap
 
     /**
      * 获取请求模式处理类
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      */
     public static function getRequest()
     {
@@ -122,7 +122,7 @@ class Ap
 
     /**
      * 设置请求模式处理类
-     * @param tfc\ap\HttpRequest $request
+     * @param \tfc\ap\HttpRequest $request
      * @return void
      */
     public static function setRequest(HttpRequest $request = null)
@@ -136,7 +136,7 @@ class Ap
 
     /**
      * 获取响应模式发送类
-     * @return tfc\ap\HttpResponse
+     * @return \tfc\ap\HttpResponse
      */
     public static function getResponse()
     {
@@ -149,7 +149,7 @@ class Ap
 
     /**
      * 设置响应模式发送类
-     * @param tfc\ap\HttpResponse $response
+     * @param \tfc\ap\HttpResponse $response
      * @return void
      */
     public static function setResponse(HttpResponse $response = null)
@@ -163,7 +163,7 @@ class Ap
 
     /**
      * 获取HTTP会话管理类
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public static function getSession()
     {
@@ -176,7 +176,7 @@ class Ap
 
     /**
      * 设置HTTP会话管理类
-     * @param tfc\ap\HttpSession $session
+     * @param \tfc\ap\HttpSession $session
      * @return void
      */
     public static function setSession(HttpSession $session = null)

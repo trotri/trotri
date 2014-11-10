@@ -32,7 +32,7 @@ abstract class Event extends Application
 
     /**
      * 将本类注册到事件处理类
-     * @param tfc\ap\EventDispatcher $owner
+     * @param \tfc\ap\EventDispatcher $owner
      * @return void
      */
     public function attach(EventDispatcher $owner)
@@ -45,7 +45,7 @@ abstract class Event extends Application
 
     /**
      * 将本类从事件处理类中销毁
-     * @param tfc\ap\EventDispatcher $owner
+     * @param \tfc\ap\EventDispatcher $owner
      * @return void
      */
     public function detach(EventDispatcher $owner)
@@ -67,7 +67,7 @@ abstract class Event extends Application
 
     /**
      * 获取事件处理类
-     * @return instance of tfc\ap\EventDispatcher
+     * @return \tfc\ap\EventDispatcher
      */
     public function getOwner()
     {

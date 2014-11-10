@@ -64,7 +64,7 @@ class Authoriz
     /**
      * 获取一个角色
      * @param string $name
-     * @return tfc\auth\Role
+     * @return \tfc\auth\Role
      */
     public function getRole($name)
     {
@@ -78,7 +78,7 @@ class Authoriz
     /**
      * 添加一个角色，如果角色名已经存在，则替换老值
      * @param Role $role
-     * @return tfc\auth\Authoriz
+     * @return \tfc\auth\Authoriz
      */
     public function addRole(Role $role)
     {
@@ -90,7 +90,7 @@ class Authoriz
     /**
      * 删除一个角色
      * @param string $name
-     * @return tfc\auth\Authoriz
+     * @return \tfc\auth\Authoriz
      */
     public function removeRole($name)
     {
@@ -122,7 +122,7 @@ class Authoriz
 
     /**
      * 清空所有的角色
-     * @return tfc\auth\Authoriz
+     * @return \tfc\auth\Authoriz
      */
     public function clearRoles()
     {

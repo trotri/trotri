@@ -28,7 +28,7 @@ interface Action
 
     /**
      * 获取控制器类
-     * @return tfc\mvc\Controller
+     * @return \tfc\mvc\Controller
      */
     public function getController();
 

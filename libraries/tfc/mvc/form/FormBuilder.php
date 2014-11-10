@@ -145,7 +145,7 @@ abstract class FormBuilder extends Widget
     /**
      * 设置多个表单元素
      * @param array $elements
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      * @throws ErrorException 如果获取的实例不是tfc\mvc\form\InputElement或tfc\mvc\form\ButtonElement类的子类，抛出异常
      */
     public function setElements(array $elements = array())
@@ -200,7 +200,7 @@ abstract class FormBuilder extends Widget
      * 添加输入框类和字符串类表单元素
      * @param InputElement $element
      * @param string $tid
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      */
     public function addInputElement(InputElement $element, $tid = '')
     {
@@ -236,7 +236,7 @@ abstract class FormBuilder extends Widget
     /**
      * 添加按钮类表单元素
      * @param ButtonElement $element
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      */
     public function addButtonElement(ButtonElement $element)
     {
@@ -248,7 +248,7 @@ abstract class FormBuilder extends Widget
      * 创建表单元素类
      * @param string $className
      * @param array $config
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      * @throws ErrorException 如果Element类不存在，抛出异常
      * @throws ErrorException 如果获取的实例不是tfc\mvc\form\Element类的子类，抛出异常
      */
@@ -295,7 +295,7 @@ abstract class FormBuilder extends Widget
 
     /**
      * 初始化所有表单元素的默认值
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      * @throws ErrorException 如果默认值不是数组，抛出异常
      */
     public function initValues()
@@ -317,7 +317,7 @@ abstract class FormBuilder extends Widget
 
     /**
      * 初始化所有表单元素的错误提示
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      * @throws ErrorException 如果错误提示不是数组，抛出异常
      */
     public function initErrors()
@@ -336,7 +336,7 @@ abstract class FormBuilder extends Widget
 
     /**
      * 初始化所有表单元素
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      * @throws ErrorException 如果模板参数elements不存在或不是数组，抛出异常
      */
     public function initElements()
@@ -357,7 +357,7 @@ abstract class FormBuilder extends Widget
 
     /**
      * 初始化表单ID
-     * @return tfc\mvc\form\FormBuilder
+     * @return \tfc\mvc\form\FormBuilder
      */
     public function initId()
     {

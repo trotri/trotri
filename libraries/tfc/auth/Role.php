@@ -247,7 +247,7 @@ class Role
 
     /**
      * 加载文件中的资源
-     * @return tfc\auth\Role
+     * @return \tfc\auth\Role
      */
     public function loadResources()
     {
@@ -285,7 +285,7 @@ class Role
 
     /**
      * 将角色资源写进文件
-     * @return tfc\auth\Role
+     * @return \tfc\auth\Role
      * @throws ErrorException 如果将资源写进文件失败，抛出异常
      */
     public function writeResources()
@@ -341,7 +341,7 @@ class Role
 
     /**
      * 清空所有的资源
-     * @return tfc\auth\Role
+     * @return \tfc\auth\Role
      */
     public function clearResources()
     {

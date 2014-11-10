@@ -161,7 +161,7 @@ class Identity
 
     /**
      * 获取用户身份授权类
-     * @return tfc\auth\Authoriz
+     * @return \tfc\auth\Authoriz
      */
     public static function getAuthoriz()
     {
@@ -174,7 +174,7 @@ class Identity
 
     /**
      * 设置用户身份授权类
-     * @param tfc\auth\Authoriz $authoriz
+     * @param \tfc\auth\Authoriz $authoriz
      * @return void
      */
     public static function setAuthoriz(Authoriz $authoriz)
@@ -189,7 +189,7 @@ class Identity
      * @param string $nickname
      * @param array $roleNames
      * @param array $appNames
-     * @param tfc\auth\Authoriz $authoriz
+     * @param \tfc\auth\Authoriz $authoriz
      * @return void
      */
     public static function setAll($userId, $loginName, $nickname, $roleNames, $appNames, Authoriz $authoriz)

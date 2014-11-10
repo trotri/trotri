@@ -137,7 +137,7 @@ class Cookie
 
     /**
      * 获取可逆的加密算法管理类
-     * @return tfc\saf\Mef
+     * @return \tfc\saf\Mef
      */
     public function getMef()
     {
@@ -240,7 +240,7 @@ class Cookie
     /**
      * 设置是否加密存取
      * @param boolean $encodeValue
-     * @return tfc\saf\Cookie
+     * @return \tfc\saf\Cookie
      */
     public function setEncodeValue($encodeValue)
     {

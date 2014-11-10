@@ -41,7 +41,7 @@ class Dispatcher extends Application
 
     /**
      * 实例化Controller类，并调用Action方法
-     * @param tfc\mvc\Router $router
+     * @param \tfc\mvc\Router $router
      * @return void
      */
     public function run(Router $router)
@@ -53,8 +53,8 @@ class Dispatcher extends Application
 
     /**
      * 通过路由器获取Controller名，并创建Controller类
-     * @param tfc\mvc\Router $router
-     * @return tfc\mvc\Controller
+     * @param \tfc\mvc\Router $router
+     * @return \tfc\mvc\Controller
      * @throws ErrorException 如果Controller类不存在，抛出异常
      * @throws ErrorException 如果获取的实例不是tfc\mvc\Controller类的子类，抛出异常
      */
@@ -79,7 +79,7 @@ class Dispatcher extends Application
 
     /**
      * 通过路由器获取控制器名
-     * @param tfc\mvc\Router $router
+     * @param \tfc\mvc\Router $router
      * @return string
      */
     public function getController(Router $router)
@@ -103,7 +103,7 @@ class Dispatcher extends Application
     /**
      * 设置控制器类所在的目录名
      * @param string $dirName
-     * @return tfc\mvc\Dispatcher
+     * @return \tfc\mvc\Dispatcher
      */
     public function setControllerDirName($dirName)
     {
@@ -123,7 +123,7 @@ class Dispatcher extends Application
     /**
      * 设置控制器类名后缀
      * @param string $extName
-     * @return tfc\mvc\Dispatcher
+     * @return \tfc\mvc\Dispatcher
      */
     public function setControllerExtName($extName)
     {
@@ -143,7 +143,7 @@ class Dispatcher extends Application
     /**
      * 设置模型所在的目录名
      * @param string $dirName
-     * @return tfc\mvc\Dispatcher
+     * @return \tfc\mvc\Dispatcher
      */
     public function setModuleDirName($dirName)
     {

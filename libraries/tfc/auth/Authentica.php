@@ -177,7 +177,7 @@ class Authentica
 
     /**
      * 获取Cookie管理类
-     * @return tfc\saf\Cookie
+     * @return \tfc\saf\Cookie
      */
     public function getCookie()
     {

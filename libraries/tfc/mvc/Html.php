@@ -596,7 +596,7 @@ class Html
     /**
      * 设置页面编码方式
      * @param string $encoding
-     * @return tfc\mvc\Html
+     * @return \tfc\mvc\Html
      */
     public function setEncoding($encoding)
     {

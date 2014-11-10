@@ -128,7 +128,7 @@ class Log
 
     /**
      * 获取日志处理类
-     * @return tfc\log\Logger
+     * @return \tfc\log\Logger
      */
     public static function getLogger()
     {
@@ -141,7 +141,7 @@ class Log
 
     /**
      * 设置日志处理类
-     * @param tfc\log\Logger
+     * @param \tfc\log\Logger
      * @return void
      */
     public static function setLogger(Logger $logger = null)

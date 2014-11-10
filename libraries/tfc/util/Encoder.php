@@ -69,7 +69,7 @@ class Encoder
     /**
      * 单例模式：获取本类的实例化对象
      * @param string $charset
-     * @return tfc\util\Encoder
+     * @return \tfc\util\Encoder
      */
     public static function getInstance($charset = null)
     {

@@ -160,7 +160,7 @@ class UpProxy
 
     /**
      * 获取上传文件对象
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function getUpload()
     {
@@ -328,7 +328,7 @@ class UpProxy
      * @param string $directory
      * @throws ErrorException 如果保存上传文件的目录不存在，抛出异常
      * @throws ErrorException 如果保存上传文件的目录没有可写权限，抛出异常
-     * @return tfc\saf\UpProxy
+     * @return \tfc\saf\UpProxy
      */
     public function mkDir($directory)
     {

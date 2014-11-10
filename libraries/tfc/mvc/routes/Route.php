@@ -59,7 +59,7 @@ abstract class Route
     /**
      * 设置Action名
      * @param string $action
-     * @return tfc\mvc\routers\Route
+     * @return \tfc\mvc\routers\Route
      */
     public function setAction($action)
     {
@@ -82,7 +82,7 @@ abstract class Route
     /**
      * 设置Controller名
      * @param string $controller
-     * @return tfc\mvc\routers\Route
+     * @return \tfc\mvc\routers\Route
      */
     public function setController($controller)
     {
@@ -105,7 +105,7 @@ abstract class Route
     /**
      * 设置Module名
      * @param string $module
-     * @return tfc\mvc\routers\Route
+     * @return \tfc\mvc\routers\Route
      */
     public function setModule($module)
     {
@@ -127,7 +127,7 @@ abstract class Route
 
     /**
      * 通过Path路径匹配当前路由，并且获取Module、Controller、Action，并将参数设置到Request中
-     * @param HttpRequest $request
+     * @param \tfc\ap\HttpRequest $request
      * @return boolean
      */
     abstract protected function match(HttpRequest $request);

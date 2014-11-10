@@ -46,7 +46,7 @@ class DbSession implements SessionSaveHandler
 
     /**
      * 构造方法：初始化数据库操作类、Session表名、是否自动创建Session表
-     * @param tfc\db\Driver $driver
+     * @param \tfc\db\Driver $driver
      * @param string $table
      * @param boolean $autoCreateSessTable
      */

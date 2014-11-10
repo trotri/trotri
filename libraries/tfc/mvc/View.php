@@ -198,7 +198,7 @@ class View implements interfaces\View
      * 渲染模板文件，如果有布局文件，依次渲染布局文件
      * @param string $tplName
      * @param array $data
-     * @return tfc\mvc\View
+     * @return \tfc\mvc\View
      */
     public function render($tplName, array $data = array())
     {
@@ -226,7 +226,7 @@ class View implements interfaces\View
      * @param array $tplVars
      * @param array $params
      * @param boolean $captureOutput
-     * @return tfc\mvc\Widget|string
+     * @return \tfc\mvc\Widget|string
      */
     public function widget($className, array $tplVars = array(), array $params = array(), $captureOutput = false)
     {
@@ -248,7 +248,7 @@ class View implements interfaces\View
      * @param string $className
      * @param array $tplVars
      * @param array $params
-     * @return tfc\mvc\Widget
+     * @return \tfc\mvc\Widget
      * @throws ErrorException 如果widget类不存在，抛出异常
      * @throws ErrorException 如果widget类不是tfc\mvc\Widget的子类，抛出异常
      */
@@ -287,7 +287,7 @@ class View implements interfaces\View
     /**
      * 添加一个模板布局名，按添加的顺序，依次渲染模板，直到所有的布局都被渲染
      * @param string $layoutName
-     * @return tfc\mvc\View
+     * @return \tfc\mvc\View
      */
     public function addLayoutName($layoutName)
     {
@@ -318,7 +318,7 @@ class View implements interfaces\View
 
     /**
      * 获取页面辅助类
-     * @return tfc\mvc\Html
+     * @return \tfc\mvc\Html
      */
     public function getHtml()
     {
@@ -331,7 +331,7 @@ class View implements interfaces\View
 
     /**
      * 获取URL管理类
-     * @return tfc\mvc\UrlManager
+     * @return \tfc\mvc\UrlManager
      */
     public function getUrlManager()
     {

@@ -39,7 +39,7 @@ class LogDb extends Log
 
     /**
      * 构造方法：初始化数据库链接类、Log表名、是否自动创建Log表
-     * @param tfc\db\Driver $driver
+     * @param \tfc\db\Driver $driver
      * @param string $table
      * @param boolean $autoCreateLogTable
      */

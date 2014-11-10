@@ -387,7 +387,7 @@ class Upload
     /**
      * 设置上传文件保存目录
      * @param string $saveDir
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      * @throws ErrorException 如果保存上传文件的目录不存在，抛出异常
      * @throws ErrorException 如果保存上传文件的目录没有可写权限，抛出异常
      */
@@ -422,7 +422,7 @@ class Upload
     /**
      * 设置文件名前缀，可以是用户ID，随机数等唯一标志
      * @param mixed $namePre
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setNamePre($namePre)
     {
@@ -446,7 +446,7 @@ class Upload
      * 0：原文件名、1：随机整数格式、2：随机字符串格式、3：日期和时间格式、4：日期和时间+随机整数格式
      * 5：日期和时间+随机字符串格式、6：时间戳格式、7：时间戳+随机整数格式、8：时间戳+随机字符串格式
      * @param integer $nameRule
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      * @throws ErrorException 如果参数是无效命名规则，抛出异常
      */
     public function setNameRule($nameRule)
@@ -486,7 +486,7 @@ class Upload
     /**
      * 设置允许上传的文件大小最大值
      * @param integer $maxSize
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setMaxSize($maxSize)
     {
@@ -506,7 +506,7 @@ class Upload
     /**
      * 设置所有允许上传的文件类型
      * @param mixed $allowTypes
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      * @throws ErrorException 如果参数不是数组或字符串，抛出异常
      */
     public function setAllowTypes($allowTypes)
@@ -537,7 +537,7 @@ class Upload
     /**
      * 设置所有允许上传的文件后缀
      * @param array $allowExts
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      * @throws ErrorException 如果参数不是数组或字符串，抛出异常
      */
     public function setAllowExts($allowExts)
@@ -568,7 +568,7 @@ class Upload
     /**
      * 设置如果保存文件的地址已经存在其他文件，是否允许替换
      * @param boolean $allowReplaceExists
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setAllowReplaceExists($allowReplaceExists)
     {
@@ -588,7 +588,7 @@ class Upload
     /**
      * 设置日期和时间的格式
      * @param string $dtFormat
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setDtFormat($dtFormat)
     {
@@ -608,7 +608,7 @@ class Upload
     /**
      * 设置文件名的连接符
      * @param string $joinStr
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setJoinStr($joinStr)
     {
@@ -628,7 +628,7 @@ class Upload
     /**
      * 设置文件名中随机数取值范围，最小值
      * @param integer $randMin
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setRandMin($randMin)
     {
@@ -648,7 +648,7 @@ class Upload
     /**
      * 设置文件名中随机数取值范围，最大值
      * @param integer $randMax
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setRandMax($randMax)
     {
@@ -668,7 +668,7 @@ class Upload
     /**
      * 设置文件名中随机字符串长度，取值 8-32
      * @param integer $strLen
-     * @return tfc\util\Upload
+     * @return \tfc\util\Upload
      */
     public function setRandStrLen($strLen)
     {

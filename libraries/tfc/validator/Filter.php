@@ -165,7 +165,7 @@ class Filter
      * @param string $className
      * @param mixed $value
      * @param mixed $rule
-     * @return instance of tfc\validator\Validator
+     * @return \tfc\validator\Validator
      * @throws ErrorException 如果Validator类不存在，抛出异常
      */
     public function createValidator($className, $value, $rule)
@@ -198,7 +198,7 @@ class Filter
      * @param mixed $value
      * @param mixed $option
      * @param string $message
-     * @return instance of tfc\validator\Validator
+     * @return \tfc\validator\Validator
      * @throws ErrorException 如果获取的实例不是tfc\validator\Validator类的子类，抛出异常
      */
     public function getValidator($className, $value, $option, $message)
@@ -234,7 +234,7 @@ class Filter
 
     /**
      * 清除所有的错误信息
-     * @return tfc\validator\Validator
+     * @return \tfc\validator\Validator
      */
     public function clearErrors()
     {
@@ -269,7 +269,7 @@ class Filter
      * 添加一条错误信息
      * @param string $key
      * @param string $value
-     * @return tfc\validator\Validator
+     * @return \tfc\validator\Validator
      */
     public function addError($key, $value)
     {

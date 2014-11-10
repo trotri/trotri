@@ -120,7 +120,7 @@ class RalProxy
 
     /**
      * 获取Ral对象
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function getRal()
     {

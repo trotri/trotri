@@ -68,7 +68,7 @@ class Mvc
 
     /**
      * 获取路由器
-     * @return tfc\mvc\Dispatcher
+     * @return \tfc\mvc\Dispatcher
      */
     public static function getDispatcher()
     {
@@ -81,7 +81,7 @@ class Mvc
 
     /**
      * 设置路由器
-     * @param tfc\mvc\Dispatcher $dispatcher
+     * @param \tfc\mvc\Dispatcher $dispatcher
      * @return void
      */
     public static function setDispatcher(Dispatcher $dispatcher = null)
@@ -95,7 +95,7 @@ class Mvc
 
     /**
      * 获取路由器
-     * @return tfc\mvc\Router
+     * @return \tfc\mvc\Router
      */
     public static function getRouter()
     {
@@ -108,7 +108,7 @@ class Mvc
 
     /**
      * 设置路由器
-     * @param tfc\mvc\Router $router
+     * @param \tfc\mvc\Router $router
      * @return void
      */
     public static function setRouter(Router $router = null)
@@ -122,7 +122,7 @@ class Mvc
 
     /**
      * 获取模板解析类
-     * @return tfc\mvc\interfaces\View
+     * @return \tfc\mvc\interfaces\View
      */
     public static function getView()
     {
@@ -135,7 +135,7 @@ class Mvc
 
     /**
      * 设置模板解析类
-     * @param tfc\mvc\interfaces\View $view
+     * @param \tfc\mvc\interfaces\View $view
      * @return void
      */
     public static function setView(interfaces\View $view = null)

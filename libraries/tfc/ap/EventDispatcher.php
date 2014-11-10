@@ -51,7 +51,7 @@ class EventDispatcher
 
     /**
      * 单例模式：获取本类的实例化对象
-     * @return instance of tfc\ap\EventDispatcher
+     * @return \tfc\ap\EventDispatcher
      */
     public static function getInstance()
     {
@@ -85,7 +85,7 @@ class EventDispatcher
      * @param string $eventName
      * @throws ErrorException 如果事件类不存在，抛出异常
      * @throws ErrorException 如果获取的实例不是tfc\ap\Event类的子类，抛出异常
-     * @return tfc\ap\Event
+     * @return \tfc\ap\Event
      */
     public function createEvent($eventName)
     {
@@ -144,7 +144,7 @@ class EventDispatcher
 
     /**
      * 注册一个被观察的事件
-     * @param tfc\ap\Event $event
+     * @param \tfc\ap\Event $event
      * @return void
      */
     public function attach(Event $event)
@@ -168,7 +168,7 @@ class EventDispatcher
 
     /**
      * 销毁一个被观察的事件
-     * @param tfc\ap\Event $event
+     * @param \tfc\ap\Event $event
      * @return void
      */
     public function detach(Event $event) {
@@ -192,7 +192,7 @@ class EventDispatcher
 
     /**
      * 获取一个事件所有可绑定的方法
-     * @param tfc\ap\Event $event
+     * @param \tfc\ap\Event $event
      * @return array
      */
     public function getAttachableMethods(Event $event)

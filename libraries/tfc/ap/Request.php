@@ -53,7 +53,7 @@ abstract class Request extends Application
     /**
      * 批量设置全局参数
      * @param array $params
-     * @return tfc\ap\Request
+     * @return \tfc\ap\Request
      */
     public function setParams(array $params)
     {
@@ -69,7 +69,7 @@ abstract class Request extends Application
 
     /**
      * 清除所有的全局参数
-     * @return tfc\ap\Request
+     * @return \tfc\ap\Request
      */
     public function clearParams()
     {
@@ -137,7 +137,7 @@ abstract class Request extends Application
      * 设置一个全局参数
      * @param string $key
      * @param mixed $value
-     * @return tfc\ap\Request
+     * @return \tfc\ap\Request
      */
     public function setParam($key, $value)
     {
@@ -230,7 +230,7 @@ abstract class Request extends Application
     /**
      * 设置表单提交方式，如果参数为null，默认从SERVER中获取，如果获取不到，默认为GET
      * @param string|null $method
-     * @return tfc\ap\Request
+     * @return \tfc\ap\Request
      * @throws InvalidArgumentException 如果参数不是有效的表单提交方式，抛出异常
      */
     public function setMethod($method = null)

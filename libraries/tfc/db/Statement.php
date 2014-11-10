@@ -72,7 +72,7 @@ class Statement extends Application
 
     /**
      * 构造方法：初始化PDO方式连接数据库对象
-     * @param tfc\db\Driver $driver
+     * @param \tfc\db\Driver $driver
      */
     public function __construct(Driver $driver)
     {
@@ -186,7 +186,7 @@ class Statement extends Application
 
     /**
      * 为执行准备一条SQL语句
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      * @throws ErrorException 如果预处理失败，抛出异常
      */
     public function prepare()
@@ -207,7 +207,7 @@ class Statement extends Application
 
     /**
      * 将准备执行的SQL、参数、PDOStatement类实例置空
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      */
     public function reset()
     {
@@ -220,7 +220,7 @@ class Statement extends Application
     /**
      * 绑定多个值到预处理语句中的参数 
      * @param array $values
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      */
     public function bindValues(array $values)
     {
@@ -246,7 +246,7 @@ class Statement extends Application
      * @param mixed $param
      * @param mixed $value
      * @param integer|null $dataType
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      */
     public function bindValue($param, $value, $dataType = null)
     {
@@ -260,7 +260,7 @@ class Statement extends Application
      * @param integer|null $dataType
      * @param integer|null $length
      * @param mixed $driverOptions
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      * @throws ErrorException 如果绑定的键不是整型或字符串类型，抛出异常
      * @throws ErrorException 如果当前不支持绑定的键的类型，抛出异常
      */
@@ -302,7 +302,7 @@ class Statement extends Application
 
     /**
      * 绑定多个PHP变量到一个预处理语句中的参数
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      * @throws ErrorException 如果绑定参数失败，抛出异常
      */
     protected function _bindParams()
@@ -360,7 +360,7 @@ class Statement extends Application
     /**
      * 为PDOStatement设置默认的fetch mode
      * @param integer $fetchMode
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      * @throws ErrorException 如果参数不是有效的类型，抛出异常
      */
     public function setFetchMode($fetchMode = \PDO::FETCH_ASSOC)
@@ -463,7 +463,7 @@ class Statement extends Application
     /**
      * 设置需要绑定执行的SQL语句
      * @param string $sql
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      * @throws ErrorException 如果SQL不是字符串类型，抛出异常
      */
     public function setSql($sql)
@@ -517,7 +517,7 @@ class Statement extends Application
     /**
      * 设置向PDOStatement绑定数据的方式
      * @param integer $value
-     * @return tfc\db\Statement
+     * @return \tfc\db\Statement
      */
     public function setSupportParam($value = self::POSITIONAL)
     {
@@ -542,7 +542,7 @@ class Statement extends Application
      * 获取PDO方式连接数据库对象
      * 根据需要打开数据库连接，以节省资源
      * @param boolean $autoOpen
-     * @return tfc\db\Driver
+     * @return \tfc\db\Driver
      */
     public function getDriver($autoOpen = true)
     {

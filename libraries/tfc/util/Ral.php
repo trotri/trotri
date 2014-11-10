@@ -248,7 +248,7 @@ class Ral
     /**
      * 设置日志ID
      * @param integer $logId
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function setLogId($logId)
     {
@@ -268,7 +268,7 @@ class Ral
     /**
      * 设置服务器名称或IP地址
      * @param string $server
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function setServer($server)
     {
@@ -291,7 +291,7 @@ class Ral
     /**
      * 设置服务器端口号
      * @param integer $port
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function setPort($port)
     {
@@ -311,7 +311,7 @@ class Ral
     /**
      * 设置连接超时，精确到：毫秒
      * @param integer $connectTimeOutMs
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function setConnectTimeOutMs($connectTimeOutMs)
     {
@@ -331,7 +331,7 @@ class Ral
     /**
      * 设置执行超时，精确到：毫秒
      * @param integer $timeOutMs
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function setTimeOutMs($timeOutMs)
     {
@@ -351,7 +351,7 @@ class Ral
     /**
      * 设置数据转码的方式
      * @param string $converter
-     * @return tfc\util\Ral
+     * @return \tfc\util\Ral
      */
     public function setConverter($converter)
     {

@@ -58,7 +58,7 @@ class DbExists2Validator extends Validator
      * @param mixed $value
      * @param mixed $option
      * @param string $message
-     * @param tfc\saf\DbProxy $dbProxy
+     * @param \tfc\saf\DbProxy $dbProxy
      * @param string $tableName
      * @param string $columnName
      * @param string $columnName2

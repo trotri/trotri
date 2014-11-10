@@ -110,7 +110,7 @@ abstract class Element
     /**
      * 设置表单元素的类型
      * @param string $value
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function setType($value)
     {
@@ -136,7 +136,7 @@ abstract class Element
     /**
      * 设置表单元素的名称
      * @param string $value
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function setName($value)
     {
@@ -168,7 +168,7 @@ abstract class Element
      * 设置一个表单元素属性
      * @param string $name
      * @param mixed $value
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function setAttribute($name, $value)
     {
@@ -179,7 +179,7 @@ abstract class Element
     /**
      * 删除一个表单元素属性
      * @param string $name
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function removeAttribute($name)
     {
@@ -212,7 +212,7 @@ abstract class Element
     /**
      * 设置表单元素样式名
      * @param string $value
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function setClass($value)
     {
@@ -232,7 +232,7 @@ abstract class Element
     /**
      * 设置表单元素是否只读
      * @param boolean $value
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function setReadonly($value)
     {
@@ -252,7 +252,7 @@ abstract class Element
     /**
      * 设置表单元素是否禁用
      * @param boolean $value
-     * @return tfc\mvc\form\Element
+     * @return \tfc\mvc\form\Element
      */
     public function setDisabled($value)
     {
@@ -262,7 +262,7 @@ abstract class Element
 
     /**
      * 获取页面辅助类
-     * @return instance of tfc\mvc\Html
+     * @return \tfc\mvc\Html
      */
     public function getHtml()
     {

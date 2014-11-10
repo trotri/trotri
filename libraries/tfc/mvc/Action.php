@@ -35,7 +35,7 @@ abstract class Action extends Application implements interfaces\Action
 
     /**
      * 构造方法：初始化控制器类和Action名
-     * @param tfc\mvc\Controller $controller
+     * @param \tfc\mvc\Controller $controller
      * @param string $id
      */
     public function __construct(Controller $controller, $id)

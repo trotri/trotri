@@ -221,7 +221,7 @@ class InputElement extends Element
     /**
      * 设置是否显示
      * @param boolean $value
-     * @return tfc\mvc\form\InputElement
+     * @return \tfc\mvc\form\InputElement
      */
     public function setVisible($value)
     {
@@ -241,7 +241,7 @@ class InputElement extends Element
     /**
      * 设置是否必填
      * @param boolean $value
-     * @return tfc\mvc\form\InputElement
+     * @return \tfc\mvc\form\InputElement
      */
     public function setRequired($value)
     {

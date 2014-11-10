@@ -24,7 +24,7 @@ class HttpSession
 {
     /**
      * 构造方法：初始化用户自定义会话处理接口
-     * @param tfc\ap\interfaces\SessionSaveHandler|null $saveHandler
+     * @param \tfc\ap\interfaces\SessionSaveHandler|null $saveHandler
      */
     public function __construct(SessionSaveHandler $saveHandler = null)
     {
@@ -37,7 +37,7 @@ class HttpSession
 
     /**
      * 打开会话任务
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      * @throws RuntimeException 如果打开任务失败，抛出异常
      */
     public function open()
@@ -63,7 +63,7 @@ class HttpSession
 
     /**
      * 关闭会话任务
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public function close()
     {
@@ -76,7 +76,7 @@ class HttpSession
 
     /**
      * 销毁所有的会话
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public function destroy()
     {
@@ -109,7 +109,7 @@ class HttpSession
     /**
      * 设置会话ID
      * @param string $value
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      * @throws RuntimeException 如果会话已经被打开，则只能通过session_regenerate_id()方式设置ID
      */
     public function setId($value)
@@ -127,7 +127,7 @@ class HttpSession
     /**
      * 重置会话ID
      * @param boolean $deleteOldSession
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public function regenerateID($deleteOldSession = true)
     {
@@ -147,7 +147,7 @@ class HttpSession
     /**
      * 设置会话名
      * @param string $value
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      * @throws RuntimeException 如果会话已经被打开，则不允许重新设置会话名
      * @throws ErrorException 如果会话名中有英文字母和数字之外的字符，抛出异常
      */
@@ -181,7 +181,7 @@ class HttpSession
     /**
      * 设置会话保存路径
      * @param string $value
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      * @throws RuntimeException 如果会话已经被打开，则不允许重新设置会话保存路径
      * @throws ErrorException 如果设置的目录地址不存在，抛出异常
      */
@@ -254,7 +254,7 @@ class HttpSession
      * 添加会话，如果键已经存在，替换老值
      * @param mixed $key
      * @param mixed $value
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public function add($key, $value)
     {
@@ -280,7 +280,7 @@ class HttpSession
 
     /**
      * 移除所有的会话
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public function clear()
     {
@@ -313,7 +313,7 @@ class HttpSession
     /**
      * 设置PHP INI中的SESSION过期时间，默认：1440s
      * @param integer $maxLifeTime
-     * @return tfc\ap\HttpSession
+     * @return \tfc\ap\HttpSession
      */
     public function setTimeout($maxLifeTime)
     {
@@ -323,7 +323,7 @@ class HttpSession
 
     /**
      * 设置用户自定义会话处理接口
-     * @param tfc\ap\interfaces\SessionSaveHandler $saveHandler
+     * @param \tfc\ap\interfaces\SessionSaveHandler $saveHandler
      * @return void
      */
     public function registerSaveHandler(SessionSaveHandler $saveHandler)

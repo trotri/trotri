@@ -89,7 +89,7 @@ abstract class Response extends Application
     /**
      * 设置HTTP响应状态码
      * @param integer $statusCode
-     * @return tfc\ap\Response
+     * @return \tfc\ap\Response
      * @throws ErrorException 如果参数不是有效的状态码，抛出异常
      */
     public function setStatusCode($statusCode)
@@ -128,7 +128,7 @@ abstract class Response extends Application
     /**
      * 设置Header中是否有页面重定向URL
      * @param boolean $isRedirect
-     * @return tfc\ap\Response
+     * @return \tfc\ap\Response
      */
     public function setIsRedirect($isRedirect = false)
     {

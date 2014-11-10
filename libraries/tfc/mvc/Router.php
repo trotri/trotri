@@ -109,8 +109,8 @@ class Router extends Application
 
     /**
      * 倒序遍历所有路由器，直到匹配一个成功后退出
-     * @param tfc\ap\HttpRequest $request
-     * @return tfc\mvc\Router
+     * @param \tfc\ap\HttpRequest $request
+     * @return \tfc\mvc\Router
      * @throws RuntimeException 如果所有的路由器都匹配失败，抛出异常
      */
     public function route(HttpRequest $request)
@@ -134,7 +134,7 @@ class Router extends Application
 
     /**
      * 获取当前的匹配成功的路由类
-     * @return tfc\mvc\routes\Route
+     * @return \tfc\mvc\routes\Route
      * @throws RuntimeException 如果还未匹配出当前的路由，抛出异常
      */
     public function getCurrRoute()
@@ -172,7 +172,7 @@ class Router extends Application
     /**
      * 通过路由名获取路由类的实例
      * @param string $name
-     * @return tfc\mvc\routes\Route
+     * @return \tfc\mvc\routes\Route
      * @throws ErrorException 如果指定的路由名不存在，抛出异常
      */
     public function getRoute($name)
@@ -189,8 +189,8 @@ class Router extends Application
     /**
      * 添加一个路由名和路由类
      * @param string $name
-     * @param tfc\mvc\routes\Route $route
-     * @return tfc\mvc\Router
+     * @param \tfc\mvc\routes\Route $route
+     * @return \tfc\mvc\Router
      */
     public function addRoute($name, Route $route)
     {
@@ -204,7 +204,7 @@ class Router extends Application
     /**
      * 通过路由名删除路由类
      * @param string $name
-     * @return tfc\mvc\Router
+     * @return \tfc\mvc\Router
      */
     public function removeRoute($name)
     {
@@ -237,7 +237,7 @@ class Router extends Application
     /**
      * 设置默认的Action名
      * @param string $action
-     * @return tfc\mvc\Router
+     * @return \tfc\mvc\Router
      */
     public function setDefaultAction($action)
     {
@@ -257,7 +257,7 @@ class Router extends Application
     /**
      * 设置默认的Controller名
      * @param string $controller
-     * @return tfc\mvc\Router
+     * @return \tfc\mvc\Router
      */
     public function setDefaultController($controller)
     {
@@ -277,7 +277,7 @@ class Router extends Application
     /**
      * 设置默认的Module名
      * @param string $defaultModule
-     * @return tfc\mvc\Router
+     * @return \tfc\mvc\Router
      */
     public function setDefaultModule($defaultModule)
     {

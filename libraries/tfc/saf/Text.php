@@ -62,7 +62,7 @@ class Text
 
     /**
      * 获取国际化管理类
-     * @return tfc\util\Language
+     * @return \tfc\util\Language
      */
     public static function getLanguage()
     {
@@ -75,7 +75,7 @@ class Text
 
     /**
      * 设置国际化管理类
-     * @param tfc\util\Language $language
+     * @param \tfc\util\Language $language
      * @return void
      */
     public static function setLanguage(Language $language = null)

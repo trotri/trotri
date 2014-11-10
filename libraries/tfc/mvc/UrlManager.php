@@ -269,7 +269,7 @@ class UrlManager
     /**
      * 设置路由方式
      * @param string $routeType
-     * @return tfc\mvc\UrlManager
+     * @return \tfc\mvc\UrlManager
      * @throws InvalidArgumentException 如果参数不是有效的路由方式，抛出异常
      */
     public function setRouteType($routeType = null)
@@ -300,7 +300,7 @@ class UrlManager
 
     /**
      * 判断路由方式是否是Supervar
-     * @param routes\Route $route
+     * @param \tfc\mvc\routes\Route $route
      * @return boolean
      */
     public function isSupervar(routes\Route $route)
@@ -314,7 +314,7 @@ class UrlManager
 
     /**
      * 判断路由方式是否是Rewrite
-     * @param routes\Route $route
+     * @param \tfc\mvc\routes\Route $route
      * @return boolean
      */
     public function isRewrite(routes\Route $route)
@@ -336,7 +336,7 @@ class UrlManager
 
     /**
      * 判断路由方式是否是Simple
-     * @param routes\Route $route
+     * @param \tfc\mvc\routes\Route $route
      * @return boolean
      */
     public function isSimple(routes\Route $route)

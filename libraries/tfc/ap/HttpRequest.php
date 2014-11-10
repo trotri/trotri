@@ -83,7 +83,7 @@ class HttpRequest extends Request
     /**
      * 设置当前应用的路径
      * @param string|null $baseUrl
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      */
     public function setBaseUrl($baseUrl = null)
     {
@@ -112,7 +112,7 @@ class HttpRequest extends Request
     /**
      * 设置当前脚本的路径
      * @param string|null $scriptUrl
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      * @throws InvalidArgumentException 如果不能获取当前脚本的路径，抛出异常
      */
     public function setScriptUrl($scriptUrl = null)
@@ -158,7 +158,7 @@ class HttpRequest extends Request
     /**
      * 设置要访问的页面名
      * @param string|null $requestUri
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      * @throws InvalidArgumentException 如果不能获取要访问的页面名，抛出异常
      */
     public function setRequestUri($requestUri = null)
@@ -216,7 +216,7 @@ class HttpRequest extends Request
     /**
      * 设置由客户端提供的、跟在真实脚本名称之后并且在查询语句（query string）之前的路径信息
      * @param string|null $pathInfo
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      * @throws InvalidArgumentException 如果不能获取路径信息，抛出异常
      */
     public function setPathInfo($pathInfo = null)
@@ -266,7 +266,7 @@ class HttpRequest extends Request
     /**
      * 设置当前页面的用户的IP地址
      * @param string|null $clientIp
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      */
     public function setClientIp($clientIp = null)
     {
@@ -338,7 +338,7 @@ class HttpRequest extends Request
      * 设置当前执行脚本的绝对路径
      * 如果在命令行界面使用相对路径执行脚本，那么该值将包含用户指定的相对路径
      * @param string|null $basePath
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      */
     public function setBasePath($basePath = null)
     {
@@ -373,7 +373,7 @@ class HttpRequest extends Request
     /**
      * 设置当前请求头中Host:项的内容
      * @param string|null $httpHost
-     * @return tfc\ap\HttpRequest
+     * @return \tfc\ap\HttpRequest
      */
     public function setHttpHost($httpHost = null)
     {

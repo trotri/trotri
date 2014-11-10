@@ -22,7 +22,7 @@ interface View
 {
     /**
      * 获取模板引擎
-     * @return tfc\mvc\interfaces\View
+     * @return \tfc\mvc\interfaces\View
      */
     public function getEngine();
 
@@ -59,7 +59,7 @@ interface View
      * 设置一对或多对模板变量
      * @param mixed $key
      * @param mixed $value
-     * @return tfc\mvc\interfaces\View
+     * @return \tfc\mvc\interfaces\View
      * @throws InvalidArgumentException 如果参数是对象，但是无法转换成数组，抛出异常
      */
     public function assign($key, $value = null);

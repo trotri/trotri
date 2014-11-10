@@ -51,7 +51,7 @@ abstract class Validator
      * @param mixed $value
      * @param mixed $option
      * @param string $message
-     * @return instance of tfc\validator\Validator
+     * @return \tfc\validator\Validator
      */
     public function init($value, $option, $message = '')
     {
@@ -79,7 +79,7 @@ abstract class Validator
     /**
      * 设置需要验证的值
      * @param mixed $value
-     * @return tfc\validator\Validator
+     * @return \tfc\validator\Validator
      */
     public function setValue($value)
     {
@@ -99,7 +99,7 @@ abstract class Validator
     /**
      * 设置验证参考内容
      * @param mixed $value
-     * @return tfc\validator\Validator
+     * @return \tfc\validator\Validator
      */
     public function setOption($value)
     {
@@ -128,7 +128,7 @@ abstract class Validator
     /**
      * 设置出错后返回的消息
      * @param string $value
-     * @return tfc\validator\Validator
+     * @return \tfc\validator\Validator
      */
     public function setMessage($value)
     {

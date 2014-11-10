@@ -124,7 +124,7 @@ abstract class Log
     /**
      * 添加一个日志级别
      * @param string $priority
-     * @return tfc\log\Log
+     * @return \tfc\log\Log
      */
     public function addPriority($priority)
     {
@@ -158,7 +158,7 @@ abstract class Log
     /**
      * 设置分隔键值的左分隔符
      * @param string $leftDelimiter
-     * @return tfc\log\Log
+     * @return \tfc\log\Log
      */
     public function setLeftDelimiter($leftDelimiter)
     {
@@ -178,7 +178,7 @@ abstract class Log
     /**
      * 设置分隔键值的右分隔符
      * @param string $rightDelimiter
-     * @return tfc\log\Log
+     * @return \tfc\log\Log
      */
     public function setRightDelimiter($rightDelimiter)
     {

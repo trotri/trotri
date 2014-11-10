@@ -128,7 +128,7 @@ class Smtp
      * @param string $body
      * @param string $toMail
      * @param string $fromMail
-     * @return instance of tfc\util\Smtp
+     * @return \tfc\util\Smtp
      * @throws ErrorException 如果反馈消息不是以354开头，抛出异常
      */
     public function sendData($subject, $body, $toMail = '', $fromMail = '')
@@ -149,7 +149,7 @@ class Smtp
     /**
      * 设置收件人地址
      * @param string $toMail
-     * @return instance of tfc\util\Smtp
+     * @return \tfc\util\Smtp
      * @throws ErrorException 如果反馈消息不是以250开头，抛出异常
      */
     public function setToMail($toMail)
@@ -180,7 +180,7 @@ class Smtp
     /**
      * 设置发件人地址
      * @param string $fromMail
-     * @return instance of tfc\util\Smtp
+     * @return \tfc\util\Smtp
      * @throws ErrorException 如果反馈消息不是以250开头，抛出异常
      */
     public function setFromMail($fromMail)
@@ -213,7 +213,7 @@ class Smtp
      * @param string $username
      * @param string $password
      * @param boolean $auth
-     * @return instance of tfc\util\Smtp
+     * @return \tfc\util\Smtp
      * @throws ErrorException 如果发送用户名后反馈消息不是以220或250开头，抛出异常
      * @throws ErrorException 如果发送登录命令后反馈消息不是以334开头，抛出异常
      * @throws ErrorException 如果发送加密登录命令后反馈消息不是以334开头，抛出异常
@@ -273,7 +273,7 @@ class Smtp
      * 连接SMTP服务器
      * @param string $host
      * @param integer $port
-     * @return instance of tfc\util\Smtp
+     * @return \tfc\util\Smtp
      * @throws ErrorException 如果连接SMTP服务器失败，抛出异常
      * @throws ErrorException 如果连接服务后反馈消息不是以220开头，抛出异常
      */
@@ -300,7 +300,7 @@ class Smtp
 
     /**
      * 关闭SMTP服务器
-     * @return instance of tfc\util\Smtp
+     * @return \tfc\util\Smtp
      */
     public function close()
     {

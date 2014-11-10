@@ -30,7 +30,7 @@ class Transaction extends Application
 
     /**
      * 构造方法：初始化PDO方式连接数据库对象
-     * @param tfc\db\Driver $driver
+     * @param \tfc\db\Driver $driver
      */
     public function __construct(Driver $driver)
     {
@@ -49,7 +49,7 @@ class Transaction extends Application
     /**
      * 设置自动提交开启状态
      * @param integer $attribute 1：开启；0：关闭
-     * @return tfc\db\Transaction
+     * @return \tfc\db\Transaction
      */
     public function setAutoCommit($attribute = 0)
     {
@@ -110,7 +110,7 @@ class Transaction extends Application
 
     /**
      * 获取PDO方式连接数据库对象
-     * @return tfc\db\Driver
+     * @return \tfc\db\Driver
      */
     public function getDriver()
     {

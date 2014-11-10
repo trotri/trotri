@@ -74,7 +74,7 @@ class Language
      * 单例模式：获取本类的实例
      * @param string $type
      * @param string $baseDir
-     * @return instance of tfc\util\Language
+     * @return \tfc\util\Language
      */
     public static function getInstance($type, $baseDir)
     {
@@ -118,7 +118,7 @@ class Language
     /**
      * 加载当前语种的ini语言包
      * @param string $fileName
-     * @return tfc\util\Language
+     * @return \tfc\util\Language
      */
     public function load($fileName)
     {
@@ -230,7 +230,7 @@ class Language
     /**
      * 设置当前语种的语言包存放目录
      * @param string $value
-     * @return tfc\util\Language
+     * @return \tfc\util\Language
      * @throws ErrorException 如果语言包存放的目录不存在，抛出异常
      */
     public function setLangDir($value = null)
@@ -261,7 +261,7 @@ class Language
     /**
      * 设置当前的语言种类
      * @param string $value
-     * @return tfc\util\Language
+     * @return \tfc\util\Language
      */
     public function setType($value)
     {
@@ -284,7 +284,7 @@ class Language
     /**
      * 设置所有语言包存放目录
      * @param string $value
-     * @return tfc\util\Language
+     * @return \tfc\util\Language
      * @throws ErrorException 如果语言包存放的目录不存在，抛出异常
      */
     public function setBaseDir($value)

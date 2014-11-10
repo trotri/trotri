@@ -81,7 +81,7 @@ class Driver extends Application
 
     /**
      * 初始化PDO，连接数据库
-     * @return tfc\db\Driver
+     * @return \tfc\db\Driver
      * @throws ErrorException 如果实例化PDO对象失败，抛出异常
      */
     public function open()
@@ -113,7 +113,7 @@ class Driver extends Application
 
     /**
      * 关闭数据库连接
-     * @return tfc\db\Driver
+     * @return \tfc\db\Driver
      */
     public function close()
     {
@@ -272,7 +272,7 @@ class Driver extends Application
     /**
      * 设置列名大小写规则
      * @param integer $caseFolding
-     * @return tfc\db\Driver
+     * @return \tfc\db\Driver
      * @throws ErrorException 如果参数不是有效的规则值，抛出异常
      */
     public function setCaseFolding($caseFolding = \PDO::CASE_NATURAL)

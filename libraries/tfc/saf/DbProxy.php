@@ -213,7 +213,7 @@ class DbProxy extends Statement
 
     /**
      * 获取PDO事务处理类
-     * @return tfc\db\Transaction
+     * @return \tfc\db\Transaction
      */
     public function getTransaction()
     {

@@ -84,7 +84,7 @@ class Logger
 
     /**
      * 获取所有的日志操作类
-     * @return tfc\log\Log
+     * @return \tfc\log\Log
      */
     public function getWriters()
     {
@@ -94,7 +94,7 @@ class Logger
     /**
      * 设置所有的日志操作类
      * @param array $writers
-     * @return tfc\log\Logger
+     * @return \tfc\log\Logger
      * @throws ErrorException 如果设置的日志操作类不正确，抛出异常
      * @throws ErrorException 如果设置的日志操作类不是tfc\log\Log的子类，抛出异常
      */
@@ -121,7 +121,7 @@ class Logger
     /**
      * 通过级别获取日志操作类
      * @param string $priority
-     * @return tfc\log\Log
+     * @return \tfc\log\Log
      * @throws ErrorException 如果该级别的日志操作类不存在，抛出异常
      */
     public function getWriter($priority)
@@ -139,7 +139,7 @@ class Logger
      * 通过级别添加日志操作类
      * @param Log $writer
      * @param string $priority
-     * @return tfc\log\Logger
+     * @return \tfc\log\Logger
      */
     public function addWriter(Log $writer, $priority)
     {
@@ -193,7 +193,7 @@ class Logger
     /**
      * 设置追溯调用的文件级数
      * @param integer $traceLevel
-     * @return tfc\log\Logger
+     * @return \tfc\log\Logger
      * @throws ErrorException 如果追溯调用的级数小于0，抛出异常
      */
     public function setTraceLevel($traceLevel)
@@ -224,7 +224,7 @@ class Logger
     /**
      * 设置日志ID
      * @param integer $id
-     * @return tfc\log\Logger
+     * @return \tfc\log\Logger
      */
     public function setId($id = null)
     {

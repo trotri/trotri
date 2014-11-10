@@ -61,7 +61,7 @@ class Mef
     /**
      * 单例模式：获取本类的实例化对象
      * @param string $keyName
-     * @return tfc\saf\Mef
+     * @return \tfc\saf\Mef
      */
     public static function getInstance($keyName)
     {
@@ -100,7 +100,7 @@ class Mef
 
     /**
      * 获取加密算法类
-     * @return tfc\util\Mcrypt
+     * @return \tfc\util\Mcrypt
      */
     public function getMcrypt()
     {
@@ -114,7 +114,7 @@ class Mef
 
     /**
      * 获取密钥管理类
-     * @return tfc\saf\Keys
+     * @return \tfc\saf\Keys
      */
     public function getKeys()
     {
