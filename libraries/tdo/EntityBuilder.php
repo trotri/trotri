@@ -42,7 +42,7 @@ class EntityBuilder
 
     /**
      * 构造方法：初始化数据库操作类和MySQL表结构处理类
-     * @param tfc\saf\DbProxy $dbProxy
+     * @param \tfc\saf\DbProxy $dbProxy
      */
     protected function __construct(DbProxy $dbProxy)
     {
@@ -52,8 +52,8 @@ class EntityBuilder
 
     /**
      * 单例模式：获取本类的实例
-     * @param tfc\saf\DbProxy $dbProxy
-     * @return instance of tdo\EntityBuilder
+     * @param \tfc\saf\DbProxy $dbProxy
+     * @return \tdo\EntityBuilder
      */
     public static function getInstance(DbProxy $dbProxy)
     {
@@ -70,7 +70,7 @@ class EntityBuilder
      * 应该根据不同的数据库类型创建对应的TableSchema类：$dbType = $this->getDriver(false)->getDbType();
      * 这里只用到MySQL数据库，暂时不做多数据库类型
      * @param string $tableName
-     * @return tfc\db\TableSchema
+     * @return \tfc\db\TableSchema
      */
     public function getTableSchema($tableName)
     {
@@ -210,7 +210,7 @@ class EntityBuilder
 
     /**
      * 获取数据库操作类
-     * @return tfc\saf\DbProxy
+     * @return \tfc\saf\DbProxy
      */
     public function getDbProxy()
     {
@@ -219,7 +219,7 @@ class EntityBuilder
 
     /**
      * 获取MySQL表结构处理类
-     * @return tdo\Metadata
+     * @return \tdo\Metadata
      */
     public function getMetadata()
     {

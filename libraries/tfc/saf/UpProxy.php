@@ -16,8 +16,9 @@ use tfc\util\Upload;
 /**
  * UpProxy class file
  * 上传代理操作类
- * <pre>
+ *
  * 配置 /cfg/app/appname/main.php：
+ * <pre>
  * return array (
  *   'upload' => array(
  *     'posts' => array(

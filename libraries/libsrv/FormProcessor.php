@@ -66,7 +66,7 @@ abstract class FormProcessor
 
 	/**
 	 * 构造方法：初始化模型类
-	 * @param libsrv\AbstractService $object
+	 * @param \libsrv\AbstractService $object
 	 */
 	public function __construct(AbstractService $object)
 	{
@@ -316,7 +316,7 @@ abstract class FormProcessor
 
 	/**
 	 * 清除所有的错误信息
-	 * @return libsrv\FormProcessor
+	 * @return \libsrv\FormProcessor
 	 */
 	public function clearErrors()
 	{
@@ -351,7 +351,7 @@ abstract class FormProcessor
 	 * 添加一条错误信息
 	 * @param string $key
 	 * @param string $value
-	 * @return libsrv\FormProcessor
+	 * @return \libsrv\FormProcessor
 	 */
 	public function addError($key, $value)
 	{
@@ -394,7 +394,7 @@ abstract class FormProcessor
 
 	/**
 	 * 清除所有的表单元素
-	 * @return libsrv\FormProcessor
+	 * @return \libsrv\FormProcessor
 	 */
 	public function clearValues()
 	{
@@ -453,7 +453,7 @@ abstract class FormProcessor
 
 	/**
 	 * 获取数据库操作类
-	 * @return tfc\saf\DbProxy
+	 * @return \tfc\saf\DbProxy
 	 */
 	public function getDbProxy()
 	{

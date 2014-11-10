@@ -69,7 +69,7 @@ class Profile extends Cache
      * 构造方法：初始化表名、ProfileID值和数据库操作类
      * @param string $tableName
      * @param integer $idValue
-     * @param tfc\saf\DbProxy $dbProxy
+     * @param \tfc\saf\DbProxy $dbProxy
      */
     protected function __construct($tableName, $idValue, DbProxy $dbProxy)
     {
@@ -82,8 +82,8 @@ class Profile extends Cache
      * 单例模式：获取本类的实例
      * @param string $tableName
      * @param integer $idValue
-     * @param tfc\saf\DbProxy $dbProxy
-     * @return instance of tdo\Profile
+     * @param \tfc\saf\DbProxy $dbProxy
+     * @return \tdo\Profile
      */
     public static function getInstance($tableName, $idValue, DbProxy $dbProxy)
     {
@@ -290,7 +290,7 @@ class Profile extends Cache
 
     /**
      * 获取数据库操作类
-     * @return tfc\saf\DbProxy
+     * @return \tfc\saf\DbProxy
      */
     public function getDbProxy()
     {
@@ -299,7 +299,7 @@ class Profile extends Cache
 
     /**
      * 获取创建简单的DB执行命令类
-     * @return tdo\CommandBuilder
+     * @return \tdo\CommandBuilder
      */
     public function getCommandBuilder()
     {

@@ -52,7 +52,7 @@ class Topic extends BaseModel
 
 	/**
 	 * 获取专题业务处理类
-	 * @return topic\services\Topic
+	 * @return \topic\services\Topic
 	 */
 	public function getService()
 	{

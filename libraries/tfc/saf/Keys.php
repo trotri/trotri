@@ -15,8 +15,9 @@ use tfc\ap\ErrorException;
 /**
  * Keys class file
  * 密钥管理类
- * <pre>
+ *
  * 配置 /cfg/key/cluster.php：
+ * <pre>
  * return array (
  *   'authentication' => array (
  *     'crypt' => string,   // 加密密钥

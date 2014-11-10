@@ -31,7 +31,7 @@ class Model
 	 * 根据模块名和类名获取类的实例，适用于类的构造方法没有参数，如果类的构造方法有参数，不能只通过类名区分不同的类
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return instance of libapp\BaseModel
+	 * @return \libapp\BaseModel
 	 */
 	public static function getInstance($className, $moduleName = '')
 	{
@@ -51,7 +51,7 @@ class Model
 	 * 通过类名获取类的实例
 	 * @param string $className
 	 * @param string $moduleName
-	 * @return instance of libapp\BaseModel
+	 * @return \libapp\BaseModel
 	 */
 	public static function get($className, $moduleName)
 	{
@@ -66,7 +66,7 @@ class Model
 	 * 设置类名和类的实例
 	 * @param string $className
 	 * @param string $moduleName
-	 * @param libapp\BaseModel $instance
+	 * @param \libapp\BaseModel $instance
 	 * @return void
 	 */
 	public static function set($className, $moduleName, BaseModel $instance)

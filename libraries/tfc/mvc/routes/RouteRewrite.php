@@ -15,9 +15,10 @@ use tfc\ap\HttpRequest;
 /**
  * RouteRewrite class file
  * 标准路由
- * <pre>
+ *
  * 一.标准路由例子：
  * URL：http://domain.com/author/iphper
+ * <pre>
  * $route = new RouteRewrite(
  *     'author/:username',
  *     array(
@@ -30,9 +31,11 @@ use tfc\ap\HttpRequest;
  *     'action'     => 'userinfo',
  *     'username'   => 'iphper'
  * );
+ * </pre>
  *
  * 二.规则匹配：
  * URL：http://domain.com/archive/2012
+ * <pre>
  * $route = new RouteRewrite(
  *     'archive/:year',
  *     array(
@@ -49,9 +52,11 @@ use tfc\ap\HttpRequest;
  *     'year'       => '2012'
  * );
  * 如果URL：http://domain.com/archive/test，将不匹配，并且尝试匹配下一个路由
+ * </pre>
  *
  * 三.有缺省值时，规则匹配：
  * URL：http://domain.com/archive
+ * <pre>
  * $route = new RouteRewrite(
  *     'archive/:year',
  *     array(
@@ -65,9 +70,11 @@ use tfc\ap\HttpRequest;
  *     'controller' => 'archive',
  *     'action'     => 'show'
  * );
+ * </pre>
  *
  * 四.模仿模块路由：
  * URL：http://domain.com/passport/profile/userinfo/username/iphper
+ * <pre>
  * $route = new RouteRewrite(
  *     ':module/:controller/:action/*',
  *     array(

@@ -18,8 +18,9 @@ use tfc\db\Transaction;
 /**
  * DbProxy class file
  * 数据库代理操作类，连接失败尝试重试、记录操作日志、主从数据库连接管理（待扩展）
- * <pre>
+ *
  * 配置 /cfg/db/cluster.php：
+ * <pre>
  * return array (
  *   'service' => array (
  *     'dsn' => string,      // Data Source Name

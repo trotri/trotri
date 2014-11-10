@@ -15,9 +15,10 @@ use tfc\ap\HttpRequest;
 /**
  * RouteStatic class file
  * 静态路由
- * <pre>
+ *
  * 静态路由例子：
  * URL：http://domain.com/login
+ * <pre>
  * $route = new RouteStatic(
  *     'login',
  *     array(

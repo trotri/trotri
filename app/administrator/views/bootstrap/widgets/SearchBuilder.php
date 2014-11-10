@@ -32,7 +32,7 @@ class SearchBuilder extends form\FormBuilder
 	public $method = 'get';
 
 	/**
-	 * @var library\BaseModel 表单元素管理类
+	 * @var \library\BaseModel 表单元素管理类
 	 */
 	public $elements_object = null;
 
@@ -66,7 +66,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化表单元素
-	 * @return views\bootstrap\widgets\SearchBuilder
+	 * @return \views\bootstrap\widgets\SearchBuilder
 	 */
 	public function initElements()
 	{
@@ -173,7 +173,7 @@ class SearchBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化表单元素管理类
-	 * @return views\bootstrap\widgets\SearchBuilder
+	 * @return \views\bootstrap\widgets\SearchBuilder
 	 */
 	public function initElementsObject()
 	{

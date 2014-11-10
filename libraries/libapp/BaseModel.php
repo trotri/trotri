@@ -25,7 +25,7 @@ abstract class BaseModel
 {
 	/**
 	 * 调用查询类方法
-	 * @param libsrv\AbstractService $object
+	 * @param \libsrv\AbstractService $object
 	 * @param string $method
 	 * @param array $args
 	 * @return array
@@ -67,7 +67,7 @@ abstract class BaseModel
 
 	/**
 	 * 调用新增类方法
-	 * @param libsrv\AbstractService $object
+	 * @param \libsrv\AbstractService $object
 	 * @param string $method
 	 * @param array $params
 	 * @param boolean $ignore
@@ -120,7 +120,7 @@ abstract class BaseModel
 
 	/**
 	 * 调用编辑类方法
-	 * @param libsrv\AbstractService $object
+	 * @param \libsrv\AbstractService $object
 	 * @param string $method
 	 * @param integer|array $id
 	 * @param array $params
@@ -176,7 +176,7 @@ abstract class BaseModel
 
 	/**
 	 * 调用删除类方法
-	 * @param libsrv\AbstractService $object
+	 * @param \libsrv\AbstractService $object
 	 * @param string $method
 	 * @param integer|array $id
 	 * @return array
@@ -215,7 +215,7 @@ abstract class BaseModel
 
 	/**
 	 * 调用从回收站还原数据类方法
-	 * @param libsrv\AbstractService $object
+	 * @param \libsrv\AbstractService $object
 	 * @param string $method
 	 * @param integer|array $id
 	 * @return array

@@ -15,27 +15,32 @@ use tfc\ap\HttpRequest;
 /**
  * RouteSupervar class file
  * 默认路由
- * <pre>
+ *
  * 一.默认路由例子：
  * URL：http://domain.com/index.php?r=archive/show
+ * <pre>
  * $route = new RouteSupervar('r');
  * $value = array(
  *     'module'     => '默认模型',
  *     'controller' => 'archive',
  *     'action'     => 'show'
  * );
+ * </pre>
  *
  * 二.默认路由例子：
  * URL：http://domain.com/index.php?r=main/archive/show
+ * <pre>
  * $route = new RouteSupervar('r');
  * $value = array(
  *     'module'     => 'main',
  *     'controller' => 'archive',
  *     'action'     => 'show'
  * );
+ * </pre>
  *
  * 三.默认路由例子：
  * URL：http://domain.com/index.php?r=archive
+ * <pre>
  * $route = new RouteSupervar('r');
  * $value = array(
  *     'module'     => '默认模型',

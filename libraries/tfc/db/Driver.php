@@ -149,6 +149,7 @@ class Driver extends Application
 
     /**
      * 防止SQL注入，对字符串进行处理
+     *
      * <pre>
      * $driver = new Driver();
      *
@@ -178,6 +179,7 @@ class Driver extends Application
 
     /**
      * 将普通的字符类型转化成PDO的字符类型
+     *
      * <pre>
      * $driver = new Driver();
      *

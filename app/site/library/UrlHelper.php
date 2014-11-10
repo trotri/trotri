@@ -44,7 +44,7 @@ class UrlHelper
 
 	/**
 	 * 单例模式：获取本类的实例
-	 * @return instance of library\UrlHelper
+	 * @return \library\UrlHelper
 	 */
 	public static function getInstance()
 	{

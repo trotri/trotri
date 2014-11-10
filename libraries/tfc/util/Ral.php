@@ -15,6 +15,7 @@ use tfc\ap\ErrorException;
 /**
  * Ral class file
  * Resource Access Layer 需要开启CURL支持
+ *
  * <pre>
  * CURLOPT_URL                读取Url
  * CURLOPT_HEADER             返回内容中不包含HTTP头

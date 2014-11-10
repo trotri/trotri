@@ -360,7 +360,7 @@ abstract class AbstractDb extends Cache
 
     /**
      * 获取数据库代理操作类
-     * @return tfc\saf\DbProxy
+     * @return \tfc\saf\DbProxy
      */
     public function getDbProxy()
     {
@@ -380,7 +380,7 @@ abstract class AbstractDb extends Cache
 
     /**
      * 获取创建简单的执行命令类
-     * @return tdo\CommandBuilder
+     * @return \tdo\CommandBuilder
      */
     public function getCommandBuilder()
     {

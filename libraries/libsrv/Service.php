@@ -29,7 +29,7 @@ class Service
 	 * 根据业务名和类名获取类的实例，适用于类的构造方法没有参数，如果类的构造方法有参数，不能只通过类名区分不同的类
 	 * @param string $className
 	 * @param string $serviceName
-	 * @return instance of libsrv\AbstractService
+	 * @return \libsrv\AbstractService
 	 */
 	public static function getInstance($className, $serviceName)
 	{
@@ -45,7 +45,7 @@ class Service
 	 * 通过类名获取类的实例
 	 * @param string $className
 	 * @param string $serviceName
-	 * @return instance of libsrv\AbstractService
+	 * @return \libsrv\AbstractService
 	 */
 	public static function get($className, $serviceName)
 	{
@@ -60,7 +60,7 @@ class Service
 	 * 设置类名和类的实例
 	 * @param string $className
 	 * @param string $serviceName
-	 * @param libsrv\AbstractService $instance
+	 * @param \libsrv\AbstractService $instance
 	 * @return void
 	 */
 	public static function set($className, $serviceName, AbstractService $instance)

@@ -150,7 +150,7 @@ abstract class BaseAction extends Action
 
 	/**
 	 * 获取URL管理类
-	 * @return tfc\mvc\UrlManager
+	 * @return \tfc\mvc\UrlManager
 	 */
 	public function getUrlManager()
 	{

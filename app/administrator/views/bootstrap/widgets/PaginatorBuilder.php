@@ -82,7 +82,7 @@ class PaginatorBuilder extends Widget
 
 	/**
 	 * 获取分页处理类
-	 * @return tfc\util\Paginator
+	 * @return \tfc\util\Paginator
 	 */
 	public function getPaginator()
 	{

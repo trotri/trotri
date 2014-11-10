@@ -117,7 +117,7 @@ class Posts extends BaseModel
 
 	/**
 	 * 获取文档业务处理类
-	 * @return posts\services\Posts
+	 * @return \posts\services\Posts
 	 */
 	public function getService()
 	{

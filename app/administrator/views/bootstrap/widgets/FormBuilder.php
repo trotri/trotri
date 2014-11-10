@@ -37,7 +37,7 @@ class FormBuilder extends form\FormBuilder
 	public $attributes = array('class' => 'form-horizontal');
 
 	/**
-	 * @var library\BaseModel 表单元素管理类
+	 * @var \library\BaseModel 表单元素管理类
 	 */
 	public $elements_object = null;
 
@@ -112,7 +112,7 @@ class FormBuilder extends form\FormBuilder
 	/**
 	 * 设置多个Input表单元素分类标签
 	 * @param array $tabs
-	 * @return views\bootstrap\widgets\FormBuilder
+	 * @return \views\bootstrap\widgets\FormBuilder
 	 */
 	public function setTabs(array $tabs = array())
 	{
@@ -127,7 +127,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * 清除所有的分类标签
-	 * @return views\bootstrap\widgets\FormBuilder
+	 * @return \views\bootstrap\widgets\FormBuilder
 	 */
 	public function clearTabs()
 	{
@@ -150,7 +150,7 @@ class FormBuilder extends form\FormBuilder
 	 * @param string $tid
 	 * @param string $prompt
 	 * @param boolean $active
-	 * @return views\bootstrap\widgets\FormBuilder
+	 * @return \views\bootstrap\widgets\FormBuilder
 	 */
 	public function addTab($tid, $prompt, $active = false)
 	{
@@ -278,7 +278,7 @@ class FormBuilder extends form\FormBuilder
 
 	/**
 	 * 初始化表单元素管理类
-	 * @return views\bootstrap\widgets\FormBuilder
+	 * @return \views\bootstrap\widgets\FormBuilder
 	 */
 	public function initElementsObject()
 	{

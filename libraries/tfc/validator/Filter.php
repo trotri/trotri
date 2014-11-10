@@ -15,8 +15,9 @@ use tfc\ap\ErrorException;
 /**
  * Filter class file
  * 数据验证类
- * <pre>
+ *
  * 验证规则：
+ * <pre>
  * $rules = array(
  *     'user_loginname' => array(
  *         'MinLength' => array(6, '用户名长度%value%不能小于%option%个字符.'),

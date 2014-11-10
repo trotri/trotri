@@ -135,8 +135,9 @@ abstract class ShowAction extends BaseAction
 
 	/**
 	 * 初始化模板解析类
-	 * <pre>
+	 *
 	 * 配置 /cfg/app/appname/main.php：
+	 * <pre>
 	 * return array (
 	 *   'view' => array (
 	 *     'skin_name' => 'bootstrap',     // 模板风格
@@ -256,7 +257,7 @@ abstract class ShowAction extends BaseAction
 	 * 设置一对或多对模板变量
 	 * @param mixed $key
 	 * @param mixed $value
-	 * @return tfc\mvc\interfaces\View
+	 * @return \tfc\mvc\interfaces\View
 	 */
 	public function assign($key, $value = null)
 	{

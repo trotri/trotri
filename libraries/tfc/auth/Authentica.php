@@ -18,8 +18,9 @@ use tfc\saf\Cfg;
 /**
  * Authentica class file
  * 用户身份认证类
- * <pre>
+ *
  * 配置 /cfg/app/appname/main.php：
+ * <pre>
  * return array (
  *   'account' => array (
  *     'key_name' => 'auth_administrator',      // 密钥配置名
@@ -34,8 +35,10 @@ use tfc\saf\Cfg;
  *     'cookset_appnames' => true,              // Cookie中设置用户拥有权限的项目名，该配置不用于此类
  *   ),
  * )
+ * </pre>
  *
  * 配置 /cfg/key/cluster.php：
+ * <pre>
  * return array (
  *   'auth_passport' => array (
  *     'crypt' => 'UViRN53uj7yZ5IAfdIGiq5bvRuCH9njd', // 加密密钥

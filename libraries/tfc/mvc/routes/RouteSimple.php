@@ -15,9 +15,10 @@ use tfc\ap\HttpRequest;
 /**
  * RouteSimple class file
  * 简单路由
- * <pre>
+ *
  * 简单路由例子：
  * URL：http://domain.com/index.php?c=archive&a=show
+ * <pre>
  * $route = new RouteSimple('c', 'a', 'm');
  * $value = array(
  *     'module'     => '默认模型',

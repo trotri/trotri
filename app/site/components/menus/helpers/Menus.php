@@ -94,7 +94,7 @@ class Menus
 
 	/**
 	 * 获取菜单业务处理类
-	 * @return menus\services\Menus
+	 * @return \menus\services\Menus
 	 */
 	public static function getService()
 	{

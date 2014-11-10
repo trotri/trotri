@@ -396,7 +396,7 @@ abstract class DynamicService extends AbstractService
 
 	/**
 	 * 设置数据库操作类
-	 * @param tdo\DynamicDb $db
+	 * @param \tdo\DynamicDb $db
 	 * @return instance of libsrv\DynamicService
 	 * @throws ErrorException 如果DB类不存在，抛出异常
 	 * @throws ErrorException 如果获取的实例不是tdo\DynamicDb类的子类，抛出异常

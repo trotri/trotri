@@ -57,7 +57,7 @@ abstract class Db extends Application
     /**
      * 构造方法：初始化表名和数据库操作类
      * @param string $tableName
-     * @param tfc\saf\DbProxy $dbProxy
+     * @param \tfc\saf\DbProxy $dbProxy
      */
     public function __construct($tableName, DbProxy $dbProxy)
     {
@@ -459,7 +459,7 @@ abstract class Db extends Application
 
     /**
      * 获取数据库操作类
-     * @return tfc\saf\DbProxy
+     * @return \tfc\saf\DbProxy
      */
     public function getDbProxy()
     {
@@ -468,7 +468,7 @@ abstract class Db extends Application
 
     /**
      * 获取创建简单的执行命令类
-     * @return tdo\CommandBuilder
+     * @return \tdo\CommandBuilder
      */
     public function getCommandBuilder()
     {
@@ -479,7 +479,7 @@ abstract class Db extends Application
      * 通过表的实体类，获取表的概要描述，包括：表名、主键、自增字段、字段、默认值
      * 应该根据不同的数据库类型创建对应的TableSchema类：$dbType = $this->getDriver(false)->getDbType();
      * 这里只用到MySQL数据库，暂时不做对应多数据库类型
-     * @return tfc\db\TableSchema
+     * @return \tfc\db\TableSchema
      */
     public function getTableSchema()
     {

@@ -23,7 +23,7 @@ use library\BaseModel;
 class TableRender
 {
 	/**
-	 * @var library\BaseModel 表单元素管理类
+	 * @var \library\BaseModel 表单元素管理类
 	 */
 	public $elements_object = null;
 
@@ -46,7 +46,7 @@ class TableRender
 
 	/**
 	 * 构造方法，初始化模板解析类、URL管理类、页面辅助类、模型名、控制器名、方法名、缺省的列表页方法名、缺省的详情页方法名、缺省的新增数据方法名、缺省的编辑数据方法名
-	 * @param library\BaseModel $elements
+	 * @param \library\BaseModel $elements
 	 */
 	public function __construct(BaseModel $elements)
 	{

@@ -15,8 +15,9 @@ use tfc\ap\HttpCookie;
 /**
  * Cookie class file
  * Cookie管理类，所有的Cookie都应该加密后保存
- * <pre>
+ *
  * 配置 /cfg/app/appname/main.php：
+ * <pre>
  * return array (
  *   'cookie' => array (
  *      'key_name' => 'authentication', // 密钥配置名

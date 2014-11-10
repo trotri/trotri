@@ -46,7 +46,7 @@ class Categories
 
 	/**
 	 * 获取文档类别业务处理类
-	 * @return posts\services\Categories
+	 * @return \posts\services\Categories
 	 */
 	public static function getService()
 	{

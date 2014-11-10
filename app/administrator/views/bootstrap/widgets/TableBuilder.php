@@ -41,12 +41,12 @@ class TableBuilder extends Widget
 	protected $_elements = array();
 
 	/**
-	 * @var library\BaseModel 表单元素管理类
+	 * @var \library\BaseModel 表单元素管理类
 	 */
 	public $elements_object = null;
 
 	/**
-	 * @var views\bootstrap\components\TableRender 表格渲染类
+	 * @var \views\bootstrap\components\TableRender 表格渲染类
 	 */
 	public $table_render = null;
 
@@ -157,7 +157,7 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化表单元素管理类
-	 * @return views\bootstrap\widgets\TableBuilder
+	 * @return \views\bootstrap\widgets\TableBuilder
 	 */
 	public function initElementsObject()
 	{
@@ -171,7 +171,7 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化表格渲染类
-	 * @return views\bootstrap\widgets\TableBuilder
+	 * @return \views\bootstrap\widgets\TableBuilder
 	 */
 	public function initTableRender()
 	{
@@ -189,7 +189,7 @@ class TableBuilder extends Widget
 
 	/**
 	 * 初始化表单元素
-	 * @return views\bootstrap\widgets\TableBuilder
+	 * @return \views\bootstrap\widgets\TableBuilder
 	 */
 	public function initElements()
 	{

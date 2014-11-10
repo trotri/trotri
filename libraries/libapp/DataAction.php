@@ -107,8 +107,9 @@ abstract class DataAction extends BaseAction
 	/**
 	 * 规范化输出数据的格式
 	 * 默认添加的输出内容：log_id (integer)
-	 * <pre>
+	 *
 	 * 一.参数是字符串：
+	 * <pre>
 	 * $data = 'trotri';
 	 * 返回值：
 	 * $ret = array (
@@ -117,8 +118,10 @@ abstract class DataAction extends BaseAction
 	 *     'data' => 'trotri',
 	 *     'log_id' => 2000010
 	 * );
+	 * </pre>
 	 *
 	 * 二.参数是数组，但是没有指定err_no和err_msg：
+	 * <pre>
 	 * $data = array (
 	 *     'user_id' => 1,
 	 *     'user_name' => 'trotri'
@@ -141,8 +144,10 @@ abstract class DataAction extends BaseAction
 	 *     ),
 	 *     'log_id' => 2000010
 	 * );
+	 * </pre>
 	 *
 	 * 三.参数是数组，并且已经指定err_no和err_msg：
+	 * <pre>
 	 * $data = array (
 	 *     'err_no' => 1001,
 	 *     'err_msg' => 'Login Failed',

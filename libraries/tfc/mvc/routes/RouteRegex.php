@@ -15,9 +15,10 @@ use tfc\ap\HttpRequest;
 /**
  * RouteRegex class file
  * 正则路由
- * <pre>
+ *
  * 一.正则路由例子：
  * URL：http://domain.com/archive/2012
+ * <pre>
  * $route = new RouteRegex(
  *     'archive/(\d+)',
  *     array(
@@ -30,8 +31,10 @@ use tfc\ap\HttpRequest;
  *     'action'     => 'show',
  *     1            => '2012'
  * );
+ * </pre>
  *
  * 二.上面例子中整数键不容易管理，下面方式解决：
+ * <pre>
  * $route = new RouteRegex(
  *     'archive/(\d+)',
  *     array(
@@ -47,8 +50,10 @@ use tfc\ap\HttpRequest;
  *     'action'     => 'show',
  *     'year'       => '2012'
  * );
+ * </pre>
  *
  * 三.如果URL的地址是：http://domain.com/archive，即后面缺省2012时，下面方式解决：
+ * <pre>
  * $route = new RouteRegex(
  *     'archive(?:/(\d+))?',
  *     array(
@@ -65,9 +70,11 @@ use tfc\ap\HttpRequest;
  *     'action'     => 'show',
  *     'year'       => '2012'
  * );
+ * </pre>
  *
  * 四.URL中有多个匹配：
  * URL：http://domain.com/iphper/page/8
+ * <pre>
  * $route = new RouteRegex(
  *     '(\w+)/page/(\d+)',
  *     array(
@@ -84,9 +91,11 @@ use tfc\ap\HttpRequest;
  *     1            => 'iphper',
  *     'page'       => '8'
  * );
+ * </pre>
  *
  * 五.URL中有多个参数：
  * URL：http://domain.com/archive/2012/username/iphper/page/2
+ * <pre>
  * $route = new RouteRegex(
  *     'archive/(\d+)',
  *     array(

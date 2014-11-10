@@ -16,8 +16,9 @@ use tfc\util\Ral;
 /**
  * RalProxy class file
  * Ral代理操作类，调用CURL失败重试、记录操作日志、负载均衡管理（待扩展）
- * <pre>
+ *
  * 配置 /cfg/ral/cluster.php：
+ * <pre>
  * return array (
  *   'administrator' => array (
  *     'server' => string,               // 服务器IP地址

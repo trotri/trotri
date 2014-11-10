@@ -402,7 +402,7 @@ abstract class DynamicDb extends AbstractDb
     /**
      * 设置表名
      * @param string $tableName
-     * @return tdo\DynamicDb
+     * @return \tdo\DynamicDb
      */
     public function setTableName($tableName)
     {
@@ -461,7 +461,7 @@ abstract class DynamicDb extends AbstractDb
      * 通过表的实体类，获取表的概要描述，包括：表名、主键、自增字段、字段、默认值
      * 应该根据不同的数据库类型创建对应的TableSchema类：$dbType = $this->getDriver(false)->getDbType();
      * 这里只用到MySQL数据库，暂时不做对应多数据库类型
-     * @return tfc\db\TableSchema
+     * @return \tfc\db\TableSchema
      */
     public function getTableSchema()
     {

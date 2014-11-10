@@ -31,7 +31,7 @@ class Metadata
 
     /**
      * 构造方法：初始化数据库操作类
-     * @param tfc\saf\DbProxy $dbProxy
+     * @param \tfc\saf\DbProxy $dbProxy
      */
     public function __construct(DbProxy $dbProxy)
     {
@@ -91,7 +91,7 @@ class Metadata
     /**
      * 获取指定表的概要描述
      * @param string $tableName
-     * @return tfc\db\TableSchema
+     * @return \tfc\db\TableSchema
      */
     public function getTableSchema($tableName)
     {
@@ -133,7 +133,7 @@ class Metadata
     /**
      * 获取列的概要描述
      * @param array $columns
-     * @return tfc\db\ColumnSchema
+     * @return \tfc\db\ColumnSchema
      */
     public function getColumnSchema($columns)
     {
@@ -303,7 +303,7 @@ class Metadata
 
     /**
      * 获取数据库操作类
-     * @return tfc\saf\DbProxy
+     * @return \tfc\saf\DbProxy
      */
     public function getDbProxy()
     {

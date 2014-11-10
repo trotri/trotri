@@ -55,7 +55,7 @@ abstract class AbstractService extends Application
 
 	/**
 	 * 获取表单数据处理类
-	 * @return instance of libsrv\FormProcessor
+	 * @return \libsrv\FormProcessor
 	 */
 	public function getFormProcessor()
 	{
@@ -68,8 +68,8 @@ abstract class AbstractService extends Application
 
 	/**
 	 * 设置表单数据处理类
-	 * @param libsrv\FormProcessor $fp
-	 * @return instance of tdo\AbstractDb
+	 * @param \libsrv\FormProcessor $fp
+	 * @return \tdo\AbstractDb
 	 * @throws ErrorException 如果表单数据处理类类不存在，抛出异常
 	 * @throws ErrorException 如果获取的实例不是libsrv\FormProcessor类的子类，抛出异常
 	 */
@@ -208,7 +208,7 @@ abstract class AbstractService extends Application
 
 	/**
 	 * 获取数据库操作类
-	 * @return instance of tdo\AbstractDb
+	 * @return \tdo\AbstractDb
 	 */
 	public function getDb()
 	{
@@ -221,8 +221,8 @@ abstract class AbstractService extends Application
 
 	/**
 	 * 设置数据库操作类
-	 * @param tdo\AbstractDb $db
-	 * @return instance of libsrv\AbstractService
+	 * @param \tdo\AbstractDb $db
+	 * @return \libsrv\AbstractService
 	 * @throws ErrorException 如果DB类不存在，抛出异常
 	 * @throws ErrorException 如果获取的实例不是tdo\AbstractDb类的子类，抛出异常
 	 */
