@@ -119,7 +119,6 @@ $this->widget(
 			'topic_id',
 			'_operate_',
 		),
-		'checkedToggle' => 'topic_id',
 	)
 );
 ?>

@@ -14,6 +14,32 @@ $config = array(
 
 $this->widget('views\bootstrap\components\bar\SideBar', array('config' => $config));
 ?>
+
+<?php
+if ($this->controller === 'topic') {
+	$this->widget('views\bootstrap\widgets\SearchBuilder',
+		array(
+			'name' => 'search',
+			'action' => $this->getUrlManager()->getUrl('index', 'topic', 'topic'),
+			'elements_object' => $this->elements,
+			'elements' => array(
+				'topic_id' => array(
+					'type' => 'text',
+				),
+				'is_published' => array(
+					'type' => 'select',
+				),
+			),
+			'columns' => array(
+				'topic_key',
+				'topic_name',
+				'is_published',
+				'topic_id',
+			)
+		)
+	);
+}
+?>
 </div><!-- /.col-xs-6 col-sm-2 -->
 <!-- /SideBar -->
 
