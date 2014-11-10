@@ -31,3 +31,4 @@ local.properties
 log/
 data/runtime/
 data/u/
+cfg/db/cluster.php

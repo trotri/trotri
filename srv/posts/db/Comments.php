@@ -418,13 +418,7 @@ class Comments extends AbstractDb
 		}
 
 		if (isset($params['ip_last_modified'])) {
-			$ipLastModified = (int) $params['ip_last_modified'];
-			if ($ipLastModified > 0) {
-				$attributes['ip_last_modified'] = $ipLastModified;
-			}
-			else {
-				return false;
-			}
+			$attributes['ip_last_modified'] = (int) $params['ip_last_modified'];
 		}
 
 		$rowCount = 0;
