@@ -20,7 +20,7 @@ Trotri功能包括：自动生成代码、用户组、用户权限、文档（�
 请点击右边 “Download ZIP” 按钮下载，下载后解压安装即可，直接用浏览器访问 “根目录/webroot/install.php” 文件进行安装。
 
 ####安装步骤：
-安装前请执行阅读 “根目录/webroot/docs/Readme-安装之前必读.txt” 文档。<br/>
+安装前请阅读 “根目录/webroot/docs/Readme-安装之前必读.txt” 文档。<br/>
 安装后请修改 “根目录/cfg/key/cluster.php” 文件里面的加密Key（crypt、sign值）。<br/>
 这些Key用于加解密存于Cookie中的信息，例如用户登录凭证等。这些加密Key最好定期修改，确保安全。
 
