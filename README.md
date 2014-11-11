@@ -3,7 +3,7 @@ Trotri
 
 当前版本：beta-1.0.0，仅支持PHP5.3及以上版本，包含两部分：TFC框架(Trotri Foundation Classes缩写)、Trotri基于TFC开发的CMS系统。
 ___
-___
+<br>
 
 ##TFC - Trotri Foundation Classes
 ###整洁、快速、专业的PHP框架
@@ -35,8 +35,7 @@ ___
 <br/>
 * Trotri技术交流群：178497611
 * [新浪微博：@Trotri](http://weibo.com/u/3849507848 "Trotri官方微博") 
-* [官方网站：待上线](http://www.trotri.com/ "官方网站：http://www.trotri.com/") 
-————
+* [官方网站：待上线](http://www.trotri.com/ "官方网站：http://www.trotri.com/")  --- ---
 
 ###
         亲，若您有任何Bug反馈、功能建议、技术分享，请马上发邮件到trotri@yeah.net，感激涕零！
