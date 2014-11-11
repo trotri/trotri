@@ -61,7 +61,7 @@ class Logger
         $writer = $this->getWriter($priority);
         $commons = array(
             'log_id' => $this->getId(),
-            'timestamp' => mktime(),
+            'timestamp' => time(),
             'method' => $method
         );
         $events = array_merge($commons, $events);

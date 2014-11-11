@@ -704,7 +704,7 @@ class Upload
      */
     public function getTimestamp()
     {
-        return mktime();
+        return time();
     }
 
     /**

@@ -259,7 +259,7 @@ function ajax(p) {
       <div class="col-lg-4">
         <input class="form-control input-sm" type="text" name="dbname" value="">
       </div>
-      <span class="control-label">请先手动创建数据库，系统不会自动创建数据库.</span>
+      <span class="control-label">请先手动创建数据库，系统不会自动创建数据库，数据库必须是utf8编码，如果需要用gbk编码，需要手动修改建表语句和配置文件.</span>
     </div>
 
     <div class="form-group">

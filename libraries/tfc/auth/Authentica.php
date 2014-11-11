@@ -141,7 +141,7 @@ class Authentica
         }
 
         if ($expiry > 0) {
-            $expiry += mktime();
+            $expiry += time();
         }
 
         $temp = array();
@@ -153,7 +153,7 @@ class Authentica
 
         $roleNames = implode(',', array_unique($temp));
         $ip = ip2long(Ap::getRequest()->getClientIp());
-        $value = $userId . "\t" . $userName . "\t" . $password . "\t" . $ip . "\t" . $expiry . "\t" . mktime() . "\t" . $nickname . "\t" . $roleNames . "\t" . $extends;
+        $value = $userId . "\t" . $userName . "\t" . $password . "\t" . $ip . "\t" . $expiry . "\t" . time() . "\t" . $nickname . "\t" . $roleNames . "\t" . $extends;
 
         $this->_identity = null;
         return $this->getCookie()->add($this->getCookieName(), $value, $expiry);

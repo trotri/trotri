@@ -83,7 +83,7 @@ class HttpCookie
      */
     public static function remove($name, $path = '/', $domain = '')
     {
-        return setcookie($name, false, mktime() - 31536000, $path, $domain); // 过期1年
+        return setcookie($name, false, time() - 31536000, $path, $domain); // 过期1年
     }
 
     /**

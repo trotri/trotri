@@ -92,7 +92,7 @@ class Mcrypt
         $sign      = substr($string, 10, 16);
         $plaintext = substr($string, 26);
 
-        if ($expiry > 0 && $expiry <= mktime()) {
+        if ($expiry > 0 && $expiry <= time()) {
             return '';
         }
 
@@ -115,7 +115,7 @@ class Mcrypt
             $expiry = 0;
         }
 
-        $expiry    = sprintf('%010d', $expiry > 0 ? $expiry + mktime() : 0);
+        $expiry    = sprintf('%010d', $expiry > 0 ? $expiry + time() : 0);
         $rndKeyLen = $this->getRndKeyLen();
         $rndKey    = $this->getRndKey($rndKeyLen);
         $cryptKey  = $this->getCryptKey($rndKey);

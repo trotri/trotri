@@ -106,7 +106,7 @@ class DbSession implements SessionSaveHandler
     public function write($sessId, $data)
     {
         $sql = 'REPLACE INTO `' . $this->_table . '` (`dt_last_access`, `data`, `session_id`) VALUES (?, ?, ?)';
-        $dtLastAccess = mktime();
+        $dtLastAccess = time();
 
         $statement = $this->_pdo->prepare($sql);
         $statement->bindParam(1, $dtLastAccess);
@@ -135,7 +135,7 @@ class DbSession implements SessionSaveHandler
     public function gc($maxLifeTime)
     {
         $sql = 'DELETE FROM `' . $this->_table . '` WHERE `dt_last_access` < ?';
-        $dtLastAccess = mktime() - $maxLifeTime;
+        $dtLastAccess = time() - $maxLifeTime;
 
         $statement = $this->_pdo->prepare($sql);
         $statement->bindParam(1, $dtLastAccess);
