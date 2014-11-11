@@ -17,7 +17,7 @@ ___
 ##Trotri
 ###基于TFC开发的CMS系统
 Trotri功能包括：自动生成代码、用户组、用户权限、文档（支持动态表单）、菜单、广告、文件批量上传、专题、多语言、支持插件、基于组件开发等。<br>
-请点击右边 “Download ZIP” 按钮下载，下载后解压安装即可，安装文件 “install.php” 存放在 “根目录/webroot” 下。
+请点击右边 “Download ZIP” 按钮下载，下载后解压安装即可，直接用浏览器访问 “根目录/webroot/install.php” 文件进行安装。
 
 ####安装步骤：
 安装前请执行阅读 “根目录/webroot/docs/Readme-安装之前必读.txt” 文档。<br/>
