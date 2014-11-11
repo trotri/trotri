@@ -6,10 +6,10 @@ ___
 
 ##TFC - Trotri Foundation Classes
 ###整洁、快速、专业的PHP框架
-TFC功能非常丰富，包括：DB、MVC、路由、缓存、日志、插件、多语言、加解密、自动验证、身份验证、角色认证、图片水印、缩略图、验证码、程序引导、业务平台等。<br/>
-请点击右边“Download ZIP”按钮下载，下载后解压。
-代码存放地址："根目录/libraries/tfc"
-API文档存放地址："根目录/docs/TFC-Api/index.html"
+TFC功能非常丰富，包括：DB、MVC、路由、缓存、日志、插件、多语言、加解密、自动验证、身份验证、角色认证、图片水印、缩略图、验证码、程序引导、业务平台等。<br>
+请点击右边“Download ZIP”按钮下载，下载后解压。<br>
+代码存放地址："根目录/libraries/tfc"<br>
+API文档存放地址："根目录/docs/TFC-Api/index.html"<br>
 API文档存放地址："根目录/docs/TFC-Api/graph_class.html"
 ___
 
