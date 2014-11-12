@@ -213,8 +213,8 @@ function ajax(p) {
     <?php endif; ?>
   </p>
   <p>
-    /data/runtime目录可读权限&nbsp;
-    <?php if (is_readable(DIR_DATA_RUNTIME)) : ?>
+    /data/runtime目录可写权限&nbsp;
+    <?php if (is_writeable(DIR_DATA_RUNTIME)) : ?>
     <span class="glyphicon glyphicon-ok"></span>
     <?php else : ?>
     <?php $hasError = true; ?>
@@ -222,8 +222,8 @@ function ajax(p) {
     <?php endif; ?>
   </p>
   <p>
-    /data/u目录可读权限&nbsp;
-    <?php if (is_readable(DIR_DATA_UPLOAD)) : ?>
+    /data/u目录可写权限&nbsp;
+    <?php if (is_writeable(DIR_DATA_UPLOAD)) : ?>
     <span class="glyphicon glyphicon-ok"></span>
     <?php else : ?>
     <?php $hasError = true; ?>
