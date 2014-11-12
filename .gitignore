@@ -32,3 +32,4 @@ log/
 data/runtime/
 data/u/
 cfg/db/cluster.php
+cfg/key/cluster.php

@@ -26,9 +26,13 @@ define('DB_IMG_HOLDERS',         '###baseurl###');
 define('DS',                     DIRECTORY_SEPARATOR);
 define('DIR_ROOT',               substr(dirname(__FILE__), 0, -8));
 define('DIR_CFG_DB',             DIR_ROOT . DS . 'cfg'  . DS . 'db');
+define('DIR_CFG_KEY',            DIR_ROOT . DS . 'cfg'  . DS . 'key');
 define('DIR_LOG',                DIR_ROOT . DS . 'log');
 define('DIR_DATA_INSTALL',       DIR_ROOT . DS . 'data' . DS . 'install');
+define('DIR_DATA_RUNTIME',       DIR_ROOT . DS . 'data' . DS . 'runtime');
+define('DIR_DATA_UPLOAD',        DIR_ROOT . DS . 'data' . DS . 'u');
 define('PATH_CFG_DB',            DIR_CFG_DB       . DS . 'cluster.php');
+define('PATH_CFG_KEY',           DIR_CFG_KEY      . DS . 'cluster.php');
 define('PATH_DB_TABLES',         DIR_DATA_INSTALL . DS . 'db_tables.sql');
 define('PATH_DB_DATA',           DIR_DATA_INSTALL . DS . 'db_data.sql');
 
@@ -191,6 +195,15 @@ function ajax(p) {
     <?php endif; ?>
   </p>
   <p>
+    /cfg/key目录可写权限&nbsp;
+    <?php if (is_writeable(DIR_CFG_KEY)) : ?>
+    <span class="glyphicon glyphicon-ok"></span>
+    <?php else : ?>
+    <?php $hasError = true; ?>
+    <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法写入密钥配置文件！</small>
+    <?php endif; ?>
+  </p>
+  <p>
     /log目录可写权限&nbsp;
     <?php if (is_writeable(DIR_LOG)) : ?>
     <span class="glyphicon glyphicon-ok"></span>
@@ -200,12 +213,21 @@ function ajax(p) {
     <?php endif; ?>
   </p>
   <p>
-    /data/install目录可读权限&nbsp;
-    <?php if (is_readable(DIR_DATA_INSTALL)) : ?>
+    /data/runtime目录可读权限&nbsp;
+    <?php if (is_readable(DIR_DATA_RUNTIME)) : ?>
     <span class="glyphicon glyphicon-ok"></span>
     <?php else : ?>
     <?php $hasError = true; ?>
-    <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法读取SQL安装文件！</small>
+    <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法写入用户权限数据、表结构、生成的代码等！</small>
+    <?php endif; ?>
+  </p>
+  <p>
+    /data/u目录可读权限&nbsp;
+    <?php if (is_readable(DIR_DATA_UPLOAD)) : ?>
+    <span class="glyphicon glyphicon-ok"></span>
+    <?php else : ?>
+    <?php $hasError = true; ?>
+    <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法写入用户上传图片、Flash等！</small>
     <?php endif; ?>
   </p>
   <p>安装需要一些数据库信息，用来导入SQL安装文件，这些数据库信息将被写入/cfg/db/cluster.php配置文件。</p>
@@ -215,12 +237,18 @@ function ajax(p) {
   <p>4. 数据库主机</p>
   <p>5. 数据表前缀</p>
   <p>如果自动安装失败，手动安装过程：</p>
-  <p>1. 请手动将这些数据库信息写入/cfg/db/cluster-sample.php文件，并将cluster-sample.php文件重命名为cluster.php</p>
-  <p>2. 请手动将/data/install/db_tables.sql和/data/install/db_data.sql中的#@__替换成表前缀，并依次将两个文件手动导入数据库</p>
-  <p>3. 再执行<a href="install.php?do=adform" target="_blank">创建管理员</a>操作</p>
+  <p>1、请手动将数据库信息写入 “根目录/cfg/db/cluster-sample.php” 文件，并将 “cluster-sample.php” 文件重命名为 “cluster.php”。</p>
+  <p>2、请手动将 “根目录/data/install/db_tables.sql” 和 “根目录/data/install/db_data.sql” 中的#@__替换成表前缀，并依次将两个文件手动导入数据库。</p>
+  <p>3、如果 “根目录/cfg/key/cluster.php” 文件不存在，请手动将密钥信息写入 “根目录/cfg/key/cluster-sample.php” 文件，并将 “cluster-sample.php” 文件重命名为 “cluster.php”。</p>
+  <p>4、以上都完成后，再次执行此安装操作，这时会跳过数据库配置，直接转到创建管理员操作，输入管理员 “用户名” 和 “密码” 后提交即可。</p>
   <p></p>
   <?php if (!$hasError) : ?>
-  <p><a class="btn btn-primary btn-lg" href="install.php?do=dbform">继续 &gt;&gt;</a></p>
+    <?php if (Util::mkKeyCfg() !== SUCCESS_NUM) : ?>
+    <h2>创建密钥配置文件失败&nbsp;<span class="glyphicon glyphicon-remove"></span></h2>
+    <p>请手动将密钥信息写入 “根目录/cfg/key/cluster-sample.php” 文件，并将 “cluster-sample.php” 文件重命名为 “cluster.php”。再刷新此页面，重新安装。</p>
+    <?php else : ?>
+    <p><a class="btn btn-primary btn-lg" href="install.php?do=dbform">继续 &gt;&gt;</a></p>
+    <?php endif; ?>
   <?php endif; ?>
   </div>
 <?php endif; ?>
@@ -512,7 +540,7 @@ class Db
 		$dbhost = trim(substr($dbhost, strlen('mysql:host=')));
 		$dbname = trim(substr($dbname, strlen('dbname=')));
 
-		if ($dbhost === '' || $dbname === '' || $username === '' || $password === '' || $charset === '' || $tblprefix === '') {
+		if ($dbhost === '' || $dbname === '' || $username === '' || $charset === '' || $tblprefix === '') {
 			$this->halt('Install Error: Db Cfg Wrong!');
 		}
 
@@ -704,6 +732,59 @@ class Util
 {
 	/**
 	 * 创建数据库配置文件
+	 * @return integer
+	 */
+	public static function mkKeyCfg()
+	{
+		if (self::hasKeyCfg()) {
+			return SUCCESS_NUM;
+		}
+
+		$data = array (
+			'auth_administrator' => array (
+				'crypt' => self::randChars(32),
+				'sign' => self::randChars(32),
+				'expiry' => 2592000,
+				'rnd_len' => 16
+			),
+			'cookie' => array (
+				'crypt' => self::randChars(16),
+				'sign' => self::randChars(16),
+				'expiry' => 86400,
+				'rnd_len' => 8
+			)
+		);
+
+		$content  = "<?php\n";
+		$content .= "/**\n";
+		$content .= " * Trotri\n";
+		$content .= " *\n";
+		$content .= " * @author    Huan Song <trotri@yeah.net>\n";
+		$content .= " * @link      http://github.com/trotri/trotri for the canonical source repository\n";
+		$content .= " * @copyright Copyright &copy; 2011-2013 http://www.trotri.com/ All rights reserved.\n";
+		$content .= " * @license   http://www.apache.org/licenses/LICENSE-2.0\n";
+		$content .= " */\n\n";
+		$content .= "return " . var_export($data, true) . ";\n";
+
+		file_put_contents(PATH_CFG_KEY, $content);
+		if (self::hasKeyCfg()) {
+			return SUCCESS_NUM;
+		}
+
+		return ERRNO_MKCFGFILE_FAILED;
+	}
+
+	/**
+	 * 是否已经创建密钥配置文件
+	 * @return boolean
+	 */
+	public static function hasKeyCfg()
+	{
+		return is_file(PATH_CFG_KEY) ? true : false;
+	}
+
+	/**
+	 * 创建数据库配置文件
 	 * @param string $dbhost
 	 * @param string $dbuser
 	 * @param string $dbpwd
@@ -728,7 +809,7 @@ class Util
 			return ERRNO_TBLPREFIX_WRONG;
 		}
 
-		if ($dbhost === '' || $dbuser === '' || $dbpwd === '') {
+		if ($dbhost === '' || $dbuser === '') {
 			return ERRNO_DBLINK_WRONG;
 		}
 
