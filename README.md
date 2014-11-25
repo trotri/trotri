@@ -55,7 +55,7 @@ ___
 <br/>
 * Trotri技术交流群：178497611
 * [新浪微博：@Trotri](http://weibo.com/u/3849507848 "Trotri官方微博") 
-* [官方网站：待上线](http://www.trotri.com/ "官方网站：http://www.trotri.com/")  --- ---
+* [官方网站：trotri.com](http://www.trotri.com/ "官方网站：http://www.trotri.com/") 
 
 ###
         亲，若您有任何Bug反馈、功能建议、技术分享，请马上发邮件到trotri@yeah.net，感激涕零！
