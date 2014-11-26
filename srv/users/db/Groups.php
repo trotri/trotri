@@ -36,7 +36,7 @@ class Groups extends AbstractDb
 	public function getGroupIds()
 	{
 		$tableName = $this->getTblprefix() . TableNames::getGroups();
-		$sql = 'SELECT `group_id` FROM ' . $tableName . ' ORDER BY `sort`';
+		$sql = 'SELECT `group_id` FROM `' . $tableName . '` ORDER BY `sort`';
 		return $this->fetchAll($sql);
 	}
 
@@ -85,7 +85,7 @@ class Groups extends AbstractDb
 		$sort = isset($params['sort']) ? (int) $params['sort'] : 0;
 		$description = isset($params['description']) ? $params['description'] : '';
 
-		if ($groupName === '' || $groupPid <= 0) {
+		if ($groupName === '' || $groupPid <= 0 || $sort <= 0) {
 			return false;
 		}
 
@@ -138,7 +138,7 @@ class Groups extends AbstractDb
 
 		if (isset($params['sort'])) {
 			$sort = (int) $params['sort'];
-			if ($sort >= 0) {
+			if ($sort > 0) {
 				$attributes['sort'] = $sort;
 			}
 			else {

@@ -13,6 +13,7 @@ namespace posts\services;
 use libsrv\AbstractService;
 use tfc\saf\Log;
 use libsrv\Service;
+use libsrv\Clean;
 use posts\library\Constant;
 use posts\library\Plugin;
 
@@ -188,7 +189,7 @@ class Posts extends AbstractService
 		if (isset($params['ip_created'])) {
 			$ipCreated = trim($params['ip_created']); unset($params['ip_created']);
 			if ($ipCreated !== '') {
-				$ipCreated = (strpos($ipCreated, '.') !== false) ? ip2long($ipCreated) : (int) $ipCreated;
+				$ipCreated = (strpos($ipCreated, '.') !== false) ? Clean::ip2long($ipCreated) : (int) $ipCreated;
 				if ($ipCreated !== false) {
 					$params['ip_created'] = $ipCreated;
 				}
@@ -198,7 +199,7 @@ class Posts extends AbstractService
 		if (isset($params['ip_last_modified'])) {
 			$ipLastModified = trim($params['ip_last_modified']); unset($params['ip_last_modified']);
 			if ($ipLastModified !== '') {
-				$ipLastModified = (strpos($ipLastModified, '.') !== false) ? ip2long($ipLastModified) : (int) $ipLastModified;
+				$ipLastModified = (strpos($ipLastModified, '.') !== false) ? Clean::ip2long($ipLastModified) : (int) $ipLastModified;
 				if ($ipLastModified !== false) {
 					$params['ip_last_modified'] = $ipLastModified;
 				}

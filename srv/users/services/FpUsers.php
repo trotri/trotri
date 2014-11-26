@@ -14,6 +14,7 @@ use libsrv\FormProcessor;
 use tfc\ap\Ap;
 use tfc\saf\Log;
 use tfc\validator;
+use libsrv\Clean;
 use libapp\ErrorNo;
 use users\library\Lang;
 use users\library\TableNames;
@@ -62,7 +63,7 @@ class FpUsers extends FormProcessor
 			if (isset($params['repwd_count'])) { unset($params['repwd_count']); }
 
 			$params['dt_registered'] = $params['dt_last_login'] = date('Y-m-d H:i:s');
-			$params['ip_registered'] = $params['ip_last_login'] = ip2long(Ap::getRequest()->getClientIp());
+			$params['ip_registered'] = $params['ip_last_login'] = Clean::ip2long(Ap::getRequest()->getClientIp());
 			$params['login_count'] = 1;
 			$params['salt'] = $this->_object->getSalt();
 
@@ -119,7 +120,7 @@ class FpUsers extends FormProcessor
 
 				$params['salt'] = $this->_object->getSalt();
 				$params['dt_last_repwd'] = date('Y-m-d H:i:s');
-				$params['ip_last_repwd'] = ip2long(Ap::getRequest()->getClientIp());
+				$params['ip_last_repwd'] = Clean::ip2long(Ap::getRequest()->getClientIp());
 				$params['repwd_count'] = (int) $row['repwd_count'] + 1;
 			}
 			else {

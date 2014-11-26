@@ -195,8 +195,10 @@ class Users extends AbstractDb
 
 		if (isset($params['ip_registered'])) {
 			$ipRegistered = (int) $params['ip_registered'];
-			$condition .= ' AND `u`.`ip_registered` = ' . $commandBuilder::PLACE_HOLDERS;
-			$attributes['ip_registered'] = $ipRegistered;
+			if ($ipRegistered >= 0) {
+				$condition .= ' AND `u`.`ip_registered` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['ip_registered'] = $ipRegistered;
+			}
 		}
 
 		if (isset($params['user_id'])) {
@@ -317,7 +319,7 @@ class Users extends AbstractDb
 		$forbidden = isset($params['forbidden']) ? trim($params['forbidden']) : '';
 		$trash = 'n';
 
-		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $userName === '' || $loginCount < 0) {
+		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $userName === '' || $loginCount < 0 || $ipRegistered < 0 || $ipLastLogin < 0) {
 			return false;
 		}
 
@@ -439,11 +441,23 @@ class Users extends AbstractDb
 		}
 
 		if (isset($params['ip_last_login'])) {
-			$attributes['ip_last_login'] = (int) $params['ip_last_login'];
+			$ipLastLogin = (int) $params['ip_last_login'];
+			if ($ipLastLogin >= 0) {
+				$attributes['ip_last_login'] = $ipLastLogin;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['ip_last_repwd'])) {
-			$attributes['ip_last_repwd'] = (int) $params['ip_last_repwd'];
+			$ipLastRepwd = (int) $params['ip_last_repwd'];
+			if ($ipLastRepwd >= 0) {
+				$attributes['ip_last_repwd'] = $ipLastRepwd;
+			}
+			else {
+				return false;
+			}
 		}
 
 		if (isset($params['login_count'])) {

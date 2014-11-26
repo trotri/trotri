@@ -17,6 +17,7 @@ use tfc\auth\Authentica;
 use tfc\auth\Authoriz;
 use tfc\auth\Role;
 use tfc\auth\Identity;
+use libsrv\Clean;
 
 /**
  * Account class file
@@ -313,7 +314,7 @@ class Account
 
 		if ($update) {
 			$dtLastLogin = date('Y-m-d H:i:s');
-			$ipLastLogin = ip2long(Ap::getRequest()->getClientIp());
+			$ipLastLogin = Clean::ip2long(Ap::getRequest()->getClientIp());
 			$loginCount += 1;
 			$params = array(
 				'dt_last_login' => $dtLastLogin,
@@ -509,7 +510,7 @@ class Account
 			return false;
 		}
 
-		$clientIp = ip2long(Ap::getRequest()->getClientIp());
+		$clientIp = Clean::ip2long(Ap::getRequest()->getClientIp());
 		if ($ip !== $clientIp) {
 			Log::warning(sprintf(
 				'Account cookie ip "%s" is not equal to client ip "%s", cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', 

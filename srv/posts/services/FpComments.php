@@ -14,6 +14,7 @@ use libsrv\FormProcessor;
 use tfc\ap\Ap;
 use tfc\validator;
 use libsrv\Service;
+use libsrv\Clean;
 use posts\library\Lang;
 
 /**
@@ -53,7 +54,7 @@ class FpComments extends FormProcessor
 			if (isset($params['last_modifier_name'])) { unset($params['last_modifier_name']); }
 
 			$params['dt_created'] = $params['dt_last_modified'] = date('Y-m-d H:i:s');
-			$params['ip_created'] = $params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
+			$params['ip_created'] = $params['ip_last_modified'] = Clean::ip2long(Ap::getRequest()->getClientIp());
 			$params['good_count'] = $params['bad_count'] = 0;
 
 			$postId = isset($params['post_id']) ? (int) $params['post_id'] : 0;
@@ -86,7 +87,7 @@ class FpComments extends FormProcessor
 			if (isset($params['dt_created'])) { unset($params['dt_created']); }
 			if (isset($params['ip_created'])) { unset($params['ip_created']); }
 			$params['dt_last_modified'] = date('Y-m-d H:i:s');
-			$params['ip_last_modified'] = ip2long(Ap::getRequest()->getClientIp());
+			$params['ip_last_modified'] = Clean::ip2long(Ap::getRequest()->getClientIp());
 		}
 
 		$rules = array(

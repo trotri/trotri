@@ -12,6 +12,7 @@ namespace users\services;
 
 use libsrv\AbstractService;
 use tfc\util\String;
+use libsrv\Clean;
 use users\library\Constant;
 use users\library\Plugin;
 
@@ -57,7 +58,7 @@ class Users extends AbstractService
 		if (isset($params['ip_registered'])) {
 			$ipRegistered = trim($params['ip_registered']); unset($params['ip_registered']);
 			if ($ipRegistered !== '') {
-				$ipRegistered = (strpos($ipRegistered, '.') !== false) ? ip2long($ipRegistered) : (int) $ipRegistered;
+				$ipRegistered = (strpos($ipRegistered, '.') !== false) ? Clean::ip2long($ipRegistered) : (int) $ipRegistered;
 				if ($ipRegistered !== false) {
 					$params['ip_registered'] = $ipRegistered;
 				}

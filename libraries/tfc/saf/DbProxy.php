@@ -115,6 +115,34 @@ class DbProxy extends Statement
     }
 
     /**
+     * 执行数据库事务操作
+     * @param array $commands
+     * @return boolean
+     */
+    public function doTransaction(array $commands = array())
+    {
+        if ($commands === array()) {
+            return false;
+        }
+
+        $transaction = $this->getTransaction();
+        $transaction->setAutoCommit(0);
+        $transaction->beginTransaction();
+
+        foreach ($commands as $sql => $params) {
+            if (!$this->query($sql, $params)) {
+                $transaction->rollBack();
+                $transaction->setAutoCommit(1);
+                return false;
+            }
+        }
+
+        $transaction->commit();
+        $transaction->setAutoCommit(1);
+        return true;
+    }
+
+    /**
      * (non-PHPdoc)
      * @see \tfc\db\Statement::getDriver()
      */

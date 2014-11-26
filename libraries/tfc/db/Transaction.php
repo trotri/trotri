@@ -65,7 +65,7 @@ class Transaction extends Application
     public function beginTransaction()
     {
         try {
-            return $this->getDriver()->getPdo()->beginTransaction();
+            return $this->getDriver()->open()->getPdo()->beginTransaction();
         }
         catch (\PDOException $e) {
             throw new ErrorException(sprintf(
@@ -82,7 +82,7 @@ class Transaction extends Application
     public function rollBack()
     {
         try {
-            return $this->getDriver()->getPdo()->rollBack();
+            return $this->getDriver()->open()->getPdo()->rollBack();
         }
         catch (\PDOException $e) {
             throw new ErrorException(sprintf(
@@ -99,7 +99,7 @@ class Transaction extends Application
     public function commit()
     {
         try {
-            return $this->getDriver()->getPdo()->commit();
+            return $this->getDriver()->open()->getPdo()->commit();
         }
         catch (\PDOException $e) {
             throw new ErrorException(sprintf(

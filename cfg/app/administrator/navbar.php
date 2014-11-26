@@ -59,6 +59,36 @@ return array(
 	),
 	array(
 		0 => array(
+			'label' => 'CFG_SYSTEM_URLS_MEMBERS_INDEX',
+			'm' => 'member', 'c' => 'members', 'a' => 'index'
+		),
+		1 => array(
+			'label' => 'CFG_SYSTEM_URLS_MEMBER_PORTAL_INDEX',
+			'm' => 'member', 'c' => 'portal', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_MEMBER_PORTAL_CREATE',
+				'm' => 'member', 'c' => 'portal', 'a' => 'create'
+			)
+		),
+		2 => array(
+			'label' => 'CFG_SYSTEM_URLS_MEMBER_TYPES_INDEX',
+			'm' => 'member', 'c' => 'types', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_MEMBER_TYPES_CREATE',
+				'm' => 'member', 'c' => 'types', 'a' => 'create'
+			)
+		),
+		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_MEMBER_RANKS_INDEX',
+			'm' => 'member', 'c' => 'ranks', 'a' => 'index',
+			'icon' => array(
+				'label' => 'CFG_SYSTEM_URLS_MEMBER_RANKS_CREATE',
+				'm' => 'member', 'c' => 'ranks', 'a' => 'create'
+			)
+		),
+	),
+	array(
+		0 => array(
 			'label' => 'CFG_SYSTEM_URLS_USERS_INDEX_INDEX',
 			'm' => 'users', 'c' => 'users', 'a' => 'index'
 		),

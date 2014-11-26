@@ -129,7 +129,7 @@ class Clean
 	 */
 	public static function ip2long($value)
 	{
-		return ip2long($value);
+		return (int) sprintf('%u', ip2long($value));
 	}
 
 	/**

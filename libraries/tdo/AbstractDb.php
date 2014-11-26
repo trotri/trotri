@@ -318,6 +318,16 @@ abstract class AbstractDb extends Cache
     }
 
     /**
+     * 执行数据库事务操作
+     * @param array $commands
+     * @return boolean
+     */
+    public function doTransaction(array $commands = array())
+    {
+        return $this->getDbProxy()->doTransaction($commands);
+    }
+
+    /**
      * 获取最后一次插入记录的ID
      * @return integer
      */

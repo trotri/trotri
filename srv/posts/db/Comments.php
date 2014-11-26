@@ -154,7 +154,7 @@ class Comments extends AbstractDb
 
 		if (isset($params['ip_created'])) {
 			$ipCreated = (int) $params['ip_created'];
-			if ($ipCreated > 0) {
+			if ($ipCreated >= 0) {
 				$condition .= ' AND `ip_created` = ' . $commandBuilder::PLACE_HOLDERS;
 				$attributes['ip_created'] = $ipCreated;
 			}
@@ -162,7 +162,7 @@ class Comments extends AbstractDb
 
 		if (isset($params['ip_last_modified'])) {
 			$ipLastModified = (int) $params['ip_last_modified'];
-			if ($ipLastModified > 0) {
+			if ($ipLastModified >= 0) {
 				$condition .= ' AND `ip_last_modified` = ' . $commandBuilder::PLACE_HOLDERS;
 				$attributes['ip_last_modified'] = $ipLastModified;
 			}
@@ -256,7 +256,7 @@ class Comments extends AbstractDb
 		$ipCreated = isset($params['ip_created']) ? (int) $params['ip_created'] : 0;
 		$ipLastModified = isset($params['ip_last_modified']) ? (int) $params['ip_last_modified'] : 0;
 
-		if ($commentPid < 0 || $postId < 0 || $content === '' || $authorName === '' || $authorMail === '') {
+		if ($commentPid < 0 || $postId < 0 || $content === '' || $authorName === '' || $authorMail === '' || $ipLastModified < 0) {
 			return false;
 		}
 
@@ -418,7 +418,13 @@ class Comments extends AbstractDb
 		}
 
 		if (isset($params['ip_last_modified'])) {
-			$attributes['ip_last_modified'] = (int) $params['ip_last_modified'];
+			$ipLastModified = (int) $params['ip_last_modified'];
+			if ($ipLastModified >= 0) {
+				$attributes['ip_last_modified'] = $ipLastModified;
+			}
+			else {
+				return false;
+			}
 		}
 
 		$rowCount = 0;

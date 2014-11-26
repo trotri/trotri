@@ -260,14 +260,18 @@ class Posts extends AbstractDb
 
 		if (isset($params['ip_created'])) {
 			$ipCreated = (int) $params['ip_created'];
-			$condition .= ' AND `ip_created` = ' . $commandBuilder::PLACE_HOLDERS;
-			$attributes['ip_created'] = $ipCreated;
+			if ($ipCreated >= 0) {
+				$condition .= ' AND `ip_created` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['ip_created'] = $ipCreated;
+			}
 		}
 
 		if (isset($params['ip_last_modified'])) {
 			$ipLastModified = (int) $params['ip_last_modified'];
-			$condition .= ' AND `ip_last_modified` = ' . $commandBuilder::PLACE_HOLDERS;
-			$attributes['ip_last_modified'] = $ipLastModified;
+			if ($ipLastModified >= 0) {
+				$condition .= ' AND `ip_last_modified` = ' . $commandBuilder::PLACE_HOLDERS;
+				$attributes['ip_last_modified'] = $ipLastModified;
+			}
 		}
 
 		if (isset($params['trash'])) {
@@ -393,12 +397,12 @@ class Posts extends AbstractDb
 		$lastModifierName = isset($params['last_modifier_name']) ? trim($params['last_modifier_name']) : '';
 		$dtCreated = isset($params['dt_created']) ? trim($params['dt_created']) : '';
 		$dtLastModified = isset($params['dt_last_modified']) ? trim($params['dt_last_modified']) : '';
-		$ipCreated = isset($params['ip_created']) ? (int) $params['ip_created'] : '';
-		$ipLastModified = isset($params['ip_last_modified']) ? (int) $params['ip_last_modified'] : '';
+		$ipCreated = isset($params['ip_created']) ? (int) $params['ip_created'] : 0;
+		$ipLastModified = isset($params['ip_last_modified']) ? (int) $params['ip_last_modified'] : 0;
 		$trash = 'n';
 
 		if ($title === '' || $sort <= 0 || $categoryId <= 0 || $categoryName === '' || $moduleId <= 0 
-			|| $hits < 0 || $praiseCount < 0 || $commentCount < 0 || $creatorId <= 0 || $creatorName === '') {
+			|| $hits < 0 || $praiseCount < 0 || $commentCount < 0 || $creatorId <= 0 || $creatorName === '' || $ipCreated < 0 || $ipLastModified < 0) {
 			return false;
 		}
 
@@ -750,7 +754,13 @@ class Posts extends AbstractDb
 		}
 
 		if (isset($params['ip_last_modified'])) {
-			$attributes['ip_last_modified'] = (int) $params['ip_last_modified'];
+			$ipLastModified = (int) $params['ip_last_modified'];
+			if ($ipLastModified >= 0) {
+				$attributes['ip_last_modified'] = $ipLastModified;
+			}
+			else {
+				return false;
+			}
 		}
 
 		$rowCount = 0;
