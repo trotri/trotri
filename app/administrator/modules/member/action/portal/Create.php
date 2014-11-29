@@ -11,7 +11,6 @@
 namespace modules\member\action\portal;
 
 use library\actions;
-use tfc\ap\Ap;
 
 /**
  * Create class file

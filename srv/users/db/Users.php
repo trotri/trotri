@@ -227,6 +227,9 @@ class Users extends AbstractDb
 			if (isset($attributes['user_phone'])) {
 				$attributes['user_phone'] = $userPhone;
 			}
+			if (isset($attributes['ip_registered'])) {
+				$attributes['ip_registered'] = long2ip($ipRegistered);
+			}
 			if (is_array($ret)) {
 				$ret['attributes'] = $attributes;
 				$ret['order']      = $order;

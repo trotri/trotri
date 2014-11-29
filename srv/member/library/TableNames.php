@@ -82,4 +82,31 @@ class TableNames
 	{
 		return 'member_profile';
 	}
+
+	/**
+	 * 获取“会员预存款日志表”表名
+	 * @return string
+	 */
+	public static function getBalanceLogs()
+	{
+		return 'member_balance_logs';
+	}
+
+	/**
+	 * 获取“会员积分日志表”表名
+	 * @return string
+	 */
+	public static function getPointsLogs()
+	{
+		return 'member_points_logs';
+	}
+
+	/**
+	 * 获取“会员成长值日志表”表名
+	 * @return string
+	 */
+	public static function getExperienceLogs()
+	{
+		return 'member_experience_logs';
+	}
 }

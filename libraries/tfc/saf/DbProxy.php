@@ -129,12 +129,22 @@ class DbProxy extends Statement
         $transaction->setAutoCommit(0);
         $transaction->beginTransaction();
 
-        foreach ($commands as $sql => $params) {
-            if (!$this->query($sql, $params)) {
-                $transaction->rollBack();
-                $transaction->setAutoCommit(1);
-                return false;
+        foreach ($commands as $row) {
+            $sql = $params = null;
+            if (is_array($row)) {
+                $sql = isset($row['sql']) ? $row['sql'] : null;
+                $params = isset($row['params']) ? $row['params'] : null;
             }
+
+            if ($sql) {
+                if ($this->query($sql, $params)) {
+                    continue;
+                }
+            }
+
+            $transaction->rollBack();
+            $transaction->setAutoCommit(1);
+            return false;
         }
 
         $transaction->commit();

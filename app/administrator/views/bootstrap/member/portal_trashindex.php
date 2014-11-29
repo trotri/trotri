@@ -1,9 +1,32 @@
 <?php
-use views\bootstrap\components\ComponentsConstant;
-use views\bootstrap\components\ComponentsBuilder;
-
 class TableRender extends views\bootstrap\components\TableRender
 {
+	public function getLoginNameLink($data)
+	{
+		return $this->elements_object->getLoginNameLink($data);
+	}
+
+	public function getValidMail($data)
+	{
+		return $this->elements_object->getValidMailLangByValidMail($data['valid_mail']);
+	}
+
+	public function getValidPhone($data)
+	{
+		return $this->elements_object->getValidPhoneLangByValidPhone($data['valid_phone']);
+	}
+
+	public function getForbidden($data)
+	{
+		return $this->elements_object->getForbiddenLangByForbidden($data['forbidden']);
+	}
+
+	public function getIpRegistered($data)
+	{
+		$output = long2ip($data['ip_registered']);
+		return $output;
+	}
+
 	public function getOperate($data)
 	{
 		$params = array(
@@ -11,9 +34,8 @@ class TableRender extends views\bootstrap\components\TableRender
 		);
 
 		$restoreIcon = $this->getRestoreIcon($params);
-		$removeIcon = $this->getRemoveIcon($params);
 
-		$output = $restoreIcon . $removeIcon;
+		$output = $restoreIcon;
 		return $output;
 	}
 }
@@ -30,24 +52,32 @@ $this->widget(
 		'data' => $this->data,
 		'table_render' => $tblRender,
 		'elements' => array(
+			'login_name' => array(
+				'callback' => 'getLoginNameLink'
+			),
+			'valid_mail' => array(
+				'callback' => 'getValidMail'
+			),
+			'valid_phone' => array(
+				'callback' => 'getValidPhone'
+			),
+			'ip_registered' => array(
+				'callback' => 'getIpRegistered'
+			),
+			'forbidden' => array(
+				'callback' => 'getForbidden'
+			),
 		),
 		'columns' => array(
 			'login_name',
 			'member_name',
 			'member_mail',
 			'member_phone',
-			'dt_registered',
-			'dt_last_login',
-			'dt_last_repwd',
-			'ip_registered',
-			'ip_last_login',
-			'ip_last_repwd',
-			'login_count',
-			'repwd_count',
 			'valid_mail',
 			'valid_phone',
+			'dt_registered',
+			'ip_registered',
 			'forbidden',
-			'trash',
 			'member_id',
 			'_operate_',
 		),

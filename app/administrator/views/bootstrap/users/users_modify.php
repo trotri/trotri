@@ -8,7 +8,7 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 		'elements_object' => $this->elements,
 		'elements' => array(
 			'login_name' => array(
-				'disabled' => true
+				'readonly' => true
 			),
 			'group_ids' => array(
 				'options' => $this->elements->getGroupIds()

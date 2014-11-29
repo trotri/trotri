@@ -1,5 +1,4 @@
 <?php
-use views\bootstrap\components\ComponentsConstant;
 use views\bootstrap\components\ComponentsBuilder;
 
 class TableRender extends views\bootstrap\components\TableRender
@@ -7,6 +6,63 @@ class TableRender extends views\bootstrap\components\TableRender
 	public function getLoginNameLink($data)
 	{
 		return $this->elements_object->getLoginNameLink($data);
+	}
+
+	public function getValidMail($data)
+	{
+		$params = array(
+			'id' => $data['member_id'],
+			'column_name' => 'valid_mail'
+		);
+
+		$output = ComponentsBuilder::getSwitch(array(
+			'id' => $data['member_id'],
+			'name' => 'valid_mail',
+			'value' => $data['valid_mail'],
+			'href' => $this->urlManager->getUrl('singlemodify', $this->controller, $this->module, $params)
+		));
+
+		return $output;
+	}
+
+	public function getValidPhone($data)
+	{
+		$params = array(
+			'id' => $data['member_id'],
+			'column_name' => 'valid_phone'
+		);
+
+		$output = ComponentsBuilder::getSwitch(array(
+			'id' => $data['member_id'],
+			'name' => 'valid_phone',
+			'value' => $data['valid_phone'],
+			'href' => $this->urlManager->getUrl('singlemodify', $this->controller, $this->module, $params)
+		));
+
+		return $output;
+	}
+
+	public function getForbidden($data)
+	{
+		$params = array(
+			'id' => $data['member_id'],
+			'column_name' => 'forbidden'
+		);
+
+		$output = ComponentsBuilder::getSwitch(array(
+			'id' => $data['member_id'],
+			'name' => 'forbidden',
+			'value' => $data['forbidden'],
+			'href' => $this->urlManager->getUrl('singlemodify', $this->controller, $this->module, $params)
+		));
+
+		return $output;
+	}
+
+	public function getIpRegistered($data)
+	{
+		$output = long2ip($data['ip_registered']);
+		return $output;
 	}
 
 	public function getOperate($data)
@@ -38,24 +94,29 @@ $this->widget(
 			'login_name' => array(
 				'callback' => 'getLoginNameLink'
 			),
+			'valid_mail' => array(
+				'callback' => 'getValidMail'
+			),
+			'valid_phone' => array(
+				'callback' => 'getValidPhone'
+			),
+			'ip_registered' => array(
+				'callback' => 'getIpRegistered'
+			),
+			'forbidden' => array(
+				'callback' => 'getForbidden'
+			),
 		),
 		'columns' => array(
 			'login_name',
 			'member_name',
 			'member_mail',
 			'member_phone',
-			'dt_registered',
-			'dt_last_login',
-			'dt_last_repwd',
-			'ip_registered',
-			'ip_last_login',
-			'ip_last_repwd',
-			'login_count',
-			'repwd_count',
 			'valid_mail',
 			'valid_phone',
+			'dt_registered',
+			'ip_registered',
 			'forbidden',
-			'trash',
 			'member_id',
 			'_operate_',
 		),

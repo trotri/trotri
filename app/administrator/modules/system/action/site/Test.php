@@ -11,6 +11,7 @@
 namespace modules\system\action\site;
 
 use library\actions;
+use tfc\saf\DbProxy;
 
 /**
  * Test class file
@@ -28,5 +29,38 @@ class Test extends actions\View
 	 */
 	public function run()
 	{
+		$dbProxy = new DbProxy('trotri');
+
+		$sql = 'SELECT `experience` FROM `tr_members` WHERE `member_id1` = ?';
+		$opBefore = $dbProxy->fetchColumn($sql, 1, 0);
+		var_dump($opBefore);
+		
+		exit;
+		$commands = array(
+			array(
+				'sql' => 'UPDATE tr_member_portal SET valid_mail = \'y\' WHERE member_id = 1',			
+			),
+			array(
+				'sql' => 'UPDATE tr_member_portal SET valid_mail = \'y\' WHERE member_id = 2',
+			),
+			array(),
+			array(
+				'sql' => 'UPDATE tr_member_portal SET valid_mail = ? WHERE member_id = ?',
+				'params' => array('valid_mail' => 'y', 'member_id' => 3),
+			),
+			array(
+				'sql' => 'UPDATE tr_member_portal SET valid_mail = ? WHERE member_id = ?',
+				'params' => array('valid_mail' => 'y', 'member_id' => 4),
+			),
+			array(
+				'sql' => 'UPDATE tr_member_portal SET valid_mail = \'y\' WHERE member_id = 5',
+			),
+		);
+
+		$ret = $dbProxy->doTransaction($commands);
+		var_dump($ret);
+
+		$ret = $dbProxy->query('UPDATE tr_member_portal SET valid_mail = \'y\' WHERE member_id = 6');
+		var_dump($ret);
 	}
 }

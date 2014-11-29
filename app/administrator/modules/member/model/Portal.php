@@ -200,6 +200,30 @@ class Portal extends BaseModel
 				'options' => DataPortal::getTrashEnum(),
 				'value' => DataPortal::TRASH_N,
 			),
+			'dt_registered_ge' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_USERS_USERS_DT_REGISTERED_GE_LABEL'),
+			),
+			'dt_registered_le' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_USERS_USERS_DT_REGISTERED_LE_LABEL'),
+			),
+			'dt_last_login_ge' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_USERS_USERS_DT_LAST_LOGIN_GE_LABEL'),
+			),
+			'dt_last_login_le' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_USERS_USERS_DT_LAST_LOGIN_LE_LABEL'),
+			),
+			'login_count_ge' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_GE_LABEL'),
+			),
+			'login_count_le' => array(
+				'type' => 'text',
+				'label' => Text::_('MOD_USERS_USERS_LOGIN_COUNT_LE_LABEL'),
+			),
 		);
 
 		return $output;
@@ -257,23 +281,23 @@ class Portal extends BaseModel
 			if (isset($ret['data']['ip_registered'])) {
 				$ret['data']['ip_registered'] = long2ip($ret['data']['ip_registered']);
 			}
-	
+
 			if (isset($ret['data']['ip_last_login'])) {
 				$ret['data']['ip_last_login'] = long2ip($ret['data']['ip_last_login']);
 			}
-	
+
 			if (isset($ret['data']['ip_last_repwd'])) {
 				$ret['data']['ip_last_repwd'] = long2ip($ret['data']['ip_last_repwd']);
 			}
-	
+
 			if (isset($ret['data']['password'])) {
 				$ret['data']['password'] = '';
 			}
 		}
-	
+
 		return $ret;
 	}
-	
+
 	/**
 	 * 获取“是否已验证邮箱”
 	 * @param string $validMail
@@ -284,7 +308,7 @@ class Portal extends BaseModel
 		$ret = $this->getService()->getValidMailLangByValidMail($validMail);
 		return $ret;
 	}
-	
+
 	/**
 	 * 获取“是否已验证手机号”
 	 * @param string $validPhone
@@ -295,7 +319,7 @@ class Portal extends BaseModel
 		$ret = $this->getService()->getValidPhoneLangByValidPhone($validPhone);
 		return $ret;
 	}
-	
+
 	/**
 	 * 获取“是否禁用”
 	 * @param string $forbidden

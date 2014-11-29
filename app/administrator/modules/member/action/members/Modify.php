@@ -8,7 +8,7 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\member\action\portal;
+namespace modules\member\action\members;
 
 use library\actions;
 
@@ -16,8 +16,8 @@ use library\actions;
  * Modify class file
  * 编辑数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Modify.php 1 2014-11-26 21:46:18Z Code Generator $
- * @package modules.member.action.portal
+ * @version $Id: Modify.php 1 2014-11-27 17:10:30Z Code Generator $
+ * @package modules.member.action.members
  * @since 1.0
  */
 class Modify extends actions\Modify
@@ -28,6 +28,6 @@ class Modify extends actions\Modify
 	 */
 	public function run()
 	{
-		$this->execute('Portal');
+		$this->execute('Members');
 	}
 }

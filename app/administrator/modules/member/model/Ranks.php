@@ -107,4 +107,22 @@ class Ranks extends BaseModel
 		return $ret;
 	}
 
+	/**
+	 * 获取所有的成长度名称
+	 * @return array
+	 */
+	public function getRankNames()
+	{
+		return $this->getService()->getRankNames();
+	}
+
+	/**
+	 * 通过“主键ID”，获取“成长度名”
+	 * @param integer $rankId
+	 * @return string
+	 */
+	public function getRankNameByRankId($rankId)
+	{
+		return $this->getService()->getRankNameByRankId($rankId);
+	}
 }

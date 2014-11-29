@@ -99,4 +99,22 @@ class Types extends BaseModel
 		return $ret;
 	}
 
+	/**
+	 * 获取所有的类型名称
+	 * @return array
+	 */
+	public function getTypeNames()
+	{
+		return $this->getService()->getTypeNames();
+	}
+
+	/**
+	 * 通过“主键ID”，获取“类型名”
+	 * @param integer $typeId
+	 * @return string
+	 */
+	public function getTypeNameByTypeId($typeId)
+	{
+		return $this->getService()->getTypeNameByTypeId($typeId);
+	}
 }

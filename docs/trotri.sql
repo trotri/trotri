@@ -572,11 +572,12 @@ CREATE TABLE `tr_member_portal` (
   KEY `valid_phone` (`valid_phone`),
   KEY `forbidden` (`forbidden`),
   KEY `trash` (`trash`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员账户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员登录表';
 
 DROP TABLE IF EXISTS `tr_members`;
 CREATE TABLE `tr_members` (
   `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号|第三方OpenID',
   `p_password` char(32) NOT NULL DEFAULT '' COMMENT '支付密码',
   `p_salt` char(6) NOT NULL DEFAULT '' COMMENT '支付密码-随机附加混淆码',
   `type_id` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '会员类型ID',
@@ -592,6 +593,7 @@ CREATE TABLE `tr_members` (
   `dt_last_rerank` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新成长度时间',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   PRIMARY KEY (`member_id`),
+  KEY `login_name` (`login_name`),
   KEY `type_id` (`type_id`),
   KEY `rank_id` (`rank_id`),
   KEY `experience` (`experience`),
@@ -605,6 +607,7 @@ CREATE TABLE `tr_members` (
 DROP TABLE IF EXISTS `tr_member_social`;
 CREATE TABLE `tr_member_social` (
   `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号|第三方OpenID',
   `realname` varchar(100) NOT NULL DEFAULT '' COMMENT '真实姓名',
   `sex` enum('male','female','unknow') NOT NULL DEFAULT 'unknow' COMMENT '性别，male：男性、female：女性、unknow：保密',
   `birth_ymd` date NOT NULL DEFAULT '0000-00-00' COMMENT '出生日',
@@ -642,6 +645,7 @@ CREATE TABLE `tr_member_social` (
   `website` varchar(255) NOT NULL DEFAULT '' COMMENT '网站',
   `fax` varchar(50) NOT NULL DEFAULT '' COMMENT '传真',
   PRIMARY KEY (`member_id`),
+  KEY `login_name` (`login_name`),
   KEY `realname` (`realname`),
   KEY `sex` (`sex`),
   KEY `birth_md` (`birth_md`),
@@ -680,6 +684,69 @@ CREATE TABLE `tr_member_addresses` (
   KEY `member_dtlm` (`member_id`,`dt_last_modified`),
   KEY `member_default_dtlm` (`member_id`,`is_default`,`dt_last_modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员地址表';
+
+DROP TABLE IF EXISTS `tr_member_balance_logs`;
+CREATE TABLE `tr_member_balance_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `op_type` enum('increase','reduce','reduce_freeze','freeze','unfreeze') NOT NULL DEFAULT 'increase' COMMENT '操作方式，increase：增加、reduce：扣除、reduce_freeze：扣除冻结金额、freeze：冻结、unfreeze：解冻',
+  `before_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0' COMMENT '原始预存款金额',
+  `after_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0' COMMENT '最终预存款金额',
+  `balance` decimal(10,2) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除预存款金额',
+  `before_freeze_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0' COMMENT '原始冻结预存款金额',
+  `after_freeze_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0' COMMENT '最终冻结预存款金额',
+  `freeze_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除的冻结预存款金额',
+  `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
+  `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`log_id`),
+  KEY `member_type_source` (`member_id`,`op_type`,`source`),
+  KEY `member_source` (`member_id`,`source`),
+  KEY `source` (`source`),
+  KEY `creator_id` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员预存款日志表';
+
+DROP TABLE IF EXISTS `tr_member_points_logs`;
+CREATE TABLE `tr_member_points_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `op_type` enum('increase','reduce','reduce_freeze','freeze','unfreeze') NOT NULL DEFAULT 'increase' COMMENT '操作方式，increase：增加、reduce：扣除、reduce_freeze：扣除冻结积分、freeze：冻结、unfreeze：解冻',
+  `before_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '原始积分',
+  `after_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最终积分',
+  `points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除积分',
+  `before_freeze_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '原始冻结积分',
+  `after_freeze_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最终冻结积分',
+  `freeze_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除的冻结积分',
+  `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
+  `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`log_id`),
+  KEY `member_type_source` (`member_id`,`op_type`,`source`),
+  KEY `member_source` (`member_id`,`source`),
+  KEY `source` (`source`),
+  KEY `creator_id` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员积分日志表';
+
+DROP TABLE IF EXISTS `tr_member_experience_logs`;
+CREATE TABLE `tr_member_experience_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `op_type` enum('increase','reduce') NOT NULL DEFAULT 'increase' COMMENT '操作方式，increase：增加、reduce：扣除',
+  `before_experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '原始成长值',
+  `after_experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最终成长值',
+  `experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除成长值',
+  `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
+  `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`log_id`),
+  KEY `member_type_source` (`member_id`,`op_type`,`source`),
+  KEY `member_source` (`member_id`,`source`),
+  KEY `source` (`source`),
+  KEY `creator_id` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员成长值日志表';
 
 DROP TABLE IF EXISTS `tr_verifiers`;
 CREATE TABLE `tr_verifiers` (

@@ -11,6 +11,7 @@
 namespace member\db;
 
 use tdo\AbstractDb;
+use libsrv\Clean;
 use member\library\Constant;
 use member\library\TableNames;
 
@@ -183,7 +184,9 @@ class Portal extends AbstractDb
 
 		if ($option === 'SQL_CALC_FOUND_ROWS') {
 			$ret = $this->fetchAllNoCache($sql, $attributes);
-
+			if (isset($attributes['ip_registered'])) {
+				$attributes['ip_registered'] = long2ip($ipRegistered);
+			}
 			if (is_array($ret)) {
 				$ret['attributes'] = $attributes;
 				$ret['order']      = $order;
@@ -317,8 +320,14 @@ class Portal extends AbstractDb
 		$membersTblName = $this->getTblprefix() . TableNames::getMembers();
 		$socialTblName = $this->getTblprefix() . TableNames::getSocial();
 		$commands = array(
-			$this->getCommandBuilder()->createInsert($membersTblName, array('member_id')) => $lastInsertId,
-			$this->getCommandBuilder()->createInsert($socialTblName, array('member_id')) => $lastInsertId,
+			array(
+				'sql' => $this->getCommandBuilder()->createInsert($membersTblName, array('member_id', 'login_name', 'dt_created')),
+				'params' => array('member_id' => $lastInsertId, 'login_name' => $loginName, 'dt_created' => date('Y-m-d H:i:s'))
+			),
+			array(
+				'sql' => $this->getCommandBuilder()->createInsert($socialTblName, array('member_id', 'login_name')),
+				'params' => array('member_id' => $lastInsertId, 'login_name' => $loginName)
+			),
 		);
 
 		if ($this->doTransaction($commands)) {
@@ -504,19 +513,74 @@ class Portal extends AbstractDb
 	}
 
 	/**
-	 * 通过主键，删除一条记录
-	 * @param integer $memberId
+	 * 通过主键，编辑多条记录
+	 * @param array|integer $memberIds
+	 * @param array $params
 	 * @return integer
 	 */
-	public function removeByPk($memberId)
+	public function batchModifyByPk($memberIds, array $params = array())
 	{
-		if (($memberId = (int) $memberId) <= 0) {
+		$memberIds = Clean::positiveInteger($memberIds);
+		if ($memberIds === false) {
 			return false;
 		}
 
+		if (is_array($memberIds)) {
+			$memberIds = implode(', ', $memberIds);
+		}
+
+		$attributes = array();
+
+		if (isset($params['valid_mail'])) {
+			$validMail = trim($params['valid_mail']);
+			if ($validMail !== '') {
+				$attributes['valid_mail'] = $validMail;
+			}
+			else {
+				return false;
+			}
+		}
+
+		if (isset($params['valid_phone'])) {
+			$validPhone = trim($params['valid_phone']);
+			if ($validPhone !== '') {
+				$attributes['valid_phone'] = $validPhone;
+			}
+			else {
+				return false;
+			}
+		}
+
+		if (isset($params['forbidden'])) {
+			$forbidden = trim($params['forbidden']);
+			if ($forbidden !== '') {
+				$attributes['forbidden'] = $forbidden;
+			}
+			else {
+				return false;
+			}
+		}
+
+		if (isset($params['trash'])) {
+			$trash = trim($params['trash']);
+			if ($trash !== '') {
+				$attributes['trash'] = $trash;
+			}
+			else {
+				return false;
+			}
+		}
+
+		$rowCount = 0;
+
+		if ($attributes === array()) {
+			return $rowCount;
+		}
+
 		$tableName = $this->getTblprefix() . TableNames::getPortal();
-		$sql = $this->getCommandBuilder()->createDelete($tableName, '`member_id` = ?');
-		$rowCount = $this->delete($sql, $memberId);
+		$condition = '`member_id` IN (' . $memberIds . ')';
+		$sql = $this->getCommandBuilder()->createUpdate($tableName, array_keys($attributes), $condition);
+		$rowCount = $this->update($sql, $attributes);
 		return $rowCount;
 	}
 }

@@ -246,6 +246,16 @@ Core = {
   },
 
   /**
+   * 列表页改变Select选项后提交
+   * @param object o
+   * @return void
+   */
+  changeSelectValue: function(o) {
+    var url = $(o).attr("href") + "&value=" + $(o).val();
+    Trotri.href(url);
+  },
+
+  /**
    * 提交表单
    * @param object btn  按钮的对象
    * @param string type 按钮的类型
