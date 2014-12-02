@@ -21,18 +21,23 @@ namespace files\library;
 class Constant
 {
 	/**
-	 * @var string 文档管理：上传图片配置
+	 * @var string 上传图片配置：文档管理
 	 */
 	const POSTS_CLUSTER = 'posts';
 
 	/**
-	 * @var string 系统管理：批量上传配置
+	 * @var string 批量上传配置：系统管理
 	 */
 	const SYSBATCH_CLUSTER = 'sysbatch';
 
 	/**
-	 * @var string 广告管理：上传图片|Flash配置
+	 * @var string 上传图片|Flash配置：广告管理
 	 */
 	const ADVERTS_CLUSTER = 'adverts';
+
+	/**
+	 * @var string 上传图片配置：会员头像管理
+	 */
+	const HEAD_PORTRAIT_CLUSTER = 'head_portrait';
 
 }

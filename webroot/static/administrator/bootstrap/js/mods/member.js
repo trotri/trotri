@@ -1,6 +1,31 @@
 $(document).ready(function() {
-  if (g_ctrl == "members" && g_act == "index") {
-    Member.ajaxAccount();
+  if (g_ctrl == "members") {
+    if (g_act == "index") {
+      Member.ajaxAccount();
+    }
+  }
+
+  if (g_ctrl == "social") {
+    if (g_act == "modify") {
+      Core.regions({
+        country  : "live_country_id",
+        province : "live_province_id",
+        city     : "live_city_id",
+        district : "live_district_id"
+      });
+      Core.regions({
+        country  : "address_country_id",
+        province : "address_province_id",
+        city     : "address_city_id",
+        district : "address_district_id"
+      });
+
+      Core.uploadPreviewImg("head_portrait_file", "head_portrait");
+    }
+
+    if (g_act == "view") {
+      //Core.uploadPreviewImg("head_portrait_file", "head_portrait", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});	
+    }
   }
 });
 

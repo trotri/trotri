@@ -79,6 +79,23 @@ class Upload
 	}
 
 	/**
+	 * 上传图片|Flash：会员图像
+	 * @param array $files
+	 * @return array
+	 */
+	public static function headPortrait(array $files)
+	{
+		$clusterName = Constant::HEAD_PORTRAIT_CLUSTER;
+
+		$ret = self::save($clusterName, $files);
+		if ($ret['err_no'] !== UpProxy::SUCCESS_NUM) {
+			return $ret;
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * 检查并上传文件
 	 * @param string $clusterName
 	 * @param array $files

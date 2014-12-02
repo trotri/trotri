@@ -18,6 +18,10 @@ $config = array(
 		'label' => 'MOD_MEMBER_URLS_MEMBERS_INDEX',
 		'm' => 'member', 'c' => 'members', 'a' => 'index'
 	),
+	'social' => array(
+		'label' => 'MOD_MEMBER_URLS_SOCIAL_INDEX',
+		'm' => 'member', 'c' => 'social', 'a' => 'index'
+	),
 	'types' => array(
 		'label' => 'MOD_MEMBER_URLS_TYPES_INDEX',
 		'm' => 'member', 'c' => 'types', 'a' => 'index',
@@ -46,6 +50,9 @@ if ($this->controller === 'portal') {
 }
 elseif ($this->controller === 'members') {
 	$config['members']['active'] = true;
+}
+elseif ($this->controller === 'social') {
+	$config['social']['active'] = true;
 }
 elseif ($this->controller === 'types') {
 	$config['types']['active'] = true;
@@ -94,7 +101,6 @@ if ($this->controller === 'portal') {
 				),
 			),
 			'columns' => array(
-				'order',
 				'login_name',
 				'member_id',
 				'login_type',
@@ -137,7 +143,6 @@ if ($this->controller === 'members') {
 				),
 			),
 			'columns' => array(
-				'order',
 				'login_name',
 				'member_id',
 				'login_type',
@@ -146,6 +151,39 @@ if ($this->controller === 'members') {
 				'member_phone',
 				'type_id',
 				'rank_id'
+			)
+		)
+	);
+}
+
+if ($this->controller === 'social') {
+	$this->widget('views\bootstrap\widgets\SearchBuilder',
+		array(
+			'name' => 'search',
+			'action' => $this->getUrlManager()->getUrl('index', 'social', 'member'),
+			'elements_object' => $this->elements,
+			'elements' => array(
+				'member_id' => array(
+					'type' => 'text',
+				),
+				'login_type' => array(
+					'type' => 'select',
+				),
+				'sex' => array(
+					'type' => 'select',
+				),
+			),
+			'columns' => array(
+				'login_name',
+				'member_id',
+				'login_type',
+				'member_name',
+				'member_mail',
+				'member_phone',
+				'realname',
+				'sex',
+				'birth_md',
+				'qq',
 			)
 		)
 	);

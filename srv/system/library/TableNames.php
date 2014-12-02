@@ -28,4 +28,13 @@ class TableNames
 	{
 		return 'system_options';
 	}
+
+	/**
+	 * 获取“地区表”表名
+	 * @return string
+	 */
+	public static function getRegions()
+	{
+		return 'regions';
+	}
 }

@@ -276,7 +276,7 @@ Core = {
 
     action = o.attr("action") + "&do=post&submit_type=" + type;
     if (lastIndexUrl !== "") {
-    	action += "&last_index_url=" + lastIndexUrl;
+      action += "&last_index_url=" + lastIndexUrl;
     }
 
     o.attr("action", action);
@@ -512,6 +512,107 @@ Core = {
 
     $.extend(defaults, options);
     button.uploadFile(defaults);
+  },
+
+  /**
+   * Ajax加载地区
+   * @param json p
+   * @return void
+   */
+  regions: function(p) {
+    var url = g_url + "?r=system/regions/index&def=1&pid=";
+
+    var defaults = {
+      country  : "country",
+      province : "province",
+      city     : "city",
+      district : "district",
+    };
+
+    p = $.extend(defaults, p);
+
+    var getObj = function(sName) {
+      return $("select[name='" + sName + "']");
+    };
+
+    var oCountry  = getObj(p.country);
+    var oProvince = getObj(p.province);
+    var oCity     = getObj(p.city);
+    var oDistrict = getObj(p.district);
+
+    var hasCountry  = (typeof(oCountry)  == "object" && oCountry.length  > 0) ? true : false;
+    var hasProvince = (typeof(oProvince) == "object" && oProvince.length > 0) ? true : false;
+    var hasCity     = (typeof(oCity)     == "object" && oCity.length     > 0) ? true : false;
+    var hasDistrict = (typeof(oDistrict) == "object" && oCity.length     > 0) ? true : false;
+
+    if (!hasProvince || !hasCity || !hasDistrict) {
+      return ;
+    }
+
+    var loadRegions = function(E, regionPid) {
+      E.empty();
+
+      if ((regionPid = parseInt(regionPid)) < 0) {
+        return ;
+      }
+
+      if (!$.isNumeric(regionPid)) {
+        return ;
+      }
+
+      if (E.attr("name") != p.country && regionPid == 0) {
+        return ;
+      }
+
+      $.getJSON(url + regionPid, function(ret) {
+        if (ret.err_no == 0) {
+          var text = "";
+          for (var regionId in ret.data) {
+            text += "<option value='" + regionId + "'>" + ret.data[regionId] + "</option>";
+          }
+
+          E.html(text);
+        }
+      });
+    };
+
+    var loadDistricts = function() {
+      loadRegions(oDistrict, oCity.val());
+    };
+
+    var loadCities = function() {
+      loadRegions(oCity, oProvince.val());
+      loadDistricts();
+    };
+
+    var loadProvinces = function() {
+      loadRegions(oProvince, (hasCountry ? oCountry.val() : 1));
+      loadCities();
+    };
+
+    var loadCountries = function() {
+      if (hasCountry) {
+        loadRegions(oCountry, 0);
+      }
+
+      loadProvinces();
+    };
+
+    if (hasCountry) {
+      oCountry.change(function() {
+        loadProvinces();
+      });
+    }
+
+    oProvince.change(function() {
+      loadCities();
+    });
+
+    oCity.change(function() {
+      loadDistricts();
+    });
+
+    loadCountries();
   }
 
 }

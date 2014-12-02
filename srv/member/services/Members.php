@@ -56,7 +56,7 @@ class Members extends AbstractService
 	}
 
 	/**
-	 * 通过主键，编辑支付密码。
+	 * 通过主键，编辑支付密码
 	 * @param integer|array $value
 	 * @param array $params
 	 * @return integer

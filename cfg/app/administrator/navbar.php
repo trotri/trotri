@@ -75,6 +75,10 @@ return array(
 			'm' => 'member', 'c' => 'members', 'a' => 'index',
 		),
 		3 => array(
+			'label' => 'CFG_SYSTEM_URLS_MEMBER_SOCIAL_INDEX',
+			'm' => 'member', 'c' => 'social', 'a' => 'index',
+		),
+		4 => array(
 			'label' => 'CFG_SYSTEM_URLS_MEMBER_TYPES_INDEX',
 			'm' => 'member', 'c' => 'types', 'a' => 'index',
 			'icon' => array(
@@ -82,7 +86,7 @@ return array(
 				'm' => 'member', 'c' => 'types', 'a' => 'create'
 			)
 		),
-		4 => array(
+		5 => array(
 			'label' => 'CFG_SYSTEM_URLS_MEMBER_RANKS_INDEX',
 			'm' => 'member', 'c' => 'ranks', 'a' => 'index',
 			'icon' => array(
