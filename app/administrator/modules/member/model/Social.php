@@ -347,6 +347,12 @@ class Social extends BaseModel
 				'label' => Text::_('MOD_MEMBER_MEMBER_SOCIAL_FAX_LABEL'),
 				'hint' => Text::_('MOD_MEMBER_MEMBER_SOCIAL_FAX_HINT'),
 			),
+			'addresses' => array(
+				'__tid__' => 'main',
+				'type' => 'text',
+				'label' => Text::_('MOD_MEMBER_URLS_ADDRESSES_INDEX'),
+				'hint' => Text::_('MOD_MEMBER_URLS_ADDRESSES_CREATE'),
+			),
 		);
 
 		return $output;

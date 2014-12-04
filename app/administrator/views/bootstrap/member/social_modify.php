@@ -56,9 +56,4 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 );
 ?>
 
-<script>
-var gLiveCountryId = "<?php echo $this->data['live_country_id']; ?>";
-var gLiveProvinceId = "<?php echo $this->data['live_province_id']; ?>";
-var gLiveCityId = "<?php echo $this->data['live_city_id']; ?>";
-var gLiveDistrictId = "<?php echo $this->data['live_district_id']; ?>";
-</script>
+<?php echo $this->getHtml()->js('var gData = ' . json_encode($this->data) . ';'); ?>

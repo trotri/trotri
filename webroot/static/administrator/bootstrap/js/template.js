@@ -516,12 +516,12 @@ Core = {
 
   /**
    * Ajax加载地区
-   * @param json p
+   * @param string url
+   * @param json columns {country : "addr_country_id", province : "addr_province_id", city : "addr_city_id", district : "addr_district_id"}
+   * @param json data {"addr_country_id" : "0", "addr_province_id" : "0", "addr_city_id" : "0", "addr_district_id" : "0"}
    * @return void
    */
-  regions: function(p) {
-    var url = g_url + "?r=system/regions/index&def=1&pid=";
-
+  regions: function(url, columns, data) {
     var defaults = {
       country  : "country",
       province : "province",
@@ -529,16 +529,16 @@ Core = {
       district : "district",
     };
 
-    p = $.extend(defaults, p);
+    columns = $.extend(defaults, columns);
 
     var getObj = function(sName) {
       return $("select[name='" + sName + "']");
     };
 
-    var oCountry  = getObj(p.country);
-    var oProvince = getObj(p.province);
-    var oCity     = getObj(p.city);
-    var oDistrict = getObj(p.district);
+    var oCountry  = getObj(columns.country);
+    var oProvince = getObj(columns.province);
+    var oCity     = getObj(columns.city);
+    var oDistrict = getObj(columns.district);
 
     var hasCountry  = (typeof(oCountry)  == "object" && oCountry.length  > 0) ? true : false;
     var hasProvince = (typeof(oProvince) == "object" && oProvince.length > 0) ? true : false;
@@ -549,7 +549,7 @@ Core = {
       return ;
     }
 
-    var loadRegions = function(E, regionPid) {
+    var loadRegions = function(E, regionPid, selectedValue, recursive) {
       E.empty();
 
       if ((regionPid = parseInt(regionPid)) < 0) {
@@ -560,59 +560,92 @@ Core = {
         return ;
       }
 
-      if (E.attr("name") != p.country && regionPid == 0) {
+      var sName = E.attr("name");
+      if (sName != columns.country && regionPid == 0) {
+        if (sName == columns.city) {
+          oDistrict.empty();
+        }
+
+        if (sName == columns.province) {
+          oCity.empty();
+          oDistrict.empty();
+        }
+
         return ;
       }
 
+      if (typeof(recursive) == "undefined") {
+        recursive = true;
+      }
+
+      selectedValue = parseInt(selectedValue);
+      $.isNumeric(selectedValue) ? "" : selectedValue = 0;
+
       $.getJSON(url + regionPid, function(ret) {
         if (ret.err_no == 0) {
+          var firstValue = 0;
+          for (var regionId in ret.data) { firstValue = regionId; break; }
+
+          var hasSelected = false;
+          for (var regionId in ret.data) {
+            if (regionId == selectedValue) { hasSelected = true; break; }
+          }
+
+          hasSelected ? "" : selectedValue = firstValue;
+
           var text = "";
           for (var regionId in ret.data) {
-            text += "<option value='" + regionId + "'>" + ret.data[regionId] + "</option>";
+            var selected = (regionId == selectedValue) ? " selected" : "";
+            text += "<option value='" + regionId + "'" + selected + ">" + ret.data[regionId] + "</option>";
           }
 
           E.html(text);
+
+          if (recursive) {
+            switch (true) {
+              case sName == columns.country:
+                loadRegions(oProvince, selectedValue, 0, recursive);
+                break;
+              case sName == columns.province:
+                loadRegions(oCity, selectedValue, 0, recursive);
+                break;
+              case sName == columns.city:
+                loadRegions(oDistrict, selectedValue, 0, recursive);
+                break;
+              default:
+                break;
+            }
+          }
         }
       });
     };
 
-    var loadDistricts = function() {
-      loadRegions(oDistrict, oCity.val());
-    };
+    var objs = hasCountry ? [oCountry, oProvince, oCity, oDistrict] : [oProvince, oCity, oDistrict];
+    for (var i in objs) {
+      eval("var selectedValue = parseInt(data." + objs[i].attr("name") + ");");
+      $.isNumeric(selectedValue) ? "" : selectedValue = 0;
+      objs[i].attr("selected_value", selectedValue);
+    }
 
-    var loadCities = function() {
-      loadRegions(oCity, oProvince.val());
-      loadDistricts();
-    };
-
-    var loadProvinces = function() {
-      loadRegions(oProvince, (hasCountry ? oCountry.val() : 1));
-      loadCities();
-    };
-
-    var loadCountries = function() {
-      if (hasCountry) {
-        loadRegions(oCountry, 0);
-      }
-
-      loadProvinces();
-    };
+    var oPrev = null;
+    for (var i in objs) {
+      loadRegions(objs[i], (oPrev ? oPrev.attr("selected_value") : (hasCountry ? 0 : 1)), objs[i].attr("selected_value"), ((objs[i].attr("selected_value") > 0) ? false : true));
+      oPrev = objs[i];
+    }
 
     if (hasCountry) {
       oCountry.change(function() {
-        loadProvinces();
+        loadRegions(oProvince, $(this).val());
       });
     }
 
     oProvince.change(function() {
-      loadCities();
+      loadRegions(oCity, $(this).val());
     });
 
     oCity.change(function() {
-      loadDistricts();
+      loadRegions(oDistrict, $(this).val());
     });
-
-    loadCountries();
   }
 
 }

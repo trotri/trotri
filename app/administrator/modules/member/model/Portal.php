@@ -299,6 +299,17 @@ class Portal extends BaseModel
 	}
 
 	/**
+	 * 通过“主键ID”，获取“登录名”
+	 * @param integer $memberId
+	 * @return string
+	 */
+	public function getLoginNameByMemberId($memberId)
+	{
+		$ret = $this->getService()->getLoginNameByMemberId($memberId);
+		return $ret;
+	}
+
+	/**
 	 * 获取“是否已验证邮箱”
 	 * @param string $validMail
 	 * @return string

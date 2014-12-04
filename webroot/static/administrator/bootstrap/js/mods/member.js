@@ -7,24 +7,37 @@ $(document).ready(function() {
 
   if (g_ctrl == "social") {
     if (g_act == "modify") {
-      Core.regions({
+      var regionUrl = g_url + "?r=system/regions/index&def=1&pid=";
+      Core.regions(regionUrl, {
         country  : "live_country_id",
         province : "live_province_id",
         city     : "live_city_id",
         district : "live_district_id"
-      });
-      Core.regions({
+      }, gData, false);
+      Core.regions(regionUrl, {
         country  : "address_country_id",
         province : "address_province_id",
         city     : "address_city_id",
         district : "address_district_id"
-      });
+      }, gData, false);
 
       Core.uploadPreviewImg("head_portrait_file", "head_portrait");
     }
 
     if (g_act == "view") {
-      //Core.uploadPreviewImg("head_portrait_file", "head_portrait", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});	
+      Core.uploadPreviewImg("head_portrait_file", "head_portrait", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});	
+    }
+  }
+
+  if (g_ctrl == "addresses") {
+    if (g_act == "create" || g_act == "modify") {
+      var regionUrl = g_url + "?r=system/regions/index&def=1&pid=";
+      Core.regions(regionUrl, {
+        country  : "addr_country_id",
+        province : "addr_province_id",
+        city     : "addr_city_id",
+        district : "addr_district_id"
+      }, gData, false);
     }
   }
 });

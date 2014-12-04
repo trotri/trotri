@@ -673,10 +673,11 @@ CREATE TABLE `tr_member_profile` (
 DROP TABLE IF EXISTS `tr_member_addresses`;
 CREATE TABLE `tr_member_addresses` (
   `address_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `address_name` varchar(255) NOT NULL DEFAULT '' COMMENT '地址名',
   `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
   `consignee` varchar(100) NOT NULL DEFAULT '' COMMENT '收货人姓名',
-  `telephone` varchar(50) NOT NULL DEFAULT '' COMMENT '收货人固定电话',
   `mobiphone` char(11) NOT NULL DEFAULT '' COMMENT '收货人手机号',
+  `telephone` varchar(50) NOT NULL DEFAULT '' COMMENT '收货人固定电话',
   `email` varchar(100) NOT NULL DEFAULT '' COMMENT '收货人邮箱',
   `addr_country_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址-国家',
   `addr_country` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-国家',
@@ -686,7 +687,7 @@ CREATE TABLE `tr_member_addresses` (
   `addr_city` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-城市',
   `addr_district_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址-区域',
   `addr_district` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-区域',
-  `addr_street` varchar(255) NOT NULL DEFAULT '' COMMENT '收货地址-街道门牌号',
+  `addr_street` varchar(255) NOT NULL DEFAULT '' COMMENT '收货地址-详细地址',
   `addr_zipcode` varchar(20) NOT NULL DEFAULT '' COMMENT '收货地址-邮编',
   `when` enum('anyone','workday','weekend','holiday') NOT NULL DEFAULT 'anyone' COMMENT '收货最佳时间，anyone：任意时间、workday：工作日、weekend：双休日、holiday：假日',
   `is_default` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否默认地址',

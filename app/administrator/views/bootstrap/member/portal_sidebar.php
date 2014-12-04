@@ -51,7 +51,7 @@ if ($this->controller === 'portal') {
 elseif ($this->controller === 'members') {
 	$config['members']['active'] = true;
 }
-elseif ($this->controller === 'social') {
+elseif ($this->controller === 'social' || $this->controller === 'addresses') {
 	$config['social']['active'] = true;
 }
 elseif ($this->controller === 'types') {
