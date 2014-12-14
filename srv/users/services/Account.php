@@ -41,7 +41,7 @@ use libsrv\Clean;
  *
  * 配置 /cfg/key/cluster.php：
  * return array (
- *   'auth_passport' => array (
+ *   'auth_administrator' => array (
  *     'crypt' => 'UViRN53uj7yZ5IAfdIGiq5bvRuCH9njd', // 加密密钥
  *     'sign' => 'xwFVMiM98nzW6PwW9jxCmT2mLTv5IJES',  // 签名密钥
  *     'expiry' => MONTH_IN_SECONDS,                  // 缺省的密文有效期，如果等于0，表示永久有效，单位：秒
@@ -72,7 +72,7 @@ class Account
 	protected $_groups = null;
 
 	/**
-	 * 构造方法：初始化数据库操作类
+	 * 构造方法：初始化业务处理类
 	 */
 	public function __construct()
 	{
@@ -543,7 +543,7 @@ class Account
 		$appNames = explode(',', $extends);
 		$authoriz = $this->getAuthoriz($roleNames);
 
-		Identity::setAll($userId, $loginName, $nickname, $roleNames, $appNames, $authoriz);
+		Identity::setAll($userId, $loginName, $nickname, $roleNames, $appNames, 0, 0, $authoriz);
 		return true;
 	}
 

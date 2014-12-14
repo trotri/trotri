@@ -40,11 +40,19 @@ class Index extends DataAction
 		$req = Ap::getRequest();
 		$pid = $req->getInteger('pid');
 		$def = $req->getInteger('def');
+		$srv = Service::getInstance('Regions', 'system');
 
-		$default = array(0 => Text::_('CFG_SYSTEM_GLOBAL_SELECT_HINT'));
-		$data = Service::getInstance('Regions', 'system')->findPairs($pid);
+		$data = $srv->findPairs($pid);
 
-		if ($def === 1) {
+		if ($data && $def === 1) {
+			$id = array_shift(array_keys(array_slice($data, 0, 1, true)));
+			$type = $srv->getRegionTypeByRegionId($id);
+			$hint = $srv->getRegionTypeLangByRegionType($type);
+			if ($hint === '') {
+				$hint = Text::_('CFG_SYSTEM_GLOBAL_SELECT_HINT');
+			}
+
+			$default = array(0 => '--' . $hint . '--');
 			$data = $default + $data;
 		}
 

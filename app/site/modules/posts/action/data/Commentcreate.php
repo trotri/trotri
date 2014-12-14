@@ -16,10 +16,10 @@ use libapp\Model;
 
 /**
  * Commentcreate class file
- * 文档列表页面
+ * Ajax提交评论
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Commentcreate.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.posts.action.show
+ * @package modules.posts.action.data
  * @since 1.0
  */
 class Commentcreate extends DataAction

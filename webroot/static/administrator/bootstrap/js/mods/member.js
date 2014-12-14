@@ -13,13 +13,13 @@ $(document).ready(function() {
         province : "live_province_id",
         city     : "live_city_id",
         district : "live_district_id"
-      }, gData, false);
+      }, g_data, false);
       Core.regions(regionUrl, {
         country  : "address_country_id",
         province : "address_province_id",
         city     : "address_city_id",
         district : "address_district_id"
-      }, gData, false);
+      }, g_data, false);
 
       Core.uploadPreviewImg("head_portrait_file", "head_portrait");
     }
@@ -37,7 +37,7 @@ $(document).ready(function() {
         province : "addr_province_id",
         city     : "addr_city_id",
         district : "addr_district_id"
-      }, gData, false);
+      }, g_data, false);
     }
   }
 });

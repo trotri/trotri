@@ -11,6 +11,7 @@
 namespace modules\system\action\show;
 
 use library\ShowAction;
+use system\services\Tools;
 
 /**
  * Test class file
@@ -28,5 +29,7 @@ class Test extends ShowAction
 	 */
 	public function run()
 	{
+		$bol = Tools::sendMail('trotri@yeah.net', 'Test-From-QQ', 'Test-From-QQ-Body');
+		var_dump($bol);
 	}
 }

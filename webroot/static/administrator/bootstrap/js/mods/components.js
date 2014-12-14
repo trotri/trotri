@@ -20,6 +20,12 @@ $(document).ready(function() {
       Core.uploadPreviewImg("cover_file", "cover", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});
     }
   }
+
+  if (g_mod == "poll" && g_ctrl == "polls" && (g_act == "create" || g_act == "modify" || g_act == "view")) {
+    Components.toggleMRankIds();
+    Components.toggleMaxChoices();
+    Components.toggleInterval();
+  }
 });
 
 /**
@@ -84,5 +90,58 @@ Components = {
     $("#advanced :radio[name='show_type']").on('ifChecked', function(event) {
       exec();
     });
+  },
+
+  /**
+   * 显示和隐藏允许参与会员成长度
+   * @return void
+   */
+  toggleMRankIds: function() {
+    var exec = function(allowUnregistered) {
+      var mRankIds = $("#main :checkbox[name='m_rank_ids[]']").parent().parent();
+      if (mRankIds.attr("class") == "checkbox-inline") { mRankIds = mRankIds.parent(); }
+      allowUnregistered == "n" ? mRankIds.show() : mRankIds.hide();
+    };
+
+    var o = $("#main :checkbox[name='allow_unregistered']");
+    exec(o.val());
+    o.change(function() {
+      exec(($(this).val() == "y") ? "n" : "y");
+    });
+  },
+
+  /**
+   * 显示和隐藏最多可选数量
+   * @return void
+   */
+  toggleMaxChoices: function() {
+    var exec = function(isMultiple) {
+      var maxChoices = $("#main :text[name='max_choices']").parent().parent();
+      isMultiple == "y" ? maxChoices.show() : maxChoices.hide();
+    };
+
+    var o = $("#main :checkbox[name='is_multiple']");
+    exec(o.val());
+    o.change(function() {
+      exec(($(this).val() == "y") ? "n" : "y");
+    });
+  },
+
+  /**
+   * 显示和隐藏间隔秒数
+   * @return void
+   */
+  toggleInterval: function() {
+    var exec = function(isInterval) {
+      var interval = $("#main :text[name='interval']").parent().parent();
+      isInterval == "y" ? interval.show() : interval.hide();
+    };
+
+    var o = $("#main :radio[name='join_type']");
+    exec(($("#main :radio[name='join_type']:checked").val() == "interval") ? "y" : "n");
+    o.on('ifChecked', function(event) {
+      exec(($(this).val() == "interval") ? "y" : "n");
+    });
   }
+
 }

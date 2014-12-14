@@ -11,7 +11,9 @@
 namespace system\services;
 
 use libsrv\AbstractService;
-use tfc\util\FileManager;
+use tfc\ap\Singleton;
+use tfc\ap\ErrorException;
+use tfc\util\Smtp;
 use tfc\saf\Log;
 use libapp\ErrorNo;
 
@@ -49,7 +51,7 @@ class Tools extends AbstractService
 	 */
 	public static function cacheclear()
 	{
-		$fileManager = new FileManager();
+		$fileManager = Singleton::getInstance('tfc\\util\\FileManager');
 
 		$dirs = $fileManager->scanDir(DIR_DATA_RUNTIME);
 		foreach ($dirs as $directory) {
@@ -66,6 +68,32 @@ class Tools extends AbstractService
 		}
 
 		return true;
+	}
+
+	/**
+	 * 发送邮件
+	 * @param string $toMail
+	 * @param string $subject
+	 * @param string $body
+	 * @return boolean
+	 */
+	public static function sendMail($toMail, $subject, $body)
+	{
+		$smtp = null;
+		if ($smtp === null) {
+			$smtp = new Smtp(Options::getSmtpHost(), Options::getSmtpUsername(), Options::getSmtpPassword());
+		}
+
+		try {
+			return $smtp->sendMail($toMail, $subject, $body);
+		}
+		catch (ErrorException $e) {
+			Log::warning(sprintf(
+				'Tools sendMail Failed, SmtpHost: "%s", Message: "%s"', $smtp->getHost(), $e->getMessage()
+			), $e->getCode(),  __METHOD__);
+		}
+
+		return false;
 	}
 
 }

@@ -49,6 +49,7 @@ abstract class ShowAction extends BaseAction
 		parent::_init();
 		$this->_isLogin();
 		$this->_initView();
+		$this->assignAccount();
 	}
 
 	/**
@@ -74,7 +75,7 @@ abstract class ShowAction extends BaseAction
 	 */
 	public function toLogin()
 	{
-		$this->forward('login', 'account', 'users');
+		$this->forward('login', 'show', 'member');
 	}
 
 	/**
@@ -160,6 +161,22 @@ abstract class ShowAction extends BaseAction
 		isset($data['err_msg']) || $data['err_msg'] = '';
 
 		$viw->render($tplName, $data);
+	}
+
+	/**
+	 * 将会员账户信息设置到模板变量中
+	 * @return void
+	 */
+	public function assignAccount()
+	{
+		$viw = Mvc::getView();
+
+		$viw->assign('is_login',    Identity::isLogin());
+		$viw->assign('member_id',   Identity::getUserId());
+		$viw->assign('login_name',  Identity::getLoginName());
+		$viw->assign('member_name', Identity::getNickname());
+		$viw->assign('type_id',     Identity::getTypeId());
+		$viw->assign('rank_id',     Identity::getRankId());
 	}
 
 	/**

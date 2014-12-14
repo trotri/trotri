@@ -10,6 +10,8 @@
 
 namespace member\services;
 
+use libsrv\Service;
+
 /**
  * DataMembers class file
  * 业务层：数据管理类，寄存常量、选项
@@ -70,4 +72,33 @@ class DataMembers
 	 */
 	const SOURCE_C_ORDER = 'c_order';
 
+	/**
+	 * 获取“会员成长度”所有选项
+	 * @return array
+	 */
+	public static function getRanksEnum()
+	{
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = Service::getInstance('Ranks', 'member')->getRankNames();
+		}
+
+		return $enum;
+	}
+
+	/**
+	 * 获取“会员类型”所有选项
+	 * @return array
+	 */
+	public static function getTypesEnum()
+	{
+		static $enum = null;
+
+		if ($enum === null) {
+			$enum = Service::getInstance('Types', 'member')->getTypeNames();
+		}
+
+		return $enum;
+	}
 }

@@ -11,6 +11,7 @@
 namespace member\db;
 
 use tdo\AbstractDb;
+use tfc\saf\Log;
 use libsrv\Clean;
 use member\library\Constant;
 use member\library\TableNames;
@@ -228,8 +229,10 @@ class Portal extends AbstractDb
 			return false;
 		}
 
-		$tableName = $this->getTblprefix() . TableNames::getPortal();
-		$sql = 'SELECT `member_id`, `login_name`, `login_type`, `password`, `salt`, `member_name`, `member_mail`, `member_phone`, `relation_member_id`, `dt_registered`, `dt_last_login`, `dt_last_repwd`, `ip_registered`, `ip_last_login`, `ip_last_repwd`, `login_count`, `repwd_count`, `valid_mail`, `valid_phone`, `forbidden`, `trash` FROM `' . $tableName . '` WHERE `login_name` = ?';
+		$membersTblName = $this->getTblprefix() . TableNames::getMembers();
+		$portalTblName = $this->getTblprefix() . TableNames::getPortal();
+
+		$sql = 'SELECT `p`.`member_id`, `p`.`login_name`, `p`.`login_type`, `p`.`password`, `p`.`salt`, `p`.`member_name`, `p`.`member_mail`, `p`.`member_phone`, `p`.`relation_member_id`, `p`.`dt_registered`, `p`.`dt_last_login`, `p`.`dt_last_repwd`, `p`.`ip_registered`, `p`.`ip_last_login`, `p`.`ip_last_repwd`, `p`.`login_count`, `p`.`repwd_count`, `p`.`valid_mail`, `p`.`valid_phone`, `p`.`forbidden`, `p`.`trash`, `m`.`type_id`, `m`.`rank_id`, `m`.`experience`, `m`.`balance`, `m`.`points`, `m`.`consum`, `m`.`orders` FROM `' . $portalTblName . '` AS `p` LEFT JOIN `' . $membersTblName . '` AS `m` ON `p`.`member_id` = `m`.`member_id` WHERE `p`.`login_name` = ?';
 		return $this->fetchAssoc($sql, $loginName);
 	}
 
@@ -583,4 +586,48 @@ class Portal extends AbstractDb
 		$rowCount = $this->update($sql, $attributes);
 		return $rowCount;
 	}
+
+	/**
+	 * 通过主键，删除一条记录
+	 * @param integer $memberId
+	 * @return integer
+	 */
+	public function removeByPk($memberId)
+	{
+		if (($memberId = (int) $memberId) <= 0) {
+			return false;
+		}
+
+		$portalTblName = $this->getTblprefix() . TableNames::getPortal();
+		$membersTblName = $this->getTblprefix() . TableNames::getMembers();
+		$socialTblName = $this->getTblprefix() . TableNames::getSocial();
+
+		$sql = 'SELECT `p`.*, `m`.*, `s`.* FROM `' . $portalTblName . '` AS `p` LEFT JOIN `' . $membersTblName . '` AS `m` ON `p`.`member_id` = `m`.`member_id` LEFT JOIN `' . $socialTblName . '` AS `s` ON `m`.`member_id` = `s`.`member_id` WHERE `m`.`member_id` = ?';
+		$row = $this->fetchAssoc($sql, $memberId);
+		if (!$row || !is_array($row) || !isset($row['member_id'])) {
+			return false;
+		}
+
+		Log::info(sprintf(
+			'Portal backup before remove: %s', serialize($row)
+		), 0,  __METHOD__);
+
+		$commands = array(
+			array(
+				'sql' => 'DELETE FROM `' . $portalTblName . '` WHERE `member_id` = ?',
+				'params' => $memberId
+			),
+			array(
+				'sql' => 'DELETE FROM `' . $membersTblName . '` WHERE `member_id` = ?',
+				'params' => $memberId
+			),
+			array(
+				'sql' => 'DELETE FROM `' . $socialTblName . '` WHERE `member_id` = ?',
+				'params' => $memberId
+			),
+		);
+
+		return $this->doTransaction($commands);
+	}
+
 }

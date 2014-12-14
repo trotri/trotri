@@ -17,10 +17,10 @@ use library\PageHelper;
 
 /**
  * Commentindex class file
- * 文档列表页面
+ * Ajax获取评论列表
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: Commentindex.php 1 2014-01-18 14:19:29Z huan.song $
- * @package modules.posts.action.show
+ * @package modules.posts.action.data
  * @since 1.0
  */
 class Commentindex extends DataAction

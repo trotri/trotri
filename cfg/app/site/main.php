@@ -23,6 +23,16 @@ return array (
 		'list_rows' => 2,           // 每页展示的行数
 		'list_pages' => 4,          // 每页展示的页码数
 	),
+	'account' => array (
+		'key_name' => 'auth_site',         // 密钥配置名
+		'domain' => '',                    // Cookie的有效域名，缺省：当前域名
+		'path' => '/',                     // Cookie的有效服务器路径，缺省：/
+		'secure' => false,                 // FALSE：HTTP和HTTPS协议都可传输；TRUE：只通过加密的HTTPS协议传输，缺省：FALSE
+		'httponly' => true,                // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
+		'expiry' => MONTH_IN_SECONDS,      // 记住密码时间
+		'cookie_name' => 'ptid',           // Cookie名
+		'cookset_password' => false,       // Cookie中设置密码
+	),
 	'cookie' => array (
 		'key_name' => 'cookie',         // 密钥配置名
 		'domain' => '',                 // Cookie的有效域名，缺省：当前域名

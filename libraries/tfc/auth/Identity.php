@@ -33,6 +33,16 @@ class Identity
     protected static $_appNames = array();
 
     /**
+     * @var integer 会员类型ID
+     */
+    protected static $_typeId = 0;
+
+    /**
+     * @var integer 会员成长度ID
+     */
+    protected static $_rankId = 0;
+
+    /**
      * @var instance of tfc\auth\Authoriz
      */
     protected static $_authoriz = null;
@@ -160,6 +170,44 @@ class Identity
     }
 
     /**
+     * 获取会员类型ID
+     * @return integer
+     */
+    public static function getTypeId()
+    {
+        return self::$_typeId;
+    }
+
+    /**
+     * 设置用户拥有权限的项目名
+     * @param integer $typeId
+     * @return void
+     */
+    public static function setTypeId($typeId)
+    {
+        self::$_typeId = (int) $typeId;
+    }
+
+    /**
+     * 获取会员类型ID
+     * @return integer
+     */
+    public static function getRankId()
+    {
+        return self::$_rankId;
+    }
+
+    /**
+     * 设置用户拥有权限的项目名
+     * @param integer $rankId
+     * @return void
+     */
+    public static function setRankId($rankId)
+    {
+        self::$_rankId = (int) $rankId;
+    }
+
+    /**
      * 获取用户身份授权类
      * @return \tfc\auth\Authoriz
      */
@@ -177,7 +225,7 @@ class Identity
      * @param \tfc\auth\Authoriz $authoriz
      * @return void
      */
-    public static function setAuthoriz(Authoriz $authoriz)
+    public static function setAuthoriz($authoriz)
     {
         self::$_authoriz = $authoriz;
     }
@@ -189,16 +237,20 @@ class Identity
      * @param string $nickname
      * @param array $roleNames
      * @param array $appNames
+     * @param integer $typeId
+     * @param integer $rankId
      * @param \tfc\auth\Authoriz $authoriz
      * @return void
      */
-    public static function setAll($userId, $loginName, $nickname, $roleNames, $appNames, Authoriz $authoriz)
+    public static function setAll($userId, $loginName, $nickname, $roleNames, $appNames, $typeId, $rankId, $authoriz)
     {
         self::setUserId($userId);
         self::setLoginName($loginName);
         self::setNickname($nickname);
         self::setRoleNames($roleNames);
         self::setAppNames($appNames);
+        self::setTypeId($typeId);
+        self::setRankId($rankId);
         self::setAuthoriz($authoriz);
     }
 }

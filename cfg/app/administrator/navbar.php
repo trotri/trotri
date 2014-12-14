@@ -56,6 +56,10 @@ return array(
 			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_TOPIC_INDEX',
 			'm' => 'topic', 'c' => 'topic', 'a' => 'index'
 		),
+		4 => array(
+			'label' => 'CFG_SYSTEM_URLS_COMPONENTS_POLL_INDEX',
+			'm' => 'poll', 'c' => 'polls', 'a' => 'index'
+		),
 	),
 	array(
 		0 => array(

@@ -34,4 +34,4 @@ $this->widget('views\bootstrap\widgets\FormBuilder',
 );
 ?>
 
-<?php echo $this->getHtml()->js('var gData = ' . json_encode($this->data) . ';'); ?>
+<?php echo $this->getHtml()->js('var g_data = ' . json_encode($this->data) . ';'); ?>

@@ -69,6 +69,11 @@ class Smtp
 
     /**
      * 构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址
+     * <ul>
+     * <li>{@link $host = 'smtp.qq.com'}</li>
+     * <li>{@link $username = '******@qq.com'}</li>
+     * <li>{@link $password = '******'}</li>
+     * </ul>
      * @param string $host
      * @param string $username
      * @param string $password
@@ -310,5 +315,50 @@ class Smtp
 
         $this->_stream = null;
         return $this;
+    }
+
+    /**
+     * 获取SMTP主机地址
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->_host;
+    }
+
+    /**
+     * 获取SMTP端口号，默认是 25
+     * @return integer
+     */
+    public function getPort()
+    {
+        return $this->_port;
+    }
+
+    /**
+     * 获取SMTP用户名
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->_username;
+    }
+
+    /**
+     * 获取SMTP密码
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->_password;
+    }
+
+    /**
+     * 获取发件人地址，应该和用户名相同，如果不相同，有可能出错
+     * @return string
+     */
+    public function getFromMail()
+    {
+        return $this->_fromMail;
     }
 }

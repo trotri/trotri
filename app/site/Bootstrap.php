@@ -11,6 +11,7 @@
 use tfc\ap;
 use tfc\mvc\Mvc;
 use tfc\util\String;
+use member\services\Account;
 
 /**
  * Bootstrap class file
@@ -68,11 +69,13 @@ class Bootstrap extends ap\Bootstrap
 	}
 
 	/**
-	 * 初始化用户账户信息
+	 * 初始化会员账户信息
 	 * @return void
 	 */
 	public function _initAccount()
 	{
+		$account = new Account();
+		$account->initIdentity();
 	}
 
 	/**

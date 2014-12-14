@@ -75,7 +75,18 @@ class Regions extends AbstractService
 	public function getRegionTypeByRegionId($regionId)
 	{
 		$value = $this->getByPk('region_type', $regionId);
-		return $value ? $value : '';
+		return $value ? (int) $value : 0;
+	}
+
+	/**
+	 * 获取“地区类型”
+	 * @param string $regionType
+	 * @return string
+	 */
+	public function getRegionTypeLangByRegionType($regionType)
+	{
+		$enum = DataRegions::getRegionTypeEnum();
+		return isset($enum[$regionType]) ? $enum[$regionType] : '';
 	}
 
 }

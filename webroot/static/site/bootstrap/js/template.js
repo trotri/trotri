@@ -86,7 +86,7 @@ Core = {
    * @param string act
    * @param string ctrl
    * @param string mod
-   * @param array params
+   * @param object params
    * @return string
    */
   getUrl: function(mod, ctrl, act, params) {

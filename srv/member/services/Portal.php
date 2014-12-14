@@ -13,7 +13,9 @@ namespace member\services;
 use libsrv\AbstractService;
 use tfc\util\String;
 use libsrv\Clean;
+use libsrv\FormProcessor;
 use member\library\Constant;
+use member\library\Lang;
 
 /**
  * Portal class file
@@ -73,6 +75,30 @@ class Portal extends AbstractService
 	{
 		$row = $this->getDb()->findByLoginName($loginName);
 		return $row;
+	}
+
+	/**
+	 * 通过主键，编辑“登录密码”
+	 * @param integer $memberId
+	 * @param string $password
+	 * @param string $repassword
+	 * @return integer
+	 */
+	public function modifyPasswordByPk($memberId, $password, $repassword)
+	{
+		$formProcessor = $this->getFormProcessor();
+		if (($password = trim($password)) === '') {
+			$formProcessor->addError('password', Lang::_('SRV_FILTER_REPWD_NEW_PASSWORD_NOTEMPTY'));
+			return false;
+		}
+
+		if (!$formProcessor->run(FormProcessor::OP_UPDATE, array('password' => $password, 'repassword' => $repassword), $memberId)) {
+			return false;
+		}
+
+		$attributes = $formProcessor->getValues();
+		$rowCount = $this->getDb()->modifyByPk($formProcessor->id, $attributes);
+		return $rowCount;
 	}
 
 	/**

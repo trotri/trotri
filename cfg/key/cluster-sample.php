@@ -15,7 +15,19 @@ return array (
     'expiry' => '加密串有效期，单位：秒',
     'rnd_len' => '随机密钥长度，取值 0-32，数字越大，加密串越长、随机性越大。'
   ),
+  'auth_site' => array (
+    'crypt' => '加密密钥',
+    'sign' => '签名密钥',
+    'expiry' => '加密串有效期，单位：秒',
+    'rnd_len' => '随机密钥长度，取值 0-32，数字越大，加密串越长、随机性越大。'
+  ),
   'cookie' => array (
+    'crypt' => '加密密钥',
+    'sign' => '签名密钥',
+    'expiry' => '加密串有效期，单位：秒',
+    'rnd_len' => '随机密钥长度，取值 0-32，数字越大，加密串越长、随机性越大。'
+  ),
+  'repwd' => array (
     'crypt' => '加密密钥',
     'sign' => '签名密钥',
     'expiry' => '加密串有效期，单位：秒',
@@ -32,9 +44,21 @@ return array (
  *     'expiry' => MONTH_IN_SECONDS,
  *     'rnd_len' => 16
  *   ),
+ *   'auth_site' => array (
+ *     'crypt' => 'B80I15CEA9e2B2Da8A28Ca611FbpF42C',
+ *     'sign' => 'L713Cf59C4dBa39F141BeDE28A70R6e0',
+ *     'expiry' => 2592000,
+ *     'rnd_len' => 16,
+ *   ),
  *   'cookie' => array (
  *     'crypt' => '5rfXDIaFhC9LqBhz',
  *     'sign' => 'E7cX4zV7pcffHfZF',
+ *     'expiry' => DAY_IN_SECONDS,
+ *     'rnd_len' => 8
+ *   ),
+ *   'repwd' => array (
+ *     'crypt' => '95YkePQf7f07OeK2',
+ *     'sign' => 'tI2v2IvL2D4L3Yx1',
  *     'expiry' => DAY_IN_SECONDS,
  *     'rnd_len' => 8
  *   )

@@ -761,50 +761,29 @@ CREATE TABLE `tr_member_experience_logs` (
   KEY `creator_id` (`creator_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员成长值日志表';
 
-DROP TABLE IF EXISTS `tr_verifiers`;
-CREATE TABLE `tr_verifiers` (
-  `verifier_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `verifier_name` varchar(100) NOT NULL DEFAULT '' COMMENT '验证名',
-  `verifier_key` varchar(24) NOT NULL DEFAULT '' COMMENT '验证Key',
-  `m_rank_ids` varchar(50) NOT NULL DEFAULT '0' COMMENT '允许参与会员成长度ID，由英文逗号分隔，0：表示游客',
-  `join_type` enum('forever','year','month','week','day','hour','interval') NOT NULL DEFAULT 'interval' COMMENT '参与方式，forever：终身只能参与一次、year：每年只能一次、...、interval：间隔几秒可再次参与',
-  `interval` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '间隔几秒可再次参与，0：表示无限参与',
-  `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '验证状态，y：有效、n：无效',
-  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始时间',
-  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束时间',
-  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
-  `ext_info` text COMMENT '扩展属性',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  PRIMARY KEY (`verifier_id`),
-  UNIQUE KEY `uk_verifier_key` (`verifier_key`),
-  KEY `verifier_name` (`verifier_name`),
-  KEY `is_published` (`is_published`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参与验证表';
-
-DROP TABLE IF EXISTS `tr_verifier_joiners`;
-CREATE TABLE `tr_verifier_joiners` (
-  `joiner_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
-  `verifier_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '验证ID',
-  `behavior` varchar(512) NOT NULL DEFAULT '' COMMENT '行为',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `dt_last_join` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次参与时间',
-  PRIMARY KEY (`joiner_id`),
-  UNIQUE KEY `uk_member_verifier` (`member_id`,`verifier_id`),
-  KEY `verifier_id` (`verifier_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参与者表，需定期清理过期活动的参与日志';
-
 DROP TABLE IF EXISTS `tr_polls`;
 CREATE TABLE `tr_polls` (
   `poll_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `poll_name` varchar(100) NOT NULL DEFAULT '' COMMENT '投票名',
+  `poll_key` varchar(24) NOT NULL DEFAULT '' COMMENT '投票Key',
+  `allow_unregistered` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许非会员参加，y：仅验证非会员、n：仅允许会员参加',
+  `m_rank_ids` varchar(50) NOT NULL DEFAULT '' COMMENT '允许参与会员成长度ID，由英文逗号分隔，置空表示不限制会员成长度',
+  `join_type` enum('forever','year','month','week','day','hour','interval') NOT NULL DEFAULT 'interval' COMMENT '参与方式，forever：终身只能参与一次、year：每年只能一次、...、interval：间隔几秒可再次参与',
+  `interval` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '间隔几秒可再次参与，0：表示无限参与',
+  `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否开放，y：开放投票、n：草稿',
+  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束时间',
   `is_visible` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否展示结果，y：是、n：否',
   `is_multiple` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否多选，y：是、n：否',
   `max_choices` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '最多可选数量，0：表示不限制',
   `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  `ext_info` text COMMENT '扩展属性',
   `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
   PRIMARY KEY (`poll_id`),
   KEY `poll_name` (`poll_name`),
+  UNIQUE KEY `uk_poll_key` (`poll_key`),
+  KEY `allow_unregistered` (`allow_unregistered`),
+  KEY `is_published` (`is_published`),
   KEY `dt_created` (`dt_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票表';
 
@@ -819,3 +798,30 @@ CREATE TABLE `tr_polloptions` (
   KEY `poll_id` (`poll_id`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票选项表';
+
+DROP TABLE IF EXISTS `tr_poll_member_logs`;
+CREATE TABLE `tr_poll_member_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `poll_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '投票ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `option_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '上次投票选项ID，由英文逗号分隔',
+  `join_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总参与次数',
+  `ts_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票时间',
+  `ip_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票IP',
+  PRIMARY KEY (`log_id`),
+  UNIQUE KEY `uk_member_poll` (`member_id`,`poll_id`),
+  KEY `poll_id` (`poll_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员投票日志表，需定期清理过期日志';
+
+DROP TABLE IF EXISTS `tr_poll_visitor_logs`;
+CREATE TABLE `tr_poll_visitor_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `poll_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '投票ID',
+  `visitor_ip` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '游客IP',
+  `option_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '上次投票选项ID，由英文逗号分隔',
+  `join_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总参与次数',
+  `ts_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票时间',
+  PRIMARY KEY (`log_id`),
+  KEY `visitor_poll_tslm` (`visitor_ip`,`poll_id`,`ts_last_modified`),
+  KEY `poll_id` (`poll_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游客投票日志表，需定期清理过期日志';

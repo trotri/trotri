@@ -227,4 +227,22 @@ class String
 
         return $rand;
     }
+
+    /**
+     * 获取字符串的ASCII码总和
+     * @param string $string
+     * @return integer
+     */
+    public static function ascii($string)
+    {
+        $output = 0;
+
+        $string = (string) $string;
+        $length = strlen($string);
+        for ($i = 0; $i < $length; $i++) {
+            $output += ord($string{$i});
+        }
+
+        return $output;
+    }
 }

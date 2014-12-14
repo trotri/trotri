@@ -34,8 +34,9 @@ class TableRender extends views\bootstrap\components\TableRender
 		);
 
 		$restoreIcon = $this->getRestoreIcon($params);
+		$removeIcon = $this->getRemoveIcon($params);
 
-		$output = $restoreIcon;
+		$output = $restoreIcon . $removeIcon;
 		return $output;
 	}
 }
