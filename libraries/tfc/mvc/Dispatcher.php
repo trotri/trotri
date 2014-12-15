@@ -137,7 +137,7 @@ class Dispatcher extends Application
      */
     public function getModuleDirName()
     {
-    	return $this->_moduleDirName;
+        return $this->_moduleDirName;
     }
 
     /**
@@ -147,7 +147,7 @@ class Dispatcher extends Application
      */
     public function setModuleDirName($dirName)
     {
-    	$this->_moduleDirName = (string) $dirName;
-    	return $this;
+        $this->_moduleDirName = (string) $dirName;
+        return $this;
     }
 }

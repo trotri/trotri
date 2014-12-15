@@ -154,7 +154,8 @@ class Repwd
 		if (!$row || $data['password'] !== $this->encryptPwd($row['password']) || $data['dt_last_login'] !== $row['dt_last_login']) {
 			$errNo = DataRepwd::ERROR_CIPHERTEXT_WRONG;
 			Log::warning(sprintf(
-				'Repwd ciphertext wrong or login_name not exists, data "%s", row "%s"', serialize($data), serialize($row)
+				'Repwd ciphertext wrong or login_name not exists, login_name "%s", password "%s | %s", dt_last_login "%s | %s"',
+				$data['login_name'], $data['password'], $this->encryptPwd($row['password']), $data['dt_last_login'], $row['dt_last_login']
 			), $errNo,  __METHOD__);
 
 			return array(
@@ -230,9 +231,10 @@ class Repwd
 			);
 		}
 
+		$ciphertext = str_replace(' ', '+', $ciphertext);
 		$plaintext = $this->_mef->decode($ciphertext);
 		if ($plaintext === '' || substr_count($plaintext, '|') !== 4) {
-			$errNo = DataRepwd::ERROR_CIPHERTEXT_DECODE_FAILED;
+			$errNo = DataRepwd::ERROR_CIPHERTEXT_DECRYPT_FAILED;
 			Log::warning(sprintf(
 				'Repwd ciphertext decrypt failed, ciphertext "%s"', $ciphertext
 			), $errNo,  __METHOD__);
@@ -269,7 +271,7 @@ class Repwd
 			$errNo = DataRepwd::ERROR_CIPHERTEXT_TIME_OUT;
 			Log::warning(sprintf(
 				'Repwd ciphertext time out, ciphertext "%s", ts_created "%s %d", expiry "%d"',
-				$ciphertext, date($data['ts_created'], 'Y-m-d H:i:s'), $data['ts_created'], self::MAIL_LINK_EXPIRY
+				$ciphertext, date('Y-m-d H:i:s', $data['ts_created']), $data['ts_created'], self::MAIL_LINK_EXPIRY
 			), $errNo,  __METHOD__);
 
 			return array(

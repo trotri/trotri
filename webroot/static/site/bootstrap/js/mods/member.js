@@ -72,15 +72,25 @@ Member = {
   },
 
   /**
+   * 获取Ajax通过邮箱找回密码链接
+   * @param object params
+   * @return string
+   */
+  getAjaxRepwdmailUrl: function(params) {
+    return Core.getUrl("member", "data", "repwdmail", params) + "&" + new Date().getTime();
+  },
+
+  /**
    * @param json 寄存字段名和字段类型
    */
   fields: {
     "login_name"   : ":text",
     "password"     : ":password",
     "repassword"   : ":password",
-    "old_pwd"     : ":password",
+    "old_pwd"      : ":password",
     "member_mail"  : ":text",
     "remember_me"  : ":checkbox",
+    "cipher"       : ":hidden",
     "http_referer" : ":hidden",
   },
 
@@ -170,7 +180,7 @@ Member = {
   },
 
   /**
-   * 通过原始密码重设新密码链接
+   * 通过原始密码重设新密码
    * @return void
    */
   ajaxRepwdoldpwd: function() {
@@ -216,6 +226,31 @@ Member = {
       }
       else {
         $("#" + formId).find(".alert").css("color", "");
+      }
+    });
+  },
+
+  /**
+   * 通过邮箱找回密码
+   * @return void
+   */
+  ajaxRepwdmail: function() {
+    var formId = "repwdmail";
+
+    var cipher  = Member.getObj("cipher", formId).val();
+    var password  = Member.getObj("password", formId).val();
+    var repassword  = Member.getObj("repassword", formId).val();
+
+    $.getJSON(Member.getAjaxRepwdmailUrl(), {"cipher": cipher, "password": password, "repassword": repassword}, function(ret) {
+      $("#" + formId).find(".alert").html(ret.err_msg);
+      if (ret.err_no > 0) {
+        $("#" + formId).find(".alert").css("color", "#a94442");
+      }
+      else {
+        $("#" + formId).find(".alert").css("color", "");
+        setTimeout(function() {
+          location.href = Member.getLogoutUrl();
+        }, 1000);
       }
     });
   }

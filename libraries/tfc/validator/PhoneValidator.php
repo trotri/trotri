@@ -21,9 +21,9 @@ namespace tfc\validator;
 class PhoneValidator extends Validator
 {
     /**
-	 * @var string 正则：验证手机号
-	 */
-	const REGEX_PHONE = '/^1\d{10}$/';
+     * @var string 正则：验证手机号
+     */
+    const REGEX_PHONE = '/^1\d{10}$/';
 
     /**
      * @var string 默认出错后的提醒消息

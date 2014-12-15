@@ -279,7 +279,7 @@ abstract class Widget implements interfaces\View
      */
     public function __toString()
     {
-    	return $this->run();
+        return $this->run();
     }
 
     /**

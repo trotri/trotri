@@ -11,7 +11,10 @@
 namespace modules\member\action\show;
 
 use library;
+use tfc\ap\Ap;
 use tfc\saf\Text;
+use libapp\Model;
+use member\services\DataRepwd;
 
 /**
  * Repwdmail class file
@@ -34,8 +37,19 @@ class Repwdmail extends library\ShowAction
 	 */
 	public function run()
 	{
+		$req = Ap::getRequest();
+
 		Text::_('MOD_MEMBER__');
 
-		$this->render();
+		$ciphertext = $req->getTrim('cipher');
+		$mod = Model::getInstance('Repwd', 'member');
+		$ret = $mod->checkCiphertext($ciphertext);
+
+		if ($ret['err_no'] === DataRepwd::SUCCESS_REPWD_NUM) {
+			$this->assign('login_name', $ret['data']['login_name']);
+			$this->assign('cipher', $ciphertext);
+		}
+
+		$this->render($ret);
 	}
 }

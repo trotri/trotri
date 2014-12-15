@@ -57,6 +57,17 @@ class Repwd extends BaseModel
 	}
 
 	/**
+	 * 验证密文是否正确
+	 * @param string $ciphertext
+	 * @return array
+	 */
+	public function checkCiphertext($ciphertext)
+	{
+		$ret = $this->_service->checkCiphertext($ciphertext);
+		return $ret;
+	}
+
+	/**
 	 * 通过密文修改
 	 * @param string $ciphertext
 	 * @param string $password

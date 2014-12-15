@@ -32,10 +32,12 @@ class Repwdmail extends DataAction
 	{
 		$req = Ap::getRequest();
 
-		$memberMail = $req->getTrim('member_mail');
+		$ciphertext = $req->getTrim('cipher');
+		$password = $req->getTrim('password');
+		$repassword = $req->getTrim('repassword');
 
 		$mod = Model::getInstance('Repwd', 'member');
-		$ret = $mod->sendMail($memberMail);
+		$ret = $mod->repwdByCipher($ciphertext, $password, $repassword);
 
 		$this->display($ret);
 	}

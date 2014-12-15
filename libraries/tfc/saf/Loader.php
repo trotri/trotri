@@ -284,7 +284,7 @@ exit('Request Error, your server configuration not allowed to change PHP include
  */
 function spl_autoload($className)
 {
-	$className = str_replace('\\', DS, $className) . '.php';
+    $className = str_replace('\\', DS, $className) . '.php';
     require $className;
 }
 

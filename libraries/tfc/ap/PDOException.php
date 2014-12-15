@@ -20,10 +20,10 @@ namespace tfc\ap;
  */
 class PDOException extends \PDOException
 {
-	/**
-	 * 构造方法：重新定义PDOException的code和message值
-	 * @param \PDOException $e
-	 */
+    /**
+     * 构造方法：重新定义PDOException的code和message值
+     * @param \PDOException $e
+     */
     public function __construct(\PDOException $e)
     {
         if (strstr($e->getMessage(), 'SQLSTATE[')) {

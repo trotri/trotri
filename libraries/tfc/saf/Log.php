@@ -177,7 +177,7 @@ class Log
      */
     public static function echoTrace($traceMsg)
     {
-    	echo '<strong style="color: blue">', $traceMsg, '</strong><br/>';
+        echo '<strong style="color: blue">', $traceMsg, '</strong><br/>';
     }
 
     /**

@@ -35,7 +35,7 @@ class DataRepwd
 	/**
 	 * @var integer 原始密码为空
 	 */
-	const ERROR_OLD_PASSWORD_EMPTY       = 3001;
+	const ERROR_OLD_PASSWORD_EMPTY    = 3001;
 
 	/**
 	 * @var integer 原始密码错误
@@ -45,7 +45,7 @@ class DataRepwd
 	/**
 	 * @var integer 会员邮箱为空
 	 */
-	const ERROR_MEMBER_MAIL_EMPTY        = 4001;
+	const ERROR_MEMBER_MAIL_EMPTY     = 4001;
 
 	/**
 	 * @var integer 会员邮箱错误
@@ -93,16 +93,16 @@ class DataRepwd
 		if ($enum === null) {
 			$enum = array(
 				self::SUCCESS_REPWD_NUM               => Lang::_('SRV_FILTER_REPWD_REPWD_SUCCESS'),
-				self::ERROR_REPWD_FAILED              => Lang::_('SRV_FILTER_REPWD_REPWD_SUCCESS'),
+				self::ERROR_REPWD_FAILED              => Lang::_('SRV_FILTER_REPWD_REPWD_FAILED'),
 				self::ERROR_OLD_PASSWORD_EMPTY        => Lang::_('SRV_FILTER_REPWD_OLD_PASSWORD_NOTEMPTY'),
 				self::ERROR_OLD_PASSWORD_WRONG        => Lang::_('SRV_FILTER_REPWD_OLD_PASSWORD_WRONG'),
-				self::ERROR_MEMBER_MAIL_EMPTY         => Lang::_('SRV_FILTER_REPWD_MEMBER_MAIL_EMPTY'),
+				self::ERROR_MEMBER_MAIL_EMPTY         => Lang::_('SRV_FILTER_REPWD_MEMBER_MAIL_NOTEMPTY'),
 				self::ERROR_MEMBER_MAIL_WRONG         => Lang::_('SRV_FILTER_REPWD_MEMBER_MAIL_WRONG'),
 				self::ERROR_MEMBER_MAIL_NOT_EXISTS    => Lang::_('SRV_FILTER_REPWD_MEMBER_MAIL_NOT_EXISTS'),
 				self::ERROR_SEND_MAIL_FAILED          => Lang::_('SRV_FILTER_REPWD_SEND_MAIL_FAILED'),
-				self::ERROR_CIPHERTEXT_EMPTY          => Lang::_('SRV_FILTER_REPWD_CIPHERTEXT_EMPTY'),
+				self::ERROR_CIPHERTEXT_EMPTY          => Lang::_('SRV_FILTER_REPWD_CIPHERTEXT_NOTEMPTY'),
 				self::ERROR_CIPHERTEXT_DECRYPT_FAILED => Lang::_('SRV_FILTER_REPWD_CIPHERTEXT_WRONG'),
-				self::ERROR_CIPHERTEXT_TIME_OUT       => Lang::_('SRV_FILTER_REPWD_CIPHERTEXT_WRONG'),
+				self::ERROR_CIPHERTEXT_TIME_OUT       => Lang::_('SRV_FILTER_REPWD_CIPHERTEXT_TIME_OUT'),
 				self::ERROR_CIPHERTEXT_WRONG          => Lang::_('SRV_FILTER_REPWD_CIPHERTEXT_WRONG')
 			);
 		}
