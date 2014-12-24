@@ -768,7 +768,7 @@ CREATE TABLE `tr_polls` (
   `poll_key` varchar(24) NOT NULL DEFAULT '' COMMENT '投票Key',
   `allow_unregistered` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许非会员参加，y：仅验证非会员、n：仅允许会员参加',
   `m_rank_ids` varchar(50) NOT NULL DEFAULT '' COMMENT '允许参与会员成长度ID，由英文逗号分隔，置空表示不限制会员成长度',
-  `join_type` enum('forever','year','month','week','day','hour','interval') NOT NULL DEFAULT 'interval' COMMENT '参与方式，forever：终身只能参与一次、year：每年只能一次、...、interval：间隔几秒可再次参与',
+  `join_type` enum('forever','year','month','day','hour','interval') NOT NULL DEFAULT 'interval' COMMENT '参与方式，forever：终身只能参与一次、year：每年只能一次、...、interval：间隔几秒可再次参与',
   `interval` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '间隔几秒可再次参与，0：表示无限参与',
   `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否开放，y：开放投票、n：草稿',
   `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始时间',
@@ -787,6 +787,8 @@ CREATE TABLE `tr_polls` (
   KEY `dt_created` (`dt_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票表';
 
+INSERT INTO `tr_polls` VALUES ('1', '您是从哪里了解到我们网站的？', 'knowmysite', 'y', '', 'forever', '0', 'y', now(), '0000-00-00 00:00:00', 'y', 'n', '0', '', '', now());
+
 DROP TABLE IF EXISTS `tr_polloptions`;
 CREATE TABLE `tr_polloptions` (
   `option_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
@@ -798,6 +800,11 @@ CREATE TABLE `tr_polloptions` (
   KEY `poll_id` (`poll_id`),
   KEY `sort` (`sort`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票选项表';
+
+INSERT INTO `tr_polloptions` VALUES ('1', '搜索引擎', '1', '0', '1');
+INSERT INTO `tr_polloptions` VALUES ('2', '朋友介绍', '1', '0', '2');
+INSERT INTO `tr_polloptions` VALUES ('3', '代码托管网站', '1', '0', '3');
+INSERT INTO `tr_polloptions` VALUES ('4', '其他', '1', '0', '4');
 
 DROP TABLE IF EXISTS `tr_poll_member_logs`;
 CREATE TABLE `tr_poll_member_logs` (
@@ -822,6 +829,6 @@ CREATE TABLE `tr_poll_visitor_logs` (
   `join_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总参与次数',
   `ts_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票时间',
   PRIMARY KEY (`log_id`),
-  KEY `visitor_poll_tslm` (`visitor_ip`,`poll_id`,`ts_last_modified`),
+  UNIQUE KEY `uk_visitor_poll` (`visitor_ip`,`poll_id`),
   KEY `poll_id` (`poll_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游客投票日志表，需定期清理过期日志';

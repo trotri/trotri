@@ -23,6 +23,24 @@ use member\library\Lang;
 class DataAccount
 {
 	/**
+	 * @var string 第三方账号登录：QQ
+	 */
+	const PARTNER_QQ = 'qq';
+
+	/**
+	 * @var string 第三方账号登录：微信
+	 */
+	const PARTNER_WECHAT = 'wechat';
+
+	/**
+	 * @var string 所有的第三方账号登录类型
+	 */
+	public static $partners = array(
+		self::PARTNER_QQ,
+		self::PARTNER_WECHAT
+	);
+
+	/**
 	 * @var integer 登录成功
 	 */
 	const SUCCESS_LOGIN_NUM           = 0;
@@ -73,6 +91,21 @@ class DataAccount
 	const ERROR_PASSWORD_WRONG        = 3015;
 
 	/**
+	 * @var integer 第三方账号登录：类型为空
+	 */
+	const ERROR_PARTNER_EMPTY         = 4001;
+
+	/**
+	 * @var integer 第三方账号登录：类型错误
+	 */
+	const ERROR_PARTNER_WRONG         = 4002;
+
+	/**
+	 * @var integer 第三方账号登录：OpenID为空
+	 */
+	const ERROR_OPENID_EMPTY          = 4003;
+
+	/**
 	 * 获取“错误信息”所有选项
 	 * @return array
 	 */
@@ -90,7 +123,10 @@ class DataAccount
 				self::ERROR_MEMBER_TRASH          => Lang::_('SRV_FILTER_ACCOUNT_MEMBER_TRASH'),
 				self::ERROR_MEMBER_FORBIDDEN      => Lang::_('SRV_FILTER_ACCOUNT_MEMBER_FORBIDDEN'),
 				self::ERROR_PASSWORD_EMPTY        => Lang::_('SRV_FILTER_ACCOUNT_PASSWORD_EMPTY'),
-				self::ERROR_PASSWORD_WRONG        => Lang::_('SRV_FILTER_ACCOUNT_PASSWORD_WRONG')
+				self::ERROR_PASSWORD_WRONG        => Lang::_('SRV_FILTER_ACCOUNT_PASSWORD_WRONG'),
+				self::ERROR_PARTNER_EMPTY         => Lang::_('SRV_FILTER_ACCOUNT_PARTNER_EMPTY'),
+				self::ERROR_PARTNER_WRONG         => Lang::_('SRV_FILTER_ACCOUNT_PARTNER_WRONG'),
+				self::ERROR_OPENID_EMPTY          => Lang::_('SRV_FILTER_ACCOUNT_OPENID_EMPTY'),
 			);
 		}
 

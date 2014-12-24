@@ -11,6 +11,7 @@
 namespace member\services;
 
 use tfc\ap\Ap;
+use tfc\util\String;
 use tfc\saf\Cfg;
 use tfc\saf\Log;
 use tfc\auth\Authentica;
@@ -517,6 +518,79 @@ class Account
 		}
 
 		$ret = $this->setIdentity($ret['data'], $rememberMe);
+		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
+		return $ret;
+	}
+
+	/**
+	 * 第三方账号登录
+	 * @param string $partner
+	 * @param string $openid
+	 * @return array
+	 */
+	public function loginByPartner($partner, $openid)
+	{
+		if (($partner = trim($partner)) === '') {
+			$errNo = DataAccount::ERROR_PARTNER_EMPTY;
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => DataAccount::getErrMsgByErrNo($errNo),
+				'data' => array()
+			);
+		}
+
+		if (($openid = trim($openid)) === '') {
+			$errNo = DataAccount::ERROR_OPENID_EMPTY;
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => DataAccount::getErrMsgByErrNo($errNo),
+				'data' => array()
+			);
+		}
+
+		if (!in_array($partner, DataAccount::$partners)) {
+			$errNo = DataAccount::ERROR_PARTNER_WRONG;
+			return array(
+				'err_no' => $errNo,
+				'err_msg' => DataAccount::getErrMsgByErrNo($errNo),
+				'data' => array()
+			);
+		}
+
+		$loginName = $partner . '_' . $openid;
+		$row = $this->_portal->findByLoginName($loginName);
+		if (!$row || !is_array($row) || !isset($row['member_id'])) {
+			$salt = $this->_portal->getSalt();
+			$password = $this->_portal->encrypt(String::randStr(12), $salt);
+			$params = array(
+				'login_name' => $loginName,
+				'login_type' => DataPortal::LOGIN_TYPE_PARTNER,
+				'password' => $password,
+				'salt' => $salt,
+				'member_name' => mt_rand(100000000, 999999999),
+				'ip_registered' => Clean::ip2long(Ap::getRequest()->getClientIp())
+			);
+
+			if (!$this->_portal->getDb()->create($params)) {
+				Log::warning(sprintf(
+					'Account db create failed, login_name "%s", login_type "%s"', $loginName, DataPortal::LOGIN_TYPE_PARTNER
+				), 0,  __METHOD__);
+			}
+		}
+
+		$ret = $this->checkName($loginName);
+		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			return $ret;
+		}
+
+		$ret = $this->checkLogin($ret['data'], true);
+		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			return $ret;
+		}
+
+		$ret = $this->setIdentity($ret['data'], false);
 		$ret['err_msg'] = DataAccount::getErrMsgByErrNo($ret['err_no']);
 		return $ret;
 	}

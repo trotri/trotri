@@ -97,5 +97,33 @@ Core = {
       }
     }
     return url;
+  },
+
+  /**
+   * 页面重定向到登录页面
+   * @return void
+   */
+  toLogin: function() {
+    var url = Core.getUrl("member", "show", "login");
+    Trotri.href(url);
+  },
+
+  /**
+   * 投票
+   * @param string name
+   * @param string type
+   * @return string
+   */
+  vote: function(name, type) {
+    var url = Core.getUrl("poll", "data", "vote", {"t" : new Date().getTime()});
+    var value = (type == "checkbox") ? Trotri.getCheckedValues(name + "[]") : $(":radio[name='" + name + "']:checked").val();
+    $.getJSON(url, {"key": name, "value": value}, function(ret) {
+      if (ret.err_no === 3001) {
+        Core.toLogin();
+      }
+
+      alert(ret.err_msg);
+    });
   }
+
 }

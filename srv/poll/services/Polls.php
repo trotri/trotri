@@ -50,7 +50,7 @@ class Polls extends AbstractService
 	{
 		$row = $this->getDb()->findByPk($pollId);
 		if ($row && is_array($row) && isset($row['m_rank_ids'])) {
-			$mRankIds = explode(',', $row['m_rank_ids']);
+			$mRankIds = $row['m_rank_ids'] ? explode(',', $row['m_rank_ids']) : array();
 			$row['m_rank_ids'] = array_map('intval', $mRankIds);
 		}
 
@@ -60,12 +60,40 @@ class Polls extends AbstractService
 	/**
 	 * 通过投票Key，查询一条记录
 	 * @param string $pollKey
+	 * @param boolean $usable
 	 * @return array
 	 */
-	public function findByPollKey($pollKey)
+	public function findByPollKey($pollKey, $usable = false)
 	{
 		$row = $this->getDb()->findByPollKey($pollKey);
-		return $row;
+		if ($row && is_array($row) && isset($row['m_rank_ids']) && isset($row['poll_id']) && isset($row['is_published']) && isset($row['dt_publish_up']) && isset($row['dt_publish_down'])) {
+			if ($usable) {
+				if ($row['is_published'] !== DataPolls::IS_PUBLISHED_Y) {
+					return array();
+				}
+
+				$nowTime = date('Y-m-d H:i:s');
+				if ($nowTime < $row['dt_publish_up']) {
+					return array();
+				}
+
+				if ($row['dt_publish_down'] !== '0000-00-00 00:00:00' && $nowTime > $row['dt_publish_down']) {
+					return array();
+				}
+			}
+
+			$row['allow_unregistered'] = ($row['allow_unregistered'] === DataPolls::ALLOW_UNREGISTERED_Y) ? true : false;
+			$row['is_published'] = ($row['is_published'] === DataPolls::IS_PUBLISHED_Y) ? true : false;
+			$row['is_visible'] = ($row['is_visible'] === DataPolls::IS_VISIBLE_Y) ? true : false;
+			$row['is_multiple'] = ($row['is_multiple'] === DataPolls::IS_MULTIPLE_Y) ? true : false;
+
+			$mRankIds = $row['m_rank_ids'] ? explode(',', $row['m_rank_ids']) : array();
+			$row['m_rank_ids'] = array_map('intval', $mRankIds);
+
+			return $row;
+		}
+
+		return false;
 	}
 
 	/**

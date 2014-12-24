@@ -11,6 +11,7 @@
 namespace modules\system\action\show;
 
 use library\ShowAction;
+use tfc\saf\Cookie;
 
 /**
  * Test class file
@@ -28,6 +29,16 @@ class Test extends ShowAction
 	 */
 	public function run()
 	{
+		$cookie = new Cookie('cookie');
 		
+		
+		
+		//var_dump($cookie->get('state'));
+		
+		$httpReferer = $cookie->get('http_referer', 'index.php');
+		var_dump($httpReferer);
+		
+		// 98683de26fdf0b3173de67f3c0d4c9b8
+		// 98683de26fdf0b3173de67f3c0d4c9b8
 	}
 }

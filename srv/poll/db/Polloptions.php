@@ -43,7 +43,7 @@ class Polloptions extends AbstractDb
 		$commandBuilder = $this->getCommandBuilder();
 		$tableName = $this->getTblprefix() . TableNames::getPolloptions();
 		$sql = 'SELECT `option_id`, `option_name`, `poll_id`, `votes`, `sort` FROM `' . $tableName . '` WHERE `poll_id` = ?';
-		$sql = $commandBuilder->applyOrder($sql, 'sort ASC, votes DESC');
+		$sql = $commandBuilder->applyOrder($sql, 'sort ASC');
 		return $this->fetchAll($sql, $pollId);
 	}
 

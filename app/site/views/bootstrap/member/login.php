@@ -38,10 +38,16 @@
     <div class="form-group">
       <label class="col-lg-2 control-label">&nbsp;&nbsp;</label>
       <div class="col-lg-4">
-        <?php echo $this->getHtml()->button($this->MOD_MEMBER_LOGIN_BUTTON_LOGIN, '', array('class' => 'btn btn-lg btn-primary btn-block', 'onclick' => 'return Member.ajaxLogin();')); ?>
+        <?php echo $this->getHtml()->a($this->getHtml()->img($this->static_url . '/images/extlogin/qq_login.jpg'), $this->getUrlManager()->getUrl('qqlogin', 'data', '', array('http_referer' => $this->http_referer))); ?>
       </div>
     </div>
 
+    <div class="form-group">
+      <label class="col-lg-2 control-label">&nbsp;&nbsp;</label>
+      <div class="col-lg-4">
+        <?php echo $this->getHtml()->button($this->MOD_MEMBER_LOGIN_BUTTON_LOGIN, '', array('class' => 'btn btn-lg btn-primary btn-block', 'onclick' => 'return Member.ajaxLogin();')); ?>
+      </div>
+    </div>
   <?php echo $this->getHtml()->closeForm(); ?>
   </div>
 </div>

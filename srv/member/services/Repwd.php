@@ -59,7 +59,7 @@ class Repwd
 
 	/**
 	 * 通过原始密码修改
-	 * @param string $memberId
+	 * @param string $loginName
 	 * @param string $oldPwd
 	 * @param string $password
 	 * @param string $repassword

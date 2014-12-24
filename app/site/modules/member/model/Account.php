@@ -73,6 +73,36 @@ class Account extends BaseModel
 	}
 
 	/**
+	 * 第三方账号登录
+	 * @param string $partner
+	 * @param string $openid
+	 * @return array
+	 */
+	public function extlogin($partner, $openid)
+	{
+		$ret = $this->_service->loginByPartner($partner, $openid);
+		if ($ret['err_no'] !== DataAccount::SUCCESS_LOGIN_NUM) {
+			$ret['data'] = array(
+				'partner' => $partner,
+				'openid' => $openid,
+			);
+
+			return $ret;
+		}
+
+		$memberId = isset($ret['data']['member_id']) ? (int) $ret['data']['member_id'] : 0;
+		$loginName = isset($ret['data']['login_name']) ? $ret['data']['login_name'] : '';
+		$ret['data'] = array(
+			'member_id' => $memberId,
+			'login_name' => $loginName,
+			'remember_me' => false
+		);
+
+		$ret['err_msg'] = Text::_('MOD_MEMBER_LOGIN_LOGIN_SUCCESS_HINT');
+		return $ret;
+	}
+
+	/**
 	 * 注销账户
 	 * @return boolean
 	 */

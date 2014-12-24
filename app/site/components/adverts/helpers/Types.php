@@ -34,7 +34,7 @@ class Types
 	}
 
 	/**
-	 * 查询广告业务处理类
+	 * 获取广告业务处理类
 	 * @return \advert\services\Adverts
 	 */
 	public static function getService()

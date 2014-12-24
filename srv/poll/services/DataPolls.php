@@ -48,11 +48,6 @@ class DataPolls
 	const JOIN_TYPE_MONTH = 'month';
 
 	/**
-	 * @var string 参与方式：week
-	 */
-	const JOIN_TYPE_WEEK = 'week';
-
-	/**
 	 * @var string 参与方式：day
 	 */
 	const JOIN_TYPE_DAY = 'day';
@@ -128,7 +123,6 @@ class DataPolls
 				self::JOIN_TYPE_FOREVER => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_FOREVER'),
 				self::JOIN_TYPE_YEAR => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_YEAR'),
 				self::JOIN_TYPE_MONTH => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_MONTH'),
-				self::JOIN_TYPE_WEEK => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_WEEK'),
 				self::JOIN_TYPE_DAY => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_DAY'),
 				self::JOIN_TYPE_HOUR => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_HOUR'),
 				self::JOIN_TYPE_INTERVAL => Lang::_('SRV_ENUM_POLLS_JOIN_TYPE_INTERVAL'),
