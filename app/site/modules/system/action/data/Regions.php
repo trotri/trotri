@@ -8,29 +8,23 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0
  */
 
-namespace modules\system\action\regions;
+namespace modules\system\action\data;
 
 use library\DataAction;
 use tfc\ap\Ap;
-use tfc\auth\Role;
 use tfc\saf\Text;
 use libsrv\Service;
 
 /**
- * Index class file
- * 查询数据列表
+ * Regions class file
+ * 查询地区数据
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Index.php 1 2014-12-01 16:15:48Z Code Generator $
- * @package modules.system.action.regions
+ * @version $Id: Regions.php 1 2014-12-01 16:15:48Z Code Generator $
+ * @package modules.system.action.data
  * @since 1.0
  */
-class Index extends DataAction
+class Regions extends DataAction
 {
-	/**
-	 * @var integer 允许的权限
-	 */
-	protected $_power = Role::SELECT;
-
 	/**
 	 * (non-PHPdoc)
 	 * @see \tfc\mvc\interfaces\Action::run()

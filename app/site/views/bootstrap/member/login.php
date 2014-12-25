@@ -43,6 +43,14 @@
     </div>
 
     <div class="form-group">
+      <label class="col-lg-2 control-label"></label>
+      <div class="col-lg-4">
+        <?php echo $this->getHtml()->a($this->getHtml()->img($this->static_url . '/images/extlogin/wechat_login.png'), $this->getUrlManager()->getUrl('wechatlogin', 'data', '', array('http_referer' => $this->http_referer))); ?>
+      </div>
+      <span class="control-label">微信联登，必须在微信客户端才有用</span>
+    </div>
+
+    <div class="form-group">
       <label class="col-lg-2 control-label">&nbsp;&nbsp;</label>
       <div class="col-lg-4">
         <?php echo $this->getHtml()->button($this->MOD_MEMBER_LOGIN_BUTTON_LOGIN, '', array('class' => 'btn btn-lg btn-primary btn-block', 'onclick' => 'return Member.ajaxLogin();')); ?>

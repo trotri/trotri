@@ -1,5 +1,26 @@
 $(document).ready(function() {
   Member.bindFocus();
+  if (g_ctrl == "show") {
+    if (g_act == "social") {
+      Member.loadBirth();
+      $("#head_portrait_file").attr("url", Member.getAjaxHeadPortrait());
+      Core.uploadPreviewImg("head_portrait_file", "head_portrait");
+
+      var regionUrl = Core.getAjaxRegionsUrl({"def": 1});
+      Core.regions(regionUrl, {
+        // country  : "live_country_id",
+        province : "live_province_id",
+        city     : "live_city_id",
+        district : "live_district_id"
+      }, g_data, false);
+      Core.regions(regionUrl, {
+        // country  : "address_country_id",
+        province : "address_province_id",
+        city     : "address_city_id",
+        district : "address_district_id"
+      }, g_data, false);
+    }
+  }
 });
 
 /**
@@ -78,6 +99,15 @@ Member = {
    */
   getAjaxRepwdmailUrl: function(params) {
     return Core.getUrl("member", "data", "repwdmail", params) + "&" + new Date().getTime();
+  },
+
+  /**
+   * 获取Ajax上传会员头像
+   * @param object params
+   * @return string
+   */
+  getAjaxHeadPortrait: function(params) {
+    return Core.getUrl("member", "data", "upload", params) + "&" + new Date().getTime();
   },
 
   /**
@@ -251,6 +281,46 @@ Member = {
         setTimeout(function() {
           location.href = Member.getLogoutUrl();
         }, 1000);
+      }
+    });
+  },
+
+  /**
+   * 当改变年和月时，改变日期
+   * @return void
+   */
+  loadBirth: function() {
+    $("select[name='birth_y']").change(function() {
+      $("select[name='birth_m'] option").eq(0).attr("selected", "true");
+      $("select[name='birth_d'] option").eq(0).attr("selected", "true");
+    });
+
+    $("select[name='birth_m']").change(function() {
+      var year = $("select[name='birth_y']").val();
+      var month = $(this).val();
+      if (year != "" && month != "") {
+        year = parseInt(year);
+        month = parseInt(month);
+
+        var maxDay = 31;
+        if (Trotri.inArray(month, [4, 6, 9, 11]) > -1) {
+          maxDay = 30;
+        }
+        else if (month == 2) {
+          maxDay = 28;
+          if (Trotri.isLeapYear(year)) maxDay = 29;
+        }
+
+        var html = "<option value=''>" + $("select[name='birth_d'] option").eq(0).text() + "</option>";
+        for (var day = 1; day <= maxDay; day++) {
+          if (day < 10) { day = "0" + day; }
+          html += "<option value='" + day + "'>" + day + "</option>";
+        }
+
+        $("select[name='birth_d']").html(html);
+      }
+      else {
+        $("select[name='birth_d'] option").eq(0).attr("selected", "true");
       }
     });
   }

@@ -25,7 +25,7 @@ $(document).ready(function() {
     }
 
     if (g_act == "view") {
-      Core.uploadPreviewImg("head_portrait_file", "head_portrait", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});	
+      Core.uploadPreviewImg("head_portrait_file", "head_portrait", {uploadButtonClass: "ajax-file-upload-gray", url: "", returnType: ""});
     }
   }
 

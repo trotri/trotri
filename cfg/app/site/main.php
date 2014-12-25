@@ -11,6 +11,7 @@
 return array (
 	'encoding' => 'utf-8', // 项目编码，不区分大小写
 	'language' => 'zh-CN', // 输出的语言种类，区分大小写
+	'picture_server' => '', // 图片服务器地址
 	'view' => array (
 		'skin_name' => 'bootstrap',     // 模板风格
 		'charset' => 'utf-8',           // HTML编码
@@ -41,4 +42,5 @@ return array (
 		'httponly' => true,             // TRUE：只能通过HTTP协议访问；FALSE：HTTP协议和脚本语言都可访问，容易造成XSS攻击，缺省：TRUE
 	),
 	'extlogin' => require_once 'extlogin.php',
+	'upload' => require_once 'upload.php',
 );

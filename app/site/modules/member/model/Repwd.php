@@ -18,7 +18,7 @@ use member\services\Repwd AS SrvRepwd;
  * Repwd class file
  * 会员找回密码
  * @author 宋欢 <trotri@yeah.net>
- * @version $Id: Account.php 1 2014-08-08 14:05:27Z Code Generator $
+ * @version $Id: Repwd.php 1 2014-08-08 14:05:27Z Code Generator $
  * @package modules.member.model
  * @since 1.0
  */
