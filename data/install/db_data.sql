@@ -48,7 +48,7 @@ INSERT INTO `#@__menus` VALUES ('3', '0', '专题', 'index.php?r=topic/show/inde
 
 INSERT INTO `#@__user_amcas` VALUES ('1', 'administrator', '0', '后端管理', '0', 'app');
 INSERT INTO `#@__user_amcas` VALUES ('2', 'system', '1', '站点管理', '1', 'mod');
-INSERT INTO `#@__user_amcas` VALUES ('3', 'users', '1', '用户管理', '2', 'mod');
+INSERT INTO `#@__user_amcas` VALUES ('3', 'users', '1', '管理员管理', '2', 'mod');
 INSERT INTO `#@__user_amcas` VALUES ('4', 'builder', '1', '生成代码管理', '3', 'mod');
 INSERT INTO `#@__user_amcas` VALUES ('5', 'posts', '1', '文档管理', '4', 'mod');
 INSERT INTO `#@__user_amcas` VALUES ('6', 'menus', '1', '菜单管理', '5', 'mod');
@@ -58,10 +58,10 @@ INSERT INTO `#@__user_amcas` VALUES ('9', 'options', '2', '站点配置', '0', '
 INSERT INTO `#@__user_amcas` VALUES ('10', 'pictures', '2', '图片管理', '1', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('11', 'site', '2', '系统管理', '2', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('12', 'tools', '2', '工具管理', '3', 'ctrl');
-INSERT INTO `#@__user_amcas` VALUES ('13', 'account', '3', '用户账户管理', '0', 'ctrl');
-INSERT INTO `#@__user_amcas` VALUES ('14', 'amcas', '3', '用户可访问的事件', '1', 'ctrl');
-INSERT INTO `#@__user_amcas` VALUES ('15', 'groups', '3', '用户组', '2', 'ctrl');
-INSERT INTO `#@__user_amcas` VALUES ('16', 'users', '3', '用户管理', '3', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('13', 'account', '3', '管理员账户管理', '0', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('14', 'amcas', '3', '管理员可访问的事件', '1', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('15', 'groups', '3', '管理组', '2', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('16', 'users', '3', '管理员管理', '3', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('17', 'builders', '4', '生成代码', '0', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('18', 'fields', '4', '表单字段', '1', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('19', 'groups', '4', '字段组', '2', 'ctrl');
@@ -77,13 +77,23 @@ INSERT INTO `#@__user_amcas` VALUES ('28', 'types', '6', '菜单类型', '1', 'c
 INSERT INTO `#@__user_amcas` VALUES ('29', 'topic', '7', '专题管理', '0', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('30', 'adverts', '8', '广告管理', '0', 'ctrl');
 INSERT INTO `#@__user_amcas` VALUES ('31', 'types', '8', '广告位置', '1', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('32', 'poll', '1', '投票管理', '8', 'mod');
+INSERT INTO `#@__user_amcas` VALUES ('33', 'polloptions', '32', '投票选项', '0', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('34', 'polls', '32', '投票管理', '1', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('35', 'member', '1', '会员管理', '9', 'mod');
+INSERT INTO `#@__user_amcas` VALUES ('36', 'addresses', '35', '会员收货地址', '5', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('37', 'members', '35', '会员账户', '3', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('38', 'portal', '35', '会员管理', '2', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('39', 'ranks', '35', '会员成长度', '1', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('40', 'social', '35', '会员详情', '4', 'ctrl');
+INSERT INTO `#@__user_amcas` VALUES ('41', 'types', '35', '会员类型', '0', 'ctrl');
 
 INSERT INTO `#@__user_groups` VALUES ('1', 'Public', '0', '0', '', '公开组，未登录用户拥有该权限');
 INSERT INTO `#@__user_groups` VALUES ('2', 'Guest', '1', '1', null, '普通会员');
 INSERT INTO `#@__user_groups` VALUES ('3', 'Manager', '1', '2', null, '普通管理员');
 INSERT INTO `#@__user_groups` VALUES ('4', 'Registered', '1', '3', 'YToxOntzOjEzOiJhZG1pbmlzdHJhdG9yIjthOjE6e3M6NToicG9zdHMiO2E6MTp7czo1OiJwb3N0cyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O319fX0=', '记名作者');
 INSERT INTO `#@__user_groups` VALUES ('5', 'Super Users', '1', '4', null, '超级会员');
-INSERT INTO `#@__user_groups` VALUES ('6', 'Administrator', '3', '1', 'YToxOntzOjEzOiJhZG1pbmlzdHJhdG9yIjthOjc6e3M6Njoic3lzdGVtIjthOjQ6e3M6Nzoib3B0aW9ucyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjg6InBpY3R1cmVzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NDoic2l0ZSI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjU6InRvb2xzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fX1zOjU6InVzZXJzIjthOjQ6e3M6NzoiYWNjb3VudCI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjU6ImFtY2FzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NjoiZ3JvdXBzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToidXNlcnMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9fXM6NzoiYnVpbGRlciI7YTo2OntzOjg6ImJ1aWxkZXJzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NjoiZmllbGRzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NjoiZ3JvdXBzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6ODoidGJsbmFtZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo1OiJ0eXBlcyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjEwOiJ2YWxpZGF0b3JzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fX1zOjU6InBvc3RzIjthOjQ6e3M6MTA6ImNhdGVnb3JpZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo4OiJjb21tZW50cyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjc6Im1vZHVsZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo1OiJwb3N0cyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O319czo1OiJtZW51cyI7YToyOntzOjU6Im1lbnVzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToidHlwZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9fXM6NToidG9waWMiO2E6MTp7czo1OiJ0b3BpYyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O319czo2OiJhZHZlcnQiO2E6Mjp7czo3OiJhZHZlcnRzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToidHlwZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9fX19', '超级管理员');
+INSERT INTO `#@__user_groups` VALUES ('6', 'Administrator', '3', '1', 'YToxOntzOjEzOiJhZG1pbmlzdHJhdG9yIjthOjk6e3M6Njoic3lzdGVtIjthOjQ6e3M6Nzoib3B0aW9ucyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjg6InBpY3R1cmVzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NDoic2l0ZSI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjU6InRvb2xzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fX1zOjU6InVzZXJzIjthOjQ6e3M6NzoiYWNjb3VudCI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjU6ImFtY2FzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NjoiZ3JvdXBzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToidXNlcnMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9fXM6NzoiYnVpbGRlciI7YTo2OntzOjg6ImJ1aWxkZXJzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NjoiZmllbGRzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NjoiZ3JvdXBzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6ODoidGJsbmFtZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo1OiJ0eXBlcyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjEwOiJ2YWxpZGF0b3JzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fX1zOjU6InBvc3RzIjthOjQ6e3M6MTA6ImNhdGVnb3JpZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo4OiJjb21tZW50cyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjc6Im1vZHVsZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo1OiJwb3N0cyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O319czo1OiJtZW51cyI7YToyOntzOjU6Im1lbnVzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToidHlwZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9fXM6NToidG9waWMiO2E6MTp7czo1OiJ0b3BpYyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O319czo2OiJhZHZlcnQiO2E6Mjp7czo3OiJhZHZlcnRzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToidHlwZXMiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9fXM6NDoicG9sbCI7YToyOntzOjExOiJwb2xsb3B0aW9ucyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjU6InBvbGxzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fX1zOjY6Im1lbWJlciI7YTo2OntzOjk6ImFkZHJlc3NlcyI7YTo0OntpOjA7aToxO2k6MTtpOjI7aToyO2k6NDtpOjM7aTo4O31zOjU6InR5cGVzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6NToicmFua3MiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo2OiJwb3J0YWwiO2E6NDp7aTowO2k6MTtpOjE7aToyO2k6MjtpOjQ7aTozO2k6ODt9czo3OiJtZW1iZXJzIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fXM6Njoic29jaWFsIjthOjQ6e2k6MDtpOjE7aToxO2k6MjtpOjI7aTo0O2k6MztpOjg7fX19fQ==', '超级管理员');
 INSERT INTO `#@__user_groups` VALUES ('7', 'Author', '4', '1', null, '普通作者');
 INSERT INTO `#@__user_groups` VALUES ('8', 'Editor', '7', '1', null, '高级作者');
 INSERT INTO `#@__user_groups` VALUES ('9', 'Publisher', '8', '1', null, '出版者');

@@ -3422,3 +3422,4 @@ INSERT INTO `tr_regions` VALUES ('3405', '3401', '包河区', '3');
 INSERT INTO `tr_regions` VALUES ('3406', '3401', '长丰县', '3');
 INSERT INTO `tr_regions` VALUES ('3407', '3401', '肥东县', '3');
 INSERT INTO `tr_regions` VALUES ('3408', '3401', '肥西县', '3');
+INSERT INTO `tr_regions` VALUES ('3411', '0', '海外', '1');

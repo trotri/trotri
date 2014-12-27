@@ -14,7 +14,7 @@ use libapp\BaseController;
 
 /**
  * PortalController class file
- * 会员账户
+ * 会员管理
  * @author 宋欢 <trotri@yeah.net>
  * @version $Id: PortalController.php 1 2014-11-26 21:46:18Z Code Generator $
  * @package modules.member.controller

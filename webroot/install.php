@@ -56,7 +56,7 @@ if ($do === 'source_db_tables') {
 			}
 		}
 
-		echo '<p>创建表完成，正在导入数据，请稍后 ...</p>';
+		echo '<p>创建表完成，正在导入数据，大约需要5分钟，请稍后 ...</p>';
 	}
 	else {
 		echo '<p>创建表失败.</p>';
@@ -157,6 +157,17 @@ function ajax(p) {
     }
   }
 }
+
+/**
+ * 展示导库日志
+ * @param string id
+ * @param string message
+ * @return void
+ */
+function showMessage(id, message) {
+  document.getElementById(id).innerHTML += message + "<br/>";
+  document.body.scrollTop = 100000000;
+}
 </script>
 </head>
 
@@ -239,7 +250,7 @@ function ajax(p) {
   <p>5. 数据表前缀</p>
   <p>如果自动安装失败，手动安装过程：</p>
   <p>1、请手动将数据库信息写入 “根目录/cfg/db/cluster-sample.php” 文件，并将 “cluster-sample.php” 文件重命名为 “cluster.php”。</p>
-  <p>2、请手动将 “根目录/data/install/db_tables.sql” 和 “根目录/data/install/db_data.sql” 中的#@__替换成表前缀，并依次将两个文件手动导入数据库。</p>
+  <p>2、请手动将 “根目录/data/install/db_tables.sql” 、 “根目录/data/install/db_data.sql” 和 “根目录/data/install/db_regions.sql” 中的#@__替换成表前缀，并依次将三个文件手动导入数据库。</p>
   <p>3、如果 “根目录/cfg/key/cluster.php” 文件不存在，请手动将密钥信息写入 “根目录/cfg/key/cluster-sample.php” 文件，并将 “cluster-sample.php” 文件重命名为 “cluster.php”。</p>
   <p>4、以上都完成后，再次执行此安装操作，这时会跳过数据库配置，直接转到创建管理员操作，输入管理员 “用户名” 和 “密码” 后提交即可。</p>
   <p></p>
@@ -343,7 +354,7 @@ function ajax(p) {
     <p>&nbsp;</p>
     <p><a class="btn btn-primary btn-lg" href="javascript: history.back();">&lt;&lt; 返回上一步</a></p>
   <?php exit; endif; ?>
-    <h2>正在导入数据库，大约需要3分钟，请稍后 ...</h2>
+    <h2>正在导入数据库，大约需要8分钟，请稍后 ...</h2>
     <div id="dbsource_tables"></div>
     <div id="dbsource_data"></div>
     <p id="button_to_adform" style="display: none;"><a class="btn btn-primary btn-lg" href="install.php?do=adform">继续 &gt;&gt;</a></p>
@@ -354,17 +365,15 @@ function ajax(p) {
       "url"      : "install.php",
       "data"     : "do=source_db_tables",
       "success"  : function(data) {
-        document.getElementById("dbsource_tables").innerHTML = data;
-        document.body.scrollTop = 768;
+        showMessage("dbsource_tables", data);
         ajax({
           "type"     : "POST",
           "dataType" : "TEXT",
           "url"      : "install.php",
           "data"     : "do=source_db_data",
           "success"  : function(data) {
-            document.getElementById("dbsource_data").innerHTML = data;
+            showMessage("dbsource_data", data);
             document.getElementById("button_to_adform").style.display = "block";
-            document.body.scrollTop = 768;
           }
         });
       }
