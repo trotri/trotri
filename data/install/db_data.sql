@@ -114,3 +114,18 @@ INSERT INTO `#@__adverts` VALUES ('6', 'Bootcss', 'friendlinks', '', 'y', '2014-
 INSERT INTO `#@__adverts` VALUES ('7', 'Trotri', 'friendlinks', '', 'y', '2014-11-05 14:31:17', '0000-00-00 00:00:00', '3', 'text', '<a target=\"_blank\" href=\"http://www.trotri.com/\">Trotri</a>', 'Trotri', 'http://www.trotri.com/', '', '', '', '0', '0', '', '_blank', '2014-11-05 14:31:37');
 
 INSERT INTO `#@__topic` VALUES ('1', '示例', 'example', '###baseurl###/static/images/test/example_728_318.jpg', '示例', '示例,专题', '示例专题', '', '', '', '<div class=\"container\">\r\n  <div class=\"blog-header\"></div>\r\n  <div class=\"row\">\r\n示例专题 ...... 示例专题 ...... 示例专题 ...... 示例专题 ...... 示例专题 ...... 示例专题 ......\r\n  </div><!-- /.row -->\r\n</div><!-- /.container -->', 'y', 'y', 'y', '1', '2014-11-05 14:17:44');
+
+INSERT INTO `#@__polls` VALUES ('1', '您是从哪里了解到我们网站的？', 'knowmysite', 'n', '', 'forever', '0', 'y', '2014-12-26 16:58:30', '0000-00-00 00:00:00', 'y', 'n', '0', '', '', '2014-12-18 17:59:17');
+INSERT INTO `#@__polloptions` VALUES ('1', '搜索引擎', '1', '8', '1');
+INSERT INTO `#@__polloptions` VALUES ('2', '朋友介绍', '1', '4', '2');
+INSERT INTO `#@__polloptions` VALUES ('3', '代码托管网站', '1', '5', '3');
+INSERT INTO `#@__polloptions` VALUES ('4', '其他', '1', '6', '4');
+
+INSERT INTO `#@__member_types` VALUES ('1', '普通会员', '1', '');
+INSERT INTO `#@__member_types` VALUES ('2', '专家达人', '2', '');
+
+INSERT INTO `#@__member_ranks` VALUES ('1', '注册会员', '0', '1', '');
+INSERT INTO `#@__member_ranks` VALUES ('2', '铜牌会员', '1', '2', '');
+INSERT INTO `#@__member_ranks` VALUES ('3', '银牌会员', '2000', '3', '');
+INSERT INTO `#@__member_ranks` VALUES ('4', '金牌会员', '10000', '4', '');
+INSERT INTO `#@__member_ranks` VALUES ('5', '钻石会员', '30000', '5', '');

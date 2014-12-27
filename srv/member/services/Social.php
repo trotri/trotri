@@ -85,6 +85,12 @@ class Social extends AbstractService
 			}
 		}
 
+		if (isset($params['interests'])) {
+			if (is_string($params['interests'])) {
+				$params['interests'] = explode(',', $params['interests']);
+			}
+		}
+
 		return parent::modifyByPk($value, $params);
 	}
 

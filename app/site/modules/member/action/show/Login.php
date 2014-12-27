@@ -38,7 +38,7 @@ class Login extends library\ShowAction
 		Text::_('MOD_MEMBER__');
 
 		$httpReferer = PageHelper::getHttpReferer();
-		if ($httpReferer === '') {
+		if ($httpReferer === '' || strpos($httpReferer, '?r=member/show') !== false) {
 			$httpReferer = 'index.php';
 		}
 

@@ -641,7 +641,7 @@ class Posts extends AbstractDb
 				$attributes['dt_publish_down'] = $dtPublishDown;
 			}
 			else {
-				return false;
+				$attributes['dt_publish_down'] = '0000-00-00 00:00:00';
 			}
 		}
 

@@ -189,6 +189,21 @@ class Polls extends BaseModel
 	}
 
 	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $id
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($id, array $params = array())
+	{
+		if (!isset($params['m_rank_ids'])) {
+			$params['m_rank_ids'] = array();
+		}
+
+		return parent::modifyByPk($id, $params);
+	}
+
+	/**
 	 * 通过“主键ID”，获取“投票名”
 	 * @param integer $pollId
 	 * @return string

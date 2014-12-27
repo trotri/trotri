@@ -3,7 +3,7 @@ $(document).ready(function() {
   if (g_ctrl == "show") {
     if (g_act == "social") {
       Member.loadBirth();
-      $("#head_portrait_file").attr("url", Member.getAjaxHeadPortrait());
+      $("#head_portrait_file").attr("url", Member.getAjaxHeadPortraitUrl());
       Core.uploadPreviewImg("head_portrait_file", "head_portrait");
 
       var regionUrl = Core.getAjaxRegionsUrl({"def": 1});
@@ -106,22 +106,48 @@ Member = {
    * @param object params
    * @return string
    */
-  getAjaxHeadPortrait: function(params) {
+  getAjaxHeadPortraitUrl: function(params) {
     return Core.getUrl("member", "data", "upload", params) + "&" + new Date().getTime();
+  },
+
+  /**
+   * 获取Ajax修改个人中心的链接
+   * @param object params
+   * @return string
+   */
+  getAjaxSocialUrl: function(params) {
+    return Core.getUrl("member", "data", "social", params) + "&" + new Date().getTime();
   },
 
   /**
    * @param json 寄存字段名和字段类型
    */
   fields: {
-    "login_name"   : ":text",
-    "password"     : ":password",
-    "repassword"   : ":password",
-    "old_pwd"      : ":password",
-    "member_mail"  : ":text",
-    "remember_me"  : ":checkbox",
-    "cipher"       : ":hidden",
-    "http_referer" : ":hidden",
+    "login_name"          : ":text",
+    "password"            : ":password",
+    "repassword"          : ":password",
+    "old_pwd"             : ":password",
+    "member_mail"         : ":text",
+    "remember_me"         : ":checkbox",
+    "cipher"              : ":hidden",
+    "http_referer"        : ":hidden",
+    "realname"            : ":text",
+    "sex"                 : ":radio",
+    "birth_y"             : "select",
+    "birth_m"             : "select",
+    "birth_d"             : "select",
+    "is_pub_birth"        : ":checkbox",
+    "head_portrait"       : ":text",
+    "interests"           : ":checkbox",
+    "is_pub_interests"    : ":checkbox",
+    "qq"                  : ":text",
+    "live_province_id"    : "select",
+    "live_city_id"        : "select",
+    "live_district_id"    : "select",
+    "address_province_id" : "select",
+    "address_city_id"     : "select",
+    "address_district_id" : "select",
+    "introduce"           : "textarea",
   },
 
   /**
@@ -216,9 +242,9 @@ Member = {
   ajaxRepwdoldpwd: function() {
     var formId = "repwdoldpwd";
 
-    var oldPwd  = Member.getObj("old_pwd", formId).val();
-    var password  = Member.getObj("password", formId).val();
-    var repassword  = Member.getObj("repassword", formId).val();
+    var oldPwd     = Member.getObj("old_pwd", formId).val();
+    var password   = Member.getObj("password", formId).val();
+    var repassword = Member.getObj("repassword", formId).val();
 
     $.getJSON(Member.getAjaxRepwdoldpwdUrl(), {"old_pwd": oldPwd, "password": password, "repassword": repassword}, function(ret) {
       $("#" + formId).find(".alert").html(ret.err_msg);
@@ -267,9 +293,9 @@ Member = {
   ajaxRepwdmail: function() {
     var formId = "repwdmail";
 
-    var cipher  = Member.getObj("cipher", formId).val();
-    var password  = Member.getObj("password", formId).val();
-    var repassword  = Member.getObj("repassword", formId).val();
+    var cipher     = Member.getObj("cipher", formId).val();
+    var password   = Member.getObj("password", formId).val();
+    var repassword = Member.getObj("repassword", formId).val();
 
     $.getJSON(Member.getAjaxRepwdmailUrl(), {"cipher": cipher, "password": password, "repassword": repassword}, function(ret) {
       $("#" + formId).find(".alert").html(ret.err_msg);
@@ -281,6 +307,76 @@ Member = {
         setTimeout(function() {
           location.href = Member.getLogoutUrl();
         }, 1000);
+      }
+    });
+  },
+
+  /**
+   * 修改会员详情
+   * @return void
+   */
+  ajaxSocial: function() {
+    var formId = "social";
+
+    var realname = Member.getObj("realname", formId).val();
+    var sex = $("#" + formId + " :radio[name='sex']:checked").val();
+    var birthY = Member.getObj("birth_y", formId).val();
+    var birthM = Member.getObj("birth_m", formId).val();
+    var birthD = Member.getObj("birth_d", formId).val();
+    var isPubBirth = $("#" + formId + " :checkbox[name='is_pub_birth']:checked").val();
+    if (isPubBirth != "y") { isPubBirth = "n"; }
+    var headPortrait = Member.getObj("head_portrait", formId).val();
+    var interests = Trotri.getCheckedValues(interests);
+    var isPubInterests = $("#" + formId + " :checkbox[name='is_pub_interests']:checked").val();
+    if (isPubInterests != "y") { isPubInterests = "n"; }
+    var qq = Member.getObj("qq", formId).val();
+    var liveProvinceId = Member.getObj("live_province_id", formId).val();
+    var liveCityId = Member.getObj("live_city_id", formId).val();
+    var liveDistrictId = Member.getObj("live_district_id", formId).val();
+    var addressProvinceId = Member.getObj("address_province_id", formId).val();
+    var addressCityId = Member.getObj("address_city_id", formId).val();
+    var addressDistrictId = Member.getObj("address_district_id", formId).val();
+    var introduce = Member.getObj("introduce", formId).val();
+
+    var birthYmd = birthY + birthM + birthD;
+
+    var data = {
+      "realname": realname,
+      "sex": sex,
+      "birth_ymd": birthYmd,
+      "is_pub_birth": isPubBirth,
+      "head_portrait": headPortrait,
+      "interests": interests,
+      "is_pub_interests": isPubInterests,
+      "qq": qq,
+      "live_province_id": liveProvinceId,
+      "live_city_id": liveCityId,
+      "live_district_id": liveDistrictId,
+      "address_province_id": addressProvinceId,
+      "address_city_id": addressCityId,
+      "address_district_id": addressDistrictId,
+      "introduce": introduce
+    };
+
+    $.ajax({
+      url: Member.getAjaxSocialUrl(),
+      data: data,
+      type: "POST",
+      dataType: "JSON",
+      success: function(ret) {
+        $("#" + formId).find(".alert").html(ret.err_msg);
+        $("#" + formId + " :button[name='social_button']").parent().next().html(ret.err_msg);
+        if (ret.err_no > 0) {
+          for (var fieldName in ret.data.errors) {
+            var o = Member.getObj(fieldName, formId);
+            o.parent().parent().addClass("has-error");
+            o.parent().next().html(ret.data.errors[fieldName]);
+          }
+          $("#" + formId).find(".alert").css("color", "#a94442");
+        }
+        else {
+          $("#" + formId).find(".alert").css("color", "");
+        }
       }
     });
   },

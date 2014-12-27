@@ -11,6 +11,8 @@
 namespace modules\member\model;
 
 use libapp\BaseModel;
+use tfc\saf\Text;
+use libapp\ErrorNo;
 use member\services\Social AS SrvSocial;
 
 /**
@@ -46,4 +48,21 @@ class Social extends BaseModel
 		$row = $this->_service->findByPk($value);
 		return $row;
 	}
+
+	/**
+	 * 通过主键，编辑一条记录
+	 * @param integer $id
+	 * @param array $params
+	 * @return array
+	 */
+	public function modifyByPk($id, array $params = array())
+	{
+		$ret = $this->callModifyMethod($this->_service, 'modifyByPk', $id, $params);
+		if ($ret['err_no'] === ErrorNo::SUCCESS_NUM) {
+			$ret['err_msg'] = Text::_('MOD_MEMBER_SOCIAL_MODIFY_SUCCESS_HINT');
+		}
+
+		return $ret;
+	}
+
 }

@@ -35,6 +35,7 @@ define('PATH_CFG_DB',            DIR_CFG_DB       . DS . 'cluster.php');
 define('PATH_CFG_KEY',           DIR_CFG_KEY      . DS . 'cluster.php');
 define('PATH_DB_TABLES',         DIR_DATA_INSTALL . DS . 'db_tables.sql');
 define('PATH_DB_DATA',           DIR_DATA_INSTALL . DS . 'db_data.sql');
+define('PATH_DB_REGIONS',        DIR_DATA_INSTALL . DS . 'db_regions.sql');
 
 $baseUrl = Util::getBaseUrl();
 $do = isset($_GET['do']) ? trim($_GET['do']) : (isset($_POST['do']) ? trim($_POST['do']) : '');
@@ -682,6 +683,17 @@ class Db
 			$data[] = $command;
 		}
 
+		$fileName = PATH_DB_REGIONS;
+		$commands = file($fileName);
+		foreach ($commands as $command) {
+			if (($command = trim($command)) === '') {
+				continue;
+			}
+
+			$command = str_replace(DB_TBLPREFIX_HOLDERS, $this->tblprefix, $command);
+			$data[] = $command;
+		}
+
 		return $data;
 	}
 
@@ -747,7 +759,19 @@ class Util
 				'expiry' => 2592000,
 				'rnd_len' => 16
 			),
+			'auth_site' => array (
+				'crypt' => self::randChars(32),
+				'sign' => self::randChars(32),
+				'expiry' => 2592000,
+				'rnd_len' => 16,
+			),
 			'cookie' => array (
+				'crypt' => self::randChars(16),
+				'sign' => self::randChars(16),
+				'expiry' => 86400,
+				'rnd_len' => 8
+			),
+			'repwd' => array (
 				'crypt' => self::randChars(16),
 				'sign' => self::randChars(16),
 				'expiry' => 86400,

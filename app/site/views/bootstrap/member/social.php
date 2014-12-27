@@ -53,7 +53,7 @@
     <div class="form-group">
       <label class="col-lg-3 control-label"><?php echo $this->MOD_MEMBER_SOCIAL_IS_PUB_BIRTH_LABEL; ?></label>
       <div class="col-lg-6">
-        <input type="checkbox" name="is_pub_birth" value="n" <?php if ($this->is_pub_birth === 'y') : ?>checked<?php endif; ?> />
+        <input type="checkbox" name="is_pub_birth" value="y" <?php if ($this->is_pub_birth === 'y') : ?>checked<?php endif; ?> />
       </div>
       <span class="control-label"></span>
     </div>
@@ -61,7 +61,7 @@
     <div class="form-group">
       <label class="col-lg-3 control-label"><?php echo $this->MOD_MEMBER_SOCIAL_HEAD_PORTRAIT_LABEL; ?></label>
       <div class="col-lg-6">
-        <input class="form-control input-sm" type="text" name="head_portrait" value="" />
+        <input class="form-control input-sm" type="text" name="head_portrait" value="<?php echo $this->head_portrait; ?>" />
       </div>
       <span class="control-label"></span>
     </div>
@@ -87,7 +87,7 @@
     <div class="form-group">
       <label class="col-lg-3 control-label"><?php echo $this->MOD_MEMBER_SOCIAL_IS_PUB_INTERESTS_LABEL; ?></label>
       <div class="col-lg-6">
-        <input type="checkbox" name="is_pub_interests" value="n" <?php if ($this->is_pub_interests === 'y') : ?>checked<?php endif; ?> />
+        <input type="checkbox" name="is_pub_interests" value="y" <?php if ($this->is_pub_interests === 'y') : ?>checked<?php endif; ?> />
       </div>
       <span class="control-label"></span>
     </div>
@@ -123,7 +123,7 @@
     <div class="form-group">
       <label class="col-lg-3 control-label"><?php echo $this->MOD_MEMBER_SOCIAL_INTRODUCE_LABEL; ?></label>
       <div class="col-lg-6">
-        <textarea class="form-control input-sm" rows="8" name="introduce"></textarea>
+        <textarea class="form-control input-sm" rows="8" name="introduce"><?php echo $this->introduce; ?></textarea>
       </div>
       <span class="control-label"></span>
     </div>
@@ -131,8 +131,9 @@
     <div class="form-group">
       <label class="col-lg-3 control-label">&nbsp;&nbsp;</label>
       <div class="col-lg-4">
-        <?php echo $this->getHtml()->button($this->CFG_SYSTEM_GLOBAL_CONFIRM, '', array('class' => 'btn btn-lg btn-primary btn-block', 'onclick' => 'return Member.ajaxSocial();')); ?>
+        <?php echo $this->getHtml()->button($this->CFG_SYSTEM_GLOBAL_CONFIRM, 'social_button', array('class' => 'btn btn-lg btn-primary btn-block', 'onclick' => 'return Member.ajaxSocial();')); ?>
       </div>
+      <span class="control-label"></span>
     </div>
 
   <?php echo $this->getHtml()->closeForm(); ?>

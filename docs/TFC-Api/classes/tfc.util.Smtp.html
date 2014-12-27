@@ -11,7 +11,7 @@
             <link href="../css/template.css" rel="stylesheet" media="all"/>
     
             <!--[if lt IE 9]>
-        <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+        
         <![endif]-->
         <script src="../js/jquery-1.7.1.min.js" type="text/javascript"></script>
         <script src="../js/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
@@ -65,7 +65,7 @@
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="../errors.html">
-                                        
+                                         
                                     </a>
                                 </li>
                                 <li>
@@ -120,8 +120,18 @@
             <i class="icon-custom icon-method"></i> Methods
             <ul>
                                                                                                     <li class="method public">
-        <a href="#method___construct" title="__construct :: 构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址">
-            <span class="description">构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址</span><pre>__construct</pre>
+        <a href="#method___construct" title="__construct :: 构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址
+&lt;ul&gt;
+&lt;li&gt;{@link $host = &#039;smtp.qq.com&#039;}&lt;/li&gt;
+&lt;li&gt;{@link $username = &#039;******@qq.com&#039;}&lt;/li&gt;
+&lt;li&gt;{@link $password = &#039;******&#039;}&lt;/li&gt;
+&lt;/ul&gt;">
+            <span class="description">构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址
+&lt;ul&gt;
+&lt;li&gt;{@link $host = &#039;smtp.qq.com&#039;}&lt;/li&gt;
+&lt;li&gt;{@link $username = &#039;******@qq.com&#039;}&lt;/li&gt;
+&lt;li&gt;{@link $password = &#039;******&#039;}&lt;/li&gt;
+&lt;/ul&gt;</span><pre>__construct</pre>
         </a>
     </li>
 
@@ -167,15 +177,45 @@
         </a>
     </li>
 
+                                                                                                        <li class="method public">
+        <a href="#method_getHost" title="getHost :: 获取SMTP主机地址">
+            <span class="description">获取SMTP主机地址</span><pre>getHost</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getPort" title="getPort :: 获取SMTP端口号，默认是 25">
+            <span class="description">获取SMTP端口号，默认是 25</span><pre>getPort</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getUsername" title="getUsername :: 获取SMTP用户名">
+            <span class="description">获取SMTP用户名</span><pre>getUsername</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getPassword" title="getPassword :: 获取SMTP密码">
+            <span class="description">获取SMTP密码</span><pre>getPassword</pre>
+        </a>
+    </li>
+
+                                                                                                        <li class="method public">
+        <a href="#method_getFromMail" title="getFromMail :: 获取发件人地址，应该和用户名相同，如果不相同，有可能出错">
+            <span class="description">获取发件人地址，应该和用户名相同，如果不相同，有可能出错</span><pre>getFromMail</pre>
+        </a>
+    </li>
+
                                                 </ul>
         </li>
         <li class="nav-header protected">» Protected
             <ul>
-                                                                                                                                                                                                                                                                                                                                            </ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
         </li>
         <li class="nav-header private">» Private
             <ul>
-                                                                                                                                                                                                                                                                                                                                            </ul>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </ul>
         </li>
         <li class="nav-header">
             <i class="icon-custom icon-constant"></i> Constants
@@ -240,7 +280,12 @@
                     <h3><i class="icon-custom icon-method"></i> Methods</h3>
                                                                 <a id="method___construct"></a>
                         <div class="element clickable method public  method___construct" data-toggle="collapse" data-target=".method___construct .collapse">
-                            <h2>构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址</h2>
+                            <h2>构造方法：初始化SMTP主机地址、SMTP用户名、SMTP密码、是否显示发件人地址、是否显示收件人地址、发件人地址
+&lt;ul&gt;
+&lt;li&gt;{@link $host = &#039;smtp.qq.com&#039;}&lt;/li&gt;
+&lt;li&gt;{@link $username = &#039;******@qq.com&#039;}&lt;/li&gt;
+&lt;li&gt;{@link $password = &#039;******&#039;}&lt;/li&gt;
+&lt;/ul&gt;</h2>
                             <pre>__construct(string $host, string $username, string $password, boolean $showFromMail = true, boolean $showToMail = true, string $fromMail = &#039;&#039;) </pre>
                             <div class="labels">
                                                                                                                                                                                             </div>
@@ -598,6 +643,171 @@
                                                                     </div>
                             </div>
                         </div>
+                                            <a id="method_getHost"></a>
+                        <div class="element clickable method public  method_getHost" data-toggle="collapse" data-target=".method_getHost .collapse">
+                            <h2>获取SMTP主机地址</h2>
+                            <pre>getHost() : string</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>string</code><p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_getPort"></a>
+                        <div class="element clickable method public  method_getPort" data-toggle="collapse" data-target=".method_getPort .collapse">
+                            <h2>获取SMTP端口号，默认是 25</h2>
+                            <pre>getPort() : integer</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>integer</code><p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_getUsername"></a>
+                        <div class="element clickable method public  method_getUsername" data-toggle="collapse" data-target=".method_getUsername .collapse">
+                            <h2>获取SMTP用户名</h2>
+                            <pre>getUsername() : string</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>string</code><p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_getPassword"></a>
+                        <div class="element clickable method public  method_getPassword" data-toggle="collapse" data-target=".method_getPassword .collapse">
+                            <h2>获取SMTP密码</h2>
+                            <pre>getPassword() : string</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>string</code><p></p>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <a id="method_getFromMail"></a>
+                        <div class="element clickable method public  method_getFromMail" data-toggle="collapse" data-target=".method_getFromMail .collapse">
+                            <h2>获取发件人地址，应该和用户名相同，如果不相同，有可能出错</h2>
+                            <pre>getFromMail() : string</pre>
+                            <div class="labels">
+                                                                                                                                                                                            </div>
+                            <div class="row collapse">
+                                <div class="detail-description">
+                                    <div class="long_description"></div>
+
+                                    <table class="table">
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                                    <tr>
+                                                <th>
+                                                    
+                                                </th>
+                                                <td>
+                                                                                                    </td>
+                                            </tr>
+                                                                            </table>
+
+                                    
+                                                                            <h3>Response</h3>
+                                        <code>string</code><p></p>
+                                                                    </div>
+                            </div>
+                        </div>
                     
                     
                                                                 <h3><i class="icon-custom icon-property"></i> Properties</h3>
@@ -918,7 +1128,7 @@
             Template is built using <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap 2</a> and icons provided by
             <a href="http://glyphicons.com/">Glyphicons</a>.<br/>
             Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and<br/>
-            generated on Wed, 12 Nov 2014 17:25:25 +0800.<br/>
+            generated on Sat, 27 Dec 2014 06:16:39 +0000.<br/>
     </footer>
     </body>
 </html>

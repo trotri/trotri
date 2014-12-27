@@ -415,7 +415,7 @@ CREATE TABLE `#@__adverts` (
   KEY `key_sort` (`type_key`,`sort`),
   KEY `key_pub_sort` (`type_key`,`is_published`,`sort`),
   KEY `advert_name` (`advert_name`),
-  KEY `advert_url` (`advert_url`),
+  KEY `advert_url` (`advert_url`(255)),
   KEY `advert_src` (`advert_src`),
   KEY `dt_publish_up` (`dt_publish_up`),
   KEY `dt_publish_down` (`dt_publish_down`)
@@ -444,3 +444,311 @@ CREATE TABLE `#@__topic` (
   KEY `pub_sort` (`is_published`,`sort`),
   KEY `dt_created` (`dt_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专题表';
+
+CREATE TABLE `#@__member_types` (
+  `type_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `type_name` varchar(100) NOT NULL DEFAULT '' COMMENT '类型名，普通会员、认证会员、达人、专家等',
+  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  PRIMARY KEY (`type_id`),
+  UNIQUE KEY `uk_type_name` (`type_name`),
+  KEY `sort` (`sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员类型表';
+
+CREATE TABLE `#@__member_ranks` (
+  `rank_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `rank_name` varchar(100) NOT NULL DEFAULT '' COMMENT '成长度名，注册会员、铜牌会员、银牌会员、金牌会员、钻石会员等',
+  `experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '需要成长值',
+  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  PRIMARY KEY (`rank_id`),
+  UNIQUE KEY `uk_rank_name` (`rank_name`),
+  KEY `experience` (`experience`),
+  KEY `sort` (`sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员成长度表';
+
+CREATE TABLE `#@__member_portal` (
+  `member_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号|第三方OpenID',
+  `login_type` enum('mail','name','phone','partner') NOT NULL DEFAULT 'mail' COMMENT '登录方式，mail：邮箱、name：用户名(不能是纯数字、不能包含@符)、phone：手机号(11位数字)、partner：第三方账号',
+  `password` char(32) NOT NULL DEFAULT '' COMMENT '登录密码',
+  `salt` char(6) NOT NULL DEFAULT '' COMMENT '随机附加混淆码',
+  `member_name` varchar(100) NOT NULL DEFAULT '' COMMENT '会员名',
+  `member_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱，可用来找回密码',
+  `member_phone` char(11) NOT NULL DEFAULT '' COMMENT '手机号，可用来找回密码',
+  `relation_member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '关联会员ID，用于合并账号',
+  `dt_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
+  `dt_last_login` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次登录时间',
+  `dt_last_repwd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新密码时间',
+  `ip_registered` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册IP',
+  `ip_last_login` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次登录IP',
+  `ip_last_repwd` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次更新密码IP',
+  `login_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总登录次数',
+  `repwd_count` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '总更新密码次数',
+  `valid_mail` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否已验证邮箱',
+  `valid_phone` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否已验证手机号',
+  `forbidden` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否禁用',
+  `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
+  PRIMARY KEY (`member_id`),
+  UNIQUE KEY `uk_login_name` (`login_name`),
+  KEY `login_type` (`login_type`),
+  KEY `member_name` (`member_name`),
+  KEY `member_mail` (`member_mail`),
+  KEY `member_phone` (`member_phone`),
+  KEY `valid_mail` (`valid_mail`),
+  KEY `valid_phone` (`valid_phone`),
+  KEY `forbidden` (`forbidden`),
+  KEY `trash` (`trash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员登录表';
+
+CREATE TABLE `#@__members` (
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号|第三方OpenID',
+  `p_password` char(32) NOT NULL DEFAULT '' COMMENT '支付密码',
+  `p_salt` char(6) NOT NULL DEFAULT '' COMMENT '支付密码-随机附加混淆码',
+  `type_id` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '会员类型ID',
+  `rank_id` smallint(5) unsigned NOT NULL DEFAULT '1' COMMENT '会员成长度ID',
+  `experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '成长值',
+  `balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '预存款金额',
+  `balance_freeze` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '预存款冻结金额',
+  `points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '积分',
+  `points_freeze` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '冻结积分',
+  `consum` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '消费总额',
+  `orders` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单总数',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  `dt_last_rerank` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新成长度时间',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`member_id`),
+  KEY `login_name` (`login_name`),
+  KEY `type_id` (`type_id`),
+  KEY `rank_id` (`rank_id`),
+  KEY `experience` (`experience`),
+  KEY `balance` (`balance`),
+  KEY `points` (`points`),
+  KEY `consum` (`consum`),
+  KEY `orders` (`orders`),
+  KEY `dt_created` (`dt_created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员主表';
+
+CREATE TABLE `#@__member_social` (
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号|第三方OpenID',
+  `realname` varchar(100) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `sex` enum('male','female','unknow') NOT NULL DEFAULT 'unknow' COMMENT '性别，male：男性、female：女性、unknow：保密',
+  `birth_ymd` date NOT NULL DEFAULT '0000-00-00' COMMENT '出生日',
+  `birth_md` char(4) NOT NULL DEFAULT '0000' COMMENT '生日',
+  `anniversary` char(4) NOT NULL DEFAULT '0000' COMMENT '纪念日',
+  `head_portrait` varchar(1024) NOT NULL DEFAULT '' COMMENT '头像URL',
+  `introduce` varchar(512) NOT NULL DEFAULT '' COMMENT '自我介绍',
+  `interests` varchar(1024) NOT NULL DEFAULT '' COMMENT '兴趣爱好，由英文逗号分隔',
+  `telephone` varchar(50) NOT NULL DEFAULT '' COMMENT '固定电话',
+  `mobiphone` char(11) NOT NULL DEFAULT '' COMMENT '备用手机号',
+  `email` varchar(100) NOT NULL DEFAULT '' COMMENT '备用邮箱',
+  `is_pub_birth` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否公开生日，y：是、n：否',
+  `is_pub_anniversary` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否公开纪念日，y：是、n：否',
+  `is_pub_interests` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否公开兴趣爱好，y：是、n：否',
+  `is_pub_mobiphone` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否公开手机号，y：是、n：否',
+  `is_pub_email` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否公开邮箱，y：是、n：否',
+  `live_country_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '家乡-国家',
+  `live_country` varchar(100) NOT NULL DEFAULT '' COMMENT '家乡-国家',
+  `live_province_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '家乡-省',
+  `live_province` varchar(100) NOT NULL DEFAULT '' COMMENT '家乡-省',
+  `live_city_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '家乡-城市',
+  `live_city` varchar(100) NOT NULL DEFAULT '' COMMENT '家乡-城市',
+  `live_district_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '家乡-区域',
+  `live_district` varchar(100) NOT NULL DEFAULT '' COMMENT '家乡-区域',
+  `live_street` varchar(255) NOT NULL DEFAULT '' COMMENT '家乡-街道门牌号',
+  `live_zipcode` varchar(20) NOT NULL DEFAULT '' COMMENT '家乡-邮编',
+  `address_country_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '住址-国家',
+  `address_country` varchar(100) NOT NULL DEFAULT '' COMMENT '住址-国家',
+  `address_province_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '住址-省',
+  `address_province` varchar(100) NOT NULL DEFAULT '' COMMENT '住址-省',
+  `address_city_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '住址-城市',
+  `address_city` varchar(100) NOT NULL DEFAULT '' COMMENT '住址-城市',
+  `address_district_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '住址-区域',
+  `address_district` varchar(100) NOT NULL DEFAULT '' COMMENT '住址-区域',
+  `address_street` varchar(255) NOT NULL DEFAULT '' COMMENT '住址-街道门牌号',
+  `address_zipcode` varchar(20) NOT NULL DEFAULT '' COMMENT '住址-邮编',
+  `qq` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT 'QQ',
+  `msn` varchar(100) NOT NULL DEFAULT '' COMMENT 'MSN',
+  `skypeid` varchar(100) NOT NULL DEFAULT '' COMMENT 'Skype',
+  `wangwang` varchar(100) NOT NULL DEFAULT '' COMMENT '旺旺',
+  `weibo` varchar(255) NOT NULL DEFAULT '' COMMENT '微博',
+  `blog` varchar(255) NOT NULL DEFAULT '' COMMENT '博客',
+  `website` varchar(255) NOT NULL DEFAULT '' COMMENT '网站',
+  `fax` varchar(50) NOT NULL DEFAULT '' COMMENT '传真',
+  PRIMARY KEY (`member_id`),
+  KEY `login_name` (`login_name`),
+  KEY `realname` (`realname`),
+  KEY `sex` (`sex`),
+  KEY `birth_md` (`birth_md`),
+  KEY `anniversary` (`anniversary`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员详情表';
+
+CREATE TABLE `#@__member_profile` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `profile_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `profile_key` varchar(255) NOT NULL DEFAULT '' COMMENT '扩展Key',
+  `profile_value` longtext COMMENT '扩展Value',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_id_key` (`profile_id`,`profile_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员扩展表';
+
+CREATE TABLE `#@__member_addresses` (
+  `address_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `address_name` varchar(255) NOT NULL DEFAULT '' COMMENT '地址名',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `consignee` varchar(100) NOT NULL DEFAULT '' COMMENT '收货人姓名',
+  `mobiphone` char(11) NOT NULL DEFAULT '' COMMENT '收货人手机号',
+  `telephone` varchar(50) NOT NULL DEFAULT '' COMMENT '收货人固定电话',
+  `email` varchar(100) NOT NULL DEFAULT '' COMMENT '收货人邮箱',
+  `addr_country_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址-国家',
+  `addr_country` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-国家',
+  `addr_province_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址-省',
+  `addr_province` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-省',
+  `addr_city_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址-城市',
+  `addr_city` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-城市',
+  `addr_district_id` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '收货地址-区域',
+  `addr_district` varchar(100) NOT NULL DEFAULT '' COMMENT '收货地址-区域',
+  `addr_street` varchar(255) NOT NULL DEFAULT '' COMMENT '收货地址-详细地址',
+  `addr_zipcode` varchar(20) NOT NULL DEFAULT '' COMMENT '收货地址-邮编',
+  `when` enum('anyone','workday','weekend','holiday') NOT NULL DEFAULT 'anyone' COMMENT '收货最佳时间，anyone：任意时间、workday：工作日、weekend：双休日、holiday：假日',
+  `is_default` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否默认地址',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
+  PRIMARY KEY (`address_id`),
+  KEY `member_dtlm` (`member_id`,`dt_last_modified`),
+  KEY `member_default_dtlm` (`member_id`,`is_default`,`dt_last_modified`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员地址表';
+
+CREATE TABLE `#@__member_balance_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `op_type` enum('increase','reduce','reduce_freeze','freeze','unfreeze') NOT NULL DEFAULT 'increase' COMMENT '操作方式，increase：增加、reduce：扣除、reduce_freeze：扣除冻结金额、freeze：冻结、unfreeze：解冻',
+  `before_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '原始预存款金额',
+  `after_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '最终预存款金额',
+  `balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '增加或扣除预存款金额',
+  `before_freeze_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '原始冻结预存款金额',
+  `after_freeze_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '最终冻结预存款金额',
+  `freeze_balance` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '增加或扣除的冻结预存款金额',
+  `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
+  `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`log_id`),
+  KEY `member_type_source` (`member_id`,`op_type`,`source`),
+  KEY `member_source` (`member_id`,`source`),
+  KEY `source` (`source`),
+  KEY `creator_id` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员预存款日志表';
+
+CREATE TABLE `#@__member_points_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `op_type` enum('increase','reduce','reduce_freeze','freeze','unfreeze') NOT NULL DEFAULT 'increase' COMMENT '操作方式，increase：增加、reduce：扣除、reduce_freeze：扣除冻结积分、freeze：冻结、unfreeze：解冻',
+  `before_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '原始积分',
+  `after_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最终积分',
+  `points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除积分',
+  `before_freeze_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '原始冻结积分',
+  `after_freeze_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最终冻结积分',
+  `freeze_points` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除的冻结积分',
+  `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
+  `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`log_id`),
+  KEY `member_type_source` (`member_id`,`op_type`,`source`),
+  KEY `member_source` (`member_id`,`source`),
+  KEY `source` (`source`),
+  KEY `creator_id` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员积分日志表';
+
+CREATE TABLE `#@__member_experience_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `op_type` enum('increase','reduce') NOT NULL DEFAULT 'increase' COMMENT '操作方式，increase：增加、reduce：扣除',
+  `before_experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '原始成长值',
+  `after_experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最终成长值',
+  `experience` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '增加或扣除成长值',
+  `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
+  `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`log_id`),
+  KEY `member_type_source` (`member_id`,`op_type`,`source`),
+  KEY `member_source` (`member_id`,`source`),
+  KEY `source` (`source`),
+  KEY `creator_id` (`creator_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员成长值日志表';
+
+CREATE TABLE `#@__polls` (
+  `poll_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `poll_name` varchar(100) NOT NULL DEFAULT '' COMMENT '投票名',
+  `poll_key` varchar(24) NOT NULL DEFAULT '' COMMENT '投票Key',
+  `allow_unregistered` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许非会员参加，y：仅验证非会员、n：仅允许会员参加',
+  `m_rank_ids` varchar(50) NOT NULL DEFAULT '' COMMENT '允许参与会员成长度ID，由英文逗号分隔，置空表示不限制会员成长度',
+  `join_type` enum('forever','year','month','day','hour','interval') NOT NULL DEFAULT 'interval' COMMENT '参与方式，forever：终身只能参与一次、year：每年只能一次、...、interval：间隔几秒可再次参与',
+  `interval` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '间隔几秒可再次参与，0：表示无限参与',
+  `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否开放，y：开放投票、n：草稿',
+  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束时间',
+  `is_visible` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否展示结果，y：是、n：否',
+  `is_multiple` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否多选，y：是、n：否',
+  `max_choices` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '最多可选数量，0：表示不限制',
+  `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
+  `ext_info` text COMMENT '扩展属性',
+  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  PRIMARY KEY (`poll_id`),
+  UNIQUE KEY `uk_poll_key` (`poll_key`),
+  KEY `poll_name` (`poll_name`),
+  KEY `allow_unregistered` (`allow_unregistered`),
+  KEY `is_published` (`is_published`),
+  KEY `dt_created` (`dt_created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票表';
+
+CREATE TABLE `#@__polloptions` (
+  `option_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `option_name` varchar(255) NOT NULL DEFAULT '' COMMENT '选项名',
+  `poll_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '投票ID',
+  `votes` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '票数',
+  `sort` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  PRIMARY KEY (`option_id`),
+  KEY `poll_id` (`poll_id`),
+  KEY `sort` (`sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票选项表';
+
+CREATE TABLE `#@__poll_member_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `poll_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '投票ID',
+  `member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
+  `option_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '上次投票选项ID，由英文逗号分隔',
+  `join_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总参与次数',
+  `ts_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票时间',
+  `ip_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票IP',
+  PRIMARY KEY (`log_id`),
+  UNIQUE KEY `uk_member_poll` (`member_id`,`poll_id`),
+  KEY `poll_id` (`poll_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='会员投票日志表，需定期清理过期日志';
+
+CREATE TABLE `#@__poll_visitor_logs` (
+  `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `poll_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '投票ID',
+  `visitor_ip` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '游客IP',
+  `option_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '上次投票选项ID，由英文逗号分隔',
+  `join_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总参与次数',
+  `ts_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票时间',
+  PRIMARY KEY (`log_id`),
+  UNIQUE KEY `uk_visitor_poll` (`visitor_ip`,`poll_id`),
+  KEY `poll_id` (`poll_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游客投票日志表，需定期清理过期日志';
+
+CREATE TABLE `#@__regions` (
+  `region_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `region_pid` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '父ID',
+  `region_name` varchar(120) NOT NULL DEFAULT '' COMMENT '地区名',
+  `region_type` tinyint(1) NOT NULL DEFAULT '2' COMMENT '地区类型',
+  PRIMARY KEY (`region_id`),
+  KEY `region_pid` (`region_pid`),
+  KEY `region_name` (`region_name`),
+  KEY `region_type` (`region_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='地区表';
