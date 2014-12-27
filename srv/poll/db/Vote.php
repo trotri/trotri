@@ -97,9 +97,7 @@ class Vote extends AbstractDb
 			return false;
 		}
 
-		if (($visitorIp = (int) $visitorIp) < 0) {
-			return false;
-		}
+		$visitorIp = (int) $visitorIp;
 
 		$memberId = max((int) $memberId, 0);
 

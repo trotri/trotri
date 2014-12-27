@@ -43,7 +43,8 @@ class FpUsers extends FormProcessor
 
 		$this->isValids($params,
 			'login_type', 'login_name', 'password', 'repassword', 'salt', 'user_name', 'user_mail', 'user_phone',
-			'dt_registered', 'dt_last_login', 'dt_last_repwd', 'login_count', 'repwd_count', 'valid_mail', 'valid_phone', 'forbidden', 'trash', 'group_ids');
+			'dt_registered', 'dt_last_login', 'dt_last_repwd', 'ip_registered', 'ip_last_login', 'ip_last_repwd',
+			'login_count', 'repwd_count', 'valid_mail', 'valid_phone', 'forbidden', 'trash', 'group_ids');
 
 		return !$this->hasError();
 	}

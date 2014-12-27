@@ -733,7 +733,7 @@ CREATE TABLE `#@__poll_member_logs` (
 CREATE TABLE `#@__poll_visitor_logs` (
   `log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
   `poll_id` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '投票ID',
-  `visitor_ip` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '游客IP',
+  `visitor_ip` int(10) NOT NULL DEFAULT '0' COMMENT '游客IP',
   `option_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '上次投票选项ID，由英文逗号分隔',
   `join_count` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总参与次数',
   `ts_last_modified` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次投票时间',
