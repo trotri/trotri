@@ -94,7 +94,7 @@ class Account
 			$errNo = DataAccount::ERROR_LOGIN_NAME_NOT_EXISTS;
 			Log::warning(sprintf(
 				'Account login_name not exists, login_name "%s"', $loginName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => array()
@@ -145,7 +145,7 @@ class Account
 			$errNo = DataAccount::ERROR_PASSWORD_WRONG;
 			Log::warning(sprintf(
 				'Account password wrong, member_id "%d", login_name "%s"', $data['member_id'], $data['login_name']
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => array()
@@ -219,7 +219,7 @@ class Account
 			$errNo = DataAccount::ERROR_LOGIN_FAILED;
 			Log::warning(sprintf(
 				'Account member_id and login_name must be not empty, member_id "%d", login_name "%s"', $memberId, $loginName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => array()
@@ -230,7 +230,7 @@ class Account
 			$errNo = DataAccount::ERROR_MEMBER_TRASH;
 			Log::warning(sprintf(
 				'Account member has been trashed, member_id "%d", login_name "%s"', $memberId, $loginName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => $data,
@@ -241,7 +241,7 @@ class Account
 			$errNo = DataAccount::ERROR_MEMBER_FORBIDDEN;
 			Log::warning(sprintf(
 				'Account member has been forbidden, member_id "%d", login_name "%s"', $memberId, $loginName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => $data,
@@ -267,7 +267,7 @@ class Account
 			else {
 				Log::warning(sprintf(
 					'Account update dt_last_login|ip_last_login|login_count Failed, member_id "%d", login_name "%s"', $memberId, $loginName
-				), DataAccount::ERROR_MODIFY_LAST_LOGIN,  __METHOD__);
+				), DataAccount::ERROR_MODIFY_LAST_LOGIN, __METHOD__);
 			}
 		}
 
@@ -313,7 +313,7 @@ class Account
 			$errNo = DataAccount::ERROR_LOGIN_FAILED;
 			Log::warning(sprintf(
 				'Account cookie name must be string and not empty, cluster_name "%s"', $clusterName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => array()
@@ -331,7 +331,7 @@ class Account
 			$errNo = DataAccount::ERROR_LOGIN_FAILED;
 			Log::warning(sprintf(
 				'Account member_id and login_name must be not empty, cluster_name "%s", cookie_name "%s", member_id "%d", login_name "%s"', $clusterName, $cookieName, $memberId, $loginName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return array(
 				'err_no' => $errNo,
 				'data' => array()
@@ -358,7 +358,7 @@ class Account
 		$errNo = DataAccount::ERROR_LOGIN_FAILED;
 		Log::warning(sprintf(
 			'Account set identity Failed, cluster_name "%s", cookie_name "%s", member_id "%d", login_name "%s"', $clusterName, $cookieName, $memberId, $loginName
-		), $errNo,  __METHOD__);
+		), $errNo, __METHOD__);
 		return array(
 			'err_no' => $errNo,
 			'data' => array()
@@ -380,7 +380,7 @@ class Account
 			$errNo = DataAccount::ERROR_LOGOUT_FAILED;
 			Log::warning(sprintf(
 				'Account cookie name must be string and not empty, cluster_name "%s"', $clusterName
-			), $errNo,  __METHOD__);
+			), $errNo, __METHOD__);
 			return false;
 		}
 
@@ -393,7 +393,7 @@ class Account
 		$errNo = DataAccount::ERROR_LOGOUT_FAILED;
 		Log::warning(sprintf(
 			'Account clear identity Failed, cluster_name "%s", cookie_name "%s"', $clusterName, $cookieName
-		), $errNo,  __METHOD__);
+		), $errNo, __METHOD__);
 		return false;
 	}
 
@@ -413,7 +413,7 @@ class Account
 		if ($cookieName === '') {
 			Log::warning(sprintf(
 				'Account cookie name must be string and not empty, cluster_name "%s"', $clusterName
-			), 0,  __METHOD__);
+			), 0, __METHOD__);
 
 			return false;
 		}
@@ -423,7 +423,7 @@ class Account
 		if (!$data || !is_array($data) || !isset($data['user_id'])) {
 			Log::debug(sprintf(
 				'Account cookie data must be array and not empty, cluster_name "%s", cookie_name "%s"', $clusterName, $cookieName
-			), 0,  __METHOD__);
+			), 0, __METHOD__);
 
 			return false;
 		}
@@ -441,17 +441,17 @@ class Account
 		if ($memberId <= 0 || $loginName === '') {
 			Log::warning(sprintf(
 				'Account cookie member_id and login_name must be not empty, cluster_name "%s", cookie_name "%s", member_id "%d", login_name "%s"', $clusterName, $cookieName, $memberId, $loginName
-			), 0,  __METHOD__);
+			), 0, __METHOD__);
 
 			return false;
 		}
 
-		$clientIp = Clean::ip2long(Ap::getRequest()->getClientIp());
+		$clientIp = ip2long(Ap::getRequest()->getClientIp());
 		if ($ip !== $clientIp) {
 			Log::warning(sprintf(
 				'Account cookie ip "%s" is not equal to client ip "%s", cluster_name "%s", cookie_name "%s", member_id "%d", login_name "%s"', 
 				long2ip($ip), long2ip($clientIp), $clusterName, $cookieName, $memberId, $loginName
-			), 0,  __METHOD__);
+			), 0, __METHOD__);
 
 			return false;
 		}
@@ -460,7 +460,7 @@ class Account
 			if ($password === '') {
 				Log::warning(sprintf(
 					'Account config cookset_password and cookie password must be not empty, cluster_name "%s", cookie_name "%s", member_id "%d", login_name "%s"', $clusterName, $cookieName, $memberId, $loginName
-				), 0,  __METHOD__);
+				), 0, __METHOD__);
 
 				return false;
 			}
@@ -469,7 +469,7 @@ class Account
 			if ($password !== $dbpwd) {
 				Log::warning(sprintf(
 					'Account cookie password "%s" is not equal to db password "%s", cluster_name "%s", cookie_name "%s", member_id "%d", login_name "%s"', $clusterName, $cookieName, $memberId, $loginName
-				), 0,  __METHOD__);
+				), 0, __METHOD__);
 
 				return false;
 			}
@@ -574,7 +574,7 @@ class Account
 			if (!$this->_portal->getDb()->create($params)) {
 				Log::warning(sprintf(
 					'Account db create failed, login_name "%s", login_type "%s"', $loginName, DataPortal::LOGIN_TYPE_PARTNER
-				), 0,  __METHOD__);
+				), 0, __METHOD__);
 			}
 		}
 

@@ -165,10 +165,8 @@ class Portal extends AbstractDb
 
 		if (isset($params['ip_registered'])) {
 			$ipRegistered = (int) $params['ip_registered'];
-			if ($ipRegistered >= 0) {
-				$condition .= ' AND `ip_registered` = ' . $commandBuilder::PLACE_HOLDERS;
-				$attributes['ip_registered'] = $ipRegistered;
-			}
+			$condition .= ' AND `ip_registered` = ' . $commandBuilder::PLACE_HOLDERS;
+			$attributes['ip_registered'] = $ipRegistered;
 		}
 
 		if (isset($params['member_id'])) {
@@ -266,7 +264,7 @@ class Portal extends AbstractDb
 		$trash = 'n';
 
 		if ($loginName === '' || $loginType === '' || $password === '' || $salt === '' || $memberName === ''
-			|| $loginCount < 0 || $ipRegistered < 0 || $ipLastLogin < 0 || $ipLastRepwd < 0) {
+			|| $loginCount < 0) {
 			return false;
 		}
 
@@ -423,23 +421,11 @@ class Portal extends AbstractDb
 		}
 
 		if (isset($params['ip_last_login'])) {
-			$ipLastLogin = (int) $params['ip_last_login'];
-			if ($ipLastLogin >= 0) {
-				$attributes['ip_last_login'] = $ipLastLogin;
-			}
-			else {
-				return false;
-			}
+			$attributes['ip_last_login'] = (int) $params['ip_last_login'];
 		}
 
 		if (isset($params['ip_last_repwd'])) {
-			$ipLastRepwd = (int) $params['ip_last_repwd'];
-			if ($ipLastRepwd >= 0) {
-				$attributes['ip_last_repwd'] = $ipLastRepwd;
-			}
-			else {
-				return false;
-			}
+			$attributes['ip_last_repwd'] = (int) $params['ip_last_repwd'];
 		}
 
 		if (isset($params['login_count'])) {

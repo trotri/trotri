@@ -510,7 +510,7 @@ class Account
 			return false;
 		}
 
-		$clientIp = Clean::ip2long(Ap::getRequest()->getClientIp());
+		$clientIp = ip2long(Ap::getRequest()->getClientIp());
 		if ($ip !== $clientIp) {
 			Log::warning(sprintf(
 				'Account cookie ip "%s" is not equal to client ip "%s", cluster_name "%s", cookie_name "%s", user_id "%d", login_name "%s"', 
