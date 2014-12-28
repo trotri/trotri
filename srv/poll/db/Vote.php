@@ -62,9 +62,7 @@ class Vote extends AbstractDb
 			return false;
 		}
 
-		if (($visitorIp = (int) $visitorIp) < 0) {
-			return false;
-		}
+		$visitorIp = (int) $visitorIp;
 
 		$tableName = $this->getTblprefix() . TableNames::getPollVisitorLogs();
 		$sql = 'SELECT `log_id`, `poll_id`, `visitor_ip`, `option_ids`, `join_count`, `ts_last_modified` FROM `' . $tableName . '` WHERE `visitor_ip` = ? AND `poll_id` = ?';
@@ -77,10 +75,9 @@ class Vote extends AbstractDb
 	 * @param array|integer $optIds
 	 * @param integer $visitorIp
 	 * @param integer $memberId
-	 * @param integer $joinCount
 	 * @return boolean
 	 */
-	public function addVote($pollId, $optIds, $visitorIp, $memberId, $joinCount)
+	public function addVote($pollId, $optIds, $visitorIp, $memberId)
 	{
 		if (($pollId = (int) $pollId) <= 0) {
 			return false;
@@ -112,37 +109,67 @@ class Vote extends AbstractDb
 		}
 
 		$optIds = implode(',', $optIds);
-		$joinCount = max((int) $joinCount, 1);
 		$nowTime = time();
 
 		if ($memberId > 0) {
 			$tableName = $this->getTblprefix() . TableNames::getPollMemberLogs();
-			$commands[] = array(
-				'sql' => 'REPLACE `' . $tableName . '` SET `member_id` = ?, `poll_id` = ?, `option_ids` = ?, `join_count` = ?, `ts_last_modified` = ?, `ip_last_modified` = ?',
-				'params' => array(
-					'member_id' => $memberId,
-					'poll_id' => $pollId,
-					'option_ids' => $optIds,
-					'join_count' => $joinCount,
-					'ts_last_modified' => $nowTime,
-					'ip_last_modified' => $visitorIp,
-				)
-			);
+			$row = $this->getMemberLogs($pollId, $memberId);
+			if ($row && is_array($row) && isset($row['log_id']) && isset($row['join_count'])) {
+				$commands[] = array(
+					'sql' => 'UPDATE `' . $tableName . '` SET `option_ids` = ?, `join_count` = ?, `ts_last_modified` = ?, `ip_last_modified` = ? WHERE `log_id` = ?',
+					'params' => array(
+						'option_ids' => $optIds,
+						'join_count' => $row['join_count'] + 1,
+						'ts_last_modified' => $nowTime,
+						'ip_last_modified' => $visitorIp,
+						'log_id' => $row['log_id']
+					)
+				);
+			}
+			else {
+				$commands[] = array(
+					'sql' => 'INSERT INTO `' . $tableName . '` SET `member_id` = ?, `poll_id` = ?, `option_ids` = ?, `join_count` = ?, `ts_last_modified` = ?, `ip_last_modified` = ?',
+					'params' => array(
+						'member_id' => $memberId,
+						'poll_id' => $pollId,
+						'option_ids' => $optIds,
+						'join_count' => 1,
+						'ts_last_modified' => $nowTime,
+						'ip_last_modified' => $visitorIp,
+					)
+				);
+			}
 		}
 		else {
 			$tableName = $this->getTblprefix() . TableNames::getPollVisitorLogs();
-			$commands[] = array(
-				'sql' => 'REPLACE `' . $tableName . '` SET `visitor_ip` = ?, `poll_id` = ?, `option_ids` = ?, `join_count` = ?, `ts_last_modified` = ?',
-				'params' => array(
-					'visitor_ip' => $visitorIp,
-					'poll_id' => $pollId,
-					'option_ids' => $optIds,
-					'join_count' => $joinCount,
-					'ts_last_modified' => $nowTime,
-				)
-			);
+			$row = $this->getVisitorLogs($pollId, $visitorIp);
+			if ($row && is_array($row) && isset($row['log_id']) && isset($row['join_count'])) {
+				$commands[] = array(
+					'sql' => 'UPDATE `' . $tableName . '` SET `option_ids` = ?, `join_count` = ?, `ts_last_modified` = ? WHERE `log_id` = ?',
+					'params' => array(
+						'option_ids' => $optIds,
+						'join_count' => $row['join_count'] + 1,
+						'ts_last_modified' => $nowTime,
+						'log_id' => $row['log_id'],
+					)
+				);
+			}
+			else {
+				$commands[] = array(
+					'sql' => 'INSERT INTO `' . $tableName . '` SET `visitor_ip` = ?, `poll_id` = ?, `option_ids` = ?, `join_count` = ?, `ts_last_modified` = ?',
+					'params' => array(
+						'visitor_ip' => $visitorIp,
+						'poll_id' => $pollId,
+						'option_ids' => $optIds,
+						'join_count' => 1,
+						'ts_last_modified' => $nowTime,
+					)
+				);
+			}
 		}
 
+		//TODO: 解决General error: 2014 Cannot execute queries while other unbuffered queries are active.错误，只是暂时解决方案.
+		$this->getDbProxy()->getDriver()->close();
 		return $this->doTransaction($commands);
 	}
 }

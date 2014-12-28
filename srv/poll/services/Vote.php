@@ -194,8 +194,6 @@ class Vote extends AbstractService
 			$row = $this->getVisitorLogs($pollId, $visitorIp);
 		}
 
-		$joinCount = isset($row['join_count']) ? max((int) $row['join_count'], 1) + 1 : 1;
-
 		if ($row && is_array($row) && isset($row['ts_last_modified'])) {
 			if (($tsLastModified = (int) $row['ts_last_modified']) > 0) {
 				$errNo = DataVote::SUCCESS_NUM;
@@ -230,7 +228,7 @@ class Vote extends AbstractService
 			}
 		}
 
-		if (!$this->getDb()->addVote($pollId, $optIds, $visitorIp, $memberId, $joinCount)) {
+		if (!$this->getDb()->addVote($pollId, $optIds, $visitorIp, $memberId)) {
 			$errNo = DataVote::ERROR_FAILED;
 
 			return array(
