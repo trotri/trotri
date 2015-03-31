@@ -266,9 +266,10 @@ class HttpRequest extends Request
     /**
      * 设置当前页面的用户的IP地址
      * @param string|null $clientIp
+     * @param boolean $directOnly
      * @return \tfc\ap\HttpRequest
      */
-    public function setClientIp($clientIp = null)
+    public function setClientIp($clientIp = null, $directOnly = true)
     {
         if ($clientIp !== null) {
             $this->_clientIp = (string) $clientIp;
@@ -279,6 +280,10 @@ class HttpRequest extends Request
         // gets the default ip sent by the user
         if (!empty($_SERVER['REMOTE_ADDR'])) {
             $directIp = $_SERVER['REMOTE_ADDR'];
+            if ($directOnly) {
+                $this->_clientIp = $directIp;
+                return $this;
+            }
         }
 
         // gets the proxy ip sent by the user
