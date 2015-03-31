@@ -826,7 +826,7 @@ HTTP请求模式处理类</p>
                                             <a id="method_setClientIp"></a>
                         <div class="element clickable method public  method_setClientIp" data-toggle="collapse" data-target=".method_setClientIp .collapse">
                             <h2>设置当前页面的用户的IP地址</h2>
-                            <pre>setClientIp(string|null $clientIp = null) : \tfc\ap\HttpRequest</pre>
+                            <pre>setClientIp(string|null $clientIp = null, boolean $directOnly = true) : \tfc\ap\HttpRequest</pre>
                             <div class="labels">
                                                                                                                                                                                             </div>
                             <div class="row collapse">
@@ -847,6 +847,10 @@ HTTP请求模式处理类</p>
                                                                                     <div class="subelement argument">
                                                 <h4>$clientIp</h4>
                                                 <code>string|null</code><p></p>
+                                            </div>
+                                            <div class="subelement argument">
+                                                <h4>$directOnly</h4>
+                                                <code>boolean</code><p></p>
                                             </div>
                                                                             
                                                                             <h3>Response</h3>
