@@ -12,6 +12,7 @@ namespace modules\posts\action\show;
 
 use library\ShowAction;
 use tfc\ap\Ap;
+use tfc\mvc\Mvc;
 use libapp\Model;
 
 /**
@@ -42,6 +43,13 @@ class View extends ShowAction
 			$this->err404();
 		}
 
+		$category = Model::getInstance('Categories', 'posts')->findByPk($row['category_id']);
+		if (!$category || !is_array($category)) {
+			$this->err404();
+		}
+
+		$tplName = isset($category['tpl_view']) ? Mvc::$module . DS . $category['tpl_view'] : null;
+
 		$prev = $mod->getPrevByCatId($row['category_id'], $row['sort']);
 		$next = $mod->getNextByCatId($row['category_id'], $row['sort']);
 
@@ -51,6 +59,6 @@ class View extends ShowAction
 		$this->assign('meta_title', isset($row['title']) ? $row['title'] : '');
 		$this->assign('meta_keywords', isset($row['keywords']) ? $row['keywords'] : '');
 		$this->assign('meta_description', isset($row['description']) ? $row['description'] : '');
-		$this->render($row);
+		$this->render($row, $tplName);
 	}
 }
