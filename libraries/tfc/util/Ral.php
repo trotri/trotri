@@ -97,7 +97,7 @@ class Ral
      * @param integer $timeOutMs
      * @param string $converter
      */
-    public function __construct($server, $port = 80, $connectTimeOutMsMs = 30, $timeOutMs = 500, $converter = self::CONVERTER_STRING)
+    public function __construct($server, $port = 80, $connectTimeOutMsMs = 50, $timeOutMs = 500, $converter = self::CONVERTER_STRING)
     {
         $this->setServer($server);
         $this->setPort($port);
@@ -132,8 +132,8 @@ class Ral
         curl_setopt($resource, CURLOPT_FOLLOWLOCATION,    true);
         curl_setopt($resource, CURLOPT_RETURNTRANSFER,    1);
         curl_setopt($resource, CURLOPT_NOSIGNAL,          1);
-        curl_setopt($resource, CURLOPT_CONNECTTIMEOUT_MS, $this->getConnectTimeOut());
-        curl_setopt($resource, CURLOPT_TIMEOUT_MS,        $this->getExecTimeOut());
+        curl_setopt($resource, CURLOPT_CONNECTTIMEOUT_MS, $this->getConnectTimeOutMS());
+        curl_setopt($resource, CURLOPT_TIMEOUT_MS,        $this->getTimeOutMS());
         if ($this->isPost($method)) {
             curl_setopt($resource, CURLOPT_POST,          1);
             curl_setopt($resource, CURLOPT_POSTFIELDS,    $params);
