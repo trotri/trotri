@@ -5,22 +5,24 @@ Trotri
 ___
 <br>
 
-##TFC - Trotri Foundation Classes
-###整洁、快速、专业的PHP框架
+## TFC - Trotri Foundation Classes
+### 整洁、快速、专业的PHP框架
 TFC功能非常丰富，包括：DB、MVC、路由、缓存、日志、插件、多语言、模版零件、加解密、自动验证、身份验证、角色认证、图片水印、缩略图、验证码、程序引导、业务平台等。<br>
 请点击右边 “Download ZIP” 按钮下载并解压。<br>
 代码存放地址：“根目录/libraries/tfc”<br>
 API文档存放地址：“根目录/docs/TFC-Api/index.html”<br>
 包图类图存放地址：“根目录/docs/TFC-Api/graph_class.html”
 ___
+<br>
 
-##Trotri
-###基于TFC开发的CMS系统
+## Trotri
+### 基于TFC开发的CMS系统
 Trotri功能包括：自动生成代码、用户组、用户权限、文档（支持动态表单）、菜单、广告、文件批量上传、专题、投票、QQ和微信账号登录、多语言、支持插件、基于组件开发等。<br>
 请点击右边 “Download ZIP” 按钮下载，下载后解压安装即可，直接用浏览器访问 “根目录/webroot/install.php” 文件进行安装。
 ___
+<br>
 
-##框架特色
+## 框架特色
 1、Saf层：实现各种代理，如：DB操作代理、密钥代理、上传代理、Cookie代理、语言包，目的是基于配置实现各种操作，好处是方便修改和测试，如新增一个上传操作，只需要增加一个配置即可，不需要开发和测试成本。功能简要：<br>
   &nbsp;&nbsp;&nbsp;&nbsp;1)、配置：“DB信息”、“连接DB失败后，尝试重连的次数”等信息，就可以实现DB操作，不必再和底层的DB类打交道。并且自动打印SQL日志，方便测试。<br>
   &nbsp;&nbsp;&nbsp;&nbsp;2)、配置：“加密密钥”、“签名密钥”、“加密串有效期”可以实现加解密操作，如Cookie数据加解密、身份认证，不必再和底层的Mcrypt类打交道。<br>
@@ -36,14 +38,14 @@ ___
 7、Controller层每个Action都是一个独立的文件，Action又细分为展示数据类和Ajax请求类。即减轻Controller层负担，又规范Action输出数据格式。<br>
 8、可以用原生的SQL语句，这样更容易实现分表逻辑和复杂SQL，还支持自动组建SQL语句，组建SQL语句前，会自动缓存表结构，但是修改表结构后需要手动删除缓存。
 ___
+<br>
 
-
-####安装步骤：
+#### 安装步骤：
 1、系统要求：PHP5.3或以上版本、PDO支持。<br/>
 2、下载并解压后，直接用浏览器访问 “根目录/webroot/install.php” 文件进行安装。<br/>
 3、如果安装出错，请阅读 “根目录/webroot/docs/Install-Readme.txt” 文档。
 
-####Linux环境下安装注意点：
+#### Linux环境下安装注意点：
 Linux对目录权限要求严格，为了安装正确，先将下面几个目录权限设置为：可读可写可执行（chmod 777 目录名）<br>
 1、根目录/cfg/db        - 数据库配置：安装时填写的数据库配置存放在该目录。<br>
 2、根目录/cfg/key       - 密钥配置：安装时随机生成的加密密钥、签名密钥存放在该目录。<br>
@@ -52,10 +54,10 @@ Linux对目录权限要求严格，为了安装正确，先将下面几个目录
 5、根目录/data/u        - 上传目录：用户上传图片存放目录。<br>
 ___
 
-<br/>
-* Trotri技术交流群：178497611
-* [新浪微博：@Trotri](http://weibo.com/u/3849507848 "Trotri官方微博") 
-* [官方网站：trotri.com](http://www.trotri.com/ "官方网站：http://www.trotri.com/") 
+
+> + Trotri技术交流群：178497611
+> + [新浪微博：@Trotri](http://weibo.com/u/3849507848 "Trotri官方微博") 
+> + [官方网站：trotri.com](http://www.trotri.com/ "官方网站：http://www.trotri.com/") 
 
 ###
         亲，若您有任何Bug反馈、功能建议、技术分享，请马上发邮件到trotri@yeah.net，感激涕零！
