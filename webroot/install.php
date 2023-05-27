@@ -198,6 +198,15 @@ function showMessage(id, message) {
     <?php endif; ?>
   </p>
   <p>
+      MySQLi支持&nbsp;
+      <?php if (class_exists('MYSQLI')) : ?>
+          <span class="glyphicon glyphicon-ok"></span>
+      <?php else : ?>
+          <?php $hasError = true; ?>
+          <span class="glyphicon glyphicon-remove"></span>&nbsp;<small>无法操作MySQL数据库！</small>
+      <?php endif; ?>
+  </p>
+  <p>
     /cfg/db目录可写权限&nbsp;
     <?php if (is_writeable(DIR_CFG_DB)) : ?>
     <span class="glyphicon glyphicon-ok"></span>
@@ -580,12 +589,12 @@ class Db
 	 */
 	public function connect()
 	{
-		$this->dblink = mysql_connect($this->dbhost, $this->username, $this->password);
+		$this->dblink = mysqli_connect($this->dbhost, $this->username, $this->password);
 		if (!$this->dblink) {
 			$this->halt('Install Error: Can not connect to MySQL server!');
 		}
 
-		$version = mysql_get_server_info($this->dblink);
+		$version = mysqli_get_server_info($this->dblink);
 		if ($version > '4.1') {
 			$command = 'SET character_set_connection=' . $this->charset . ', character_set_results=' . $this->charset . ', character_set_client=binary';
 			if ($version > '5.0.1') {
@@ -595,7 +604,7 @@ class Db
 			$this->query($command);
 		}
 
-		if (!mysql_select_db($this->dbname, $this->dblink)) {
+		if (!mysqli_select_db($this->dblink, $this->dbname)) {
 			$this->halt('Install Error: Db Name Not Exists!');
 		}
 	}
@@ -607,7 +616,7 @@ class Db
 	 */
 	public function query($command)
 	{
-		return mysql_query($command, $this->dblink);
+		return mysqli_query($this->dblink, $command);
 	}
 
 	/**
@@ -617,7 +626,7 @@ class Db
 	public function close()
 	{
 		if ($this->dblink) {
-			return mysql_close($this->dblink);
+			return mysqli_close($this->dblink);
 		}
 
 		return true;
@@ -663,7 +672,7 @@ class Db
 	{
 		$command = "SELECT user_id, login_name FROM {$this->tblprefix}users WHERE user_id = '1'";
 		$query = $this->query($command);
-		$row = mysql_fetch_assoc($query);
+		$row = mysqli_fetch_assoc($query);
 		if ($row && is_array($row)) {
 			return true;
 		}
@@ -850,17 +859,17 @@ class Util
 			return ERRNO_DBNAME_WRONG;
 		}
 
-		$link = mysql_connect($dbhost, $dbuser, $dbpwd);
+		$link = mysqli_connect($dbhost, $dbuser, $dbpwd);
 		if (!$link) {
 			return ERRNO_DBLINK_WRONG;
 		}
 
-		if (!mysql_select_db($dbname, $link)) {
-			mysql_close($link);
+		if (!mysqli_select_db($link, $dbname)) {
+			mysqli_close($link);
 			return ERRNO_DBNAME_WRONG;
 		}
 
-		mysql_close($link);
+		mysqli_close($link);
 
 		$data = array (
 			'trotri' => array (
