@@ -55,8 +55,8 @@ CREATE TABLE `tr_builders` (
   `description` text COMMENT '描述',
   `author_name` varchar(100) NOT NULL DEFAULT '' COMMENT '作者姓名，代码注释用',
   `author_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '作者邮箱，代码注释用',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `dt_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `dt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '上次编辑时间',
   `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
   PRIMARY KEY (`builder_id`),
   KEY `builder_name` (`builder_name`),
@@ -143,7 +143,7 @@ CREATE TABLE `tr_system_logwf_ym` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `priority` enum('DB_EMERG','DB_ALERT','DB_CRIT','DB_ERR','DB_WARNING','DB_NOTICE','DB_INFO','DB_DEBUG') NOT NULL DEFAULT 'DB_WARNING' COMMENT '日志类型',
   `event` text COMMENT '日志内容',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='日志表，按月存Warning、Err等日志';
 
@@ -152,7 +152,7 @@ CREATE TABLE `tr_system_log_ymd` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `priority` enum('DB_EMERG','DB_ALERT','DB_CRIT','DB_ERR','DB_WARNING','DB_NOTICE','DB_INFO','DB_DEBUG') NOT NULL DEFAULT 'DB_NOTICE' COMMENT '日志类型',
   `event` text COMMENT '日志内容',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='日志表，按天存Notice、Info等日志';
 
@@ -193,8 +193,8 @@ CREATE TABLE `tr_menus` (
   `attr_rel` varchar(100) NOT NULL DEFAULT '' COMMENT 'Rel属性，如：alternate、stylesheet、start、next、prev等',
   `attr_class` varchar(100) NOT NULL DEFAULT '' COMMENT 'CSS-class名',
   `attr_style` varchar(255) NOT NULL DEFAULT '' COMMENT 'CSS-style属性',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `dt_last_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '上次编辑时间',
   PRIMARY KEY (`menu_id`),
   KEY `key_pid` (`type_key`,`menu_pid`,`sort`),
   KEY `key_pid_allow` (`type_key`,`menu_pid`,`allow_unregistered`,`sort`),
@@ -252,9 +252,9 @@ CREATE TABLE `tr_users` (
   `user_name` varchar(100) NOT NULL DEFAULT '' COMMENT '用户名',
   `user_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱，可用来找回密码',
   `user_phone` char(11) NOT NULL DEFAULT '' COMMENT '手机号，可用来找回密码',
-  `dt_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
-  `dt_last_login` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次登录时间',
-  `dt_last_repwd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新密码时间',
+  `dt_registered` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
+  `dt_last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上次登录时间',
+  `dt_last_repwd` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上次更新密码时间',
   `ip_registered` bigint(20) NOT NULL DEFAULT '0' COMMENT '注册IP',
   `ip_last_login` bigint(20) NOT NULL DEFAULT '0' COMMENT '上次登录IP',
   `ip_last_repwd` bigint(20) NOT NULL DEFAULT '0' COMMENT '上次更新密码IP',
@@ -276,8 +276,8 @@ CREATE TABLE `tr_users` (
   KEY `trash` (`trash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户主表';
 
-INSERT INTO `tr_users` VALUES ('1', 'administrator', 'name', '6d3f4f0d7f7ef593061de299599dcf17', 'UUeGTJ', 'administrator', '', '', now(), now(), '0000-00-00 00:00:00', '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
-INSERT INTO `tr_users` VALUES ('2', 'trotri@yeah.net', 'mail', '5faafdadd44658ca4af91887711329f1', 'SIKVbP', '宋欢', 'trotri@yeah.net', now(), now(), '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
+INSERT INTO `tr_users` VALUES ('1', 'administrator', 'name', '6d3f4f0d7f7ef593061de299599dcf17', 'UUeGTJ', 'administrator', '', '', now(), now(), CURRENT_TIMESTAMP, '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
+INSERT INTO `tr_users` VALUES ('2', 'trotri@yeah.net', 'mail', '5faafdadd44658ca4af91887711329f1', 'SIKVbP', '宋欢', 'trotri@yeah.net', '', now(), now(), CURRENT_TIMESTAMP, '0', '0', '0', '0', '0', 'n', 'n', 'n', 'n');
 
 DROP TABLE IF EXISTS `tr_user_profile`;
 CREATE TABLE `tr_user_profile` (
@@ -354,8 +354,8 @@ CREATE TABLE `tr_posts` (
   `is_jump` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否跳转',
   `jump_url` varchar(255) NOT NULL DEFAULT '' COMMENT '跳转链接',
   `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿或待审核',
-  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始发表时间',
-  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：永不过期',
+  `dt_publish_up` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始发表时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束发表时间，0000-00-00 00:00:00：永不过期',
   `comment_status` enum('publish','draft','forbidden') NOT NULL DEFAULT 'publish' COMMENT '评论设置，publish：开放浏览、draft：审核后展示、forbidden：禁止评论',
   `allow_other_modify` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否允许其他人编辑',
   `hits` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '访问次数',
@@ -365,8 +365,8 @@ CREATE TABLE `tr_posts` (
   `creator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '创建人',
   `last_modifier_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑人ID',
   `last_modifier_name` varchar(100) NOT NULL DEFAULT '' COMMENT '上次编辑人',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `dt_last_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '上次编辑时间',
   `ip_created` bigint(20) NOT NULL DEFAULT '0' COMMENT '创建IP',
   `ip_last_modified` bigint(20) NOT NULL DEFAULT '0' COMMENT '上次编辑IP',
   `trash` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否删除',
@@ -425,8 +425,8 @@ CREATE TABLE `tr_post_comments` (
   `creator_name` varchar(100) NOT NULL DEFAULT '' COMMENT '创建人登录名',
   `last_modifier_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上次编辑人ID',
   `last_modifier_name` varchar(100) NOT NULL DEFAULT '' COMMENT '上次编辑人登录名',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `dt_last_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '上次编辑时间',
   `ip_created` bigint(20) NOT NULL DEFAULT '0' COMMENT '创建IP',
   `ip_last_modified` bigint(20) NOT NULL DEFAULT '0' COMMENT '上次编辑IP',
   PRIMARY KEY (`comment_id`),
@@ -457,8 +457,8 @@ CREATE TABLE `tr_adverts` (
   `type_key` varchar(24) NOT NULL DEFAULT '' COMMENT '位置Key',
   `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
   `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否发表，y：开放浏览、n：草稿',
-  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始发表时间',
-  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束发表时间，0000-00-00 00:00:00：永不过期',
+  `dt_publish_up` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始发表时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束发表时间，0000-00-00 00:00:00：永不过期',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
   `show_type` enum('code','text','image','flash') NOT NULL DEFAULT 'image' COMMENT '展现方式，code：代码、text：文字、image：图片、flash：Flash',
   `show_code` text COMMENT '展现代码',
@@ -471,7 +471,7 @@ CREATE TABLE `tr_adverts` (
   `attr_height` smallint(5) unsigned NOT NULL DEFAULT '0' COMMENT '图片|Flash-高度，单位：px',
   `attr_fontsize` varchar(100) NOT NULL DEFAULT '' COMMENT '文字大小，单位：pt、px、em',
   `attr_target` varchar(100) NOT NULL DEFAULT '_blank' COMMENT 'Target属性，如：_blank、_self、_parent、_top等',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`advert_id`),
   KEY `key_sort` (`type_key`,`sort`),
   KEY `key_pub_sort` (`type_key`,`is_published`,`sort`),
@@ -499,7 +499,7 @@ CREATE TABLE `tr_topic` (
   `use_header` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '使用公共的页头',
   `use_footer` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '使用公共的页脚',
   `sort` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`topic_id`),
   UNIQUE KEY `uk_topic_key` (`topic_key`),
   KEY `topic_name` (`topic_name`),
@@ -550,9 +550,9 @@ CREATE TABLE `tr_member_portal` (
   `member_mail` varchar(100) NOT NULL DEFAULT '' COMMENT '邮箱，可用来找回密码',
   `member_phone` char(11) NOT NULL DEFAULT '' COMMENT '手机号，可用来找回密码',
   `relation_member_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '关联会员ID，用于合并账号',
-  `dt_registered` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '注册时间',
-  `dt_last_login` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次登录时间',
-  `dt_last_repwd` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新密码时间',
+  `dt_registered` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
+  `dt_last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上次登录时间',
+  `dt_last_repwd` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上次更新密码时间',
   `ip_registered` bigint(20) NOT NULL DEFAULT '0' COMMENT '注册IP',
   `ip_last_login` bigint(20) NOT NULL DEFAULT '0' COMMENT '上次登录IP',
   `ip_last_repwd` bigint(20) NOT NULL DEFAULT '0' COMMENT '上次更新密码IP',
@@ -590,8 +590,8 @@ CREATE TABLE `tr_members` (
   `consum` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '消费总额',
   `orders` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '订单总数',
   `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
-  `dt_last_rerank` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次更新成长度时间',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_last_rerank` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上次更新成长度时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`member_id`),
   KEY `login_name` (`login_name`),
   KEY `type_id` (`type_id`),
@@ -610,7 +610,7 @@ CREATE TABLE `tr_member_social` (
   `login_name` varchar(100) NOT NULL DEFAULT '' COMMENT '登录名：邮箱|用户名|手机号|第三方OpenID',
   `realname` varchar(100) NOT NULL DEFAULT '' COMMENT '真实姓名',
   `sex` enum('male','female','unknow') NOT NULL DEFAULT 'unknow' COMMENT '性别，male：男性、female：女性、unknow：保密',
-  `birth_ymd` date NOT NULL DEFAULT '0000-00-00' COMMENT '出生日',
+  `birth_ymd` date DEFAULT NULL COMMENT '出生日',
   `birth_md` char(4) NOT NULL DEFAULT '0000' COMMENT '生日',
   `anniversary` char(4) NOT NULL DEFAULT '0000' COMMENT '纪念日',
   `head_portrait` varchar(1024) NOT NULL DEFAULT '' COMMENT '头像URL',
@@ -691,8 +691,8 @@ CREATE TABLE `tr_member_addresses` (
   `addr_zipcode` varchar(20) NOT NULL DEFAULT '' COMMENT '收货地址-邮编',
   `when` enum('anyone','workday','weekend','holiday') NOT NULL DEFAULT 'anyone' COMMENT '收货最佳时间，anyone：任意时间、workday：工作日、weekend：双休日、holiday：假日',
   `is_default` enum('y','n') NOT NULL DEFAULT 'n' COMMENT '是否默认地址',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
-  `dt_last_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次编辑时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `dt_last_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '上次编辑时间',
   PRIMARY KEY (`address_id`),
   KEY `member_dtlm` (`member_id`,`dt_last_modified`),
   KEY `member_default_dtlm` (`member_id`,`is_default`,`dt_last_modified`)
@@ -712,7 +712,7 @@ CREATE TABLE `tr_member_balance_logs` (
   `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
   `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
   `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`log_id`),
   KEY `member_type_source` (`member_id`,`op_type`,`source`),
   KEY `member_source` (`member_id`,`source`),
@@ -734,7 +734,7 @@ CREATE TABLE `tr_member_points_logs` (
   `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
   `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
   `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`log_id`),
   KEY `member_type_source` (`member_id`,`op_type`,`source`),
   KEY `member_source` (`member_id`,`source`),
@@ -753,7 +753,7 @@ CREATE TABLE `tr_member_experience_logs` (
   `source` char(10) NOT NULL DEFAULT '' COMMENT '来源，adminop：管理员操作、login：登录、signin：每日签到、p_order：提交订单、c_order：取消订单等',
   `remarks` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
   `creator_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`log_id`),
   KEY `member_type_source` (`member_id`,`op_type`,`source`),
   KEY `member_source` (`member_id`,`source`),
@@ -771,14 +771,14 @@ CREATE TABLE `tr_polls` (
   `join_type` enum('forever','year','month','day','hour','interval') NOT NULL DEFAULT 'interval' COMMENT '参与方式，forever：终身只能参与一次、year：每年只能一次、...、interval：间隔几秒可再次参与',
   `interval` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '间隔几秒可再次参与，0：表示无限参与',
   `is_published` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否开放，y：开放投票、n：草稿',
-  `dt_publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '开始时间',
-  `dt_publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '结束时间',
+  `dt_publish_up` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
+  `dt_publish_down` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束时间',
   `is_visible` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否展示结果，y：是、n：否',
   `is_multiple` enum('y','n') NOT NULL DEFAULT 'y' COMMENT '是否多选，y：是、n：否',
   `max_choices` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '最多可选数量，0：表示不限制',
   `description` varchar(512) NOT NULL DEFAULT '' COMMENT '描述',
   `ext_info` text COMMENT '扩展属性',
-  `dt_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+  `dt_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`poll_id`),
   UNIQUE KEY `uk_poll_key` (`poll_key`),
   KEY `poll_name` (`poll_name`),
@@ -787,7 +787,7 @@ CREATE TABLE `tr_polls` (
   KEY `dt_created` (`dt_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='投票表';
 
-INSERT INTO `tr_polls` VALUES ('1', '您是从哪里了解到我们网站的？', 'knowmysite', 'y', '', 'forever', '0', 'y', now(), '0000-00-00 00:00:00', 'y', 'n', '0', '', '', now());
+INSERT INTO `tr_polls` VALUES ('1', '您是从哪里了解到我们网站的？', 'knowmysite', 'y', '', 'forever', '0', 'y', now(), CURRENT_TIMESTAMP, 'y', 'n', '0', '', '', now());
 
 DROP TABLE IF EXISTS `tr_polloptions`;
 CREATE TABLE `tr_polloptions` (
